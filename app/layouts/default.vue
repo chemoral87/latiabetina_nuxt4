@@ -1,26 +1,21 @@
 <template>
   <VApp>
-    <VNavigationDrawer v-model="drawer" temporary app touchless>
+    <VNavigationDrawer id="layout-nav-drawer" v-model="drawer" temporary app touchless>
       <VList>
         <VListItem>
           <VListItemTitle>Latiabetina</VListItemTitle>
         </VListItem>
-        <VListItem v-for="(item, i) in items" :key="i" :to="item.to" router exact @click="drawer = false">
-          <VListItemAction>
-            <VIcon>{{ item.icon }}</VIcon>
-          </VListItemAction>
-          <VListItemContent>
-            <VListItemTitle>{{ item.title }}</VListItemTitle>
-          </VListItemContent>
+        <VListItem v-for="(item, i) in items" :key="i" :to="item.to" router exact :prepend-icon="item.icon" @click="drawer = false">
+          <VListItemTitle>{{ item.title }}</VListItemTitle>
         </VListItem>
       </VList>
     </VNavigationDrawer>
 
-    <VAppBar elevation="2" fixed app>
-      <VAppBarNavIcon @click.stop="drawer = !drawer" />
-      <VToolbarTitle>{{ title }}</VToolbarTitle>
+    <VAppBar id="layout-app-bar" elevation="2" fixed app>
+      <VAppBarNavIcon id="layout-nav-icon" @click.stop="drawer = !drawer" />
+      <VToolbarTitle id="layout-title">{{ title }}</VToolbarTitle>
       <VSpacer />
-      <VBtn icon @click="gotoLogin">
+      <VBtn id="layout-login-btn" icon @click="gotoLogin">
         <VIcon>mdi-lock</VIcon>
       </VBtn>
     </VAppBar>
