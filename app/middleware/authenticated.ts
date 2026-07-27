@@ -1,5 +1,3 @@
-import { useAuthStore } from "~/composables/useAuth"
-
 export default defineNuxtRouteMiddleware((to) => {
   const auth = useAuthStore()
   if (!auth.loggedIn) {

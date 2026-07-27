@@ -165,6 +165,26 @@ export const useAuthStore = defineStore("auth", () => {
     }
   }
 
+  async function init() {
+    const savedStrategy = localStorage.getItem("auth.strategy")
+    if (savedStrategy && strategies[savedStrategy]) {
+      strategy.value = savedStrategy
+    }
+
+    const token = localStorage.getItem("auth.token")
+    if (!token) return
+
+    const expires = localStorage.getItem("auth.expires")
+    if (expires && Date.now() > Number(expires)) {
+      localStorage.removeItem("auth.token")
+      localStorage.removeItem("auth.strategy")
+      localStorage.removeItem("auth.expires")
+      return
+    }
+
+    await fetchUser()
+  }
+
   const permissions = computed(() => {
     if (!user.value) return []
     return (user.value.all_permissions || user.value.permissions || []) as string[]
@@ -174,7 +194,7 @@ export const useAuthStore = defineStore("auth", () => {
     return permissions.value.includes(permission)
   }
 
-  return { user, loggedIn, strategy, redirects, permissions, hasPermission, loginWith, fetchUser, logout, setToken, setStrategy, setUser }
+  return { user, loggedIn, strategy, redirects, permissions, hasPermission, loginWith, fetchUser, logout, setToken, setStrategy, setUser, init }
 })
 
 export function useAuth() {

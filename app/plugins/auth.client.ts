@@ -1,7 +1,4 @@
-export default defineNuxtPlugin(() => {
+export default defineNuxtPlugin(async () => {
   const auth = useAuthStore()
-  const token = localStorage.getItem("auth.token")
-  if (token) {
-    auth.fetchUser()
-  }
+  await auth.init()
 })

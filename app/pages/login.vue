@@ -1,6 +1,6 @@
 <template>
   <VContainer>
-    <VRow align="center" justify="center" class="fill-height">
+    <VRow align="center" justify="center" style="min-height: 100vh">
       <VCol cols="12" sm="8" md="6" lg="4">
         <VCard id="login-card" flat class="pa-6">
           <VForm id="login-form" @submit.prevent="submitLogin">
@@ -10,7 +10,7 @@
               </VCol>
 
               <VCol cols="12">
-                <VBtn id="login-google-btn" variant="outlined" block size="large" class="mb-4 text-none"
+                <VBtn id="login-google-btn" variant="outlined" block size="large" class="mb-4"
                   style="border-color: #dadce0; color: #3c4043; background-color: white" @click="loginWithGoogle">
                   <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"
                     style="width: 18px; height: 18px; margin-right: 12px" />
@@ -36,13 +36,13 @@
               </VCol>
 
               <VCol cols="12" class="text-right">
-                <a href="#" class="text-decoration-none text-primary" @click.prevent="navigateTo('/forgot-password')">
+                <a href="#" class="text-primary" style="text-decoration: none" @click.prevent="navigateTo('/forgot-password')">
                   Olvidé mi contraseña
                 </a>
               </VCol>
 
               <VCol cols="12">
-                <VBtn id="login-submit" type="submit" color="primary" block size="large" class="text-none">Ingresar</VBtn>
+                <VBtn id="login-submit" type="submit" color="primary" block size="large">Ingresar</VBtn>
               </VCol>
             </VRow>
           </VForm>

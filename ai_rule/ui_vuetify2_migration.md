@@ -173,6 +173,118 @@ Layout root containers must include layout-scoped identifiers:
 +</script>
 ```
 
+## VBtn Props (Fab/Icon)
+
+Vuetify 2's `v-btn--fab` button with colored background and white icon:
+
+```diff
+-<v-btn class="ml-3" small fab color="blue white--text" id="btn-layout-account">
+-  <v-icon>mdi-account</v-icon>
+-</v-btn>
++<VBtn id="btn-layout-account" class="ml-3" size="small" color="blue" variant="flat" icon>
++  <VIcon color="white">mdi-account</VIcon>
++</VBtn>
+```
+
+Key differences:
+- `fab` is replaced by `icon` prop
+- Vuetify 3 `icon` defaults to `variant="text"` (no background) — add `variant="flat"` or `variant="elevated"` for a solid background
+- `color="blue white--text"` → `color="blue"` + `VIcon color="white"`
+- `small` → `size="small"`
+
+## VContainer fluid (SSR Hydration)
+
+```diff
+-<v-container fluid>
++<VContainer :fluid="true">
+```
+
+Bare `fluid` attribute in Vuetify 3 can cause SSR hydration mismatches (server skips the `v-container--fluid` class). Always use `:fluid="true"` (bound boolean prop) to ensure consistency.
+
+## Text Color Classes
+
+Vuetify 2's `text--primary` (high-emphasis dark text) is **not** the same as Vuetify 3's `text-primary`:
+
+| Vuetify 2 | Vuetify 3 | Effect |
+|-----------|-----------|--------|
+| `text--primary` | `text-grey-darken-4` | Dark text (near-black), safe on any background |
+| `text--secondary` | `text-grey-darken-1` | Medium emphasis |
+| `text-primary` (V3) | `text-primary` | Theme primary color (often blue) — low contrast on yellow/light backgrounds |
+
+Use `text-grey-darken-4` instead of `text-primary` when you need dark readable text on colored backgrounds.
+
+## VCard flat / outlined
+
+```diff
+-<v-card flat outlined>
++<VCard flat border>
+```
+
+- `flat` still works in Vuetify 3
+- `outlined` was removed — use `border` prop or `variant="outlined"` instead
+
+## VSwitch
+
+```diff
+-<v-switch v-model="combinedView" hide-details dense inset class="mt-0 pt-0" />
++<VSwitch v-model="combinedView" hide-details density="compact" inset class="mt-0 pt-0" />
+```
+
+- `dense` → `density="compact"` (also applies to VTextField, VSelect, etc.)
+
+## VAvatar
+
+```diff
+-<v-avatar color="primary" size="52" class="mr-3">
+-  <span class="white--text text-h6">{{ initials }}</span>
+-</v-avatar>
++<VAvatar color="primary" size="52" class="mr-3">
++  <span class="text-white text-h6">{{ initials }}</span>
++</VAvatar>
+```
+
+- `white--text` → `text-white`
+
+## VProgressCircular
+
+```diff
+-<v-progress-circular indeterminate color="primary" size="64"></v-progress-circular>
++<VProgressCircular indeterminate color="primary" size="64" />
+```
+
+- Self-closing tag is valid in Vue 3
+
+## Absent/Unsupported Components
+
+| Component | Status | Replacement |
+|-----------|--------|-------------|
+| `v-skeleton-loader` | Migrated | `VSkeletonLoader` (same name, PascalCase) |
+
+## Vuetify 2–Only Utility Classes
+
+These Vuetify 2 utility classes were removed in Vuetify 3:
+
+| Class | Vuetify 3 Replacement |
+|-------|----------------------|
+| `fill-height` | `style="min-height: 100vh"` or `align="stretch"` on VRow |
+| `text-none` (text-transform) | Remove — Vuetify 3 buttons have no text-transform by default, or use inline `style` |
+| `text-decoration-none` | `style="text-decoration: none"` (not a Vuetify utility) |
+
+```diff
+-<VRow align="center" justify="center" class="fill-height">
++<VRow align="center" justify="center" style="min-height: 100vh">
+```
+
+```diff
+-<VBtn id="login-submit" type="submit" color="primary" block size="large" class="text-none">Ingresar</VBtn>
++<VBtn id="login-submit" type="submit" color="primary" block size="large">Ingresar</VBtn>
+```
+
+```diff
+-<a href="#" class="text-decoration-none text-primary" @click.prevent="...">
++<a href="#" class="text-primary" style="text-decoration: none" @click.prevent="...">
+```
+
 ## Autofill CSS Fix
 
 ```css
