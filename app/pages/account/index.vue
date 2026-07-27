@@ -13,27 +13,30 @@
             </div>
           </div>
           <VBtn id="btn-account-changepw" color="success" size="small" @click="dialogPassword = true">
-            <VIcon left size="small">mdi-lock-reset</VIcon>
+            <VIcon start size="small">mdi-lock-reset</VIcon>
             Cambiar contraseña
           </VBtn>
         </VCard>
 
-        <div class="d-flex align-center mb-3" style="gap: 6px">
-          <span class="text-caption text-grey">Separado</span>
-          <VSwitch v-model="combinedView" hide-details density="compact" inset class="mt-0 pt-0" />
-          <span class="text-caption text-grey">Combinado</span>
-        </div>
+        <VCard id="card-accou-index-toggle" flat class="mb-3 pa-3" border>
+          <div class="d-flex align-center" style="gap: 6px">
+            <span class="text-caption text-grey">Separado</span>
+            <VSwitch v-model="combinedView" hide-details density="compact" inset class="mt-0 pt-0" />
+            <span class="text-caption text-grey">Combinado</span>
+          </div>
+        </VCard>
 
         <VCard id="card-accou-index-2" v-if="!combinedView" flat border>
           <VCardTitle class="text-subtitle-1 font-weight-bold pb-1">
-            <VIcon left size="small" color="primary">mdi-redhat</VIcon>
+            <VIcon start size="small" color="primary">mdi-redhat</VIcon>
             Roles
           </VCardTitle>
-          <VCardText class="pt-1">
+          <VDivider />
+          <VCardText class="pt-2">
             <div v-if="!hasRoles" class="text-grey text-body-2">Sin roles asignados</div>
             <div v-for="(orgIds, role) in roles_org" :key="role" class="mb-2">
               <div class="d-flex align-center flex-wrap" style="gap: 6px">
-                <VChip size="small" color="primary" label>{{ role }}</VChip>
+                <VChip size="small" color="primary" variant="elevated" label>{{ role }}</VChip>
                 <VChip v-for="oid in orgIds" :key="oid" size="x-small" variant="outlined" color="primary">
                   {{ getOrgNameById(oid) }}
                 </VChip>
@@ -47,12 +50,12 @@
         <VCard flat border height="100%">
           <VCardTitle class="text-subtitle-1 font-weight-bold pb-1">
             <span v-if="!combinedView">
-              <VIcon left size="small" color="secondary">mdi-key-variant</VIcon>
+              <VIcon start size="small" color="secondary">mdi-key-variant</VIcon>
               Permisos
             </span>
             <span v-else>
-              <VIcon left size="small" color="primary">mdi-redhat</VIcon>
-              <VIcon left size="small" color="secondary">mdi-key-variant</VIcon>
+              <VIcon start size="small" color="primary">mdi-redhat</VIcon>
+              <VIcon start size="small" color="secondary">mdi-key-variant</VIcon>
               Roles y permisos
             </span>
           </VCardTitle>
@@ -63,7 +66,7 @@
               <VRow dense>
                 <VCol v-for="(orgIds, perm) in permissions_org" :key="perm" cols="12" sm="6">
                   <div class="d-flex align-center flex-wrap" style="gap: 4px">
-                    <VChip size="x-small" color="secondary" label class="mr-1">{{ perm }}</VChip>
+                    <VChip size="x-small" color="secondary" variant="elevated" label class="mr-1">{{ perm }}</VChip>
                     <VChip v-for="oid in orgIds" :key="oid" size="x-small" variant="outlined" color="secondary">
                       {{ getOrgNameById(oid) }}
                     </VChip>
@@ -77,8 +80,8 @@
               <div v-else>
                 <div v-for="(orgIds, roleName) in roles_org" :key="roleName" class="mb-4">
                   <div class="d-flex align-center flex-wrap mb-1" style="gap: 6px">
-                    <VChip size="small" color="primary" label>
-                      <VIcon left size="small">mdi-redhat</VIcon>
+                    <VChip size="small" color="primary" variant="elevated" label>
+                      <VIcon start size="small">mdi-redhat</VIcon>
                       {{ roleName }}
                     </VChip>
                     <VChip v-for="oid in orgIds" :key="oid" size="x-small" variant="outlined" color="primary">
@@ -90,7 +93,7 @@
                   </div>
 
                   <div v-if="roles_permissions[roleName] && roles_permissions[roleName].length > 0" class="pl-2">
-                    <VChip v-for="perm in roles_permissions[roleName]" :key="perm" size="x-small" label color="secondary" class="mr-1 mb-1">
+                    <VChip v-for="perm in roles_permissions[roleName]" :key="perm" size="x-small" variant="elevated" label color="secondary" class="mr-1 mb-1">
                       {{ perm }}
                     </VChip>
                   </div>
@@ -112,7 +115,7 @@ definePageMeta({
 })
 
 const auth = useAuthStore()
-const user = computed(() => auth.user as Record<string, unknown>)
+const user = computed(() => (auth.user ?? {}) as Record<string, unknown>)
 const orgs = computed(() => (user.value?.orgs as Array<{ id: number; name: string; short_code?: string }>) || [])
 const roles_org = computed(() => (user.value?.roles_org as Record<string, number[]>) || {})
 const permissions_org = computed(() => (user.value?.permissions_org as Record<string, number[]>) || {})

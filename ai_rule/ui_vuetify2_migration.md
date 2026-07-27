@@ -260,19 +260,77 @@ Use `text-grey-darken-4` instead of `text-primary` when you need dark readable t
 |-----------|--------|-------------|
 | `v-skeleton-loader` | Migrated | `VSkeletonLoader` (same name, PascalCase) |
 
+## VIcon Props (removed `left` / `right`)
+
+Vuetify 2's `left` and `right` props on `v-icon` were removed. Use `start` (margin-inline-end) or `end` (margin-inline-start) instead:
+
+```diff
+-<VIcon left size="small">mdi-account</VIcon>
++<VIcon start size="small">mdi-account</VIcon>
+```
+
+```diff
+-<VIcon right>mdi-arrow-right</VIcon>
++<VIcon end>mdi-arrow-right</VIcon>
+```
+
+Alternatively, use spacing classes: `class="mr-1"` or `class="me-1"` for left, `class="ml-1"` or `class="ms-1"` for right.
+
+## VContainer fluid (bare attribute)
+
+Use `:fluid="true"` instead of `fluid` to avoid SSR hydration mismatches:
+
+```diff
+-<VContainer fluid />
+-<VContainer fluid class="fill-height">
++<VContainer :fluid="true" />
++<VContainer :fluid="true" class="fill-height">
+```
+
+## SCSS Style Overrides (avoid conflicting with Vuetify classes)
+
+Do **not** redefine Vuetify utility class names in scoped styles. For example, `logout.vue` defined:
+
+```css
+.fill-height {
+  height: 100vh;
+}
+```
+
+This overrides Vuetify's `.fill-height` (`height: 100%`) and creates a scrollbar with fixed VAppBar. Remove custom definitions of Vuetify utility class names.
+
+## VChip Props
+
+Vuetify 3's `VChip` retains the `label` prop (removes border-radius). No migration needed.
+
+The `dark` prop was **removed** from VChip (and all other components) in Vuetify 3:
+
+```diff
+-<v-chip small color="primary" dark label>{{ role }}</v-chip>
++<VChip size="small" color="primary" variant="elevated" label>{{ role }}</VChip>
+```
+
+In Vuetify 3, text color is automatically applied based on the component's `color` — white text on dark backgrounds (primary, secondary, error, etc.), dark text on light backgrounds (outlined, default). Just remove `dark`.
+
+Always specify `variant="elevated"` on solid-background chips (default variant in Vuetify 2 was elevated with shadow). Without an explicit `variant`, Vuetify 3 chips may render as `variant="flat"` depending on context, losing the expected shadow and visual depth.
+
+## VRow Props
+
+Vuetify 2's `<v-row dense>` becomes `<VRow density="compact">` in Vuetify 3.
+
 ## Vuetify 2–Only Utility Classes
 
 These Vuetify 2 utility classes were removed in Vuetify 3:
 
 | Class | Vuetify 3 Replacement |
 |-------|----------------------|
-| `fill-height` | `style="min-height: 100vh"` or `align="stretch"` on VRow |
+| `fill-height` | Same class — **still works** in Vuetify 3 (`height: 100%`). Do NOT use `min-height: 100vh` — `100vh` doesn't account for the fixed VAppBar (64px padding on VMain), creating a vertical scrollbar. |
 | `text-none` (text-transform) | Remove — Vuetify 3 buttons have no text-transform by default, or use inline `style` |
 | `text-decoration-none` | `style="text-decoration: none"` (not a Vuetify utility) |
 
 ```diff
 -<VRow align="center" justify="center" class="fill-height">
-+<VRow align="center" justify="center" style="min-height: 100vh">
++<VRow align="center" justify="center" class="fill-height">
 ```
 
 ```diff

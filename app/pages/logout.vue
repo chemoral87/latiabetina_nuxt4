@@ -1,5 +1,5 @@
 <template>
-  <VContainer fluid class="fill-height">
+  <VContainer :fluid="true" class="fill-height">
     <VRow align="center" justify="center">
       <VCol cols="auto" class="text-center">
         <VProgressCircular indeterminate color="primary" size="64" />
@@ -33,8 +33,4 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped>
-.fill-height {
-  height: 100vh;
-}
-</style>
+

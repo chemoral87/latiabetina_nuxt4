@@ -1,6 +1,6 @@
 <template>
   <VContainer>
-    <VRow align="center" justify="center" style="min-height: 100vh">
+    <VRow align="center" justify="center" class="fill-height">
       <VCol cols="12" sm="8" md="6" lg="4">
         <VCard id="login-card" flat class="pa-6">
           <VForm id="login-form" @submit.prevent="submitLogin">
