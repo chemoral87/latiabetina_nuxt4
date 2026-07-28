@@ -1,4 +1,4 @@
-# Vuetify 2 → Vuetify 3 Migration Guide
+# Vuetify 2 → Vuetify 4 Migration Guide
 
 > **Identifiers:** All interactive elements must include an `id` per `ai_rule/ui_identifiers_convention.md`.
 
@@ -37,9 +37,15 @@ Vuetify 3 removed `v-layout` and `v-flex`. Use `VRow` / `VCol` instead:
 ## Text Fields
 
 ```diff
--<v-text-field outlined dense label="Email" :append-icon="showed ? 'mdi-eye' : 'mdi-eye-off'" @click:append="showed = !showed" />
-+<VTextField id="login-email" variant="outlined" density="compact" label="Email" :append-inner-icon="showed ? 'mdi-eye' : 'mdi-eye-off'" @click:append-inner="showed = !showed" />
+-<v-text-field outlined dense label="Email" :append-icon="showed ? 'mdi-eye' : 'mdi-eye-off'" @click:append="showed = !shown" />
++<VTextField id="login-email" variant="outlined" density="compact" label="Email" :append-inner-icon="shown ? 'mdi-eye' : 'mdi-eye-off'" @click:append-inner="shown = !shown" />
 ```
+
+Key changes:
+- `outlined` → `variant="outlined"`
+- `dense` → `density="compact"`
+- `append-icon` → `append-inner-icon`  
+- `@click:append` → `@click:append-inner`
 
 ## Buttons
 
@@ -451,4 +457,163 @@ The `rounded="circle"` prop applies `border-radius: 50%` for a perfectly circula
 
 This ensures the API call runs client-side where `localStorage.getItem("auth.token")` is available.
 
-Also, Vuetify 3's VDataTable `@update:options` does **not** fire on mount — it only fires on user interaction (sort, paginate). Do not rely on it for the initial data load.
+Vuetify 3's VDataTable `@update:options` does **not** fire on mount — it only fires on user interaction (sort, paginate). Do not rely on it for the initial data load.
+
+**Vuetify 4 differs:** `@update:options` fires **immediately on mount** (`immediate: true` in `useOptions`), so the initial `emit("sorting")` in `onUpdateOptions` works as the data load trigger via `@update:options`.
+
+## VDataTable Header Text Color
+
+Vuetify 4's VDataTable uses CSS layers and may not properly inherit the theme text color for header `<th>` elements. The header text can appear white (invisible) on a light background:
+
+```diff
++<style scoped>
++:deep(.v-data-table th) {
++  color: rgba(0, 0, 0, 0.87);
++}
++</style>
+```
+
+This explicitly sets the header text to dark (87% opacity black) in the light theme.
+
+## VDataTable Headers (`text` → `title`)
+
+Vuetify 4 changed the header property from `text` to `title`. Using `text` causes the header cell to render with no text:
+
+```diff
+ const headers: Header[] = [
+-  { text: "name", value: "name", sortable: true },
++  { title: "name", value: "name", sortable: true },
+ ]
+```
+
+Both `key` and `value` are accepted for the data field identifier (fallback chain: `key` → `value`). The `title` property is the only one that controls the visible header label.
+
+## VDataTableServer (Vuetify 4 Server-Side)
+
+Vuetify 4 removed `v-model:options` from `VDataTable`. For server-side pagination/sorting, use `VDataTableServer` with individual `v-model:page`, `v-model:items-per-page`, and `v-model:sort-by` bindings:
+
+```diff
+-<VDataTable v-model:options="optionsTable" @update:options="onUpdateOptions">
++<VDataTableServer
++  v-model:page="page"
++  v-model:items-per-page="itemsPerPage"
++  v-model:sort-by="sortBy"
++  :items="items"
++  :items-length="total"
++  @update:options="onUpdateOptions"
++>
+```
+
+### sortBy format
+
+Vuetify 4 uses `{ key: string; order: 'asc' | 'desc' }[]` instead of Vuetify 2's `{ sortBy: string[]; sortDesc: boolean[] }`:
+
+```diff
+-// Vuetify 2
+-{ sortBy: ["name"], sortDesc: [true] }
++// Vuetify 4
++[{ key: "name", order: "desc" }]
+```
+
+### stripped prop (type change)
+
+Vuetify 4 changed `striped` from boolean to string. Use `"even"` or `"odd"`:
+
+```diff
+-<VDataTableServer striped>
++<VDataTableServer striped="odd">
+```
+
+### v-model:options removed
+
+Replace `v-model:options` with individual `v-model:page`, `v-model:items-per-page`, `v-model:sort-by`. The `@update:options` event still fires (on mount and on change) and the emitted value format matches the v-model bindings:
+
+```js
+{
+  page: 1,
+  itemsPerPage: 5,
+  sortBy: [{ key: "name", order: "desc" }],
+  groupBy: [],
+  search: ""
+}
+```
+
+### firstSortDesc pattern
+
+To make a column sort descending on first click (non-standard), intercept `@update:options` and override the sort order before emitting to the parent:
+
+```ts
+const headers: Header[] = [
+  { title: "name", value: "name", sortable: true, firstSortDesc: true },
+]
+
+function onUpdateOptions(val: Record<string, unknown>) {
+  const sortByArr = (val.sortBy as { key: string; order: string }[]) ?? []
+  if (sortByArr.length) {
+    const first = sortByArr[0]
+    const head = headers.find((x) => x.value === first.key)
+    if (head?.firstSortDesc && first.order !== 'desc') {
+      sortBy.value = [{ key: first.key, order: 'desc' }]
+      return // suppress emit, watcher will re-fire with desc
+    }
+  }
+  emit("sorting", val)
+}
+```
+
+This modifies the `sortBy` ref directly (which is `v-model:sort-by` bound), causing a second `@update:options` call with the corrected order. Vue batches DOM updates so no visual flash occurs.
+
+### search prop for filter-triggered page reset
+
+Vuetify 4's `useOptions` composable watches the `search` prop and resets `page.value = 1` when it changes. Pass the filter text as the `search` prop instead of manually watching the filter:
+
+```diff
+-<OrganizationTable :filter="filterOrganization" />
++<OrganizationTable :search="filterOrganization" />
+```
+
+```diff
+-// parent: watch(filterOrganization, ...) → manual API call
+-// table: watch(filter, ...) → reset page
++// Vuetify 4 handles page reset + emits @update:options with new search value
+```
+
+The `@update:options` event includes `search`, so the parent uses it directly for the API filter parameter.
+
+### onMounted + @update:options (instead of useAsyncData)
+
+Since `@update:options` fires immediately on mount in Vuetify 4, use it as the initial load trigger. Pair with `onMounted` only if the component is conditionally rendered or needs extra initialization:
+
+```ts
+// Vuetify 4: @update:options fires on mount, so no separate onMounted load needed
+const lastOptions = ref<Record<string, unknown> | null>(null)
+
+async function indexOrganizations(opts: Record<string, unknown>) {
+  lastOptions.value = opts
+  const params: Record<string, unknown> = {
+    page: opts.page ?? 1,
+    itemsPerPage: opts.itemsPerPage ?? 5,
+  }
+  const sortBy = (opts.sortBy as { key: string; order: string }[]) ?? []
+  if (sortBy.length > 0) {
+    params.sortBy = [sortBy[0].key]
+    params.sortDesc = [sortBy[0].order]
+  }
+  if (filterOrganization.value) {
+    params.filter = filterOrganization.value
+  }
+  loading.value = true
+  response.value = await apiIndex(params)
+  loading.value = false
+}
+```
+
+For refresh operations, store the last emitted options and re-use them:
+
+```ts
+function refresh() {
+  if (lastOptions.value) {
+    indexOrganizations(lastOptions.value)
+  }
+}
+```

@@ -2,11 +2,11 @@
   <VContainer :fluid="true">
     <VRow>
       <VCol cols="12" sm="6" md="2">
-        <VTextField id="tf-organ-index-filterorganization-1" v-model="filterOrganization" append-inner-icon="mdi-magnify" variant="outlined" clearable hide-details placeholder="Filtro" />
+        <VTextField id="tf-organ-index-filterorganization-1" v-model="filterInput" append-inner-icon="mdi-magnify" variant="outlined" density="compact" clearable hide-details placeholder="Filtro" />
       </VCol>
 
       <VCol cols="auto" class="d-flex align-center">
-        <VBtn id="btn-org-refresh" color="primary" :loading="loading" class="mr-1" @click="indexOrganizations()">
+        <VBtn id="btn-org-refresh" color="primary" :loading="loading" class="mr-1" @click="refresh">
           <VIcon start>mdi-reload</VIcon>
           Refrescar
         </VBtn>
@@ -17,7 +17,7 @@
       </VCol>
 
       <VCol cols="12">
-        <OrganizationTable :options="options" :response="response" v-model:dialog-delete="dialogDeleteOrganization" @sorting="indexOrganizations" @edit="editOrganization" @delete="deleteOrganization" @config="goConfig" />
+        <OrganizationTable :search="filterOrganization" :response="response" :loading="loading" v-model:dialog-delete="dialogDeleteOrganization" @sorting="indexOrganizations" @edit="editOrganization" @delete="deleteOrganization" @config="goConfig" />
       </VCol>
     </VRow>
 
@@ -33,11 +33,25 @@ definePageMeta({
 
 const dialogDeleteOrganization = ref(false)
 const organizationFormDialog = ref(false)
-const options = ref({ sortBy: ["name"], sortDesc: [true], itemsPerPage: 5 })
 const response = ref({})
+const filterInput = ref("")
 const filterOrganization = ref("")
 const loading = ref(false)
 const organization = ref<Record<string, unknown> | null>(null)
+const lastOptions = ref<Record<string, unknown> | null>(null)
+
+let debounceTimer: ReturnType<typeof setTimeout> | null = null
+
+watch(filterInput, (val) => {
+  if (debounceTimer) clearTimeout(debounceTimer)
+  if (!val) {
+    filterOrganization.value = ""
+    return
+  }
+  debounceTimer = setTimeout(() => {
+    filterOrganization.value = val
+  }, 300)
+})
 
 const { $api } = useApi()
 
@@ -57,14 +71,33 @@ async function apiUpdate(id: number, data: Record<string, unknown>) {
   return await $api(`/organization/${id}`, { method: "PUT", body: data })
 }
 
-onMounted(async () => {
-  await indexOrganizations()
-})
+async function indexOrganizations(opts: Record<string, unknown>) {
+  lastOptions.value = opts
+  const params: Record<string, unknown> = {
+    page: opts.page ?? 1,
+    itemsPerPage: opts.itemsPerPage ?? 5,
+  }
+  const sortBy = (opts.sortBy as { key: string; order: string }[]) ?? []
+  if (sortBy.length > 0) {
+    params.sortBy = [sortBy[0].key]
+    params.sortDesc = [sortBy[0].order]
+  }
+  if (filterOrganization.value) {
+    params.filter = filterOrganization.value
+  }
+  try {
+    loading.value = true
+    response.value = await apiIndex(params)
+  } finally {
+    loading.value = false
+  }
+}
 
-watch(filterOrganization, async (value) => {
-  const op = { ...options.value, filter: value, page: 1 }
-  response.value = await apiIndex(op)
-})
+function refresh() {
+  if (lastOptions.value) {
+    indexOrganizations(lastOptions.value)
+  }
+}
 
 function goConfig(item: Record<string, unknown>) {
   navigateTo(`/organizations/${item.id}/config`)
@@ -80,23 +113,11 @@ function editOrganization(item: Record<string, unknown>) {
   organizationFormDialog.value = true
 }
 
-async function indexOrganizations(sortingOptions?: Record<string, unknown>) {
-  const op = sortingOptions
-    ? { filter: filterOrganization.value, ...sortingOptions }
-    : { filter: filterOrganization.value, ...options.value }
-  try {
-    loading.value = true
-    response.value = await apiIndex(op)
-  } finally {
-    loading.value = false
-  }
-}
-
 async function deleteOrganization(item: Record<string, unknown>) {
   try {
     await apiDelete(item.id as number)
     dialogDeleteOrganization.value = false
-    await indexOrganizations()
+    refresh()
   } catch (e) {
     console.error(e)
   }
@@ -109,7 +130,7 @@ async function saveOrganization(item: Record<string, unknown>) {
     } else {
       await apiCreate(item)
     }
-    await indexOrganizations()
+    await refresh()
     organizationFormDialog.value = false
   } catch (e) {
     console.error(e)

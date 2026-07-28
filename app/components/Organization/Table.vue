@@ -1,14 +1,18 @@
 <template>
   <div>
-    <VDataTable
+    <VDataTableServer
       id="dt-organ-table-items-1"
+      v-model:page="page"
+      v-model:items-per-page="itemsPerPage"
+      v-model:sort-by="sortBy"
       density="compact"
-      mobile-breakpoint="0"
       :headers="headers"
       :items="items"
-      v-model:options="optionsTable"
       :items-length="total"
+      :loading="loading"
       class="elevation-1"
+      striped="odd"
+      :search="props.search"
       @update:options="onUpdateOptions"
     >
       <template #[`item.actions`]="{ item }">
@@ -22,7 +26,7 @@
           <VIcon>mdi-delete</VIcon>
         </VBtn>
       </template>
-    </VDataTable>
+    </VDataTableServer>
     <DialogDelete
       v-if="dialogDelete"
       :dialog="dialogDeleteProp"
@@ -34,7 +38,7 @@
 
 <script setup lang="ts">
 interface Header {
-  text: string
+  title: string
   value: string
   sortable: boolean
   firstSortDesc?: boolean
@@ -44,8 +48,8 @@ interface Header {
 const props = defineProps<{
   dialogDelete: unknown
   response?: { total?: number; data?: unknown[] } | null
-  options?: Record<string, unknown>
-  tableHeaders?: unknown
+  loading?: boolean
+  search?: string
 }>()
 
 const emit = defineEmits<{
@@ -56,29 +60,30 @@ const emit = defineEmits<{
   (e: 'delete', val: unknown): void
 }>()
 
-const optionsTable = ref<Record<string, unknown>>({})
+const page = ref(1)
+const itemsPerPage = ref(5)
+const sortBy = ref<{ key: string; order: string }[]>([{ key: "name", order: "desc" }])
 const dialogDeleteProp = ref<Record<string, unknown>>({})
 
 const headers: Header[] = [
-  { text: "name", value: "name", sortable: true, firstSortDesc: true },
-  { text: "short_code", value: "short_code", sortable: true, firstSortDesc: true },
-  { text: "description", value: "description", sortable: true, firstSortDesc: true },
-  { text: "Acciones", value: "actions", width: "200px", sortable: false },
+  { title: "name", value: "name", sortable: true, firstSortDesc: true },
+  { title: "short_code", value: "short_code", sortable: true, firstSortDesc: true },
+  { title: "description", value: "description", sortable: true, firstSortDesc: true },
+  { title: "Acciones", value: "actions", width: "200px", sortable: false },
 ]
 
 const total = computed(() => props.response?.total ?? 0)
 const items = computed(() => props.response?.data ?? [])
-
-watch(() => props.options, (val) => {
-  if (val) optionsTable.value = val
-}, { immediate: true })
+const loading = computed(() => props.loading ?? false)
 
 function onUpdateOptions(val: Record<string, unknown>) {
-  const sortBy = ((val.sortBy ?? []) as string[])[0]
-  if (sortBy) {
-    const head = headers.find((x) => x.value === sortBy)
-    if (head?.firstSortDesc) {
-      val.sortDesc = [true]
+  const sortByArr = (val.sortBy as { key: string; order: string }[]) ?? []
+  if (sortByArr.length) {
+    const first = sortByArr[0]
+    const head = headers.find((x) => x.value === first.key)
+    if (head?.firstSortDesc && first.order !== 'desc') {
+      sortBy.value = [{ key: first.key, order: 'desc' }]
+      return
     }
   }
   emit("sorting", val)
@@ -96,3 +101,9 @@ function confirmDelete(item: unknown) {
 function emitEdit(item: unknown) { emit("edit", item) }
 function emitConfig(item: unknown) { emit("config", item) }
 </script>
+
+<style scoped>
+:deep(.v-data-table th) {
+  color: rgba(0, 0, 0, 0.87);
+}
+</style>
