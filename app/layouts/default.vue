@@ -74,6 +74,27 @@
 
     <VMain>
       <slot />
+
+      <div class="snackbar-wrapper">
+        <VSnackbar
+          v-for="(snack, i) in notify.snacks"
+          :key="snack.id"
+          model-value
+          :color="snack.color"
+          content-class="snack-content"
+          location="bottom end"
+          absolute
+          :timeout="-1"
+          :style="{ bottom: `${i * 69}px` }"
+        >
+          <span class="text-subtitle-1 font-weight-bold">{{ snack.text }}</span>
+          <template #actions>
+            <VBtn color="grey" icon size="small" id="btn-layout-snack-close" @click="notify.closeSnackbar(snack.id)">
+              <VIcon>mdi-close</VIcon>
+            </VBtn>
+          </template>
+        </VSnackbar>
+      </div>
     </VMain>
   </VApp>
 </template>
@@ -87,6 +108,7 @@ const menu = ref(false)
 const showLogin = ref(true)
 
 const auth = useAuthStore()
+const notify = useNotifyStore()
 const title = computed(() => route.meta?.title || "Latiabetina")
 const userName = computed(() => {
   const u = auth.user

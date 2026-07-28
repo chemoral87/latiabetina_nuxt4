@@ -53,23 +53,7 @@ watch(filterInput, (val) => {
   }, 300)
 })
 
-const { $api } = useApi()
-
-async function apiIndex(opts: Record<string, unknown>) {
-  return await $api("/organization", { params: opts })
-}
-
-async function apiDelete(id: number) {
-  return await $api(`/organization/${id}`, { method: "DELETE" })
-}
-
-async function apiCreate(data: Record<string, unknown>) {
-  return await $api("/organization", { method: "POST", body: data })
-}
-
-async function apiUpdate(id: number, data: Record<string, unknown>) {
-  return await $api(`/organization/${id}`, { method: "PUT", body: data })
-}
+const { Organization } = useRepository()
 
 async function indexOrganizations(opts: Record<string, unknown>) {
   lastOptions.value = opts
@@ -87,7 +71,7 @@ async function indexOrganizations(opts: Record<string, unknown>) {
   }
   try {
     loading.value = true
-    response.value = await apiIndex(params)
+    response.value = await Organization.index(params)
   } finally {
     loading.value = false
   }
@@ -104,18 +88,20 @@ function goConfig(item: Record<string, unknown>) {
 }
 
 function newOrganization() {
+  useValidationErrors().clearErrors()
   organization.value = {}
   organizationFormDialog.value = true
 }
 
 function editOrganization(item: Record<string, unknown>) {
+  useValidationErrors().clearErrors()
   organization.value = { ...item }
   organizationFormDialog.value = true
 }
 
 async function deleteOrganization(item: Record<string, unknown>) {
   try {
-    await apiDelete(item.id as number)
+    await Organization.delete(item.id as number)
     dialogDeleteOrganization.value = false
     refresh()
   } catch (e) {
@@ -126,9 +112,9 @@ async function deleteOrganization(item: Record<string, unknown>) {
 async function saveOrganization(item: Record<string, unknown>) {
   try {
     if (item.id) {
-      await apiUpdate(item.id as number, item)
+      await Organization.update(item.id as number, item)
     } else {
-      await apiCreate(item)
+      await Organization.create(item)
     }
     await refresh()
     organizationFormDialog.value = false
@@ -139,5 +125,6 @@ async function saveOrganization(item: Record<string, unknown>) {
 
 function closeFormDialog() {
   organizationFormDialog.value = false
+  useValidationErrors().clearErrors()
 }
 </script>

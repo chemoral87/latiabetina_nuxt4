@@ -15,6 +15,8 @@
       mustSort
       initial-sort-order="desc"
       :search="props.search"
+      items-per-page-text="Filas por página"
+      :items-per-page-options="[10, 15, 30]"
       @update:options="onUpdateOptions"
     >
       <template #[`item.actions`]="{ item }">
@@ -62,7 +64,7 @@ const emit = defineEmits<{
 }>()
 
 const page = ref(1)
-const itemsPerPage = ref(5)
+const itemsPerPage = ref(10)
 const sortBy = ref<{ key: string; order: string }[]>([{ key: "name", order: "desc" }])
 const dialogDeleteProp = ref<Record<string, unknown>>({})
 

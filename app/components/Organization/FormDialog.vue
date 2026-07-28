@@ -11,34 +11,36 @@
       </VCardTitle>
 
       <VCardText>
-        <VRow density="comfortable">
-          <VCol cols="12">
-            <VTextField id="tf-organ-formd-item-name-1"
-              v-model="item.name"
-              label="Nombre"
-              :error-messages="errors?.name"
-              :rules="[required]"
-              @keyup.enter="save"
-            />
-          </VCol>
-          <VCol cols="12">
-            <VTextField id="tf-organ-formd-item-short_code-2"
-              v-model="item.short_code"
-              label="Código"
-              :error-messages="errors?.short_code"
-              :rules="[required]"
-              @keyup.enter="save"
-            />
-          </VCol>
-          <VCol cols="12">
-            <VTextField id="tf-organ-formd-item-description-3"
-              v-model="item.description"
-              label="Descripción"
-              :error-messages="errors?.description"
-              @keyup.enter="save"
-            />
-          </VCol>
-        </VRow>
+        <VForm ref="formRef">
+          <VRow density="comfortable">
+            <VCol cols="12">
+              <VTextField id="tf-organ-formd-item-name-1"
+                v-model="item.name"
+                label="Nombre"
+                :error-messages="errors?.name"
+                :rules="[vrules.required]"
+                @keyup.enter="save"
+              />
+            </VCol>
+            <VCol cols="12">
+              <VTextField id="tf-organ-formd-item-short_code-2"
+                v-model="item.short_code"
+                label="Código"
+                :error-messages="errors?.short_code"
+                :rules="[vrules.required]"
+                @keyup.enter="save"
+              />
+            </VCol>
+            <VCol cols="12">
+              <VTextField id="tf-organ-formd-item-description-3"
+                v-model="item.description"
+                label="Descripción"
+                :error-messages="errors?.description"
+                @keyup.enter="save"
+              />
+            </VCol>
+          </VRow>
+        </VForm>
       </VCardText>
 
       <VCardActions class="pa-4">
@@ -57,6 +59,9 @@
 </template>
 
 <script setup lang="ts">
+import { useValidationErrors } from "~/composables/useValidationErrors"
+import { useVrules } from "~/composables/useVrules"
+
 const props = defineProps<{
   modelValue?: boolean
   organization?: Record<string, unknown> | null
@@ -68,16 +73,16 @@ const emit = defineEmits<{
   (e: 'save', item: Record<string, unknown>): void
 }>()
 
+const { errors, clearErrors } = useValidationErrors()
+const { vrules } = useVrules()
+
+const formRef = ref()
+
 const dialogVisible = ref(true)
-const errors = ref<Record<string, string> | null>(null)
 
 const item = ref<Record<string, unknown>>({})
 
 const formTitle = computed(() => item.value.id ? "Editar Organización" : "Nueva Organización")
-
-function required(v: unknown) {
-  return !!v || "Este campo es requerido"
-}
 
 onMounted(() => {
   if (props.organization) {
@@ -86,10 +91,13 @@ onMounted(() => {
 })
 
 function close() {
+  clearErrors()
   emit("close")
 }
 
-function save() {
+async function save() {
+  const { valid } = await formRef.value?.validate() ?? { valid: false }
+  if (!valid) return
   emit("save", { ...item.value })
 }
 </script>

@@ -858,3 +858,53 @@ Predefined VIcon sizes (relative to parent font):
 - default: `1.5em`
 - large: `1.75em`
 - x-large: `2em`
+
+## Form Validation (Client + Server)
+
+### Client-side rules — `useVrules` composable
+
+Replaces AUI's Vue `$vrules` global mixin. Drop-in equivalent:
+
+```ts
+import { useVrules } from "~/composables/useVrules"
+const { vrules } = useVrules()
+```
+
+```diff
+-:rules="[$vrules.required]"
++:rules="[vrules.required]"
+```
+
+Available rules: `required`, `requiredField(name)`, `email`, `minLength(n)`, `maxLength(n)`, `between(min,max)`, `numeric`, `integer`, `alpha`, `alphaNum`, `url`, `pattern(regex,msg)`, `confirmed(val)`, `phone`, `min(n)`, `max(n)`.
+
+Import explicitly rather than relying on Nuxt auto-import for newly created composables.
+
+### Server-side validation errors — `useValidationErrors` composable
+
+Replaces AUI's Vuex `validation/errors` store:
+
+```ts
+import { useValidationErrors } from "~/composables/useValidationErrors"
+const { errors, clearErrors } = useValidationErrors()
+```
+
+`errors?.fieldName` is `string[]`. `withNotify.ts` calls `extractFromError(err)` on 422. Call `clearErrors()` on dialog close.
+
+### Form submission — `VForm` + `validate()`
+
+```diff
+-<VCardText>...</VCardText>
++<VCardText>
++  <VForm ref="formRef">...</VForm>
++</VCardText>
+```
+
+```diff
+-function save() { emit("save", { ...item.value }) }
++const formRef = ref()
++async function save() {
++  const { valid } = await formRef.value?.validate() ?? { valid: false }
++  if (!valid) return
++  emit("save", { ...item.value })
++}
+```
