@@ -352,12 +352,103 @@ These Vuetify 2 utility classes were removed in Vuetify 3:
 
 ## Autofill CSS Fix
 
-```css
-:deep(.v-text-field--outlined) input:-webkit-autofill ~ .v-label,
-:deep(.v-text-field--outlined) input:-webkit-autofill:focus ~ .v-label {
-  transform: translateY(-24px) scale(0.75);
-  top: 0px;
-  background: white;
-  padding: 0 4px;
-}
+Vuetify 2 classes (`.v-text-field--outlined`, `.v-label`) were renamed in Vuetify 3 (`.v-field--variant-outlined`, `.v-field-label`):
+
+```diff
+-:deep(.v-text-field--outlined) input:-webkit-autofill ~ .v-label,
+-:deep(.v-text-field--outlined) input:-webkit-autofill:focus ~ .v-label {
++:deep(.v-field--variant-outlined) input:-webkit-autofill ~ .v-field-label,
++:deep(.v-field--variant-outlined) input:-webkit-autofill:focus ~ .v-field-label {
+   transform: translateY(-24px) scale(0.75);
+   top: 0px;
+   background: white;
+   padding: 0 4px;
+ }
 ```
+
+## VDataTable (v-model:options)
+
+Vuetify 3's `VDataTable` changed from `:options.sync` to `v-model:options`:
+
+```diff
+-<v-data-table :options.sync="optionsTable" @update:sort-by="sortTable">
++<VDataTable v-model:options="optionsTable" @update:options="onUpdateOptions">
+```
+
+**Important:** Avoid a reactive loop when emitting sorting changes back to the parent. Only emit `"sorting"` from the `@update:options` event (user interaction), not from a deep `watch` on `optionsTable`:
+
+```diff
+-// ❌ Bucle infinito: watch emite en cada cambio, padre actualiza options, watch se dispara de nuevo
+-watch(optionsTable, (val) => {
+-  emit("sorting", val)
+-}, { deep: true })
+
++// ✅ Solo emitir desde el evento del VDataTable (cambio real del usuario)
++function onUpdateOptions(val: Record<string, unknown>) {
++  emit("sorting", val)
++}
+```
+
+On the parent page, do **not** update `options` ref from the sorting event — use the sorting options directly for the API call:
+
+```diff
+-async function indexOrganizations(extraOptions) {
+-  if (extraOptions) {
+-    options.value = { ...options.value, ...extraOptions }
+-  }
+-  const op = { filter: filterOrganization.value, ...options.value }
++async function indexOrganizations(sortingOptions) {
++  const op = sortingOptions
++    ? { filter: filterOrganization.value, ...sortingOptions }
++    : { filter: filterOrganization.value, ...options.value }
+   response.value = await apiIndex(op)
+ }
+```
+
+## Components Directory (Nuxt 4)
+
+Nuxt 4 scans `app/components/` for auto-imported components, **not** the root `components/` directory. All other user directories are also under `app/`:
+
+```
+app/components/   ← ✅ scanned
+app/composables/  ← ✅ scanned
+app/pages/        ← ✅ scanned
+app/layouts/      ← ✅ scanned
+app/middleware/    ← ✅ scanned
+components/       ← ❌ NOT scanned (Nuxt 4)
+```
+
+If components are placed at root `components/`, the build will **not** emit any error but the component will fail to resolve at runtime:
+
+```
+[Vue warn]: Failed to resolve component: OrganizationTable
+```
+
+## VBtn icon (circular vs square)
+
+Vuetify 2 `v-btn--fab` creates a **circular** icon button. Vuetify 3's `icon` prop creates a **square** button by default:
+
+```diff
+-<VBtn title="Editar" color="primary" variant="outlined" size="small" icon>
++<VBtn title="Editar" color="primary" variant="outlined" size="small" icon rounded="circle">
+```
+
+The `rounded="circle"` prop applies `border-radius: 50%` for a perfectly circular button that matches the V2 `fab` look.
+
+## Data Loading for Auth-Protected APIs
+
+`useAsyncData` runs during SSR, but auth tokens from `localStorage` are **not available** on the server. For pages that require an auth token:
+
+```diff
+-const { data: initialResponse, error: initialError } = await useAsyncData("key", () =>
+-  apiIndex(options.value)
+-)
+-if (initialResponse.value) response.value = initialResponse.value
++onMounted(async () => {
++  await loadData()
++})
+```
+
+This ensures the API call runs client-side where `localStorage.getItem("auth.token")` is available.
+
+Also, Vuetify 3's VDataTable `@update:options` does **not** fire on mount — it only fires on user interaction (sort, paginate). Do not rely on it for the initial data load.

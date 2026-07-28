@@ -1,5 +1,5 @@
 <template>
-  <VApp class="bg-grey-darken-3">
+  <VApp >
     <VNavigationDrawer id="layout-nav-drawer" v-model="drawer" temporary app touchless>
       <VList>
         <VListItem>

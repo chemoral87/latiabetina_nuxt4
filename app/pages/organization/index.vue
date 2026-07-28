@@ -2,7 +2,7 @@
   <VContainer :fluid="true">
     <VRow>
       <VCol cols="12" sm="6" md="2">
-        <VTextField id="tf-organ-index-filterorganization-1" v-model="filterOrganization" append-inner-icon="mdi-magnify" outlined clearable hide-details placeholder="Filtro" />
+        <VTextField id="tf-organ-index-filterorganization-1" v-model="filterOrganization" append-inner-icon="mdi-magnify" variant="outlined" clearable hide-details placeholder="Filtro" />
       </VCol>
 
       <VCol cols="auto" class="d-flex align-center">
@@ -57,15 +57,9 @@ async function apiUpdate(id: number, data: Record<string, unknown>) {
   return await $api(`/organization/${id}`, { method: "PUT", body: data })
 }
 
-const { data: initialResponse, error: initialError } = await useAsyncData("organizations", () =>
-  apiIndex(options.value)
-)
-
-if (initialError.value) {
-  console.error("Failed to load organizations", initialError.value)
-} else if (initialResponse.value) {
-  response.value = initialResponse.value
-}
+onMounted(async () => {
+  await indexOrganizations()
+})
 
 watch(filterOrganization, async (value) => {
   const op = { ...options.value, filter: value, page: 1 }
@@ -86,11 +80,10 @@ function editOrganization(item: Record<string, unknown>) {
   organizationFormDialog.value = true
 }
 
-async function indexOrganizations(extraOptions?: Record<string, unknown>) {
-  if (extraOptions) {
-    options.value = { ...options.value, ...extraOptions }
-  }
-  const op = { filter: filterOrganization.value, ...options.value }
+async function indexOrganizations(sortingOptions?: Record<string, unknown>) {
+  const op = sortingOptions
+    ? { filter: filterOrganization.value, ...sortingOptions }
+    : { filter: filterOrganization.value, ...options.value }
   try {
     loading.value = true
     response.value = await apiIndex(op)

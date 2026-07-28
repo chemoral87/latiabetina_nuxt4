@@ -12,13 +12,13 @@
       @update:options="onUpdateOptions"
     >
       <template #[`item.actions`]="{ item }">
-        <VBtn title="Editar" class="ma-1" color="primary" variant="outlined" size="small" icon id="btn-organization-table-edit" @click="emitEdit(item)">
+        <VBtn title="Editar" class="ma-1" color="primary" variant="outlined" size="small" icon rounded="circle" id="btn-organization-table-edit" @click="emitEdit(item)">
           <VIcon>mdi-pencil</VIcon>
         </VBtn>
-        <VBtn title="Config" class="ma-1" color="info" variant="outlined" size="small" icon id="btn-organization-table-config" @click="emitConfig(item)">
+        <VBtn title="Config" class="ma-1" color="info" variant="outlined" size="small" icon rounded="circle" id="btn-organization-table-config" @click="emitConfig(item)">
           <VIcon>mdi-cog</VIcon>
         </VBtn>
-        <VBtn title="Delete" class="ma-1" color="error" variant="outlined" size="small" icon id="btn-organization-table-delete" @click="confirmDelete(item)">
+        <VBtn title="Delete" class="ma-1" color="error" variant="outlined" size="small" icon rounded="circle" id="btn-organization-table-delete" @click="confirmDelete(item)">
           <VIcon>mdi-delete</VIcon>
         </VBtn>
       </template>
@@ -73,10 +73,6 @@ watch(() => props.options, (val) => {
   if (val) optionsTable.value = val
 }, { immediate: true })
 
-watch(optionsTable, (val) => {
-  emit("sorting", val)
-}, { deep: true })
-
 function onUpdateOptions(val: Record<string, unknown>) {
   const sortBy = ((val.sortBy ?? []) as string[])[0]
   if (sortBy) {
@@ -85,6 +81,7 @@ function onUpdateOptions(val: Record<string, unknown>) {
       val.sortDesc = [true]
     }
   }
+  emit("sorting", val)
 }
 
 function confirmDelete(item: unknown) {

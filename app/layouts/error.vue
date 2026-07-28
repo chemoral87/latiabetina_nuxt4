@@ -1,5 +1,5 @@
 <template>
-  <VApp class="bg-grey-darken-3">
+  <VApp >
     <VMain>
       <VContainer style="max-width: 800px">
         <slot />
