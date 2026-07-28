@@ -5,9 +5,24 @@
         <VListItem>
           <VListItemTitle>Latiabetina</VListItemTitle>
         </VListItem>
-        <VListItem v-for="(item, i) in items" :key="i" :to="item.to" router exact :prepend-icon="item.icon" @click="drawer = false">
-          <VListItemTitle>{{ item.title }}</VListItemTitle>
-        </VListItem>
+        <template v-for="(item, i) in items" :key="i">
+          <VListGroup v-if="item.children" :value="false" :prepend-icon="item.icon">
+            <template #activator="{ props }">
+              <VListItem v-bind="props">
+                <VListItemTitle>{{ item.title }}</VListItemTitle>
+              </VListItem>
+            </template>
+            <VListItem v-for="(child, j) in item.children" :key="`child-${j}`" :to="child.to" router exact @click="drawer = false">
+              <template #prepend>
+                <VIcon size="small">{{ child.icon || 'mdi-circle-small' }}</VIcon>
+              </template>
+              <VListItemTitle>{{ child.title }}</VListItemTitle>
+            </VListItem>
+          </VListGroup>
+          <VListItem v-else :to="item.to" router exact :prepend-icon="item.icon" @click="drawer = false">
+            <VListItemTitle>{{ item.title }}</VListItemTitle>
+          </VListItem>
+        </template>
         <template v-if="auth.loggedIn">
           <VDivider />
           <VListItem to="/account" prepend-icon="mdi-account" @click="drawer = false">
@@ -29,7 +44,7 @@
       </VBtn>
       <VMenu v-if="auth.loggedIn" v-model="menu" offset-y>
         <template #activator="{ props }">
-          <VBtn id="btn-layout-account" class="ml-3" size="small" color="blue" variant="flat" icon v-bind="props">
+          <VBtn id="btn-layout-account" class="mr-3" size="small" color="blue" variant="flat" icon v-bind="props">
             <VIcon color="white">mdi-account</VIcon>
           </VBtn>
         </template>
@@ -56,6 +71,8 @@
 </template>
 
 <script setup lang="ts">
+import { MenuService } from "~/services/menu-service"
+
 const route = useRoute()
 const drawer = ref(false)
 const menu = ref(false)
@@ -71,8 +88,8 @@ const userName = computed(() => {
 const userEmail = computed(() => auth.user?.email || "")
 
 const items = computed(() => {
-  const list = [{ title: "Inicio", icon: "mdi-home", to: "/" }]
-  return list
+  const menuService = new MenuService(auth.loggedIn, (perm) => auth.hasPermission(perm))
+  return menuService.getMenu()
 })
 
 function gotoLogin() {

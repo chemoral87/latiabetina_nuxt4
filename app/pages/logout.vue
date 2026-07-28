@@ -1,9 +1,11 @@
 <template>
   <VContainer :fluid="true" class="fill-height">
     <VRow align="center" justify="center">
-      <VCol cols="auto" class="text-center">
-        <VProgressCircular indeterminate color="primary" size="64" />
-        <div class="mt-4 text-h6 text-grey-darken-1">Finalizando sesión...</div>
+      <VCol cols="auto">
+        <VCard id="card-logout" flat class="pa-8 text-center" border>
+          <VProgressCircular indeterminate color="primary" size="64" />
+          <div class="mt-4 text-h6 text-grey-darken-1">Finalizando sesión...</div>
+        </VCard>
       </VCol>
     </VRow>
   </VContainer>

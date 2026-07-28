@@ -66,7 +66,7 @@
               <VRow dense>
                 <VCol v-for="(orgIds, perm) in permissions_org" :key="perm" cols="12" sm="6">
                   <div class="d-flex align-center flex-wrap" style="gap: 4px">
-                    <VChip size="x-small" color="secondary" variant="elevated" label class="mr-1">{{ perm }}</VChip>
+                    <VChip size="small" color="secondary" variant="elevated" label class="mr-1">{{ perm }}</VChip>
                     <VChip v-for="oid in orgIds" :key="oid" size="x-small" variant="outlined" color="secondary">
                       {{ getOrgNameById(oid) }}
                     </VChip>
@@ -87,13 +87,13 @@
                     <VChip v-for="oid in orgIds" :key="oid" size="x-small" variant="outlined" color="primary">
                       {{ getOrgNameById(oid) }}
                     </VChip>
-                    <VChip size="x-small" variant="outlined" color="secondary" class="ml-1">
+                    <VChip size="small" variant="outlined" color="secondary" class="ml-1">
                       {{ (roles_permissions[roleName] || []).length }} permisos
                     </VChip>
                   </div>
 
                   <div v-if="roles_permissions[roleName] && roles_permissions[roleName].length > 0" class="pl-2">
-                    <VChip v-for="perm in roles_permissions[roleName]" :key="perm" size="x-small" variant="elevated" label color="secondary" class="mr-1 mb-1">
+                    <VChip v-for="perm in roles_permissions[roleName]" :key="perm" size="small" variant="elevated" label color="secondary" class="mr-1 mb-1">
                       {{ perm }}
                     </VChip>
                   </div>

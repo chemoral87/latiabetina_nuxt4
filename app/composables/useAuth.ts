@@ -190,11 +190,19 @@ export const useAuthStore = defineStore("auth", () => {
     return (user.value.all_permissions || user.value.permissions || []) as string[]
   })
 
+  const permissionsOrg = computed(() => {
+    if (!user.value) return {} as Record<string, number[]>
+    const p = user.value.permissions_org as Record<string, number[]> | undefined
+    return p || {}
+  })
+
   function hasPermission(permission: string): boolean {
+    if (!user.value) return false
+    if (permission in permissionsOrg.value) return true
     return permissions.value.includes(permission)
   }
 
-  return { user, loggedIn, strategy, redirects, permissions, hasPermission, loginWith, fetchUser, logout, setToken, setStrategy, setUser, init }
+  return { user, loggedIn, strategy, redirects, permissions, permissionsOrg, hasPermission, loginWith, fetchUser, logout, setToken, setStrategy, setUser, init }
 })
 
 export function useAuth() {

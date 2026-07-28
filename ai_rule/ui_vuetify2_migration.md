@@ -260,7 +260,7 @@ Use `text-grey-darken-4` instead of `text-primary` when you need dark readable t
 |-----------|--------|-------------|
 | `v-skeleton-loader` | Migrated | `VSkeletonLoader` (same name, PascalCase) |
 
-## VIcon Props (removed `left` / `right`)
+## VIcon Props (removed `left` / `right` / `small`)
 
 Vuetify 2's `left` and `right` props on `v-icon` were removed. Use `start` (margin-inline-end) or `end` (margin-inline-start) instead:
 
@@ -272,6 +272,13 @@ Vuetify 2's `left` and `right` props on `v-icon` were removed. Use `start` (marg
 ```diff
 -<VIcon right>mdi-arrow-right</VIcon>
 +<VIcon end>mdi-arrow-right</VIcon>
+```
+
+The `small` prop on `VIcon` was also removed. Use `size="small"` instead:
+
+```diff
+-<VIcon start small color="primary">mdi-domain</VIcon>
++<VIcon start size="small" color="primary">mdi-domain</VIcon>
 ```
 
 Alternatively, use spacing classes: `class="mr-1"` or `class="me-1"` for left, `class="ml-1"` or `class="ms-1"` for right.

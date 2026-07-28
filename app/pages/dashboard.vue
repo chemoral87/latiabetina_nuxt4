@@ -1,11 +1,13 @@
 <template>
   <VContainer :fluid="true">
-    <span class="text-h6 ml-2">Bienvenidos</span>
-    <VRow>
-      <VCol cols="12" md="6" lg="4">
-        <DashboardConsolidacion v-if="canViewAuditorium" />
-      </VCol>
-    </VRow>
+    <VCard id="card-dashboard" flat class="pa-4" border>
+      <span class="text-h6">Bienvenidos</span>
+      <VRow>
+        <VCol cols="12" md="6" lg="4">
+          <DashboardConsolidacion v-if="canViewAuditorium" />
+        </VCol>
+      </VRow>
+    </VCard>
   </VContainer>
 </template>
 
