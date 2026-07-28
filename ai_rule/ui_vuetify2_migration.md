@@ -875,6 +875,15 @@ const { vrules } = useVrules()
 +:rules="[vrules.required]"
 ```
 
+For field-specific error messages (matching AUI's `$vrules.requiredField('name')`):
+
+```diff
+-:rules="[$vrules.required]"
++:rules="[vrules.requiredField('Nombre')]"
+```
+
+Uses the field's display label so validation reads: *"El campo Nombre es obligatorio."* instead of generic *"El campo es obligatorio."*
+
 Available rules: `required`, `requiredField(name)`, `email`, `minLength(n)`, `maxLength(n)`, `between(min,max)`, `numeric`, `integer`, `alpha`, `alphaNum`, `url`, `pattern(regex,msg)`, `confirmed(val)`, `phone`, `min(n)`, `max(n)`.
 
 Import explicitly rather than relying on Nuxt auto-import for newly created composables.

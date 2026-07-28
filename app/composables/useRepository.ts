@@ -5,7 +5,6 @@ export function useRepository() {
 
   return {
     Organization: createCommonRepository($api, "/organization"),
-    // Agrega aquí el resto de los recursos conforme se construyan sus páginas,
-    // ej: Auditorium: createCommonRepository($api, "/auditorium"),
+    User: createCommonRepository($api, "/user"),
   }
 }
