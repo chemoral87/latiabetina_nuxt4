@@ -85,7 +85,7 @@ function onUpdateOptions(val: Record<string, unknown>) {
 
 function confirmDelete(item: unknown) {
   dialogDeleteProp.value = {
-    text: "Desea eliminar undefined",
+    text: "Desea eliminar ",
     strong: (item as Record<string, unknown>).name,
     payload: item,
   }
