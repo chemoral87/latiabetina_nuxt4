@@ -25,7 +25,7 @@
           <VIcon start>mdi-close</VIcon>
           NO
         </VBtn>
-        <VBtn color="primary" :loading="loading" id="btn-dialog-delete-yes" @click="ok">
+        <VBtn color="primary" variant="elevated" :loading="loading" id="btn-dialog-delete-yes" @click="ok">
           <VIcon start>mdi-check</VIcon>
           SI
         </VBtn>

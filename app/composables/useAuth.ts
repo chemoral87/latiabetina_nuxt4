@@ -60,6 +60,13 @@ export const useAuthStore = defineStore("auth", () => {
     callback: false,
   }
 
+  // Cookies (en vez de localStorage) para que el token esté disponible
+  // tanto en servidor (SSR) como en cliente, y consistente con useApi().
+  const tokenCookie = useCookie<string | null>("auth.token")
+  const strategyCookie = useCookie<string | null>("auth.strategy")
+  const expiresCookie = useCookie<string | null>("auth.expires")
+  const refreshTokenCookie = useCookie<string | null>("auth.refreshToken")
+
   function getBaseUrl() {
     const config = useRuntimeConfig()
     if (config.public.baseUrl) {
@@ -85,12 +92,12 @@ export const useAuthStore = defineStore("auth", () => {
     const token = (res as Record<string, string>)[s.token.property]
     if (!token) throw new Error("No access token returned")
 
-    localStorage.setItem("auth.token", token)
-    localStorage.setItem("auth.strategy", name)
+    tokenCookie.value = token
+    strategyCookie.value = name
     strategy.value = name
 
     const expiresAt = Date.now() + s.token.maxAge * 1000
-    localStorage.setItem("auth.expires", String(expiresAt))
+    expiresCookie.value = String(expiresAt)
 
     if (s.user?.autoFetch !== false) {
       await fetchUser()
@@ -103,7 +110,7 @@ export const useAuthStore = defineStore("auth", () => {
     const s = strategies[strategy.value]
     if (!s) return null
 
-    const token = localStorage.getItem("auth.token")
+    const token = tokenCookie.value
     if (!token) return null
 
     const baseUrl = getBaseUrl()
@@ -126,7 +133,7 @@ export const useAuthStore = defineStore("auth", () => {
   async function logout() {
     const s = strategies[strategy.value]
     if (s) {
-      const token = localStorage.getItem("auth.token")
+      const token = tokenCookie.value
       const baseUrl = getBaseUrl()
       try {
         await $fetch(`${baseUrl}/${s.endpoints.logout.url}`, {
@@ -138,16 +145,16 @@ export const useAuthStore = defineStore("auth", () => {
       }
     }
 
-    localStorage.removeItem("auth.token")
-    localStorage.removeItem("auth.refreshToken")
-    localStorage.removeItem("auth.strategy")
-    localStorage.removeItem("auth.expires")
+    tokenCookie.value = null
+    refreshTokenCookie.value = null
+    strategyCookie.value = null
+    expiresCookie.value = null
     user.value = null
   }
 
   function setStrategy(name: string) {
     strategy.value = name
-    localStorage.setItem("auth.strategy", name)
+    strategyCookie.value = name
   }
 
   function setUser(userData: AuthUser) {
@@ -156,34 +163,36 @@ export const useAuthStore = defineStore("auth", () => {
 
   function setToken(token: string, name = "laravelJWT") {
     const s = strategies[name]
-    localStorage.setItem("auth.token", token)
-    localStorage.setItem("auth.strategy", name)
+    tokenCookie.value = token
+    strategyCookie.value = name
     strategy.value = name
     if (s) {
       const expiresAt = Date.now() + s.token.maxAge * 1000
-      localStorage.setItem("auth.expires", String(expiresAt))
+      expiresCookie.value = String(expiresAt)
     }
   }
 
   async function init() {
-    const savedStrategy = localStorage.getItem("auth.strategy")
+    const savedStrategy = strategyCookie.value
     if (savedStrategy && strategies[savedStrategy]) {
       strategy.value = savedStrategy
     }
 
-    const token = localStorage.getItem("auth.token")
+    const token = tokenCookie.value
     if (!token) return
 
-    const expires = localStorage.getItem("auth.expires")
+    const expires = expiresCookie.value
     if (expires && Date.now() > Number(expires)) {
-      localStorage.removeItem("auth.token")
-      localStorage.removeItem("auth.strategy")
-      localStorage.removeItem("auth.expires")
+      tokenCookie.value = null
+      strategyCookie.value = null
+      expiresCookie.value = null
       return
     }
 
     await fetchUser()
   }
+
+  const hasToken = computed(() => !!tokenCookie.value)
 
   const permissions = computed(() => {
     if (!user.value) return []
@@ -202,7 +211,7 @@ export const useAuthStore = defineStore("auth", () => {
     return permissions.value.includes(permission)
   }
 
-  return { user, loggedIn, strategy, redirects, permissions, permissionsOrg, hasPermission, loginWith, fetchUser, logout, setToken, setStrategy, setUser, init }
+  return { user, loggedIn, hasToken, strategy, redirects, permissions, permissionsOrg, hasPermission, loginWith, fetchUser, logout, setToken, setStrategy, setUser, init }
 })
 
 export function useAuth() {

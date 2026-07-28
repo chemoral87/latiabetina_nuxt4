@@ -37,7 +37,7 @@ onMounted(async () => {
 
       if (response && response.user) {
         auth.setUser(response.user as { name?: string; last_name?: string; email?: string; [key: string]: unknown })
-      } else if (localStorage.getItem("auth.token")) {
+      } else if (auth.hasToken) {
         await auth.fetchUser()
       }
 
