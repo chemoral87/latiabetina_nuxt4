@@ -181,7 +181,24 @@ Layout root containers must include layout-scoped identifiers:
 
 ## VBtn Props (Fab/Icon)
 
-Vuetify 2's `v-btn--fab` button with colored background and white icon:
+## VBtn Variants
+
+Vuetify 3/4 adds explicit `variant` prop:
+
+| Variant | Visual |
+|---------|--------|
+| `elevated` | Solid bg with shadow (default) |
+| `flat` | Solid bg, no shadow |
+| `tonal` | Muted bg of the color |
+| `outlined` | Border only, transparent |
+| `text` | No bg, no border |
+
+```diff
+-<VBtn color="primary">Guardar</VBtn>
++<VBtn color="primary" variant="elevated">Guardar</VBtn>
+```
+
+## VBtn Props (Fab/Icon)
 
 ```diff
 -<v-btn class="ml-3" small fab color="blue white--text" id="btn-layout-account">
@@ -310,6 +327,34 @@ Do **not** redefine Vuetify utility class names in scoped styles. For example, `
 }
 ```
 
+## Striped Row Color Override
+
+Vuetify 4 applies stripes via `v-table--striped-odd` class on the `<table>` wrapper using `background-image: linear-gradient(...)`. The Vuetify 2/3 class `v-data-table__tr--striped` does not exist.
+
+```diff
+-:deep(.v-data-table__tr--striped) {
+-  background-color: #f5fbff !important;
+-}
++:deep(.v-table--striped-odd > .v-table__wrapper > table > tbody > tr:nth-child(odd)) {
++  background-image: none !important;
++  background-color: #f5fbff !important;
++}
+```
+
+## VIcon Size Inside VBtn icon
+
+Inside a `VBtn` with `icon` prop, `--v-icon-size-multiplier` is `1`. The default VIcon size prop value is `'default'` (not absent), so even omitting `size` gives class `v-icon--size-default` (`1.5em`). To maximize icon size inside a small icon button:
+
+```diff
+-<VIcon>mdi-pencil</VIcon>
++<VIcon size="x-large">mdi-pencil</VIcon>
+```
+
+Predefined VIcon sizes (relative to parent font):
+- default: `1.5em`
+- large: `1.75em`
+- x-large: `2em`
+
 This overrides Vuetify's `.fill-height` (`height: 100%`) and creates a scrollbar with fixed VAppBar. Remove custom definitions of Vuetify utility class names.
 
 ## VChip Props
@@ -372,6 +417,34 @@ Vuetify 2 classes (`.v-text-field--outlined`, `.v-label`) were renamed in Vuetif
  }
 ```
 
+## Striped Row Color Override
+
+Vuetify 4 applies stripes via `v-table--striped-odd` class on the `<table>` wrapper using `background-image: linear-gradient(...)`. The Vuetify 2/3 class `v-data-table__tr--striped` does not exist.
+
+```diff
+-:deep(.v-data-table__tr--striped) {
+-  background-color: #f5fbff !important;
+-}
++:deep(.v-table--striped-odd > .v-table__wrapper > table > tbody > tr:nth-child(odd)) {
++  background-image: none !important;
++  background-color: #f5fbff !important;
++}
+```
+
+## VIcon Size Inside VBtn icon
+
+Inside a `VBtn` with `icon` prop, `--v-icon-size-multiplier` is `1`. The default VIcon size prop value is `'default'` (not absent), so even omitting `size` gives class `v-icon--size-default` (`1.5em`). To maximize icon size inside a small icon button:
+
+```diff
+-<VIcon>mdi-pencil</VIcon>
++<VIcon size="x-large">mdi-pencil</VIcon>
+```
+
+Predefined VIcon sizes (relative to parent font):
+- default: `1.5em`
+- large: `1.75em`
+- x-large: `2em`
+
 ## VDataTable (v-model:options)
 
 Vuetify 3's `VDataTable` changed from `:options.sync` to `v-model:options`:
@@ -395,6 +468,34 @@ Vuetify 3's `VDataTable` changed from `:options.sync` to `v-model:options`:
 +}
 ```
 
+## Striped Row Color Override
+
+Vuetify 4 applies stripes via `v-table--striped-odd` class on the `<table>` wrapper using `background-image: linear-gradient(...)`. The Vuetify 2/3 class `v-data-table__tr--striped` does not exist.
+
+```diff
+-:deep(.v-data-table__tr--striped) {
+-  background-color: #f5fbff !important;
+-}
++:deep(.v-table--striped-odd > .v-table__wrapper > table > tbody > tr:nth-child(odd)) {
++  background-image: none !important;
++  background-color: #f5fbff !important;
++}
+```
+
+## VIcon Size Inside VBtn icon
+
+Inside a `VBtn` with `icon` prop, `--v-icon-size-multiplier` is `1`. The default VIcon size prop value is `'default'` (not absent), so even omitting `size` gives class `v-icon--size-default` (`1.5em`). To maximize icon size inside a small icon button:
+
+```diff
+-<VIcon>mdi-pencil</VIcon>
++<VIcon size="x-large">mdi-pencil</VIcon>
+```
+
+Predefined VIcon sizes (relative to parent font):
+- default: `1.5em`
+- large: `1.75em`
+- x-large: `2em`
+
 On the parent page, do **not** update `options` ref from the sorting event — use the sorting options directly for the API call:
 
 ```diff
@@ -410,6 +511,34 @@ On the parent page, do **not** update `options` ref from the sorting event — u
    response.value = await apiIndex(op)
  }
 ```
+
+## Striped Row Color Override
+
+Vuetify 4 applies stripes via `v-table--striped-odd` class on the `<table>` wrapper using `background-image: linear-gradient(...)`. The Vuetify 2/3 class `v-data-table__tr--striped` does not exist.
+
+```diff
+-:deep(.v-data-table__tr--striped) {
+-  background-color: #f5fbff !important;
+-}
++:deep(.v-table--striped-odd > .v-table__wrapper > table > tbody > tr:nth-child(odd)) {
++  background-image: none !important;
++  background-color: #f5fbff !important;
++}
+```
+
+## VIcon Size Inside VBtn icon
+
+Inside a `VBtn` with `icon` prop, `--v-icon-size-multiplier` is `1`. The default VIcon size prop value is `'default'` (not absent), so even omitting `size` gives class `v-icon--size-default` (`1.5em`). To maximize icon size inside a small icon button:
+
+```diff
+-<VIcon>mdi-pencil</VIcon>
++<VIcon size="x-large">mdi-pencil</VIcon>
+```
+
+Predefined VIcon sizes (relative to parent font):
+- default: `1.5em`
+- large: `1.75em`
+- x-large: `2em`
 
 ## Components Directory (Nuxt 4)
 
@@ -538,6 +667,34 @@ Replace `v-model:options` with individual `v-model:page`, `v-model:items-per-pag
 }
 ```
 
+## Striped Row Color Override
+
+Vuetify 4 applies stripes via `v-table--striped-odd` class on the `<table>` wrapper using `background-image: linear-gradient(...)`. The Vuetify 2/3 class `v-data-table__tr--striped` does not exist.
+
+```diff
+-:deep(.v-data-table__tr--striped) {
+-  background-color: #f5fbff !important;
+-}
++:deep(.v-table--striped-odd > .v-table__wrapper > table > tbody > tr:nth-child(odd)) {
++  background-image: none !important;
++  background-color: #f5fbff !important;
++}
+```
+
+## VIcon Size Inside VBtn icon
+
+Inside a `VBtn` with `icon` prop, `--v-icon-size-multiplier` is `1`. The default VIcon size prop value is `'default'` (not absent), so even omitting `size` gives class `v-icon--size-default` (`1.5em`). To maximize icon size inside a small icon button:
+
+```diff
+-<VIcon>mdi-pencil</VIcon>
++<VIcon size="x-large">mdi-pencil</VIcon>
+```
+
+Predefined VIcon sizes (relative to parent font):
+- default: `1.5em`
+- large: `1.75em`
+- x-large: `2em`
+
 ### firstSortDesc pattern
 
 To make a column sort descending on first click (non-standard), intercept `@update:options` and override the sort order before emitting to the parent:
@@ -560,6 +717,34 @@ function onUpdateOptions(val: Record<string, unknown>) {
   emit("sorting", val)
 }
 ```
+
+## Striped Row Color Override
+
+Vuetify 4 applies stripes via `v-table--striped-odd` class on the `<table>` wrapper using `background-image: linear-gradient(...)`. The Vuetify 2/3 class `v-data-table__tr--striped` does not exist.
+
+```diff
+-:deep(.v-data-table__tr--striped) {
+-  background-color: #f5fbff !important;
+-}
++:deep(.v-table--striped-odd > .v-table__wrapper > table > tbody > tr:nth-child(odd)) {
++  background-image: none !important;
++  background-color: #f5fbff !important;
++}
+```
+
+## VIcon Size Inside VBtn icon
+
+Inside a `VBtn` with `icon` prop, `--v-icon-size-multiplier` is `1`. The default VIcon size prop value is `'default'` (not absent), so even omitting `size` gives class `v-icon--size-default` (`1.5em`). To maximize icon size inside a small icon button:
+
+```diff
+-<VIcon>mdi-pencil</VIcon>
++<VIcon size="x-large">mdi-pencil</VIcon>
+```
+
+Predefined VIcon sizes (relative to parent font):
+- default: `1.5em`
+- large: `1.75em`
+- x-large: `2em`
 
 This modifies the `sortBy` ref directly (which is `v-model:sort-by` bound), causing a second `@update:options` call with the corrected order. Vue batches DOM updates so no visual flash occurs.
 
@@ -608,6 +793,34 @@ async function indexOrganizations(opts: Record<string, unknown>) {
 }
 ```
 
+## Striped Row Color Override
+
+Vuetify 4 applies stripes via `v-table--striped-odd` class on the `<table>` wrapper using `background-image: linear-gradient(...)`. The Vuetify 2/3 class `v-data-table__tr--striped` does not exist.
+
+```diff
+-:deep(.v-data-table__tr--striped) {
+-  background-color: #f5fbff !important;
+-}
++:deep(.v-table--striped-odd > .v-table__wrapper > table > tbody > tr:nth-child(odd)) {
++  background-image: none !important;
++  background-color: #f5fbff !important;
++}
+```
+
+## VIcon Size Inside VBtn icon
+
+Inside a `VBtn` with `icon` prop, `--v-icon-size-multiplier` is `1`. The default VIcon size prop value is `'default'` (not absent), so even omitting `size` gives class `v-icon--size-default` (`1.5em`). To maximize icon size inside a small icon button:
+
+```diff
+-<VIcon>mdi-pencil</VIcon>
++<VIcon size="x-large">mdi-pencil</VIcon>
+```
+
+Predefined VIcon sizes (relative to parent font):
+- default: `1.5em`
+- large: `1.75em`
+- x-large: `2em`
+
 For refresh operations, store the last emitted options and re-use them:
 
 ```ts
@@ -617,3 +830,31 @@ function refresh() {
   }
 }
 ```
+
+## Striped Row Color Override
+
+Vuetify 4 applies stripes via `v-table--striped-odd` class on the `<table>` wrapper using `background-image: linear-gradient(...)`. The Vuetify 2/3 class `v-data-table__tr--striped` does not exist.
+
+```diff
+-:deep(.v-data-table__tr--striped) {
+-  background-color: #f5fbff !important;
+-}
++:deep(.v-table--striped-odd > .v-table__wrapper > table > tbody > tr:nth-child(odd)) {
++  background-image: none !important;
++  background-color: #f5fbff !important;
++}
+```
+
+## VIcon Size Inside VBtn icon
+
+Inside a `VBtn` with `icon` prop, `--v-icon-size-multiplier` is `1`. The default VIcon size prop value is `'default'` (not absent), so even omitting `size` gives class `v-icon--size-default` (`1.5em`). To maximize icon size inside a small icon button:
+
+```diff
+-<VIcon>mdi-pencil</VIcon>
++<VIcon size="x-large">mdi-pencil</VIcon>
+```
+
+Predefined VIcon sizes (relative to parent font):
+- default: `1.5em`
+- large: `1.75em`
+- x-large: `2em`

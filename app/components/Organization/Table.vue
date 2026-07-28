@@ -12,18 +12,20 @@
       :loading="loading"
       class="elevation-1"
       striped="odd"
+      mustSort
+      initial-sort-order="desc"
       :search="props.search"
       @update:options="onUpdateOptions"
     >
       <template #[`item.actions`]="{ item }">
         <VBtn title="Editar" class="ma-1" color="primary" variant="outlined" size="small" icon rounded="circle" id="btn-organization-table-edit" @click="emitEdit(item)">
-          <VIcon>mdi-pencil</VIcon>
+          <VIcon size="x-large">mdi-pencil</VIcon>
         </VBtn>
         <VBtn title="Config" class="ma-1" color="info" variant="outlined" size="small" icon rounded="circle" id="btn-organization-table-config" @click="emitConfig(item)">
-          <VIcon>mdi-cog</VIcon>
+          <VIcon size="x-large">mdi-cog</VIcon>
         </VBtn>
         <VBtn title="Delete" class="ma-1" color="error" variant="outlined" size="small" icon rounded="circle" id="btn-organization-table-delete" @click="confirmDelete(item)">
-          <VIcon>mdi-delete</VIcon>
+          <VIcon size="x-large">mdi-delete</VIcon>
         </VBtn>
       </template>
     </VDataTableServer>
@@ -41,7 +43,6 @@ interface Header {
   title: string
   value: string
   sortable: boolean
-  firstSortDesc?: boolean
   width?: string
 }
 
@@ -66,9 +67,9 @@ const sortBy = ref<{ key: string; order: string }[]>([{ key: "name", order: "des
 const dialogDeleteProp = ref<Record<string, unknown>>({})
 
 const headers: Header[] = [
-  { title: "name", value: "name", sortable: true, firstSortDesc: true },
-  { title: "short_code", value: "short_code", sortable: true, firstSortDesc: true },
-  { title: "description", value: "description", sortable: true, firstSortDesc: true },
+  { title: "name", value: "name", sortable: true },
+  { title: "short_code", value: "short_code", sortable: true },
+  { title: "description", value: "description", sortable: true },
   { title: "Acciones", value: "actions", width: "200px", sortable: false },
 ]
 
@@ -77,15 +78,6 @@ const items = computed(() => props.response?.data ?? [])
 const loading = computed(() => props.loading ?? false)
 
 function onUpdateOptions(val: Record<string, unknown>) {
-  const sortByArr = (val.sortBy as { key: string; order: string }[]) ?? []
-  if (sortByArr.length) {
-    const first = sortByArr[0]
-    const head = headers.find((x) => x.value === first.key)
-    if (head?.firstSortDesc && first.order !== 'desc') {
-      sortBy.value = [{ key: first.key, order: 'desc' }]
-      return
-    }
-  }
   emit("sorting", val)
 }
 
@@ -102,8 +94,4 @@ function emitEdit(item: unknown) { emit("edit", item) }
 function emitConfig(item: unknown) { emit("config", item) }
 </script>
 
-<style scoped>
-:deep(.v-data-table th) {
-  color: rgba(0, 0, 0, 0.87);
-}
-</style>
+<style scoped></style>

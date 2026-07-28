@@ -80,7 +80,7 @@ async function indexOrganizations(opts: Record<string, unknown>) {
   const sortBy = (opts.sortBy as { key: string; order: string }[]) ?? []
   if (sortBy.length > 0) {
     params.sortBy = [sortBy[0].key]
-    params.sortDesc = [sortBy[0].order]
+    params.sortDesc = [sortBy[0].order === 'desc']
   }
   if (filterOrganization.value) {
     params.filter = filterOrganization.value

@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   devServer: { port: 3003 },
   modules: ['vuetify-nuxt-module', '@pinia/nuxt'],
+  css: ['@/assets/css/global.css'],
   vuetify: {
     moduleOptions: {
       importComposables: ['useDate', 'useLocale', 'useDefaults', 'useDisplay', 'useRtl', 'useTheme'],

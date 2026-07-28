@@ -11,7 +11,7 @@
       </VCardTitle>
 
       <VCardText>
-        <VRow dense>
+        <VRow density="comfortable">
           <VCol cols="12">
             <VTextField id="tf-organ-formd-item-name-1"
               v-model="item.name"
@@ -47,7 +47,7 @@
           <VIcon start>mdi-close</VIcon>
           Cancelar
         </VBtn>
-        <VBtn color="primary" id="btn-organization-dialog-save" @click="save">
+        <VBtn color="primary" variant="elevated" id="btn-organization-dialog-save" @click="save">
           <VIcon start>mdi-content-save</VIcon>
           Guardar
         </VBtn>
