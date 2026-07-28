@@ -321,9 +321,9 @@ In Vuetify 3, text color is automatically applied based on the component's `colo
 
 Always specify `variant="elevated"` on solid-background chips (default variant in Vuetify 2 was elevated with shadow). Without an explicit `variant`, Vuetify 3 chips may render as `variant="flat"` depending on context, losing the expected shadow and visual depth.
 
-## VRow Props
+## VRow Props (dense)
 
-Vuetify 2's `<v-row dense>` becomes `<VRow density="compact">` in Vuetify 3.
+Vuetify 3's `VRow` still supports the `dense` boolean prop (same as Vuetify 2). It does **not** have a `density` prop — only components with sizing variants (VBtn, VTextField, VSelect, VDataTable, etc.) use `density`.
 
 ## Vuetify 2–Only Utility Classes
 

@@ -8,7 +8,7 @@
       :items="items"
       v-model:options="optionsTable"
       :items-length="total"
-      class="elevation-1 xwidth1200"
+      class="elevation-1"
       @update:options="onUpdateOptions"
     >
       <template #[`item.actions`]="{ item }">

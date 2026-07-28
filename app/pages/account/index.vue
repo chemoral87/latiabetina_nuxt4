@@ -1,5 +1,6 @@
 <template>
-  <VContainer>
+  <ClientOnly>
+    <VContainer>
     <VRow dense>
       <VCol cols="12" md="5">
         <VCard id="card-accou-index-1" flat class="mb-3 pa-4" border>
@@ -106,6 +107,7 @@
       </VCol>
     </VRow>
   </VContainer>
+  </ClientOnly>
 </template>
 
 <script setup lang="ts">

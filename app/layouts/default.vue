@@ -5,7 +5,8 @@
         <VListItem>
           <VListItemTitle>Latiabetina</VListItemTitle>
         </VListItem>
-        <template v-for="(item, i) in items" :key="i">
+        <ClientOnly>
+          <template v-for="(item, i) in items" :key="i">
           <VListGroup v-if="item.children" :value="false" :prepend-icon="item.icon">
             <template #activator="{ props }">
               <VListItem v-bind="props">
@@ -23,15 +24,18 @@
             <VListItemTitle>{{ item.title }}</VListItemTitle>
           </VListItem>
         </template>
-        <template v-if="auth.loggedIn">
-          <VDivider />
-          <VListItem to="/account" prepend-icon="mdi-account" @click="drawer = false">
-            <VListItemTitle>Mi Perfil</VListItemTitle>
-          </VListItem>
-          <VListItem to="/logout" prepend-icon="mdi-logout" @click="drawer = false">
-            <VListItemTitle>Cerrar Sesión</VListItemTitle>
-          </VListItem>
-        </template>
+        </ClientOnly>
+        <ClientOnly>
+          <template v-if="auth.loggedIn">
+            <VDivider />
+            <VListItem to="/account" prepend-icon="mdi-account" @click="drawer = false">
+              <VListItemTitle>Mi Perfil</VListItemTitle>
+            </VListItem>
+            <VListItem to="/logout" prepend-icon="mdi-logout" @click="drawer = false">
+              <VListItemTitle>Cerrar Sesión</VListItemTitle>
+            </VListItem>
+          </template>
+        </ClientOnly>
       </VList>
     </VNavigationDrawer>
 
@@ -39,29 +43,33 @@
       <VAppBarNavIcon id="layout-nav-icon" @click.stop="drawer = !drawer" />
       <VToolbarTitle id="layout-title">{{ title }}</VToolbarTitle>
       <VSpacer />
-      <VBtn v-if="!auth.loggedIn && showLogin" id="layout-login-btn" icon @click="gotoLogin">
-        <VIcon>mdi-lock</VIcon>
-      </VBtn>
-      <VMenu v-if="auth.loggedIn" v-model="menu" offset-y>
-        <template #activator="{ props }">
-          <VBtn id="btn-layout-account" class="mr-3" size="small" color="blue" variant="flat" icon v-bind="props">
-            <VIcon color="white">mdi-account</VIcon>
-          </VBtn>
-        </template>
-        <VList>
-          <VListItem to="/account">
-            <VListItemTitle>{{ userName }}</VListItemTitle>
-            <VListItemSubtitle>{{ userEmail }}</VListItemSubtitle>
-          </VListItem>
-          <VDivider />
-          <VListItem @click="handleLogout">
-            <VListItemTitle>
-              <VIcon>mdi-logout</VIcon>
-              Cerrar Sesión
-            </VListItemTitle>
-          </VListItem>
-        </VList>
-      </VMenu>
+      <ClientOnly>
+        <VBtn v-if="!auth.loggedIn && showLogin" id="layout-login-btn" icon @click="gotoLogin">
+          <VIcon>mdi-lock</VIcon>
+        </VBtn>
+      </ClientOnly>
+      <ClientOnly>
+        <VMenu v-if="auth.loggedIn" v-model="menu" offset-y>
+          <template #activator="{ props }">
+            <VBtn id="btn-layout-account" class="mr-3" size="small" color="blue" variant="flat" icon v-bind="props">
+              <VIcon color="white">mdi-account</VIcon>
+            </VBtn>
+          </template>
+          <VList>
+            <VListItem to="/account">
+              <VListItemTitle>{{ userName }}</VListItemTitle>
+              <VListItemSubtitle>{{ userEmail }}</VListItemSubtitle>
+            </VListItem>
+            <VDivider />
+            <VListItem @click="handleLogout">
+              <VListItemTitle>
+                <VIcon>mdi-logout</VIcon>
+                Cerrar Sesión
+              </VListItemTitle>
+            </VListItem>
+          </VList>
+        </VMenu>
+      </ClientOnly>
     </VAppBar>
 
     <VMain>

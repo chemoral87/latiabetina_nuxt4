@@ -4,7 +4,7 @@
       <VCol cols="12" sm="8" md="6" lg="4">
         <VCard id="login-card" flat class="pa-6">
           <VForm id="login-form" @submit.prevent="submitLogin">
-            <VRow density="compact">
+            <VRow dense>
               <VCol cols="12" class="text-center mb-4">
                 <span class="text-h5">Inicio de Sesión v4</span>
               </VCol>
@@ -95,8 +95,8 @@ async function submitLogin() {
 </script>
 
 <style scoped>
-:deep(.v-text-field--outlined) input:-webkit-autofill ~ .v-label,
-:deep(.v-text-field--outlined) input:-webkit-autofill:focus ~ .v-label {
+:deep(.v-field--variant-outlined) input:-webkit-autofill ~ .v-field-label,
+:deep(.v-field--variant-outlined) input:-webkit-autofill:focus ~ .v-field-label {
   transform: translateY(-24px) scale(0.75);
   top: 0px;
   background: white;

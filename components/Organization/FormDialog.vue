@@ -11,7 +11,7 @@
       </VCardTitle>
 
       <VCardText>
-        <VRow density="compact">
+        <VRow dense>
           <VCol cols="12">
             <VTextField id="tf-organ-formd-item-name-1"
               v-model="item.name"

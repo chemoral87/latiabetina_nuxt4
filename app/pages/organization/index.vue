@@ -2,7 +2,7 @@
   <VContainer :fluid="true">
     <VRow>
       <VCol cols="12" sm="6" md="2">
-        <VTextField id="tf-organ-index-filterorganization-1" v-model="filterOrganization" append-inner-icon="mdi-magnify" clearable hide-details placeholder="Filtro" />
+        <VTextField id="tf-organ-index-filterorganization-1" v-model="filterOrganization" append-inner-icon="mdi-magnify" outlined clearable hide-details placeholder="Filtro" />
       </VCol>
 
       <VCol cols="auto" class="d-flex align-center">
@@ -31,7 +31,6 @@ definePageMeta({
   middleware: "authenticated",
 })
 
-const config = useRuntimeConfig()
 const dialogDeleteOrganization = ref(false)
 const organizationFormDialog = ref(false)
 const options = ref({ sortBy: ["name"], sortDesc: [true], itemsPerPage: 5 })
@@ -40,32 +39,22 @@ const filterOrganization = ref("")
 const loading = ref(false)
 const organization = ref<Record<string, unknown> | null>(null)
 
-function getBaseUrl() {
-  if (config.public.baseUrl) return config.public.baseUrl
-  if (import.meta.client) {
-    return `http://${window.location.hostname}${config.public.suffixUrl}`
-  }
-  return ""
-}
+const { $api } = useApi()
 
 async function apiIndex(opts: Record<string, unknown>) {
-  const baseUrl = getBaseUrl()
-  return await $fetch(`${baseUrl}/organization`, { params: opts })
+  return await $api("/organization", { params: opts })
 }
 
 async function apiDelete(id: number) {
-  const baseUrl = getBaseUrl()
-  return await $fetch(`${baseUrl}/organization/${id}`, { method: "DELETE" })
+  return await $api(`/organization/${id}`, { method: "DELETE" })
 }
 
 async function apiCreate(data: Record<string, unknown>) {
-  const baseUrl = getBaseUrl()
-  return await $fetch(`${baseUrl}/organization`, { method: "POST", body: data })
+  return await $api("/organization", { method: "POST", body: data })
 }
 
 async function apiUpdate(id: number, data: Record<string, unknown>) {
-  const baseUrl = getBaseUrl()
-  return await $fetch(`${baseUrl}/organization/${id}`, { method: "PUT", body: data })
+  return await $api(`/organization/${id}`, { method: "PUT", body: data })
 }
 
 const { data: initialResponse, error: initialError } = await useAsyncData("organizations", () =>
