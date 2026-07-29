@@ -20,12 +20,12 @@
       @update:options="onUpdateOptions"
     >
       <template #[`item.roles`]="{ item }">
-        <VChip v-for="it in (item as Record<string, unknown>).roles as Record<string, unknown>[]" :key="it.id as number" class="ma-2" color="primary">
+        <VChip v-for="it in (item as Record<string, unknown>).roles as Record<string, unknown>[]" :key="it.id as number" class="ma-2" color="primary" variant="elevated">
           {{ it.name as string }}
         </VChip>
       </template>
       <template #[`item.direct_permissions`]="{ item }">
-        <VChip v-for="it in (item as Record<string, unknown>).permissions as Record<string, unknown>[]" :key="it.id as number" class="ma-2" color="info">
+        <VChip v-for="it in (item as Record<string, unknown>).permissions as Record<string, unknown>[]" :key="it.id as number" class="ma-2" color="info" variant="elevated">
           {{ it.name as string }}
         </VChip>
       </template>

@@ -27,7 +27,7 @@
             Crear nuevo permiso
           </VCardTitle>
           <VCardText class="pb-2">
-            <VRow dense align="center">
+            <VRow density="comfortable" align="center">
               <VCol cols="12">
                 <VTextField
                   id="tf-role-index-newpermissionname-1"

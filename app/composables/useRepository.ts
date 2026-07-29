@@ -26,7 +26,12 @@ export function useRepository() {
     OrganizationConfig,
     User: createCommonRepository($api, "/user"),
     Role: createRoleRepository($api, "/role"),
-    Permission: createCommonRepository($api, "/permission"),
+    Permission: {
+      ...createCommonRepository($api, "/permission"),
+      distribution<T = unknown>(id: number | string) {
+        return $api<T>(`/permission/${id}/distribution`)
+      },
+    },
     Profile,
   }
 }

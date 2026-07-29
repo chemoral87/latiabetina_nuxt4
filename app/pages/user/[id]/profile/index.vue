@@ -2,7 +2,7 @@
   <VContainer :fluid="true" class="pa-4">
     <VRow class="mb-3">
       <VCol cols="12">
-        <VBtn id="btn-user-profile-new" color="primary" class="font-weight-bold" @click="newProfile()">
+        <VBtn id="btn-user-profile-new" color="primary" variant="elevated" class="font-weight-bold" @click="newProfile()">
           <VIcon start>mdi-plus</VIcon>
           Nuevo Perfil
         </VBtn>

@@ -13,14 +13,14 @@
           <div class="text-h6 text-grey-darken-4">Presione el siguiente botón para regresar.</div>
       </VCardText>
 
-      <VCardActions>
+      <div class="d-flex justify-end px-4 pb-4">
         <template v-if="isReady && !isRedirecting">
-          <VBtn id="btn-layout-error-redirect" color="primary" @click="handleRedirect">
+          <VBtn id="btn-layout-error-redirect" color="primary" variant="elevated" @click="handleRedirect">
             {{ redirectButtonText }}
           </VBtn>
         </template>
         <VSkeletonLoader v-else type="button" width="150px" />
-      </VCardActions>
+      </div>
     </VCard>
   </NuxtLayout>
 </template>

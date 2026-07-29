@@ -4,7 +4,7 @@
       <VCol cols="12" sm="8" md="6" lg="4">
         <VCard id="login-card" flat class="pa-6">
           <VForm id="login-form" @submit.prevent="submitLogin">
-            <VRow dense>
+            <VRow density="comfortable">
               <VCol cols="12" class="text-center mb-4">
                 <span class="text-h5">Inicio de Sesión v4</span>
               </VCol>
@@ -42,7 +42,7 @@
               </VCol>
 
               <VCol cols="12">
-                <VBtn id="login-submit" type="submit" color="primary" block size="large">Ingresar</VBtn>
+                <VBtn id="login-submit" type="submit" color="primary" variant="elevated" block size="large">Ingresar</VBtn>
               </VCol>
             </VRow>
           </VForm>

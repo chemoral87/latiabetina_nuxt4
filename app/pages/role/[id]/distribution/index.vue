@@ -1,6 +1,6 @@
 <template>
   <VContainer :fluid="true">
-    <VRow dense>
+    <VRow density="comfortable">
       <!-- Organization filter -->
       <VCol cols="12" md="3">
         <VSelect

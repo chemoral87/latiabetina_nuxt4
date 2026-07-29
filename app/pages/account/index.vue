@@ -1,7 +1,7 @@
 <template>
   <ClientOnly>
     <VContainer>
-    <VRow dense>
+    <VRow density="comfortable">
       <VCol cols="12" md="5">
         <VCard id="card-accou-index-1" flat class="mb-3 pa-4" border>
           <div class="d-flex align-center mb-3">
@@ -13,7 +13,7 @@
               <div class="text-body-2 text-grey">{{ user.email }}</div>
             </div>
           </div>
-          <VBtn id="btn-account-changepw" color="success" size="small" @click="dialogPassword = true">
+          <VBtn id="btn-account-changepw" color="success" variant="elevated" size="small" @click="dialogPassword = true">
             <VIcon start size="small">mdi-lock-reset</VIcon>
             Cambiar contraseña
           </VBtn>
@@ -64,7 +64,7 @@
           <VCardText class="pt-2">
             <template v-if="!combinedView">
               <div v-if="!hasPermissions" class="text-grey text-body-2">Sin permisos asignados</div>
-              <VRow dense>
+              <VRow density="comfortable">
                 <VCol v-for="(orgIds, perm) in permissions_org" :key="perm" cols="12" sm="6">
                   <div class="d-flex align-center flex-wrap" style="gap: 4px">
                     <VChip size="small" color="secondary" variant="elevated" label class="mr-1">{{ perm }}</VChip>
