@@ -10,12 +10,10 @@
       </VCol>
 
       <VCol cols="12" class="d-flex justify-end">
-        <VBtn id="btn-useprf-cancel" color="primary" variant="outlined" class="mr-1" @click="back()">
-          <VIcon start>mdi-close</VIcon>
+        <VBtn id="btn-useprf-cancel" color="primary" variant="outlined" class="mr-1 text-uppercase" @click="back()">
           Cancelar
         </VBtn>
-        <VBtn id="btn-useprf-save" color="primary" variant="elevated" @click="saveProfileRolesPermissions()">
-          <VIcon start>mdi-content-save</VIcon>
+        <VBtn id="btn-useprf-save" color="primary" variant="elevated" class="text-uppercase" @click="saveProfileRolesPermissions()">
           Guardar
         </VBtn>
       </VCol>
@@ -45,6 +43,12 @@ onMounted(async () => {
   ])
   mUser.value = (_mUser as Record<string, unknown>) ?? {}
   profile.value = (_profile as Record<string, unknown>) ?? {}
+
+  // Replicates: eventBus.$emit("setNavBar", { title: `Perfilx: ${mUser.name} ${mUser.last_name}` })
+  // The layout reads route.meta.title via computed(() => route.meta?.title || 'Latiabetina')
+  if (mUser.value.name) {
+    route.meta.title = `Perfil de: ${mUser.value.name} ${mUser.value.last_name ?? ''}`.trim()
+  }
 })
 
 function setRoles(roles: Record<string, unknown>[]) {

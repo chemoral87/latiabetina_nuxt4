@@ -1,50 +1,67 @@
 <template>
-  <VContainer>
-    <VRow dense>
+  <VContainer :fluid="true" class="pa-4">
+    <VRow class="mb-3">
       <VCol cols="12">
-        <VBtn id="btn-user-profile-new" color="primary" @click="newProfile()">
+        <VBtn id="btn-user-profile-new" color="primary" class="text-uppercase font-weight-bold" @click="newProfile()">
           <VIcon start>mdi-plus</VIcon>
           Nuevo Perfil
         </VBtn>
       </VCol>
+    </VRow>
 
-      <VCol v-for="profile in profiles" :key="profile.id as number" cols="12">
-        <VCard>
-          <VCardTitle class="py-0">
-            <span class="text-subtitle-1 py-1">{{ profile.organization_name }} ({{ profile.organization_short_code }})</span>
-            <VSpacer />
+    <VRow>
+      <VCol v-for="profile in profiles" :key="profile.id as number" cols="12" class="mb-3">
+        <VCard variant="outlined" class="bg-white rounded-lg">
+          <VCardItem class="pb-2">
+            <div class="d-flex align-center justify-space-between">
+              <div class="text-h6 font-weight-regular text-body-1">
+                {{ profile.organization_name }} ({{ profile.organization_short_code }})
+              </div>
 
-            <VBtn id="btn-user-profile-fav" icon :color="getColorFavorite(profile.favorite)" @click="setFavProfile(profile)">
-              <VIcon>mdi-star</VIcon>
-            </VBtn>
-            <VBtn id="btn-user-profile-edit" icon color="primary" @click="editProfile(profile)">
-              <VIcon>mdi-pencil</VIcon>
-            </VBtn>
-            <VBtn id="btn-user-profile-delete" icon color="error" @click="confirmDeleteProfile(profile)">
-              <VIcon>mdi-delete</VIcon>
-            </VBtn>
-          </VCardTitle>
+              <div class="d-flex align-center ga-2">
+                <VBtn id="btn-user-profile-fav" icon variant="text" size="small" :color="getColorFavorite(profile.favorite)" @click="setFavProfile(profile)">
+                  <VIcon size="large" icon="mdi-star" />
+                </VBtn>
+                <VBtn id="btn-user-profile-edit" icon variant="text" size="small" color="primary" @click="editProfile(profile)">
+                  <VIcon size="large" icon="mdi-pencil" />
+                </VBtn>
+                <VBtn id="btn-user-profile-delete" icon variant="text" size="small" color="error" @click="confirmDeleteProfile(profile)">
+                  <VIcon size="large" icon="mdi-delete" />
+                </VBtn>
+              </div>
+            </div>
+          </VCardItem>
+
           <VCardText>
-            <VRow dense>
-              <VCol cols="12" sm="6">
-                <div class="text-subtitle-2">Roles</div>
-
-                <VChip v-for="it in (profile.roles as Record<string, unknown>[])" :key="it.id as number" class="ma-2" color="primary">
-                  {{ it.name as string }}
-                </VChip>
+            <VRow>
+              <VCol cols="12" md="6">
+                <div class="text-caption font-weight-medium text-grey-darken-1 mb-2">
+                  Roles
+                </div>
+                <div class="d-flex flex-wrap ga-2">
+                  <VChip v-for="it in (profile.roles as Record<string, unknown>[])" :key="it.id as number" color="primary" variant="flat" size="small" rounded="pill">
+                    {{ it.name as string }}
+                  </VChip>
+                </div>
               </VCol>
-              <VCol cols="12" sm="6">
-                <div class="text-subtitle-2">Permisos Directos</div>
 
-                <VChip v-for="it in (profile.permissions as Record<string, unknown>[])" :key="it.id as number" class="ma-2" color="info">
-                  {{ it.name as string }}
-                </VChip>
+              <VCol cols="12" md="6">
+                <div class="text-caption font-weight-medium text-grey-darken-1 mb-2">
+                  Permisos Directos
+                </div>
+                <div class="d-flex flex-wrap ga-2">
+                  <VChip v-for="it in (profile.permissions as Record<string, unknown>[])" :key="it.id as number" color="info" variant="flat" size="small" rounded="pill">
+                    {{ it.name as string }}
+                  </VChip>
+                </div>
               </VCol>
             </VRow>
           </VCardText>
         </VCard>
       </VCol>
+    </VRow>
 
+    <VRow>
       <VCol cols="12">
         <VCard border>
           <VCardText class="d-flex justify-end pa-4">
@@ -86,6 +103,13 @@ onMounted(async () => {
   ])
   mUser.value = (userRes as Record<string, unknown>) ?? {}
   profiles.value = (profilesRes as Record<string, unknown>[]) ?? []
+
+  if (mUser.value.name) {
+    route.meta.title = `Perfiles de: ${mUser.value.name} ${mUser.value.last_name ?? ""}`.trim()
+    route.meta.icon = "mdi-account"
+    route.meta.back = "/user"
+    route.meta.showDrawer = false
+  }
 })
 
 function getColorFavorite(favorite: unknown) {

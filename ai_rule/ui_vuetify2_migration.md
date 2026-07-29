@@ -570,6 +570,17 @@ Vuetify 2 `v-btn--fab` creates a **circular** icon button. Vuetify 3's `icon` pr
 
 The `rounded="circle"` prop applies `border-radius: 50%` for a perfectly circular button that matches the V2 `fab` look.
 
+This is especially common for the layout's back button, which was `outlined fab` in Vuetify 2:
+
+```diff
+-<v-btn outlined fab small elevation="0" @click="backHandler">
+-  <v-icon>mdi-arrow-left</v-icon>
+-</v-btn>
++<VBtn icon variant="outlined" rounded="circle" size="small" @click="handleBack">
++  <VIcon>mdi-arrow-left</VIcon>
++</VBtn>
+```
+
 ## Data Loading for Auth-Protected APIs
 
 `useAsyncData` runs during SSR, but auth tokens from `localStorage` are **not available** on the server. For pages that require an auth token:
@@ -859,6 +870,116 @@ Predefined VIcon sizes (relative to parent font):
 - large: `1.75em`
 - x-large: `2em`
 
+## Dynamic NavBar Title (`eventBus.$emit("setNavBar")`)
+
+The AUI app used a global event bus to update the VAppBar title dynamically:
+
+```diff
+-mounted() {
+-  const eventBus = this.$eventBus || this.$nuxt
+-  eventBus.$emit("setNavBar", { title: `Perfiles de: ${this.mUser.name} ${this.mUser.last_name}`, icon: "mdi-account", back: `/user`, showDrawer: false })
+-},
+```
+
+In Nuxt4, the layout reads `route.meta.title` for the VAppBar title. Set it directly after the async data loads:
+
+```diff
++import { useRoute } from "vue-router"
++const route = useRoute()
+
+ onMounted(async () => {
+   const res = await api.show(id)
+   mUser.value = res as Record<string, unknown>
+
++  if (mUser.value.name) {
++    route.meta.title = `Perfiles de: ${mUser.value.name} ${mUser.value.last_name ?? ""}`.trim()
++  }
+ })
+```
+
+- `route.meta` is reactive — changes reflect immediately in the layout's `computed` title.
+- Only set the `title` property. The AUI `icon`, `back`, and `showDrawer` properties are not used by the Nuxt4 layout.
+- The static `definePageMeta({ title })` is replaced dynamically after the API call.
+
+## Form Validation (Client + Server)
+
+### Client-side rules — `useVrules` composable
+
+Replaces AUI's Vue `$vrules` global mixin. Drop-in equivalent:
+
+```ts
+import { useVrules } from "~/composables/useVrules"
+const { vrules } = useVrules()
+```
+
+```diff
+-:rules="[$vrules.required]"
++:rules="[vrules.required]"
+```
+
+For field-specific error messages (matching AUI's `$vrules.requiredField('name')`):
+
+```diff
+-:rules="[$vrules.required]"
++:rules="[vrules.requiredField('Nombre')]"
+```
+
+Uses the field's display label so validation reads: *"El campo Nombre es obligatorio."* instead of generic *"El campo es obligatorio."*
+
+Available rules: `required`, `requiredField(name)`, `email`, `minLength(n)`, `maxLength(n)`, `between(min,max)`, `numeric`, `integer`, `alpha`, `alphaNum`, `url`, `pattern(regex,msg)`, `confirmed(val)`, `phone`, `min(n)`, `max(n)`.
+
+Import explicitly rather than relying on Nuxt auto-import for newly created composables.
+
+### Server-side validation errors — `useValidationErrors` composable
+
+Replaces AUI's Vuex `validation/errors` store:
+
+```ts
+import { useValidationErrors } from "~/composables/useValidationErrors"
+const { errors, clearErrors } = useValidationErrors()
+```
+
+`errors?.fieldName` is `string[]`. `withNotify.ts` calls `extractFromError(err)` on 422. Call `clearErrors()` on dialog close.
+
+### Form submission — `VForm` + `validate()`
+
+```diff
+-<VCardText>...</VCardText>
++<VCardText>
++  <VForm ref="formRef">...</VForm>
++</VCardText>
+
+## Dynamic NavBar Title (`eventBus.$emit("setNavBar")`)
+
+The AUI app used a global event bus to update the VAppBar title dynamically:
+
+```diff
+-mounted() {
+-  const eventBus = this.$eventBus || this.$nuxt
+-  eventBus.$emit("setNavBar", { title: `Perfiles de: ${this.mUser.name} ${this.mUser.last_name}`, icon: "mdi-account", back: `/user`, showDrawer: false })
+-},
+```
+
+In Nuxt4, the layout reads `route.meta.title` for the VAppBar title. Set it directly after the async data loads:
+
+```diff
++import { useRoute } from "vue-router"
++const route = useRoute()
+
+ onMounted(async () => {
+   const res = await api.show(id)
+   mUser.value = res as Record<string, unknown>
+
++  if (mUser.value.name) {
++    route.meta.title = `Perfiles de: ${mUser.value.name} ${mUser.value.last_name ?? ""}`.trim()
++  }
+ })
+```
+
+- `route.meta` is reactive — changes reflect immediately in the layout's `computed` properties.
+- The layout reads `route.meta.icon`, `route.meta.back` (to show a back arrow), and `route.meta.showDrawer` (boolean to toggle the hamburger menu), so set these as well if they were in the AUI event payload.
+- The static `definePageMeta({ title })` is replaced dynamically after the API call.
+
 ## Form Validation (Client + Server)
 
 ### Client-side rules — `useVrules` composable
@@ -917,3 +1038,79 @@ const { errors, clearErrors } = useValidationErrors()
 +  emit("save", { ...item.value })
 +}
 ```
+
+## Dynamic NavBar Title — Sub-pages (nested async data)
+
+Same pattern as the `setNavBar` section above, but for deeply nested pages where
+both a parent resource (user) and a child resource (profile) are fetched in
+parallel before the title can be built.
+
+### AUI source (`pages/user/_id/profile/_profile_id/index.vue`)
+
+```js
+// Options API — mounted() fires AFTER asyncData resolves, mUser is already populated
+mounted() {
+  const eventBus = this.$eventBus || this.$nuxt
+  eventBus.$emit("setNavBar", {
+    title: `Perfilx: ${this.mUser.name} ${this.mUser.last_name}`,
+    icon: "mdi-account",
+    back: `/user`,
+    showDrawer: false,
+  })
+},
+```
+
+### Nuxt 4 equivalent (`pages/user/[id]/profile/[profile_id]/index.vue`)
+
+```ts
+const route = useRoute()
+
+onMounted(async () => {
+  const [_mUser, _profile] = await Promise.all([
+    User.show(userId).catch(() => null),
+    Profile.show(userId, profileId).catch(() => null),
+  ])
+  mUser.value = (_mUser as Record<string, unknown>) ?? {}
+  profile.value = (_profile as Record<string, unknown>) ?? {}
+
+  // Replicates eventBus.$emit("setNavBar", { title: `...`, icon: '...', back: '...', showDrawer: false })
+  // layout reads: computed(() => route.meta?.title || 'Latiabetina') (and back, icon, showDrawer)
+  if (mUser.value.name) {
+    route.meta.title = `Perfil de: ${mUser.value.name} ${mUser.value.last_name ?? ''}`.trim()
+    route.meta.icon = "mdi-account"
+    route.meta.back = "/user"
+    route.meta.showDrawer = false
+  }
+})
+```
+
+### Migration diff
+
+```diff
+-mounted() {
+-  const eventBus = this.$eventBus || this.$nuxt
+-  eventBus.$emit("setNavBar", {
+-    title: `Perfilx: ${this.mUser.name} ${this.mUser.last_name}`,
+-    icon: "mdi-account",
+-    back: `/user`,
+-    showDrawer: false,
+-  })
+-},
++onMounted(async () => {
++  // ... parallel API calls (User.show + Profile.show) ...
++  if (mUser.value.name) {
++    route.meta.title = `Perfil de: ${mUser.value.name} ${mUser.value.last_name ?? ''}`.trim()
++    route.meta.icon = "mdi-account"
++    route.meta.back = "/user"
++    route.meta.showDrawer = false
++  }
++})
+```
+
+### Rules
+
+- Set `route.meta.title`, `route.meta.icon`, `route.meta.back`, and `route.meta.showDrawer` **inside `onMounted`**, after all async calls resolve.
+  `definePageMeta({ title })` is static and cannot use runtime data.
+- Guard with `if (mUser.value.name)` to avoid `"undefined undefined"` if the API fails.
+- Use `.trim()` to avoid trailing whitespace when `last_name` is absent.
+- `route.meta` is reactive — the layout's `computed` properties update immediately.

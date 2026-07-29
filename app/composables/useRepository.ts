@@ -1,5 +1,6 @@
 import { createCommonRepository } from "~/repositories/factory/createCommonRepository"
 import { createParentRepository } from "~/repositories/factory/createParentRepository"
+import { createRoleRepository } from "~/repositories/RoleRepository"
 
 export function useRepository() {
   const { $api } = useApi()
@@ -14,7 +15,7 @@ export function useRepository() {
   return {
     Organization: createCommonRepository($api, "/organization"),
     User: createCommonRepository($api, "/user"),
-    Role: createCommonRepository($api, "/role"),
+    Role: createRoleRepository($api, "/role"),
     Permission: createCommonRepository($api, "/permission"),
     Profile,
   }

@@ -40,8 +40,12 @@
     </VNavigationDrawer>
 
     <VAppBar id="layout-app-bar" elevation="2" fixed app>
-      <VAppBarNavIcon id="layout-nav-icon" @click.stop="drawer = !drawer" />
-      <VToolbarTitle id="layout-title">{{ title }}</VToolbarTitle>
+      <VAppBarNavIcon v-if="showDrawer" id="layout-nav-icon" @click.stop="drawer = !drawer" />
+      <VBtn v-if="backRoute" id="btn-layout-back" icon variant="outlined" rounded="circle" size="small" class="mx-2" @click="handleBack">
+        <VIcon>mdi-arrow-left</VIcon>
+      </VBtn>
+      <VIcon v-if="icon" class="mr-2">{{ icon }}</VIcon>
+      <VToolbarTitle id="layout-title" class="pl-0">{{ title }}</VToolbarTitle>
       <VSpacer />
       <ClientOnly>
         <VBtn v-if="!auth.loggedIn && showLogin" id="layout-login-btn" icon @click="gotoLogin">
@@ -109,7 +113,10 @@ const showLogin = ref(true)
 
 const auth = useAuthStore()
 const notify = useNotifyStore()
-const title = computed(() => route.meta?.title || "Latiabetina")
+const title = computed(() => (route.meta?.title as string) || "Latiabetina")
+const showDrawer = computed(() => route.meta?.showDrawer ?? true)
+const backRoute = computed(() => route.meta?.back as string | undefined)
+const icon = computed(() => route.meta?.icon as string | undefined)
 const userName = computed(() => {
   const u = auth.user
   if (!u) return ""
@@ -129,5 +136,11 @@ function gotoLogin() {
 function handleLogout() {
   menu.value = false
   navigateTo("/logout")
+}
+
+function handleBack() {
+  if (backRoute.value) {
+    navigateTo(backRoute.value)
+  }
 }
 </script>

@@ -1,4 +1,4 @@
-import { defineStore } from "pinia"
+import { defineStore, acceptHMRUpdate } from "pinia"
 
 interface AuthUser {
   name?: string
@@ -72,11 +72,8 @@ export const useAuthStore = defineStore("auth", () => {
     if (config.public.baseUrl) {
       return config.public.baseUrl
     }
-    if (import.meta.client) {
-      const hostname = window.location.hostname
-      return `http://${hostname}${config.public.suffixUrl}`
-    }
-    return ""
+    const reqUrl = useRequestURL()
+    return `http://${reqUrl.hostname}${config.public.suffixUrl}`
   }
 
   async function loginWith(name: string, { data }: { data: Record<string, string> }) {
@@ -216,4 +213,8 @@ export const useAuthStore = defineStore("auth", () => {
 
 export function useAuth() {
   return useAuthStore()
+}
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useAuthStore, import.meta.hot))
 }
