@@ -103,7 +103,6 @@ onMounted(async () => {
   ])
   mUser.value = (userRes as Record<string, unknown>) ?? {}
   profiles.value = (profilesRes as Record<string, unknown>[]) ?? []
-
   if (mUser.value.name) {
     route.meta.title = `Perfiles de: ${mUser.value.name} ${mUser.value.last_name ?? ""}`.trim()
     route.meta.icon = "mdi-account"

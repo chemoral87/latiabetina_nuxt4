@@ -77,6 +77,7 @@
     </VAppBar>
 
     <VMain>
+      <VProgressLinear v-if="isLoading" indeterminate color="primary" class="global-progress" style="position: fixed; top: 0; left: 0; right: 0; z-index: 2000;" />
       <slot />
 
       <div class="snackbar-wrapper">
@@ -110,6 +111,8 @@ const route = useRoute()
 const drawer = ref(false)
 const menu = ref(false)
 const showLogin = ref(true)
+
+const { isLoading } = useGlobalProgress()
 
 const auth = useAuthStore()
 const notify = useNotifyStore()

@@ -134,7 +134,6 @@ onMounted(async () => {
   const data = res as { role: Record<string, unknown>; profiles: Profile[] }
   role.value = data.role ?? {}
   profiles.value = data.profiles ?? []
-
   if (role.value.name) {
     route.meta.title = `Distribución: ${role.value.name}`
     route.meta.icon = "mdi-share-variant"

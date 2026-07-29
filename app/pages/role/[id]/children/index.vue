@@ -102,7 +102,6 @@ const notify = useNotifyStore()
 onMounted(async () => {
   const res = await Role.show(roleId).catch(() => null)
   mRole.value = (res as Record<string, unknown>) ?? {}
-
   if (mRole.value.name) {
     route.meta.title = `Rol ${mRole.value.name}`
     route.meta.icon = "mdi-redhat"

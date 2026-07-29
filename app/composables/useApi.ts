@@ -119,6 +119,10 @@ export function useApi() {
     if (params) {
       url += `?${serializeParams(params as Record<string, unknown>)}`
     }
+
+    const { start, finish } = useGlobalProgress()
+    start()
+
     try {
       return await $fetch<T>(url, { ...rest, headers })
     } catch (err: unknown) {
@@ -133,6 +137,8 @@ export function useApi() {
         }
       }
       throw err
+    } finally {
+      finish()
     }
   }
 
