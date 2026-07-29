@@ -10,7 +10,7 @@
         </VBtn>
       </VCardTitle>
 
-      <VCardText>
+      <VCardText class="py-1">
         <div class="text-body-1 text-grey-darken-4">
           {{ item.text }}
           <strong v-if="item.strong">{{ item.strong }}</strong>
@@ -19,9 +19,8 @@
         <div class="text-caption text-grey mt-2">Esta acción no se puede deshacer</div>
       </VCardText>
 
-      <VCardActions class="pa-4">
-        <VSpacer />
-        <VBtn color="error" variant="outlined" class="mr-2" :disabled="loading" id="btn-dialog-delete-no" @click="close">
+      <div class="d-flex justify-end px-4 pb-4">
+        <VBtn color="error" variant="outlined" class="mr-4" :disabled="loading" id="btn-dialog-delete-no" @click="close">
           <VIcon start>mdi-close</VIcon>
           NO
         </VBtn>
@@ -29,7 +28,7 @@
           <VIcon start>mdi-check</VIcon>
           SI
         </VBtn>
-      </VCardActions>
+      </div>
     </VCard>
   </VDialog>
 </template>

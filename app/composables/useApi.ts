@@ -1,10 +1,20 @@
 let refreshPromise: Promise<string | null> | null = null
 
+function getJwtExp(token: string): number | null {
+  try {
+    const payload = token.split(".")[1]
+    if (!payload) return null
+    const decoded = JSON.parse(atob(payload))
+    return decoded.exp ?? null
+  } catch {
+    return null
+  }
+}
+
 export function useApi() {
   const config = useRuntimeConfig()
 
   const tokenCookie = useCookie<string | null>("auth.token")
-  const expiresCookie = useCookie<string | null>("auth.expires")
   const refreshTokenCookie = useCookie<string | null>("auth.refreshToken")
   const strategyCookie = useCookie<string | null>("auth.strategy")
 
@@ -42,16 +52,12 @@ export function useApi() {
           method: "POST",
           headers: { Authorization: `Bearer ${token}` },
         })
-        const newToken = res.access_token
-        tokenCookie.value = newToken
-        const expiresAt = Date.now() + 3600 * 1000
-        expiresCookie.value = String(expiresAt)
-        return newToken
+        tokenCookie.value = res.access_token
+        return res.access_token
       } catch {
         tokenCookie.value = null
         refreshTokenCookie.value = null
         strategyCookie.value = null
-        expiresCookie.value = null
         if (import.meta.client) {
           window.location.href = "/login"
         }
@@ -65,9 +71,11 @@ export function useApi() {
   }
 
   function isTokenExpired(): boolean {
-    const expires = expiresCookie.value
-    if (!expires) return true
-    return Date.now() >= Number(expires) - 30000
+    const token = tokenCookie.value
+    if (!token) return true
+    const exp = getJwtExp(token)
+    if (!exp) return true
+    return Date.now() >= exp * 1000 - 30000
   }
 
   async function ensureValidToken(): Promise<string | null> {
@@ -98,7 +106,21 @@ export function useApi() {
     if (params) {
       url += `?${serializeParams(params as Record<string, unknown>)}`
     }
-    return await $fetch<T>(url, { ...rest, headers })
+    try {
+      return await $fetch<T>(url, { ...rest, headers })
+    } catch (err: unknown) {
+      if (err && typeof err === 'object' && 'response' in err) {
+        const status = (err as { response: { status: number } }).response?.status
+        if (status === 401) {
+          const newToken = await tryRefreshToken()
+          if (newToken) {
+            headers.Authorization = `Bearer ${newToken}`
+            return await $fetch<T>(url, { ...rest, headers })
+          }
+        }
+      }
+      throw err
+    }
   }
 
   return { $api, getBaseUrl }

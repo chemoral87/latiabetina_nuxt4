@@ -10,7 +10,7 @@
         </VBtn>
       </VCardTitle>
 
-      <VCardText>
+      <VCardText class="py-1" >
         <VForm ref="formRef">
           <VRow density="comfortable">
             <VCol cols="12">
@@ -65,9 +65,8 @@
         </VForm>
       </VCardText>
 
-      <VCardActions class="pa-4">
-        <VSpacer />
-        <VBtn color="primary" variant="outlined" class="mr-2" id="btn-user-dialog-cancel" @click="close">
+      <div class="d-flex justify-end px-4 pb-4">
+        <VBtn color="primary" variant="outlined" class="mr-4" id="btn-user-dialog-cancel" @click="close">
           <VIcon start>mdi-close</VIcon>
           Cancelar
         </VBtn>
@@ -75,7 +74,7 @@
           <VIcon start>mdi-content-save</VIcon>
           Guardar
         </VBtn>
-      </VCardActions>
+      </div>
     </VCard>
   </VDialog>
 </template>

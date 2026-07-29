@@ -59,6 +59,38 @@ Key changes:
 +<VBtn id="login-submit" type="submit" color="primary" block size="large" class="text-none">Ingresar</VBtn>
 ```
 
+## VCardActions (avoid with VBtn)
+
+VCardActions applies default styles (gap, padding, button overrides) that can distort VBtn appearance. Use a plain `div` with flex utilities instead.
+
+**VCardText density** — use `class="py-1"` for compact content area (VCardText has no `dense`/`density` prop):
+
+```diff
+-<VCardText>
++<VCardText class="py-1">
+```
+
+**Button container** — replace `VCardActions` with right-aligned flex div with horizontal and bottom padding only:
+
+```diff
+-<VCardActions class="pa-4">
+-  <VSpacer />
+-  <VBtn color="primary" variant="outlined" class="mr-2">Cancelar</VBtn>
+-  <VBtn color="primary" variant="elevated">Guardar</VBtn>
+-</VCardActions>
++<div class="d-flex justify-end px-4 pb-4">
++  <VBtn color="primary" variant="outlined" class="mr-4">Cancelar</VBtn>
++  <VBtn color="primary" variant="elevated">Guardar</VBtn>
++</div>
+```
+
+Key changes:
+- `VCardText` → add `class="py-1"` for tight vertical padding
+- `VCardActions` → `<div class="d-flex justify-end px-4 pb-4">` (no top padding — `py-1` on VCardText already provides it)
+- Remove `<VSpacer />` — `justify-end` handles right alignment
+- `mr-2` → `mr-4` for wider button spacing
+- VBtn renders with normal button styling (no VCardActions overrides)
+
 ## Dividers
 
 ```diff

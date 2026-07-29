@@ -24,20 +24,22 @@
       </template>
 
       <template #selection="{ item }">
-        <VChip
+        <VChip 
+    
           color="primary"
-          variant="flat"
+          size="large"
+          variant="elevated"
           closable
           @click:close="removeRole(item as RoleItem)"
         >
-          <span class="pr-2">{{ item.name }}</span>
+          <span >{{ item.name }}</span>
         </VChip>
       </template>
 
       <template #item="{ item, props: itemProps }">
         <VListItem v-bind="itemProps">
           <template #title>
-            <VChip color="primary" variant="flat" size="small" label>{{ item.name }}</VChip>
+            <VChip color="success" variant="elevated" size="large" label>{{ item.name }}</VChip>
           </template>
         </VListItem>
       </template>

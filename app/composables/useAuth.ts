@@ -64,7 +64,6 @@ export const useAuthStore = defineStore("auth", () => {
   // tanto en servidor (SSR) como en cliente, y consistente con useApi().
   const tokenCookie = useCookie<string | null>("auth.token")
   const strategyCookie = useCookie<string | null>("auth.strategy")
-  const expiresCookie = useCookie<string | null>("auth.expires")
   const refreshTokenCookie = useCookie<string | null>("auth.refreshToken")
 
   function getBaseUrl() {
@@ -92,9 +91,6 @@ export const useAuthStore = defineStore("auth", () => {
     tokenCookie.value = token
     strategyCookie.value = name
     strategy.value = name
-
-    const expiresAt = Date.now() + s.token.maxAge * 1000
-    expiresCookie.value = String(expiresAt)
 
     if (s.user?.autoFetch !== false) {
       await fetchUser()
@@ -145,7 +141,6 @@ export const useAuthStore = defineStore("auth", () => {
     tokenCookie.value = null
     refreshTokenCookie.value = null
     strategyCookie.value = null
-    expiresCookie.value = null
     user.value = null
   }
 
@@ -159,13 +154,19 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   function setToken(token: string, name = "laravelJWT") {
-    const s = strategies[name]
     tokenCookie.value = token
     strategyCookie.value = name
     strategy.value = name
-    if (s) {
-      const expiresAt = Date.now() + s.token.maxAge * 1000
-      expiresCookie.value = String(expiresAt)
+  }
+
+  function getJwtExp(token: string): number | null {
+    try {
+      const payload = token.split(".")[1]
+      if (!payload) return null
+      const decoded = JSON.parse(atob(payload))
+      return decoded.exp ?? null
+    } catch {
+      return null
     }
   }
 
@@ -178,11 +179,10 @@ export const useAuthStore = defineStore("auth", () => {
     const token = tokenCookie.value
     if (!token) return
 
-    const expires = expiresCookie.value
-    if (expires && Date.now() > Number(expires)) {
+    const exp = getJwtExp(token)
+    if (!exp || Date.now() > exp * 1000) {
       tokenCookie.value = null
       strategyCookie.value = null
-      expiresCookie.value = null
       return
     }
 
