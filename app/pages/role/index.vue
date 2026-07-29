@@ -162,11 +162,9 @@ async function saveRole(item: Record<string, unknown>) {
     } else {
       await Role.create(item)
     }
-    filterRole.value = item.name as string
-    filterInput.value = item.name as string
     roleDialog.value = false
     role.value = null
-    await loadRoles({ filter: item.name as string, page: 1 })
+    await refreshRoles()
   } catch (e) {
     console.error("Error al guardar el rol", e)
   } finally {

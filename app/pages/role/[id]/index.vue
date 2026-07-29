@@ -62,7 +62,7 @@
 
       <!-- Actions -->
       <VCol cols="12">
-        <VCard variant="outlined">
+        <VCard id="card-roldtl-actions" variant="outlined">
           <VCardText class="d-flex justify-end pa-4">
             <VBtn id="btn-roldtl-cancel" color="primary" variant="outlined" class="mr-4" @click="navigateTo('/role')">
               <VIcon start>mdi-close</VIcon>

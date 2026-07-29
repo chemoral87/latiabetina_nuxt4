@@ -50,7 +50,7 @@ watch(filterInput, (val) => {
   }
   debounceTimer = setTimeout(() => {
     filterUser.value = val
-  }, 500)
+  }, 300)
 })
 
 const { User } = useRepository()

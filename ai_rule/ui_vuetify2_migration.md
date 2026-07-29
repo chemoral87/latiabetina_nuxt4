@@ -856,6 +856,37 @@ Vuetify 4's `useOptions` composable watches the `search` prop and resets `page.v
 
 The `@update:options` event includes `search`, so the parent uses it directly for the API filter parameter.
 
+### CRITICAL: `:search` must propagate into `VDataTableServer`
+
+Both the parent **page** AND the child **table component** must bind the `:search` prop to `VDataTableServer`. This is the most common overlooked step.
+
+**Page → Table component:**
+
+```vue
+<RoleTable :search="filterRole" />
+```
+
+**Table component → VDataTableServer (INSIDE the component):**
+
+```vue
+<VDataTableServer
+  ...
+  :search="props.search"   <!-- ✅ REQUIRED: without this, filter changes never reach useOptions -->
+  @update:options="onUpdateOptions"
+>
+```
+
+Without the `:search="props.search"` binding on `VDataTableServer`, Vuetify 4's `useOptions` composable **never detects search changes** and **never emits `@update:options`**. The debounce sets the filter ref, the parent passes it as a prop, but the table component doesn't forward it internally → the API call is never triggered.
+
+**Checklist for a new index page with search:**
+1. ✅ Debounced `filterInput` → `filterRole` (300ms)
+2. ✅ Table component gets `:search="filterRole"` from the page
+3. ✅ `VDataTableServer` inside the component gets `:search="props.search"`
+4. ✅ `@update:options="onUpdateOptions"` emits `sorting` event
+5. ✅ Parent `loadRoles(opts)` reads `filterRole.value` for the API filter param
+
+**Auditing existing tables:** If the filter works on one table but not another, check the component's template for the missing `:search="props.search"` on `VDataTableServer`. This was the root cause of the Role table filter not working — both `Organization/Table.vue` and `User/Table.vue` had the binding, but `Role/Table.vue` was missing it.
+
 ### onMounted + @update:options (instead of useAsyncData)
 
 Since `@update:options` fires immediately on mount in Vuetify 4, use it as the initial load trigger. Pair with `onMounted` only if the component is conditionally rendered or needs extra initialization:

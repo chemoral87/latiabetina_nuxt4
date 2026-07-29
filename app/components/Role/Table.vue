@@ -13,6 +13,7 @@
       class="elevation-1"
       striped="odd"
       mustSort
+      :search="props.search"
       items-per-page-text="Filas por página"
       :items-per-page-options="[10, 15, 30]"
       @update:options="onUpdateOptions"
@@ -137,7 +138,7 @@ const dialogDeleteProp = ref<Record<string, unknown>>({})
 const headers: Header[] = [
   { title: "Nombre", value: "name", align: "start", sortable: true },
   { title: "Permisos", value: "permissions", sortable: false },
-  { title: "Acciones", value: "actions", sortable: false, align: "center" },
+  { title: "Acciones", value: "actions", sortable: false, align: "center", width: "240px" },
 ]
 
 const total = computed(() => props.response?.total ?? 0)
