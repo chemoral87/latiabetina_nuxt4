@@ -1,6 +1,6 @@
 <template>
   <VContainer>
-    <div class="text-h6">{{ profile.organization_name }} ({{ profile.organization_short_code }})</div>
+    <div class="text-h6 mb-2">{{ profile.organization_name }} ({{ profile.organization_short_code }})</div>
     <VRow>
       <VCol cols="12" md="6">
         <RoleCombobox :roles="profile.roles as Record<string, unknown>[]" @model-change="setRoles" />

@@ -2,7 +2,7 @@
   <div>
     <VCombobox
       v-model="model"
-      variant="underlined"
+      variant="outlined"
       :filter="customFilter"
       item-value="id"
       item-title="name"

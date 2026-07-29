@@ -11,7 +11,10 @@ export function createRoleRepository(api: ApiFn, resource: string) {
   function distribution<T = unknown>(id: number | string, params?: Record<string, unknown>) {
     return api<T>(`${resource}/${id}/distribution`, { params })
   }
-  return { ...common, distribution }
+  function children<T = unknown>(id: number | string, payload: Record<string, unknown>) {
+    return api<T>(`${resource}/${id}`, { method: "PUT", body: payload })
+  }
+  return { ...common, distribution, children }
 }
 
 export type RoleRepository = ReturnType<typeof createRoleRepository>

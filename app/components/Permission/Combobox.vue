@@ -2,7 +2,7 @@
   <div>
     <VCombobox
       v-model="model"
-      variant="underlined"
+      variant="outlined"
       :filter="customFilter"
       item-value="id"
       item-title="name"
@@ -25,20 +25,20 @@
 
       <template #selection="{ item }">
         <VChip
-          color="info"
-          variant="flat"
+          color="primary"
+         size="large"
+          variant="elevated"
           closable
-          @click:close="removePermission(item.raw as PermissionItem)"
+          @click:close="removePermission(item as PermissionItem)"
         >
-          <span class="pr-2">{{ item.title }}</span>
+          {{ (item as PermissionItem).name }}
         </VChip>
       </template>
 
       <template #item="{ item, props: itemProps }">
         <VListItem v-bind="itemProps">
           <template #title>
-            <VChip v-if="item.raw && typeof item.raw === 'object'" color="info" variant="flat" size="small" label>{{ item.raw.name }}</VChip>
-            <span v-else>{{ item.title }}</span>
+            <VChip color="success" variant="elevated" size="large" label>{{ (item as PermissionItem).name }}</VChip>
           </template>
         </VListItem>
       </template>

@@ -84,7 +84,7 @@ function refresh() {
 }
 
 function goConfig(item: Record<string, unknown>) {
-  navigateTo(`/organizations/${item.id}/config`)
+  navigateTo(`/organization/${item.id}/config`)
 }
 
 function newOrganization() {

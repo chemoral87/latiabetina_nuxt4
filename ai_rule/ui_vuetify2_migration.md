@@ -646,6 +646,31 @@ Vuetify 3's VDataTable `@update:options` does **not** fire on mount — it only 
 
 **Vuetify 4 differs:** `@update:options` fires **immediately on mount** (`immediate: true` in `useOptions`), so the initial `emit("sorting")` in `onUpdateOptions` works as the data load trigger via `@update:options`.
 
+## Filter Debounce Pattern
+
+All index/list pages must use a consistent debounced filter pattern with **300ms** delay:
+
+```ts
+// Debounced filter
+let debounceTimer: ReturnType<typeof setTimeout> | null = null
+
+watch(filterInput, (val) => {
+  if (debounceTimer) clearTimeout(debounceTimer)
+  if (!val) {
+    filterRole.value = ""
+    return
+  }
+  debounceTimer = setTimeout(() => {
+    filterRole.value = val
+  }, 300)
+})
+```
+
+Rules:
+- Always use `300` (not 500) as the debounce delay — inconsistent timing across pages causes confusing UX.
+- Always clear `filter*` immediately when `filterInput` becomes empty (no debounce on clear).
+- The `filterInput` ref is bound to the `VTextField`; the `filter*` ref drives the actual API call via the `search` prop on `VDataTableServer` / `VDataTable`.
+
 ## VDataTable Header Text Color
 
 Vuetify 4's VDataTable uses CSS layers and may not properly inherit the theme text color for header `<th>` elements. The header text can appear white (invisible) on a light background:

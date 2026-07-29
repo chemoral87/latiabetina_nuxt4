@@ -12,8 +12,18 @@ export function useRepository() {
     },
   }
 
+  const OrganizationConfig = {
+    index<T = unknown>(orgId: string | number) {
+      return $api<T>(`/organization/${orgId}/config`)
+    },
+    create<T = unknown>(orgId: string | number, payload: Record<string, unknown>) {
+      return $api<T>(`/organization/${orgId}/config`, { method: "POST", body: payload })
+    },
+  }
+
   return {
     Organization: createCommonRepository($api, "/organization"),
+    OrganizationConfig,
     User: createCommonRepository($api, "/user"),
     Role: createRoleRepository($api, "/role"),
     Permission: createCommonRepository($api, "/permission"),

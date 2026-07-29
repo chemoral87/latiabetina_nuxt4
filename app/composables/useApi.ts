@@ -79,7 +79,20 @@ export function useApi() {
   }
 
   async function ensureValidToken(): Promise<string | null> {
-    const token = tokenCookie.value
+    let token = tokenCookie.value
+    // Fallback: read from auth store (handles SSR hydration where Pinia state
+    // is restored from payload but the client cookie ref may not be available yet)
+    if (!token) {
+      try {
+        const auth = useAuthStore()
+        token = auth.token ?? null
+      } catch {
+        // auth store may not be ready
+      }
+      // Auth store validated this token during SSR init() — return it directly
+      // to avoid isTokenExpired()/tryRefreshToken() reading the stale cookie ref
+      if (token) return token
+    }
     if (!token) return null
     if (isTokenExpired()) {
       return tryRefreshToken()

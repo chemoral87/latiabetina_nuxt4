@@ -18,25 +18,23 @@
         <VListItem v-if="!searching">Intente con otra búsqueda</VListItem>
         <VListItem v-else>Buscando...</VListItem>
       </template>
-      <template #selection="{ item, selected }">
+      <template #selection="{ item }">
         <VChip 
-          v-if="typeof item.raw === 'object'" 
           color="primary" 
-          variant="flat"
-          :model-value="selected" 
+          size="large"
+          variant="elevated"
           closable 
-          @click:close="removeUser(item.raw as UserItem)"
+          @click:close="removeUser(item as UserItem)"
         >
-          <span class="pr-2">{{ item.raw.name }} {{ item.raw.last_name }} ({{ item.raw.email }})</span>
+          {{ (item as UserItem).name }} {{ (item as UserItem).last_name }} ({{ (item as UserItem).email }})
         </VChip>
       </template>
       <template #item="{ item, props: itemProps }">
         <VListItem v-bind="itemProps">
           <template #title>
-            <VChip v-if="item.raw && typeof item.raw === 'object'" color="info" variant="flat" size="small" label>
-              {{ item.raw.name }} {{ item.raw.last_name }} ({{ item.raw.email }})
+            <VChip color="primary" variant="elevated" size="large" label>
+              {{ (item as UserItem).name }} {{ (item as UserItem).last_name }} ({{ (item as UserItem).email }})
             </VChip>
-            <span v-else>{{ item.title }}</span>
           </template>
         </VListItem>
       </template>

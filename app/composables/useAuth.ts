@@ -189,6 +189,7 @@ export const useAuthStore = defineStore("auth", () => {
     await fetchUser()
   }
 
+  const token = computed(() => tokenCookie.value)
   const hasToken = computed(() => !!tokenCookie.value)
 
   const permissions = computed(() => {
@@ -208,7 +209,7 @@ export const useAuthStore = defineStore("auth", () => {
     return permissions.value.includes(permission)
   }
 
-  return { user, loggedIn, hasToken, strategy, redirects, permissions, permissionsOrg, hasPermission, loginWith, fetchUser, logout, setToken, setStrategy, setUser, init }
+  return { user, loggedIn, token, hasToken, strategy, redirects, permissions, permissionsOrg, hasPermission, loginWith, fetchUser, logout, setToken, setStrategy, setUser, init }
 })
 
 export function useAuth() {
