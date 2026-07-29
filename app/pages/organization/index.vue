@@ -17,7 +17,7 @@
       </VCol>
 
       <VCol cols="12">
-        <OrganizationTable :search="filterOrganization" :response="response" :loading="loading" v-model:dialog-delete="dialogDeleteOrganization" @sorting="indexOrganizations" @edit="editOrganization" @delete="deleteOrganization" @config="goConfig" />
+        <OrganizationTable :search="filterOrganization" :response="response" :loading="loading" v-model:dialog-delete="dialogDeleteOrganization"          @sorting="handleSorting" @edit="editOrganization" @delete="deleteOrganization" @config="goConfig" />
       </VCol>
     </VRow>
 
@@ -28,6 +28,7 @@
 <script setup lang="ts">
 definePageMeta({
   title: "Organizaciones",
+  icon: "mdi-domain",
   middleware: "authenticated",
 })
 
@@ -39,6 +40,24 @@ const filterOrganization = ref("")
 const loading = ref(false)
 const organization = ref<Record<string, unknown> | null>(null)
 const lastOptions = ref<Record<string, unknown> | null>(null)
+const { Organization } = useRepository()
+
+// Top-level await — loads initial data before render (asyncData equivalent)
+{
+  const apiParams: Record<string, unknown> = {
+    page: 1,
+    itemsPerPage: 5,
+    sortBy: ["name"],
+    sortDesc: [false],
+  }
+  const initialResponse = await Organization.index(apiParams).catch(() => ({ data: [], total: 0 }))
+  response.value = initialResponse as { data: unknown[]; total: number }
+  lastOptions.value = {
+    page: 1,
+    itemsPerPage: 5,
+    sortBy: [{ key: "name", order: "asc" }],
+  }
+}
 
 let debounceTimer: ReturnType<typeof setTimeout> | null = null
 
@@ -52,8 +71,6 @@ watch(filterInput, (val) => {
     filterOrganization.value = val
   }, 300)
 })
-
-const { Organization } = useRepository()
 
 async function indexOrganizations(opts: Record<string, unknown>) {
   lastOptions.value = opts
@@ -75,6 +92,17 @@ async function indexOrganizations(opts: Record<string, unknown>) {
   } finally {
     loading.value = false
   }
+}
+
+let initialLoaded = false
+
+function handleSorting(opts: Record<string, unknown>) {
+  if (!initialLoaded) {
+    // Suppress mount-time @update:options — data was already loaded by top-level await
+    initialLoaded = true
+    return
+  }
+  indexOrganizations(opts)
 }
 
 function refresh() {

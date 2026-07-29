@@ -17,7 +17,7 @@
       </VCol>
 
       <VCol cols="12">
-        <UserTable :search="filterUser" :response="response" :loading="loading" v-model:dialog-delete="dialogDeleteUser" @sorting="indexUsers" @edit="editUser" @edit-profiles="editProfiles" @delete="deleteUser" />
+        <UserTable :search="filterUser" :response="response" :loading="loading" v-model:dialog-delete="dialogDeleteUser"          @sorting="handleSorting" @edit="editUser" @edit-profiles="editProfiles" @delete="deleteUser" />
       </VCol>
     </VRow>
 
@@ -28,6 +28,7 @@
 <script setup lang="ts">
 definePageMeta({
   title: "Usuarios",
+  icon: "mdi-account",
   middleware: "authenticated",
 })
 
@@ -39,6 +40,24 @@ const filterUser = ref("")
 const loading = ref(false)
 const userx = ref<Record<string, unknown> | null>(null)
 const lastOptions = ref<Record<string, unknown> | null>(null)
+const { User } = useRepository()
+
+// Top-level await — loads initial data before render (asyncData equivalent)
+{
+  const apiParams: Record<string, unknown> = {
+    page: 1,
+    itemsPerPage: 10,
+    sortBy: ["name"],
+    sortDesc: [false],
+  }
+  const initialResponse = await User.index(apiParams).catch(() => ({ data: [], total: 0 }))
+  response.value = initialResponse as { data: unknown[]; total: number }
+  lastOptions.value = {
+    page: 1,
+    itemsPerPage: 10,
+    sortBy: [{ key: "name", order: "asc" }],
+  }
+}
 
 let debounceTimer: ReturnType<typeof setTimeout> | null = null
 
@@ -52,8 +71,6 @@ watch(filterInput, (val) => {
     filterUser.value = val
   }, 300)
 })
-
-const { User } = useRepository()
 
 async function indexUsers(opts: Record<string, unknown>) {
   lastOptions.value = opts
@@ -75,6 +92,17 @@ async function indexUsers(opts: Record<string, unknown>) {
   } finally {
     loading.value = false
   }
+}
+
+let initialLoaded = false
+
+function handleSorting(opts: Record<string, unknown>) {
+  if (!initialLoaded) {
+    // Suppress mount-time @update:options — data was already loaded by top-level await
+    initialLoaded = true
+    return
+  }
+  indexUsers(opts)
 }
 
 function refresh() {

@@ -96,20 +96,19 @@ const profileDialog = ref(false)
 const dialogDelete = ref(false)
 const dialogDeleteProp = ref<Record<string, unknown>>({})
 
-onMounted(async () => {
-  const [userRes, profilesRes] = await Promise.all([
-    User.show(userId).catch(() => null),
-    Profile.index(userId).catch(() => []),
-  ])
-  mUser.value = (userRes as Record<string, unknown>) ?? {}
-  profiles.value = (profilesRes as Record<string, unknown>[]) ?? []
-  if (mUser.value.name) {
-    route.meta.title = `Perfiles de: ${mUser.value.name} ${mUser.value.last_name ?? ""}`.trim()
-    route.meta.icon = "mdi-account"
-    route.meta.back = "/user"
-    route.meta.showDrawer = false
-  }
-})
+// Top-level await — loads initial data before render (asyncData equivalent)
+const [userRes, profilesRes] = await Promise.all([
+  User.show(userId).catch(() => null),
+  Profile.index(userId).catch(() => []),
+])
+mUser.value = (userRes as Record<string, unknown>) ?? {}
+profiles.value = (profilesRes as Record<string, unknown>[]) ?? []
+if (mUser.value.name) {
+  route.meta.title = `Perfiles de: ${mUser.value.name} ${mUser.value.last_name ?? ""}`.trim()
+  route.meta.icon = "mdi-account"
+  route.meta.back = "/user"
+  route.meta.showDrawer = false
+}
 
 function getColorFavorite(favorite: unknown) {
   return favorite ? "orange" : "grey"

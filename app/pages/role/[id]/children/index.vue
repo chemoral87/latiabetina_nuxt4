@@ -99,18 +99,17 @@ const creatingPermission = ref(false)
 // Snackbar
 const notify = useNotifyStore()
 
-onMounted(async () => {
-  const res = await Role.show(roleId).catch(() => null)
-  mRole.value = (res as Record<string, unknown>) ?? {}
-  if (mRole.value.name) {
-    route.meta.title = `Rol ${mRole.value.name}`
-    route.meta.icon = "mdi-redhat"
-    route.meta.back = "/role"
-    route.meta.showDrawer = false
-  } else {
-    route.meta.title = "Permisos del Rol"
-  }
-})
+// Top-level await — data loads before render (asyncData equivalent)
+const res = await Role.show(roleId).catch(() => null)
+mRole.value = (res as Record<string, unknown>) ?? {}
+if (mRole.value.name) {
+  route.meta.title = `Rol ${mRole.value.name}`
+  route.meta.icon = "mdi-redhat"
+  route.meta.back = "/role"
+  route.meta.showDrawer = false
+} else {
+  route.meta.title = "Permisos del Rol"
+}
 
 function setPermissions(permissions: Record<string, unknown>[]) {
   mRole.value.permissions = permissions

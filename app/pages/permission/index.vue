@@ -4,79 +4,78 @@
       <!-- Filter -->
       <VCol cols="12" md="2">
         <VTextField
-          id="tf-role-index-filterrole-1"
+          id="tf-permission-index-filter-1"
           v-model="filterInput"
           append-inner-icon="mdi-magnify"
           variant="outlined"
           density="compact"
           clearable
           hide-details
-          placeholder="Buscar rol..."
+          placeholder="Buscar permiso..."
         />
       </VCol>
 
       <!-- Action buttons -->
       <VCol cols="auto" class="d-flex align-center">
-        <VBtn id="btn-role-refresh" color="primary" :loading="loading" class="mr-4" @click="refreshRoles">
+        <VBtn id="btn-permission-refresh" color="primary" :loading="loading" class="mr-4" @click="refreshPermissions">
           <VIcon start>mdi-reload</VIcon>
           Refrescar
         </VBtn>
-        <VBtn id="btn-role-new" color="success" @click="newRole">
+        <VBtn id="btn-permission-new" color="success" @click="newPermission">
           <VIcon start>mdi-plus</VIcon>
-          Nuevo Rol
+          Nuevo Permiso
         </VBtn>
       </VCol>
 
-      <!-- Role table -->
+      <!-- Permission table -->
       <VCol cols="12">
-        <RoleTable
-          :search="filterRole"
+        <PermissionTable
+          :search="filterPermission"
           :response="response"
           :loading="loading"
-          v-model:dialog-delete="roleDialogDelete"
+          v-model:dialog-delete="permissionDialogDelete"
           @sorting="handleSorting"
-          @editPermissions="editRolePermissions"
-          @distribution="distributeRole"
-          @edit="editRole"
-          @delete="deleteRole"
+          @edit="editPermission"
+          @distribution="distributePermission"
+          @delete="deletePermission"
         />
       </VCol>
     </VRow>
 
     <!-- Create/Edit dialog -->
-    <RoleDialog
-      v-if="roleDialog"
-      :role="role"
+    <PermissionDialog
+      v-if="permissionDialog"
+      :permission="permission"
       :loading="saving"
       @close="closeDialog"
-      @save="saveRole"
+      @save="savePermission"
     />
   </VContainer>
 </template>
 
 <script setup lang="ts">
 definePageMeta({
-  title: "Roles",
-  icon: "mdi-redhat",
+  title: "Permisos",
+  icon: "mdi-key-variant",
   middleware: "authenticated",
 })
 
-const { Role } = useRepository()
+const { Permission } = useRepository()
 
 const filterInput = ref("")
-const filterRole = ref("")
-const role = ref<Record<string, unknown> | null>(null)
+const filterPermission = ref("")
+const permission = ref<Record<string, unknown> | null>(null)
 const response = ref({ data: [], total: 0 })
 const loading = ref(false)
 const saving = ref(false)
-const roleDialog = ref(false)
-const roleDialogDelete = ref(false)
+const permissionDialog = ref(false)
+const permissionDialogDelete = ref(false)
 
 const lastOptions = ref<Record<string, unknown> | null>(null)
 
 // Top-level await — loads initial data before render (asyncData equivalent)
 // Use backend-compatible format for the API call, but store Vuetify 4 format
-// in lastOptions so loadRoles() conversion logic works correctly.
+// in lastOptions so loadPermissions() conversion logic works correctly.
 {
   const apiParams: Record<string, unknown> = {
     page: 1,
@@ -84,7 +83,7 @@ const lastOptions = ref<Record<string, unknown> | null>(null)
     sortBy: ["name"],
     sortDesc: [false],
   }
-  const initialResponse = await Role.index(apiParams).catch(() => ({ data: [], total: 0 }))
+  const initialResponse = await Permission.index(apiParams).catch(() => ({ data: [], total: 0 }))
   response.value = initialResponse as { data: unknown[]; total: number }
   lastOptions.value = {
     page: 1,
@@ -93,21 +92,21 @@ const lastOptions = ref<Record<string, unknown> | null>(null)
   }
 }
 
-// Debounced filter — matches Organization index pattern (300ms)
+// Debounced filter (300ms)
 let debounceTimer: ReturnType<typeof setTimeout> | null = null
 
 watch(filterInput, (val) => {
   if (debounceTimer) clearTimeout(debounceTimer)
   if (!val) {
-    filterRole.value = ""
+    filterPermission.value = ""
     return
   }
   debounceTimer = setTimeout(() => {
-    filterRole.value = val
+    filterPermission.value = val
   }, 300)
 })
 
-async function loadRoles(opts: Record<string, unknown>) {
+async function loadPermissions(opts: Record<string, unknown>) {
   try {
     loading.value = true
     lastOptions.value = opts
@@ -120,20 +119,20 @@ async function loadRoles(opts: Record<string, unknown>) {
       params.sortBy = [sortBy[0].key]
       params.sortDesc = [sortBy[0].order === 'desc']
     }
-    if (filterRole.value) {
-      params.filter = filterRole.value
+    if (filterPermission.value) {
+      params.filter = filterPermission.value
     }
-    response.value = await Role.index(params)
+    response.value = await Permission.index(params)
   } catch (e) {
-    console.error("Error al cargar roles", e)
+    console.error("Error al cargar permisos", e)
   } finally {
     loading.value = false
   }
 }
 
-async function refreshRoles() {
+async function refreshPermissions() {
   if (lastOptions.value) {
-    await loadRoles(lastOptions.value)
+    await loadPermissions(lastOptions.value)
   }
 }
 
@@ -145,80 +144,64 @@ function handleSorting(opts: Record<string, unknown>) {
     initialLoaded = true
     return
   }
-  loadRoles(opts)
+  loadPermissions(opts)
 }
 
-function newRole() {
+function newPermission() {
   useValidationErrors().clearErrors()
-  role.value = {}
-  roleDialog.value = true
+  permission.value = {}
+  permissionDialog.value = true
 }
 
-function editRole(item: Record<string, unknown>) {
+function editPermission(item: Record<string, unknown>) {
   useValidationErrors().clearErrors()
-  role.value = { ...item }
-  roleDialog.value = true
+  permission.value = { ...item }
+  permissionDialog.value = true
 }
 
-function editRolePermissions(item: Record<string, unknown>) {
-  navigateTo(`/role/${item.id}/children`)
+function distributePermission(item: Record<string, unknown>) {
+  navigateTo(`/permission/${item.id}/distribution`)
 }
 
-function distributeRole(item: Record<string, unknown>) {
-  navigateTo(`/role/${item.id}/distribution`)
-}
-
-async function deleteRole(item: Record<string, unknown>) {
+async function deletePermission(item: Record<string, unknown>) {
   try {
     saving.value = true
-    await Role.delete(item.id as number)
+    await Permission.delete(item.id as number)
     const data = response.value.data as Record<string, unknown>[]
     const idx = data.findIndex((r) => r.id === item.id)
     if (idx !== -1) {
       data.splice(idx, 1)
       response.value.total = Math.max(0, (response.value.total ?? 0) - 1)
     }
-    roleDialogDelete.value = false
+    permissionDialogDelete.value = false
   } catch (e) {
-    console.error("Error al eliminar el rol", e)
+    console.error("Error al eliminar el permiso", e)
   } finally {
     saving.value = false
   }
 }
 
-async function saveRole(item: Record<string, unknown>) {
+async function savePermission(item: Record<string, unknown>) {
   try {
     saving.value = true
     if (item.id) {
-      const res = await Role.update<Record<string, unknown>>(item.id as number, item)
-      const updated = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined
-      if (updated) {
-        const data = response.value.data as Record<string, unknown>[]
-        const idx = data.findIndex((r) => r.id === updated.id)
-        if (idx !== -1) {
-          data[idx] = updated
-        }
-      }
+      await Permission.update(item.id as number, item)
     } else {
-      const res = await Role.create<Record<string, unknown>>(item)
-      const created = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined
-      if (created) {
-        ;(response.value.data as Record<string, unknown>[]).unshift(created)
-        response.value.total = (response.value.total ?? 0) + 1
-      }
+      await Permission.create(item)
     }
-    roleDialog.value = false
-    role.value = null
+    permissionDialog.value = false
+    permission.value = null
+    await refreshPermissions()
   } catch (e) {
-    console.error("Error al guardar el rol", e)
+    console.error("Error al guardar el permiso", e)
   } finally {
     saving.value = false
   }
 }
 
 function closeDialog() {
-  roleDialog.value = false
-  role.value = null
+  permissionDialog.value = false
+  permission.value = null
   useValidationErrors().clearErrors()
 }
 </script>

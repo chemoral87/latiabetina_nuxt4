@@ -211,6 +211,35 @@ Layout root containers must include layout-scoped identifiers:
 +</script>
 ```
 
+### Page Icon
+
+Add an `icon` property to `definePageMeta` to display an icon next to the page title in the VAppBar. The layout reads `route.meta.icon` and renders a `VIcon` before the title:
+
+```vue
+<VIcon v-if="icon" class="mr-0">{{ icon }}</VIcon>
+<VToolbarTitle id="layout-title">{{ title }}</VToolbarTitle>
+```
+
+**Usage:**
+
+```diff
+ definePageMeta({
+   title: "Roles",
++  icon: "mdi-redhat",
+   middleware: "authenticated",
+ })
+```
+
+**Recommended icons by page:**
+
+| Page | Icon |
+|------|------|
+| Organization | `mdi-domain` |
+| Role | `mdi-redhat` |
+| User | `mdi-account-group` |
+
+This is the **static** icon — used for top-level index pages. For detail/child pages, set `route.meta.icon` dynamically after the async data loads (see [Dynamic NavBar Title](#dynamic-navbar-title-eventbusemitsetnavbar)).
+
 ## VBtn Props (Fab/Icon)
 
 ## VBtn Variants
@@ -951,7 +980,132 @@ function refresh() {
     indexOrganizations(lastOptions.value)
   }
 }
+
+## Initial Data Load (asyncData Replacement)
+
+Replaces AUI's `async asyncData()` hook. Loads the initial page data **before the component renders** (component suspends during the await), then suppresses the mount-time `@update:options` to avoid a duplicate request.
+
+### Problem
+
+Vuetify 4's `VDataTableServer` fires `@update:options` **immediately on mount**. If you do a top-level await for initial data AND let `@update:options` fire, you get **2 API calls** on page load (one wasted).
+
+### Solution
+
+1. **Top-level await** — load initial data with backend-compatible params (`sortBy: ["name"]`, `sortDesc: [false]`)
+2. **`lastOptions` in Vuetify 4 format** — store `[{ key: "name", order: "asc" }]` so `loadRoles()` conversion works on refresh
+3. **`initialLoaded` flag** — suppress the first (mount-time) `@update:options` call
+4. **`handleSorting` wrapper** — checks the flag, then delegates to the actual loader
+
+### Reference implementation (`role/index.vue`)
+
+```ts
+const response = ref({ data: [], total: 0 })
+const loading = ref(false)
+const lastOptions = ref<Record<string, unknown> | null>(null)
+
+// 1. Top-level await — backend-compatible format for the API call
+//    Vuetify 4 format in lastOptions so loadRoles() conversion works.
+{
+  const apiParams: Record<string, unknown> = {
+    page: 1,
+    itemsPerPage: 10,
+    sortBy: ["name"],        // ← backend format
+    sortDesc: [false],
+  }
+  const initialResponse = await Role.index(apiParams).catch(() => ({ data: [], total: 0 }))
+  response.value = initialResponse as { data: unknown[]; total: number }
+  lastOptions.value = {
+    page: 1,
+    itemsPerPage: 10,
+    sortBy: [{ key: "name", order: "asc" }],  // ← Vuetify 4 format
+  }
+}
+
+// 2. Data loader — converts Vuetify 4 sortBy to backend format
+async function loadRoles(opts: Record<string, unknown>) {
+  try {
+    loading.value = true
+    lastOptions.value = opts
+    const params: Record<string, unknown> = {
+      page: opts.page ?? 1,
+      itemsPerPage: opts.itemsPerPage ?? 10,
+    }
+    const sortBy = (opts.sortBy as { key: string; order: string }[]) ?? []
+    if (sortBy.length > 0) {
+      params.sortBy = [sortBy[0].key]
+      params.sortDesc = [sortBy[0].order === 'desc']
+    }
+    if (filterRole.value) {
+      params.filter = filterRole.value
+    }
+    response.value = await Role.index(params)
+  } catch (e) {
+    console.error("Error al cargar roles", e)
+  } finally {
+    loading.value = false
+  }
+}
+
+async function refreshRoles() {
+  if (lastOptions.value) {
+    await loadRoles(lastOptions.value)
+  }
+}
+
+// 3. Suppress mount-time duplicate with initialLoaded flag
+let initialLoaded = false
+
+function handleSorting(opts: Record<string, unknown>) {
+  if (!initialLoaded) {
+    // Suppress mount-time @update:options — data was already loaded by top-level await
+    initialLoaded = true
+    return
+  }
+  loadRoles(opts)
+}
 ```
+
+### Template wiring
+
+```vue
+<!-- Parent page passes :search and @sorting to handleSorting -->
+<RoleTable
+  :search="filterRole"
+  :response="response"
+  :loading="loading"
+  @sorting="handleSorting"
+/>
+```
+
+### CRITICAL: Repository must be declared BEFORE the await
+
+```diff
+ const lastOptions = ref<Record<string, unknown> | null>(null)
++const { Role } = useRepository()   // ← MUST be here, before the await!
+
+ // Top-level await
+ {
+   const initialResponse = await Role.index(apiParams)...
+```
+
+`const` is in the **temporal dead zone** — accessing it before the declaration throws `ReferenceError`. Always declare `const { Repository } = useRepository()` **before** the top-level await block.
+
+### Comparison: AUI asyncData vs Nuxt 4 pattern
+
+| AUI Nuxt 2 (`asyncData`) | Nuxt 4 (`<script setup>`) |
+|---|---|
+| `async asyncData({ app, params }) { const res = await api.show(params.id); return { mRole: res } }` | `const res = await api.show(route.params.id); mRole.value = res` |
+| Runs before page mount | Runs before component render (component suspends) |
+| Data merged into component data | Manually assigned to refs |
+| Single fetch, no duplicate | Top-level await + `initialLoaded` flag to prevent duplicate |
+| Error: `error({ statusCode: ... })` | `.catch(() => fallbackData)` |
+
+### Rules
+
+1. Use **backend-compatible params** (`sortBy: ["name"]`, `sortDesc: [false]`) for the API call
+2. Store **Vuetify 4 format** (`[{ key: "name", order: "asc" }]`) in `lastOptions` so refresh/sort work
+3. Always declare the repository **before** the top-level await (avoid temporal dead zone)4. The `refreshRoles()` / `refresh()` function calls `loadRoles(lastOptions.value)` / `indexOrganizations(lastOptions.value)` directly, bypassing the `initialLoaded` flag
+5. This pattern only applies to **index pages** with `VDataTableServer` — detail pages without a table need only the top-level await (no flag)
 
 ## Striped Row Color Override
 

@@ -129,18 +129,17 @@ const filteredProfiles = computed(() => {
   return profiles.value.filter((profile) => profile.org_id === selectedOrganization.value)
 })
 
-onMounted(async () => {
-  const res = await Role.distribution(roleId).catch(() => ({ role: {}, profiles: [] }))
-  const data = res as { role: Record<string, unknown>; profiles: Profile[] }
-  role.value = data.role ?? {}
-  profiles.value = data.profiles ?? []
-  if (role.value.name) {
-    route.meta.title = `Distribución: ${role.value.name}`
-    route.meta.icon = "mdi-share-variant"
-    route.meta.back = "/role"
-    route.meta.showDrawer = false
-  }
-})
+// Top-level await — loads initial data before render (asyncData equivalent)
+const res = await Role.distribution(roleId).catch(() => ({ role: {}, profiles: [] }))
+const data = res as { role: Record<string, unknown>; profiles: Profile[] }
+role.value = data.role ?? {}
+profiles.value = data.profiles ?? []
+if (role.value.name) {
+  route.meta.title = `Distribución: ${role.value.name}`
+  route.meta.icon = "mdi-share-variant"
+  route.meta.back = "/role"
+  route.meta.showDrawer = false
+}
 
 function userName(user: Record<string, unknown> | null | undefined): string {
   if (!user) return ""
