@@ -12,6 +12,7 @@
       :items="items"
       v-model:search="search"
       multiple
+      return-object
     >
       <template #no-data>
         <VListItem>
@@ -27,18 +28,16 @@
           color="primary"
           variant="flat"
           closable
-          @click:close="removeRole(item.raw as RoleItem)"
+          @click:close="removeRole(item as RoleItem)"
         >
-        {{ item.name }}
-          <span class="pr-2">{{ item.title }}</span>
+          <span class="pr-2">{{ item.name }}</span>
         </VChip>
       </template>
 
       <template #item="{ item, props: itemProps }">
         <VListItem v-bind="itemProps">
           <template #title>
-            <VChip v-if="item.raw && typeof item.raw === 'object'" color="primary" variant="flat" size="small" label>{{ item.raw.name }}</VChip>
-            <span v-else>{{ item.title }}</span>
+            <VChip color="primary" variant="flat" size="small" label>{{ item.name }}</VChip>
           </template>
         </VListItem>
       </template>

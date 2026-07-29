@@ -6,11 +6,11 @@
       </VCol>
 
       <VCol cols="auto" class="d-flex align-center">
-        <VBtn id="btn-org-refresh" color="primary" :loading="loading" class="mr-1" @click="refresh">
+        <VBtn id="btn-org-refresh" color="primary" :loading="loading" class="mr-4" @click="refresh">
           <VIcon start>mdi-reload</VIcon>
           Refrescar
         </VBtn>
-        <VBtn id="btn-org-new" color="success" class="mr-1" @click="newOrganization()">
+        <VBtn id="btn-org-new" color="success" @click="newOrganization()">
           <VIcon start>mdi-plus</VIcon>
           Nueva Organización
         </VBtn>

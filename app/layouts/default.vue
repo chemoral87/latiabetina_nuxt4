@@ -42,10 +42,10 @@
     <VAppBar id="layout-app-bar" elevation="2" fixed app>
       <VAppBarNavIcon v-if="showDrawer" id="layout-nav-icon" @click.stop="drawer = !drawer" />
       <VBtn v-if="backRoute" id="btn-layout-back" icon variant="outlined" rounded="circle" size="small" class="mx-2" @click="handleBack">
-        <VIcon>mdi-arrow-left</VIcon>
+        <VIcon size="large">mdi-arrow-left</VIcon> 
       </VBtn>
-      <VIcon v-if="icon" class="mr-2">{{ icon }}</VIcon>
-      <VToolbarTitle id="layout-title" class="pl-0">{{ title }}</VToolbarTitle>
+      <VIcon v-if="icon" class="mr-0">{{ icon }}</VIcon>
+      <VToolbarTitle id="layout-title" class="mx-1 pl-0">{{ title }}</VToolbarTitle>
       <VSpacer />
       <ClientOnly>
         <VBtn v-if="!auth.loggedIn && showLogin" id="layout-login-btn" icon @click="gotoLogin">

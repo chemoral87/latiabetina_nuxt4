@@ -75,8 +75,24 @@ export function useApi() {
     }
   }
 
+  function isTokenExpired(): boolean {
+    const expires = expiresCookie.value
+    if (!expires) return true
+    return Date.now() >= Number(expires) - 30000
+  }
+
+  async function ensureValidToken(): Promise<string | null> {
+    const token = tokenCookie.value
+    if (!token) return null
+    if (isTokenExpired()) {
+      return tryRefreshToken()
+    }
+    return token
+  }
+
   async function $api<T = unknown>(path: string, opts: Record<string, unknown> = {}): Promise<T> {
     const baseUrl = getBaseUrl()
+    await ensureValidToken()
     const headers = getHeaders(opts)
     const { headers: _h, params, ...rest } = opts
     let url = `${baseUrl}${path}`

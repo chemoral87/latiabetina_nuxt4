@@ -607,10 +607,20 @@ Vuetify 4's VDataTable uses CSS layers and may not properly inherit the theme te
 
 ```diff
 +<style scoped>
-+:deep(.v-data-table th) {
++:deep(.v-table th) {
 +  color: rgba(0, 0, 0, 0.87);
 +}
 +</style>
+```
+
+**Important:** The CSS class changed from Vuetify 2/3's `.v-data-table` to Vuetify 4's `.v-table`. If you have global styles targeting `.v-data-table`, update them:
+
+```diff
+-.v-data-table th {
++.v-table th {
+   color: #00000099;
+   font-weight: bold;
+ }
 ```
 
 This explicitly sets the header text to dark (87% opacity black) in the light theme.
@@ -1114,3 +1124,81 @@ onMounted(async () => {
 - Guard with `if (mUser.value.name)` to avoid `"undefined undefined"` if the API fails.
 - Use `.trim()` to avoid trailing whitespace when `last_name` is absent.
 - `route.meta` is reactive — the layout's `computed` properties update immediately.
+
+## VCombobox / VAutocomplete `#selection` Slot (Vuetify 3/4 Proxy Quirks)
+
+Vuetify 3/4's slot proxy system can break simple `typeof` checks and interpolation inside `#selection` slots. The same slot proxy also affects `selected` and `item.raw` access.
+
+### Chip rendering — remove `v-if` and `:model-value`
+
+```diff
+-<template #selection="{ item, selected }">
+-  <VChip
+-    v-if="typeof item.raw === 'object'"
+-    color="primary"
+-    :model-value="selected"
+-  >
+-    <span class="pr-2">{{ item.raw.name }}</span>
+-  </VChip>
+-</template>
++<template #selection="{ item }">
++  <VChip color="primary" closable @click:close="removeRole(item.raw as RoleItem)">
++    {{ item.raw.name }}
++  </VChip>
++</template>
+```
+
+Key changes:
+- **Remove `v-if="typeof item.raw === 'object'"`**: Returns `false` for slot proxy objects even though `item.raw` IS an object. The proxy intercept breaks `typeof`.
+- **Remove `:model-value="selected"`**: `selected` is `undefined` when VCombobox can't match model values to items (see items requirement below).
+- **Remove `variant="flat"`**: Causes invisible text in some Vuetify 4 themes. Let the chip use its default variant.
+- **Remove `<span>` wrapper**: Not needed, use `{{ item.raw.name }}` directly.
+- **Use `item.raw.name`** instead of `item.raw?.name` or `item.title` — the raw object always has the property.
+
+### Items must contain selected values
+
+Vuetify 3/4's VCombobox needs the selected model values to also exist in the `:items` array for chip rendering to work. Unlike Vuetify 2 (which renders chips from model alone), Vuetify 3/4 tries to match model values against items to determine selection state.
+
+```diff
+ watch(
+   () => props.roles,
+   (val) => {
+     model.value = val && val.length > 0 ? [...val] : []
++    if (val && val.length > 0) {
++      items.value = [...val]
++    }
+   },
+   { immediate: true },
+ )
+```
+
+### Search must merge selected items back
+
+When the user types to search, the API results exclude already-selected items (via the `ids` parameter). Without merging them back, chips disappear because the selected items are no longer in `:items`.
+
+```diff
+ async function loadRoles(queryText: string) {
+   const result = await Role.filter({ queryText, ids: rolesId.value })
+   items.value = (Array.isArray(result) ? result : []) as RoleItem[]
++  const selected = model.value
++  if (selected.length > 0) {
++    const existingIds = new Set(items.value.map((r) => r.id))
++    for (const role of selected) {
++      if (!existingIds.has(role.id)) {
++        items.value.push(role)
++      }
++    }
++  }
+ }
+```
+
+Without this merge, searching the combobox overwrites `items` with API results that exclude selected roles, and VCombobox loses the match → chips disappear.
+
+### Summary
+
+| Issue | Root Cause | Fix |
+|-------|-----------|-----|
+| Chips not rendering | `v-if="typeof item.raw === 'object'"` returns false for slot proxies | Remove the `v-if` |
+| Chips render without text | `variant="flat"` hides text in some themes | Use default variant (omit `variant`) |
+| `selected` always `undefined` | VCombobox can't match model values to empty `items` | Populate `items` from props |
+| Chips disappear after search | API result overwrites `items`, removing selected items | Merge selected items back into search results |

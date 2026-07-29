@@ -10,10 +10,12 @@
       </VCol>
 
       <VCol cols="12" class="d-flex justify-end">
-        <VBtn id="btn-useprf-cancel" color="primary" variant="outlined" class="mr-1 text-uppercase" @click="back()">
+        <VBtn id="btn-useprf-cancel" color="primary" variant="outlined" class="mr-4" @click="back()">
+          <VIcon start>mdi-close</VIcon>
           Cancelar
         </VBtn>
-        <VBtn id="btn-useprf-save" color="primary" variant="elevated" class="text-uppercase" @click="saveProfileRolesPermissions()">
+        <VBtn id="btn-useprf-save" color="primary" variant="elevated" @click="saveProfileRolesPermissions()">
+          <VIcon start>mdi-content-save</VIcon>
           Guardar
         </VBtn>
       </VCol>
@@ -44,10 +46,12 @@ onMounted(async () => {
   mUser.value = (_mUser as Record<string, unknown>) ?? {}
   profile.value = (_profile as Record<string, unknown>) ?? {}
 
-  // Replicates: eventBus.$emit("setNavBar", { title: `Perfilx: ${mUser.name} ${mUser.last_name}` })
-  // The layout reads route.meta.title via computed(() => route.meta?.title || 'Latiabetina')
+  // Replicates: eventBus.$emit("setNavBar", { title: `Perfilx: ${mUser.name} ${mUser.last_name}`, icon: "mdi-account", back: `/user/${userId}/profile`, showDrawer: false })
   if (mUser.value.name) {
     route.meta.title = `Perfil de: ${mUser.value.name} ${mUser.value.last_name ?? ''}`.trim()
+    route.meta.icon = 'mdi-account'
+    route.meta.back = `/user/${userId}/profile`
+    route.meta.showDrawer = false
   }
 })
 
