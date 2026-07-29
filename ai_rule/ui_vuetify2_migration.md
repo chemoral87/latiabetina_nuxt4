@@ -198,6 +198,19 @@ Vuetify 3/4 adds explicit `variant` prop:
 +<VBtn color="primary" variant="elevated">Guardar</VBtn>
 ```
 
+## VBtn Spacing Between Adjacent Buttons
+
+Add `class="mr-4"` to each button except the last in a group to maintain consistent spacing:
+
+```diff
++<VBtn id="btn-org-refresh" color="primary" class="mr-4" @click="refresh">
++  Refrescar
++</VBtn>
++<VBtn id="btn-org-new" color="success" @click="newOrganization()">
++  Nueva Organización
++</VBtn>
+```
+
 ## VBtn Props (Fab/Icon)
 
 ```diff
