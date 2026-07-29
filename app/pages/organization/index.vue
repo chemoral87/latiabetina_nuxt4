@@ -102,8 +102,13 @@ function editOrganization(item: Record<string, unknown>) {
 async function deleteOrganization(item: Record<string, unknown>) {
   try {
     await Organization.delete(item.id as number)
+    const data = response.value.data as Record<string, unknown>[]
+    const idx = data.findIndex((r) => r.id === item.id)
+    if (idx !== -1) {
+      data.splice(idx, 1)
+      response.value.total = Math.max(0, (response.value.total ?? 0) - 1)
+    }
     dialogDeleteOrganization.value = false
-    refresh()
   } catch (e) {
     console.error(e)
   }
@@ -112,11 +117,23 @@ async function deleteOrganization(item: Record<string, unknown>) {
 async function saveOrganization(item: Record<string, unknown>) {
   try {
     if (item.id) {
-      await Organization.update(item.id as number, item)
+      const res = await Organization.update<Record<string, unknown>>(item.id as number, item)
+      const updated = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined
+      if (updated) {
+        const data = response.value.data as Record<string, unknown>[]
+        const idx = data.findIndex((r) => r.id === updated.id)
+        if (idx !== -1) {
+          data[idx] = updated
+        }
+      }
     } else {
-      await Organization.create(item)
+      const res = await Organization.create<Record<string, unknown>>(item)
+      const created = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined
+      if (created) {
+        ;(response.value.data as Record<string, unknown>[]).unshift(created)
+        response.value.total = (response.value.total ?? 0) + 1
+      }
     }
-    await refresh()
     organizationFormDialog.value = false
   } catch (e) {
     console.error(e)

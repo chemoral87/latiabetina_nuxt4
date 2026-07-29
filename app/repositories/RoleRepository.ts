@@ -12,7 +12,7 @@ export function createRoleRepository(api: ApiFn, resource: string) {
     return api<T>(`${resource}/${id}/distribution`, { params })
   }
   function children<T = unknown>(id: number | string, payload: Record<string, unknown>) {
-    return api<T>(`${resource}/${id}`, { method: "PUT", body: payload })
+    return api<T>(`${resource}/${id}/children`, { method: "PUT", body: payload })
   }
   return { ...common, distribution, children }
 }

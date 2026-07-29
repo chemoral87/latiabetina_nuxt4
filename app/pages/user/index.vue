@@ -102,8 +102,13 @@ function editProfiles(item: Record<string, unknown>) {
 async function deleteUser(item: Record<string, unknown>) {
   try {
     await User.delete(item.id as number)
+    const data = response.value.data as Record<string, unknown>[]
+    const idx = data.findIndex((r) => r.id === item.id)
+    if (idx !== -1) {
+      data.splice(idx, 1)
+      response.value.total = Math.max(0, (response.value.total ?? 0) - 1)
+    }
     dialogDeleteUser.value = false
-    refresh()
   } catch (e) {
     console.error(e)
   }
@@ -112,13 +117,27 @@ async function deleteUser(item: Record<string, unknown>) {
 async function saveUser(item: Record<string, unknown>) {
   try {
     if (item.id) {
-      await User.update(item.id as number, item)
-      await refresh()
+      const res = await User.update<Record<string, unknown>>(item.id as number, item)
+      const updated = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined
+      if (updated) {
+        const data = response.value.data as Record<string, unknown>[]
+        const idx = data.findIndex((r) => r.id === updated.id)
+        if (idx !== -1) {
+          data[idx] = updated
+        }
+      }
       userDialog.value = false
     } else {
-      const res = await User.create(item)
+      const res = await User.create<Record<string, unknown>>(item)
+      const created = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined
+      if (created) {
+        ;(response.value.data as Record<string, unknown>[]).unshift(created)
+        response.value.total = (response.value.total ?? 0) + 1
+      }
       userDialog.value = false
-      editProfiles(res as Record<string, unknown>)
+      if ((res as Record<string, unknown>)?.data) {
+        editProfiles((res as Record<string, unknown>).data as Record<string, unknown>)
+      }
     }
   } catch (e) {
     console.error(e)

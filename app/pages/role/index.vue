@@ -133,7 +133,7 @@ function editRole(item: Record<string, unknown>) {
 }
 
 function editRolePermissions(item: Record<string, unknown>) {
-  navigateTo(`/role/${item.id}`)
+  navigateTo(`/role/${item.id}/children`)
 }
 
 function distributeRole(item: Record<string, unknown>) {
@@ -144,9 +144,13 @@ async function deleteRole(item: Record<string, unknown>) {
   try {
     saving.value = true
     await Role.delete(item.id as number)
-    filterRole.value = ""
+    const data = response.value.data as Record<string, unknown>[]
+    const idx = data.findIndex((r) => r.id === item.id)
+    if (idx !== -1) {
+      data.splice(idx, 1)
+      response.value.total = Math.max(0, (response.value.total ?? 0) - 1)
+    }
     roleDialogDelete.value = false
-    await loadRoles({ page: 1, filter: "" })
   } catch (e) {
     console.error("Error al eliminar el rol", e)
   } finally {
@@ -158,13 +162,25 @@ async function saveRole(item: Record<string, unknown>) {
   try {
     saving.value = true
     if (item.id) {
-      await Role.update(item.id as number, item)
+      const res = await Role.update<Record<string, unknown>>(item.id as number, item)
+      const updated = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined
+      if (updated) {
+        const data = response.value.data as Record<string, unknown>[]
+        const idx = data.findIndex((r) => r.id === updated.id)
+        if (idx !== -1) {
+          data[idx] = updated
+        }
+      }
     } else {
-      await Role.create(item)
+      const res = await Role.create<Record<string, unknown>>(item)
+      const created = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined
+      if (created) {
+        ;(response.value.data as Record<string, unknown>[]).unshift(created)
+        response.value.total = (response.value.total ?? 0) + 1
+      }
     }
     roleDialog.value = false
     role.value = null
-    await refreshRoles()
   } catch (e) {
     console.error("Error al guardar el rol", e)
   } finally {
