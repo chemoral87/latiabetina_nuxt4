@@ -84,6 +84,12 @@ function formatErrorMessage(message: string) {
     message = ERROR_MESSAGES[404]
   }
   if (code === 403) {
+    // Read the required permission directly from error.data (structured, no regex needed)
+    const err = props.error as Record<string, unknown> | null
+    const permissionData = err?.data as { permission?: string } | undefined
+    if (permissionData?.permission) {
+      return `${ERROR_MESSAGES[403]}<br/><br/>Se requiere el permiso: <span class="error-message">${permissionData.permission}</span>`
+    }
     return `${ERROR_MESSAGES[403]}<br/><br/>${message}`
   }
   if ([404, 500, 405].includes(code)) {

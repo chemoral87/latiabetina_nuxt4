@@ -9,7 +9,8 @@ export default defineNuxtRouteMiddleware((to) => {
   if (!auth.hasPermission(required)) {
     throw createError({
       statusCode: 403,
-      statusMessage: `No tienes permiso para acceder a esta página. Se requiere el permiso: ${required}`,
+      statusMessage: "No tienes permiso para acceder a esta página.",
+      data: { permission: required },
     })
   }
 })

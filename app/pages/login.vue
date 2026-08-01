@@ -58,6 +58,7 @@ const auth = useAuthStore()
 
 definePageMeta({
   title: "Inicio Sesión",
+  icon: "mdi-login",
   middleware: ["guest"],
 })
 

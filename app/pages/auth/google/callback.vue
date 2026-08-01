@@ -12,6 +12,7 @@
 <script setup lang="ts">
 definePageMeta({
   title: "Autenticación Google",
+  icon: "mdi-google",
 })
 
 const auth = useAuthStore()

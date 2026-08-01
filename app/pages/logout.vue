@@ -14,6 +14,7 @@
 <script setup lang="ts">
 definePageMeta({
   title: "Cerrando sesión",
+  icon: "mdi-logout",
 })
 
 const auth = useAuthStore()

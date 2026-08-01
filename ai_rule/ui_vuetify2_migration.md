@@ -236,11 +236,17 @@ Add an `icon` property to `definePageMeta` to display an icon next to the page t
 
 | Page | Icon |
 |------|------|
+| Dashboard | `mdi-view-dashboard` |
 | Organization | `mdi-domain` |
 | Role | `mdi-redhat` |
 | User | `mdi-account` |
+| Permission | `mdi-key-variant` |
+| Account/Profile | `mdi-account-circle` |
+| Login | `mdi-login` |
+| Logout | `mdi-logout` |
+| Google Auth | `mdi-google` |
 
-This is the **static** icon — used for top-level index pages. For detail/child pages, set `route.meta.icon` dynamically after the async data loads (see [Dynamic NavBar Title](#dynamic-navbar-title-eventbusemitsetnavbar)).
+This is the **static** icon — used for top-level index pages. For detail/child pages, set `route.meta.icon` dynamically after the async data loads (see [Dynamic NavBar Title](#dynamic-navbar-title-eventbusemitsetnavbar--avoid-dry-with-a-helper)).
 
 ## VBtn Variants
 
@@ -937,78 +943,79 @@ function handleSorting(opts: Record<string, unknown>) {
 4. The `refreshRoles()` / `refresh()` function calls `loadRoles(lastOptions.value)` / `indexOrganizations(lastOptions.value)` directly, bypassing the `initialLoaded` flag
 5. This pattern only applies to **index pages** with `VDataTableServer` — detail pages without a table need only the top-level await (no flag)
 
-## Dynamic NavBar Title (`eventBus.$emit("setNavBar")`)
+## Dynamic NavBar Title (`eventBus.$emit("setNavBar")`) — avoid DRY with a helper
 
 The AUI app used a global event bus to update the VAppBar title dynamically:
-
-```diff
--mounted() {
--  const eventBus = this.$eventBus || this.$nuxt
--  eventBus.$emit("setNavBar", { title: `Perfiles de: ${this.mUser.name} ${this.mUser.last_name}`, icon: "mdi-account", back: `/user`, showDrawer: false })
--},
-```
-
-In Nuxt 4, the layout reads `route.meta.title` for the VAppBar title. Set it directly after the async data loads:
-
-```diff
-+import { useRoute } from "vue-router"
-+const route = useRoute()
-
- onMounted(async () => {
-   const res = await api.show(id)
-   mUser.value = res as Record<string, unknown>
-
-+  if (mUser.value.name) {
-+    route.meta.title = `Perfiles de: ${mUser.value.name} ${mUser.value.last_name ?? ""}`.trim()
-+  }
- })
-```
-
-- `route.meta` is reactive — changes reflect immediately in the layout's `computed` properties.
-- The layout reads `route.meta.icon`, `route.meta.back` (to show a back arrow), and `route.meta.showDrawer` (boolean to toggle the hamburger menu), so set these as well if they were in the AUI event payload.
-- The static `definePageMeta({ title })` is replaced dynamically after the API call.
-
-### Dynamic NavBar Title — Sub-pages (nested async data)
-
-Same pattern as above, but for deeply nested pages where both a parent resource (user) and a child resource (profile) are fetched in parallel before the title can be built.
-
-**AUI source (`pages/user/_id/profile/_profile_id/index.vue`):**
 
 ```js
 mounted() {
   const eventBus = this.$eventBus || this.$nuxt
-  eventBus.$emit("setNavBar", {
-    title: `Perfilx: ${this.mUser.name} ${this.mUser.last_name}`,
-    icon: "mdi-account",
-    back: `/user`,
-    showDrawer: false,
-  })
+  eventBus.$emit("setNavBar", { title: `...`, icon: "...", back: `/...`, showDrawer: false })
 },
 ```
 
-**Nuxt 4 equivalent (`pages/user/[id]/profile/[profile_id]/index.vue`):**
+In Nuxt 4, the layout reads `route.meta` properties (`title`, `icon`, `back`, `showDrawer`).
+Set them directly after the async data loads.
+
+### Helper function (avoid repeating 4 assignments)
+
+Every detail page sets the same 4 `route.meta` properties. Instead of repeating:
 
 ```ts
-const route = useRoute()
+route.meta.title = `...`
+route.meta.icon = "..."
+route.meta.back = "/..."
+route.meta.showDrawer = false
+```
 
+Create a reusable helper:
+
+```ts
+function setNavBar({ title, icon, back, showDrawer = false }: {
+  title?: string
+  icon?: string
+  back?: string
+  showDrawer?: boolean
+}) {
+  const route = useRoute()
+  if (title !== undefined) route.meta.title = title
+  if (icon !== undefined) route.meta.icon = icon
+  if (back !== undefined) route.meta.back = back
+  if (showDrawer !== undefined) route.meta.showDrawer = showDrawer
+}
+```
+
+Then each detail page calls a single line:
+
+```ts
+// Simple detail page
+if (mRole.value.name) {
+  setNavBar({
+    title: `Rol ${mRole.value.name}`,
+    icon: "mdi-redhat",
+    back: "/role",
+  })
+}
+
+// Nested sub-pages (parallel fetches)
 onMounted(async () => {
-  const [_mUser, _profile] = await Promise.all([
+  const [userRes, profileRes] = await Promise.all([
     User.show(userId).catch(() => null),
-    Profile.show(userId, profileId).catch(() => null),
+    Profile.show(profileId).catch(() => null),
   ])
-  mUser.value = (_mUser as Record<string, unknown>) ?? {}
-  profile.value = (_profile as Record<string, unknown>) ?? {}
+  // ... assign to refs ...
 
   if (mUser.value.name) {
-    route.meta.title = `Perfil de: ${mUser.value.name} ${mUser.value.last_name ?? ''}`.trim()
-    route.meta.icon = "mdi-account"
-    route.meta.back = "/user"
-    route.meta.showDrawer = false
+    setNavBar({
+      title: `Perfil de: ${mUser.value.name} ${mUser.value.last_name ?? ''}`.trim(),
+      icon: "mdi-account",
+      back: `/user/${userId}/profile`,
+    })
   }
 })
 ```
 
-**Migration diff:**
+### Migration diff
 
 ```diff
 -mounted() {
@@ -1020,22 +1027,22 @@ onMounted(async () => {
 -    showDrawer: false,
 -  })
 -},
-+onMounted(async () => {
-+  // ... parallel API calls (User.show + Profile.show) ...
-+  if (mUser.value.name) {
-+    route.meta.title = `Perfil de: ${mUser.value.name} ${mUser.value.last_name ?? ''}`.trim()
-+    route.meta.icon = "mdi-account"
-+    route.meta.back = "/user"
-+    route.meta.showDrawer = false
-+  }
-+})
++if (mUser.value.name) {
++  setNavBar({
++    title: `Perfil de: ${mUser.value.name} ${mUser.value.last_name ?? ''}`.trim(),
++    icon: "mdi-account",
++    back: "/user",
++  })
++}
 ```
 
-**Rules:**
-- Set `route.meta.title`, `route.meta.icon`, `route.meta.back`, and `route.meta.showDrawer` **inside `onMounted`**, after all async calls resolve. `definePageMeta({ title })` is static and cannot use runtime data.
-- Guard with `if (mUser.value.name)` to avoid `"undefined undefined"` if the API fails.
-- Use `.trim()` to avoid trailing whitespace when `last_name` is absent.
-- `route.meta` is reactive — the layout's `computed` properties update immediately.
+### Rules
+
+- `route.meta` is reactive — changes reflect immediately in the layout's `computed` properties.
+- The static `definePageMeta({ title })` is replaced dynamically after the API call — keep the fallback static title.
+- Guard with `if (entity.value.name)` to avoid `"undefined undefined"` if the API fails.
+- Use `.trim()` to avoid trailing whitespace when last_name is absent.
+- `showDrawer` defaults to `false` in the helper — only pass it when you need `true` (main pages with the navigation drawer).
 
 ## Form Validation (Client + Server)
 

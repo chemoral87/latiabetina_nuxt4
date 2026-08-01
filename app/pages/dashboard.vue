@@ -16,6 +16,7 @@
 <script setup lang="ts">
 definePageMeta({
   title: "Dashboard",
+  icon: "mdi-view-dashboard",
   middleware: "authenticated",
 })
 

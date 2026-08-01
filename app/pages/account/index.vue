@@ -113,6 +113,7 @@
 <script setup lang="ts">
 definePageMeta({
   title: "Perfil",
+  icon: "mdi-account-circle",
   middleware: "authenticated",
 })
 

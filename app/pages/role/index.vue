@@ -58,7 +58,8 @@
 definePageMeta({
   title: "Roles",
   icon: "mdi-redhat",
-  middleware: "authenticated",
+  permission: "role-index",
+  middleware: ["authenticated", "permission"],
 })
 
 const { Role } = useRepository()
