@@ -314,6 +314,8 @@ Predefined VIcon sizes (relative to parent font):
 - large: `1.75em`
 - x-large: `2em`
 
+**Rule:** Always use `size="x-large"` for icons inside `VBtn` with `icon` prop — in table action columns (`AuditoriumEvent/Table.vue`, `User/Table.vue`, `Role/Table.vue`, etc.), the user profile actions, and the layout back button. `size="large"` (`1.75em`) is noticeably smaller and produces inconsistent icon sizing across tables.
+
 ## VBtn Props (Fab/Icon) — Vuetify 2 pattern
 
 ```diff

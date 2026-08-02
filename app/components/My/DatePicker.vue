@@ -23,16 +23,42 @@
       @update:model-value="pickDate"
       :show-adjacent-months="scrollable"
       :locale="locale"
+      hide-header
+      elevation="5"
     >
+      <template #controls="{ disabled, nextMonth, prevMonth, monthYearText }">
+        <VBtn
+          :disabled="disabled?.includes?.('prev-month')"
+          color="primary"
+          icon="mdi-chevron-left"
+          variant="text"
+          @click="prevMonth"
+        />
+        <VSpacer />
+        <div class="text-center text-body-1 font-weight-medium text-capitalize">
+          {{ monthYearText }}
+        </div>
+        <VSpacer />
+        <VBtn
+          :disabled="disabled?.includes?.('next-month')"
+          color="primary"
+          icon="mdi-chevron-right"
+          variant="text"
+          @click="nextMonth"
+        />
+      </template>
       <template #actions>
+     
+
         <VBtn color="primary" variant="outlined" class="mr-2" id="btn-my-datepicker-clear" @click="clearDate">
           <VIcon start>mdi-close</VIcon>
           Limpiar
         </VBtn>
-        <VBtn color="primary" id="btn-my-datepicker-today" @click="setToday">
+        <VBtn color="primary" variant="elevated" id="btn-my-datepicker-today" @click="setToday">
           <VIcon start>mdi-calendar-today</VIcon>
           Hoy
         </VBtn>
+ 
       </template>
     </VDatePicker>
   </VMenu>
@@ -85,8 +111,16 @@ const formattedDate = computed(() => {
   return formatShortDateSlash(props.modelValue)
 })
 
-function pickDate(val: string | null) {
-  emit("update:modelValue", val)
+function pickDate(val: Date | string | null) {
+  let isoDate: string | null = null
+  if (val instanceof Date && !isNaN(val.getTime())) {
+    const offset = val.getTimezoneOffset()
+    const localDate = new Date(val.getTime() - offset * 60 * 1000)
+    isoDate = localDate.toISOString().substr(0, 10)
+  } else if (typeof val === "string" && val) {
+    isoDate = val
+  }
+  emit("update:modelValue", isoDate)
   dateMenu.value = false
   nextTick(() => {
     dateMenuRef.value?.$el?.querySelector?.("input")?.focus?.()

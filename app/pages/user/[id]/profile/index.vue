@@ -20,13 +20,13 @@
 
               <div class="d-flex align-center ga-2">
                 <VBtn id="btn-user-profile-fav" icon variant="text" size="small" :color="getColorFavorite(profile.favorite)" @click="setFavProfile(profile)">
-                  <VIcon size="large" icon="mdi-star" />
+                  <VIcon size="x-large" icon="mdi-star" />
                 </VBtn>
                 <VBtn id="btn-user-profile-edit" icon variant="text" size="small" color="primary" @click="editProfile(profile)">
-                  <VIcon size="large" icon="mdi-pencil" />
+                  <VIcon size="x-large" icon="mdi-pencil" />
                 </VBtn>
                 <VBtn id="btn-user-profile-delete" icon variant="text" size="small" color="error" @click="confirmDeleteProfile(profile)">
-                  <VIcon size="large" icon="mdi-delete" />
+                  <VIcon size="x-large" icon="mdi-delete" />
                 </VBtn>
               </div>
             </div>
