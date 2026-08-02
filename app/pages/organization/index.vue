@@ -21,7 +21,7 @@
       </VCol>
     </VRow>
 
-    <OrganizationFormDialog v-if="organizationFormDialog" :organization="organization" @close="closeFormDialog()" @save="saveOrganization" />
+    <OrganizationFormDialog v-if="organizationFormDialog" :organization="organization" :loading="saving" @close="closeFormDialog()" @save="saveOrganization" />
   </VContainer>
 </template>
 
@@ -38,6 +38,7 @@ const response = ref({})
 const filterInput = ref("")
 const filterOrganization = ref("")
 const loading = ref(false)
+const saving = ref(false)
 const organization = ref<Record<string, unknown> | null>(null)
 const lastOptions = ref<Record<string, unknown> | null>(null)
 const { Organization } = useRepository()
@@ -143,6 +144,7 @@ async function deleteOrganization(item: Record<string, unknown>) {
 }
 
 async function saveOrganization(item: Record<string, unknown>) {
+  saving.value = true
   try {
     if (item.id) {
       const res = await Organization.update<Record<string, unknown>>(item.id as number, item)
@@ -165,6 +167,8 @@ async function saveOrganization(item: Record<string, unknown>) {
     organizationFormDialog.value = false
   } catch (e) {
     console.error(e)
+  } finally {
+    saving.value = false
   }
 }
 

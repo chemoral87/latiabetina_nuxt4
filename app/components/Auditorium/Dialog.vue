@@ -1,11 +1,11 @@
 <template>
-  <VDialog id="dlg-permission-dialog-1" v-model="dialogVisible" persistent max-width="400px">
+  <VDialog id="dlg-audit-dialo-1" v-model="dialogVisible" persistent width="400px">
     <VCard>
       <VCardTitle class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center">
-        <VIcon start size="small" color="primary">mdi-key-variant</VIcon>
+        <VIcon start size="small" color="primary">mdi-seat</VIcon>
         {{ formTitle }}
         <VSpacer />
-        <VBtn icon size="x-small" id="btn-permission-dialog-close" @click="close">
+        <VBtn icon size="x-small" id="btn-auditorium-dialog-close" @click="close">
           <VIcon>mdi-close</VIcon>
         </VBtn>
       </VCardTitle>
@@ -13,15 +13,18 @@
       <VCardText class="py-1">
         <VForm ref="formRef" @submit.prevent="save">
           <VRow density="comfortable">
+            <VCol v-if="!item.id" cols="12">
+              <OrganizationSelect v-model="item.org_id" permission="auditorium-index" hide-one density="compact"  variant="outlined" :rules="[vrules.requiredField('Organización')]" />
+            </VCol>
             <VCol cols="12">
-              <VTextField
-                id="tf-permission-dialog-name-1"
+              <VTextField id="tf-audit-dialo-item-name-1"
                 v-model="item.name"
                 label="Nombre"
                 variant="outlined"
+                density="compact"
                 :error-messages="errors?.name"
                 :rules="[vrules.requiredField('Nombre')]"
-                autofocus
+                :disabled="saving || loading"
                 @keyup.enter="save"
               />
             </VCol>
@@ -30,11 +33,11 @@
       </VCardText>
 
       <div class="d-flex justify-end px-4 pb-4">
-        <VBtn color="primary" variant="outlined" class="mr-4" :disabled="saving || loading" id="btn-permission-dialog-cancel" @click="close">
+        <VBtn color="primary" variant="outlined" class="mr-4" :disabled="saving || loading" id="btn-auditorium-dialog-cancel" @click="close">
           <VIcon start>mdi-close</VIcon>
           Cancelar
         </VBtn>
-        <VBtn color="primary" variant="elevated" :loading="saving || loading" :disabled="saving || loading" id="btn-permission-dialog-save" @click="save">
+        <VBtn color="primary" variant="elevated" :loading="saving || loading" :disabled="saving || loading" id="btn-auditorium-dialog-save" @click="save">
           <VIcon start>mdi-content-save</VIcon>
           Guardar
         </VBtn>
@@ -48,7 +51,7 @@ import { useValidationErrors } from "~/composables/useValidationErrors"
 import { useVrules } from "~/composables/useVrules"
 
 const props = defineProps<{
-  permission?: Record<string, unknown> | null
+  auditorium?: Record<string, unknown> | null
   loading?: boolean
 }>()
 
@@ -64,10 +67,9 @@ const formRef = ref()
 const dialogVisible = ref(true)
 const saving = ref(false)
 
-const item = ref<Record<string, unknown>>({ name: "" })
+const item = ref<Record<string, unknown>>({})
 
-const isEditMode = computed(() => !!item.value.id)
-const formTitle = computed(() => isEditMode.value ? "Editar Permiso" : "Nuevo Permiso")
+const formTitle = computed(() => item.value.id ? "Editar Auditorio" : "Nuevo Auditorio")
 
 // Reset the local guard when the parent finishes the API call (success or error)
 watch(() => props.loading, (val) => {
@@ -75,9 +77,8 @@ watch(() => props.loading, (val) => {
 }, { immediate: true })
 
 onMounted(() => {
-  clearErrors()
-  if (props.permission && Object.keys(props.permission).length > 0) {
-    item.value = { ...props.permission }
+  if (props.auditorium) {
+    item.value = { ...props.auditorium }
   }
 })
 
@@ -92,7 +93,11 @@ async function save() {
   if (!valid) return
   if (saving.value || props.loading) return
   saving.value = true
-  emit("save", { ...item.value })
+  const payload = { ...item.value }
+  if (item.value.id) {
+    delete payload.org_id
+  }
+  emit("save", payload)
 }
 </script>
 

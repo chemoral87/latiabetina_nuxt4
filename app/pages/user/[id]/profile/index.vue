@@ -74,7 +74,7 @@
       </VCol>
     </VRow>
 
-    <ProfileDialog v-if="profileDialog" :user-id="userId" @close="closeProfileDialog" @save="saveProfile" />
+    <ProfileDialog v-if="profileDialog" :user-id="userId" :loading="saving" @close="closeProfileDialog" @save="saveProfile" />
     <DialogDelete v-if="dialogDelete" :dialog="dialogDeleteProp" @ok="(item) => { deleteProfile(item) }" @close="dialogDelete = false" />
   </VContainer>
 </template>
@@ -95,6 +95,7 @@ const profiles = ref<Record<string, unknown>[]>([])
 const profileDialog = ref(false)
 const dialogDelete = ref(false)
 const dialogDeleteProp = ref<Record<string, unknown>>({})
+const saving = ref(false)
 
 // Top-level await — loads initial data before render (asyncData equivalent)
 const [userRes, profilesRes] = await Promise.all([
@@ -136,10 +137,16 @@ function closeProfileDialog() {
 }
 
 function saveProfile(item: Record<string, unknown>) {
-  Profile.create(userId, { org_id: item.org_id }).then((res) => {
-    profileDialog.value = false
-    navigateTo(`/user/${userId}/profile/${(res as Record<string, unknown>).profile?.id}`)
-  })
+  saving.value = true
+  Profile.create(userId, { org_id: item.org_id })
+    .then((res) => {
+      profileDialog.value = false
+      navigateTo(`/user/${userId}/profile/${(res as Record<string, unknown>).profile?.id}`)
+    })
+    .catch((e) => console.error(e))
+    .finally(() => {
+      saving.value = false
+    })
 }
 
 function confirmDeleteProfile(profile: Record<string, unknown>) {

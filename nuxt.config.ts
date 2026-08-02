@@ -14,6 +14,10 @@ export default defineNuxtConfig({
     public: {
       baseUrl: process.env.BASE_URL || '',
       suffixUrl: process.env.SUFFIX_URL || ':8001/api',
+      reverbAppKey: process.env.REVERB_APP_KEY || '',
+      reverbHost: process.env.REVERB_HOST || '',
+      reverbPort: process.env.REVERB_PORT || '6001',
+      reverbScheme: process.env.REVERB_SCHEME || 'http',
     },
   },
 })

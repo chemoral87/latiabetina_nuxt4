@@ -21,7 +21,7 @@
       </VCol>
     </VRow>
 
-    <UserDialog v-if="userDialog" :userx="userx" @close="closeDialog" @save="saveUser" />
+    <UserDialog v-if="userDialog" :userx="userx" :loading="saving" @close="closeDialog" @save="saveUser" />
   </VContainer>
 </template>
 
@@ -38,6 +38,7 @@ const response = ref({})
 const filterInput = ref("")
 const filterUser = ref("")
 const loading = ref(false)
+const saving = ref(false)
 const userx = ref<Record<string, unknown> | null>(null)
 const lastOptions = ref<Record<string, unknown> | null>(null)
 const { User } = useRepository()
@@ -143,6 +144,7 @@ async function deleteUser(item: Record<string, unknown>) {
 }
 
 async function saveUser(item: Record<string, unknown>) {
+  saving.value = true
   try {
     if (item.id) {
       const res = await User.update<Record<string, unknown>>(item.id as number, item)
@@ -169,6 +171,8 @@ async function saveUser(item: Record<string, unknown>) {
     }
   } catch (e) {
     console.error(e)
+  } finally {
+    saving.value = false
   }
 }
 

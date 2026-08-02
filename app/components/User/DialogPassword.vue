@@ -48,7 +48,7 @@
           <VIcon start>mdi-close</VIcon>
           Cancelar
         </VBtn>
-        <VBtn color="primary" variant="elevated" id="btn-user-password-save" @click="save">
+        <VBtn color="primary" variant="elevated" :loading="saving || loading" :disabled="saving || loading" id="btn-user-password-save" @click="save">
           <VIcon start>mdi-content-save</VIcon>
           Guardar
         </VBtn>
@@ -61,6 +61,7 @@
 const props = defineProps<{
   modelValue?: boolean
   userx?: Record<string, unknown> | null
+  loading?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -72,14 +73,22 @@ const emit = defineEmits<{
 const dialogVisible = ref(true)
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
+const saving = ref(false)
 const item = ref<Record<string, unknown>>({})
 const localError = ref<Record<string, string>>({})
+
+// Reset the local guard when the parent finishes the API call (success or error)
+watch(() => props.loading, (val) => {
+  if (!val) saving.value = false
+}, { immediate: true })
 
 function close() {
   emit("close")
 }
 
 function save() {
+  if (saving.value || props.loading) return
+
   localError.value = {}
 
   if (item.value.password !== item.value.confirm_password) {
@@ -90,6 +99,7 @@ function save() {
     localError.value.confirm_password = "Mínimo debe ser de 8 caracteres"
     return
   }
+  saving.value = true
   emit("save", { ...item.value })
 }
 </script>

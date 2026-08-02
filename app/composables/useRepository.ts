@@ -24,6 +24,10 @@ export function useRepository() {
   return {
     Organization: createCommonRepository($api, "/organization"),
     OrganizationConfig,
+    Auditorium: createCommonRepository($api, "/auditorium"),
+    AuditoriumEvent: createCommonRepository($api, "/auditorium-event"),
+    AuditoriumEventSeat: createCommonRepository($api, "/auditorium-event-seat"),
+    AuditoriumEventSeatLog: createCommonRepository($api, "/auditorium-event-seat-log"),
     User: createCommonRepository($api, "/user"),
     Role: createRoleRepository($api, "/role"),
     Permission: {

@@ -43,7 +43,7 @@
             <VIcon start>mdi-close</VIcon>
             Cancelar
           </VBtn>
-          <VBtn color="primary" variant="elevated" type="submit" id="btn-profile-dialog-save">
+          <VBtn color="primary" variant="elevated" type="submit" :loading="saving || loading" :disabled="saving || loading" id="btn-profile-dialog-save">
             <VIcon start>mdi-content-save</VIcon>
             Guardar
           </VBtn>
@@ -59,6 +59,7 @@ import { useVrules } from "~/composables/useVrules"
 const props = defineProps<{
   modelValue?: boolean
   userId: string | number
+  loading?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -72,9 +73,15 @@ const { Organization } = useRepository()
 
 const formRef = ref()
 const dialogVisible = ref(true)
+const saving = ref(false)
 const item = ref<Record<string, unknown>>({})
 const organizations = ref<Record<string, unknown>[]>([])
 const filterProfile = ref("")
+
+// Reset the local guard when the parent finishes the API call (success or error)
+watch(() => props.loading, (val) => {
+  if (!val) saving.value = false
+}, { immediate: true })
 
 onMounted(() => {
   searchOrganizations()
@@ -95,8 +102,12 @@ function close() {
   emit("close")
 }
 
-function saveProfile() {
-  formRef.value?.validate()
+async function saveProfile() {
+  if (saving.value || props.loading) return
+  const { valid } = await formRef.value?.validate() ?? { valid: false }
+  if (!valid) return
+  if (saving.value || props.loading) return
+  saving.value = true
   emit("save", { ...item.value })
 }
 </script>

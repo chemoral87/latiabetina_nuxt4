@@ -1103,6 +1103,109 @@ const { errors, clearErrors } = useValidationErrors()
 +}
 ```
 
+## Prevent Double-Submit on Dialog Save Buttons
+
+**Problem:** Vuetify 3/4's `VBtn loading` prop does **NOT** disable clicks. In `VBtn.js`, `isDisabled` only includes `props.disabled` — `loading` only sets `tabindex="-1"` and `aria-busy`. So `:loading` alone never blocks a double-click on "Guardar"; two rapid clicks fire the save handler twice (two API calls).
+
+**Strategy:** A local `saving` ref in the dialog guards re-entry, backed by the parent's `saving` ref passed down as `:loading`. The parent sets its `saving` around the API call so the guard resets and the button visually locks during the request.
+
+### Dialog side
+
+```diff
+ const props = defineProps<{
+   // ...
++  loading?: boolean        // ← parent's `saving` ref
+ }>()
+
+ const formRef = ref()
+ const dialogVisible = ref(true)
++const saving = ref(false)
+
++// Reset the local guard when the parent finishes the API call (success or error)
++watch(() => props.loading, (val) => {
++  if (!val) saving.value = false
++}, { immediate: true })
+
+ async function save() {
++  if (saving.value || props.loading) return
+   const { valid } = await formRef.value?.validate() ?? { valid: false }
+   if (!valid) return
++  // Re-check AFTER the async gap — two overlapping clicks both pass the first
++  // guard while validate() is pending, so only the first one may proceed.
++  if (saving.value || props.loading) return
++  saving.value = true
+   emit("save", { ...item.value })
+ }
+```
+
+```diff
+-<VBtn color="primary" variant="elevated" :loading="loading" ...>Guardar</VBtn>
++<VBtn color="primary" variant="elevated"
++  :loading="saving || loading"
++  :disabled="saving || loading" ...>Guardar</VBtn>
+```
+
+Always pair `:loading` with `:disabled` — the button must be truly unclickable while saving. Apply the same `:disabled="saving || loading"` to the Cancel button and any disabled inputs.
+
+### Parent side
+
+```diff
+ const loading = ref(false)   // table / refresh loading (separate concern)
++const saving = ref(false)    // dialog save in-flight
+
+ async function saveX(item: Record<string, unknown>) {
++  saving.value = true
+   try {
+     // ... create / update API call ...
+     dialog.value = false
+   } catch (e) {
+     console.error(e)
+   } finally {
++    saving.value = false
+   }
+ }
+```
+
+```diff
+-<XDiaolog v-if="dialog" ... @save="saveX" />
++<XDiaolog v-if="dialog" :loading="saving" ... @save="saveX" />
+```
+
+### Rules
+
+1. `loading` alone never disables clicks — always add `:disabled`.
+2. The guard must be re-checked **after** `await validate()`; both clicks pass the first check before the emit fires, so the second check is what blocks the duplicate.
+3. Reset `saving` via `watch(() => props.loading)` so a **failed** save re-enables the button for retry (the parent closes the dialog on success, so remount handles that case).
+4. Keep the parent's table `loading` separate from the dialog `saving` (see `permission/index.vue` / `role/index.vue` for the reference implementation).
+
+## Never Disable the Save/Guardar Button
+
+**Rule:** The dialog's Save/Guardar button must **never** be `:disabled` based on form state. Remove AUI's `:disabled="!isFormValid"` (or any `isFormValid`-style computed gating the button). The button stays clickable; validation feedback is shown via the field `:rules` when the user clicks Save.
+
+```diff
+-<VBtn color="primary" :loading="saving" :disabled="!isFormValid">Guardar</VBtn>
++<VBtn color="primary" :loading="saving">Save</VBtn>
+```
+
+Replace the silent `if (!isFormValid) return` guard in the handler with an explicit `VForm.validate()` so the user *sees* which fields are wrong:
+
+```diff
+-function saveEvent() {
+-  if (!isFormValid.value) return
++async function saveEvent() {
++  const form = eventForm.value
++  if (form) {
++    const { valid } = await form.validate()
++    if (!valid) return
++  }
+```
+
+Rules:
+1. Never gate the Save button with `:disabled="!isFormValid"` / `:disabled="!formIsValid"`.
+2. Use `formRef.value.validate()` in the save handler — validation errors render inline on the fields.
+3. Drop the now-unused `isFormValid` computed (dead code).
+4. Only `:disabled="saving"` (in-flight guard) is allowed, per the double-submit section above.
+
 ## VCombobox / VAutocomplete `#selection` Slot (Vuetify 3/4 Proxy Quirks)
 
 Vuetify 3/4's slot proxy system can break simple `typeof` checks and interpolation inside `#selection` slots. The same slot proxy also affects `selected` and `item.raw` access.

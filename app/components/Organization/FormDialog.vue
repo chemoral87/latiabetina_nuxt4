@@ -51,7 +51,7 @@
           <VIcon start>mdi-close</VIcon>
           Cancelar
         </VBtn>
-        <VBtn color="primary" variant="elevated" id="btn-organization-dialog-save" @click="save">
+        <VBtn color="primary" variant="elevated" :loading="saving || loading" :disabled="saving || loading" id="btn-organization-dialog-save" @click="save">
           <VIcon start>mdi-content-save</VIcon>
           Guardar
         </VBtn>
@@ -67,6 +67,7 @@ import { useVrules } from "~/composables/useVrules"
 const props = defineProps<{
   modelValue?: boolean
   organization?: Record<string, unknown> | null
+  loading?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -81,10 +82,16 @@ const { vrules } = useVrules()
 const formRef = ref()
 
 const dialogVisible = ref(true)
+const saving = ref(false)
 
 const item = ref<Record<string, unknown>>({})
 
 const formTitle = computed(() => item.value.id ? "Editar Organización" : "Nueva Organización")
+
+// Reset the local guard when the parent finishes the API call (success or error)
+watch(() => props.loading, (val) => {
+  if (!val) saving.value = false
+}, { immediate: true })
 
 onMounted(() => {
   if (props.organization) {
@@ -98,8 +105,11 @@ function close() {
 }
 
 async function save() {
+  if (saving.value || props.loading) return
   const { valid } = await formRef.value?.validate() ?? { valid: false }
   if (!valid) return
+  if (saving.value || props.loading) return
+  saving.value = true
   emit("save", { ...item.value })
 }
 </script>
