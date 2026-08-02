@@ -33,6 +33,7 @@
           :search="filterPermission"
           :response="response"
           :loading="loading"
+          :highlight-id="highlightId"
           v-model:dialog-delete="permissionDialogDelete"
           @sorting="handleSorting"
           @edit="editPermission"
@@ -54,6 +55,8 @@
 </template>
 
 <script setup lang="ts">
+import { useRowHighlight } from "~/composables/useRowHighlight"
+
 definePageMeta({
   title: "Permisos",
   icon: "mdi-key-variant",
@@ -70,6 +73,7 @@ const loading = ref(false)
 const saving = ref(false)
 const permissionDialog = ref(false)
 const permissionDialogDelete = ref(false)
+const { highlightId, flash } = useRowHighlight()
 
 const lastOptions = ref<Record<string, unknown> | null>(null)
 
@@ -184,14 +188,21 @@ async function deletePermission(item: Record<string, unknown>) {
 async function savePermission(item: Record<string, unknown>) {
   try {
     saving.value = true
+    let savedId: number | undefined
     if (item.id) {
       await Permission.update(item.id as number, item)
+      savedId = item.id as number
     } else {
-      await Permission.create(item)
+      const res = await Permission.create(item)
+      const created = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined
+      savedId = created?.id as number | undefined
     }
     permissionDialog.value = false
     permission.value = null
     await refreshPermissions()
+    if (savedId != null) {
+      flash(savedId)
+    }
   } catch (e) {
     console.error("Error al guardar el permiso", e)
   } finally {

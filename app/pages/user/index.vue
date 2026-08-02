@@ -17,7 +17,7 @@
       </VCol>
 
       <VCol cols="12">
-        <UserTable :search="filterUser" :response="response" :loading="loading" v-model:dialog-delete="dialogDeleteUser"          @sorting="handleSorting" @edit="editUser" @edit-profiles="editProfiles" @delete="deleteUser" />
+        <UserTable :search="filterUser" :response="response" :loading="loading" :highlight-id="highlightId" v-model:dialog-delete="dialogDeleteUser"          @sorting="handleSorting" @edit="editUser" @edit-profiles="editProfiles" @delete="deleteUser" />
       </VCol>
     </VRow>
 
@@ -26,6 +26,8 @@
 </template>
 
 <script setup lang="ts">
+import { useRowHighlight } from "~/composables/useRowHighlight"
+
 definePageMeta({
   title: "Usuarios",
   icon: "mdi-account",
@@ -41,6 +43,8 @@ const loading = ref(false)
 const saving = ref(false)
 const userx = ref<Record<string, unknown> | null>(null)
 const lastOptions = ref<Record<string, unknown> | null>(null)
+const { highlightId, flash } = useRowHighlight()
+
 const { User } = useRepository()
 
 // Top-level await — loads initial data before render (asyncData equivalent)
@@ -155,6 +159,10 @@ async function saveUser(item: Record<string, unknown>) {
         if (idx !== -1) {
           data[idx] = updated
         }
+        const updatedId = updated.id
+        if (updatedId != null) {
+          flash(updatedId as number)
+        }
       }
       userDialog.value = false
     } else {
@@ -163,6 +171,10 @@ async function saveUser(item: Record<string, unknown>) {
       if (created) {
         ;(response.value.data as Record<string, unknown>[]).unshift(created)
         response.value.total = (response.value.total ?? 0) + 1
+        const createdId = created.id
+        if (createdId != null) {
+          flash(createdId as number)
+        }
       }
       userDialog.value = false
       if ((res as Record<string, unknown>)?.data) {

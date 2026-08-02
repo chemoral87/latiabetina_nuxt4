@@ -17,7 +17,7 @@
       </VCol>
 
       <VCol cols="12">
-        <OrganizationTable :search="filterOrganization" :response="response" :loading="loading" v-model:dialog-delete="dialogDeleteOrganization"          @sorting="handleSorting" @edit="editOrganization" @delete="deleteOrganization" @config="goConfig" />
+        <OrganizationTable :search="filterOrganization" :response="response" :loading="loading" :highlight-id="highlightId" v-model:dialog-delete="dialogDeleteOrganization"          @sorting="handleSorting" @edit="editOrganization" @delete="deleteOrganization" @config="goConfig" />
       </VCol>
     </VRow>
 
@@ -26,6 +26,8 @@
 </template>
 
 <script setup lang="ts">
+import { useRowHighlight } from "~/composables/useRowHighlight"
+
 definePageMeta({
   title: "Organizaciones",
   icon: "mdi-domain",
@@ -41,6 +43,8 @@ const loading = ref(false)
 const saving = ref(false)
 const organization = ref<Record<string, unknown> | null>(null)
 const lastOptions = ref<Record<string, unknown> | null>(null)
+const { highlightId, flash } = useRowHighlight()
+
 const { Organization } = useRepository()
 
 // Top-level await — loads initial data before render (asyncData equivalent)
@@ -155,6 +159,10 @@ async function saveOrganization(item: Record<string, unknown>) {
         if (idx !== -1) {
           data[idx] = updated
         }
+        const updatedId = updated.id
+        if (updatedId != null) {
+          flash(updatedId as number)
+        }
       }
     } else {
       const res = await Organization.create<Record<string, unknown>>(item)
@@ -162,6 +170,10 @@ async function saveOrganization(item: Record<string, unknown>) {
       if (created) {
         ;(response.value.data as Record<string, unknown>[]).unshift(created)
         response.value.total = (response.value.total ?? 0) + 1
+        const createdId = created.id
+        if (createdId != null) {
+          flash(createdId as number)
+        }
       }
     }
     organizationFormDialog.value = false

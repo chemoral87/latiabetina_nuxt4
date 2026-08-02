@@ -818,6 +818,119 @@ function refresh() {
 }
 ```
 
+## Momentary Row Highlight After Edit (`row-props` + `highlight-id`)
+
+Vuetify 4's `VDataTable` / `VDataTableServer` has **no `item-class` prop**. To
+apply a class (or any attribute) to a specific row, use **`row-props`**: a
+function `({ item, index, internalItem }) => attrs` whose returned object is
+merged onto each `<tr>`. This powers the "flash the edited row" pattern used by
+the **Role**, **User**, **Organization**, **Permission**, **Auditorium** and
+**AuditoriumEvent** tables.
+
+> **Why animate `td` and not `tr`:** Vuetify 4 paints `striped="odd"` via
+> `background-image` on the `<tr>`, which would cover a `background-color`
+> animation applied to the `<tr>`. Animating the row's `<td>` cells keeps the
+> flash visible on every row.
+
+### Table component (e.g. `Role/Table.vue`)
+
+1. Add a `highlightId` prop.
+2. Bind `:row-props="rowProps"` on `VDataTableServer`.
+3. Return the `row-highlight` class only for the matching row:
+
+```vue
+<VDataTableServer ... :row-props="rowProps" />
+```
+
+```ts
+const props = defineProps<{
+  // ...
+  highlightId?: number | null
+}>()
+
+function rowProps(data: { item: unknown }) {
+  const id = (data.item as Record<string, unknown>)?.id
+  return {
+    class: props.highlightId != null && id === props.highlightId ? 'row-highlight' : undefined,
+  }
+}
+```
+
+No scoped CSS in the component — the animation lives **once** in
+`app/assets/css/global.css` (already loaded via `css: ['@/assets/css/global.css']`):
+
+```css
+/* Momentary row flash after edit — driven by row-props + highlight-id in table components */
+.row-highlight td {
+  animation: row-highlight-flash 1.4s ease-out;
+}
+
+@keyframes row-highlight-flash {
+  0% {
+    background-color: rgba(var(--v-theme-success), 0.35);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row-highlight td {
+    animation: none;
+  }
+}
+```
+
+### Parent page (e.g. `role/index.vue`)
+
+Use the shared **`useRowHighlight`** composable
+(`app/composables/useRowHighlight.ts`) — it owns the `highlightId` ref, the
+**resettable** timer, the `null` → `nextTick` re-set (so the animation
+re-triggers even when the **same** row is edited twice in a row), and the
+`onUnmounted` timer cleanup:
+
+```ts
+import { useRowHighlight } from "~/composables/useRowHighlight"
+
+const { highlightId, flash } = useRowHighlight()
+```
+
+Import it **explicitly** (per the Form Validation section — do not rely on Nuxt
+auto-import for newly created composables). Then call `flash(id)` after a
+successful create/update and pass `:highlight-id` to the table component:
+
+```vue
+<RoleTable ... :highlight-id="highlightId" />
+```
+
+```ts
+// Update branch — after data[idx] = updated
+const updatedId = updated.id
+if (updatedId != null) {
+  flash(updatedId as number)
+}
+```
+
+### Rules
+
+1. Vuetify 4 uses **`row-props`**, not `item-class` (does not exist).
+2. Animate `td` cells, not the `tr` — the striped `background-image` on the
+   `tr` would hide a `tr` `background-color` flash on odd rows.
+3. Keep the CSS **global** (single definition in `app/assets/css/global.css`).
+   Do **not** add scoped `:deep(.row-highlight td)` copies per component.
+4. Use the shared `useRowHighlight` composable — do **not** copy the
+   ref/timer/`nextTick` helper into pages. Import it explicitly.
+5. `flash()` clears the id and re-sets it on `nextTick` — otherwise a fast
+   re-edit of the same row silently no-ops (the class never leaves the DOM, so
+   the animation never restarts).
+6. The timer (1600ms) must be ≥ the CSS animation (1.4s); the animation
+   settles on its own, JS just removes the class for hygiene.
+7. The highlight is **id-driven** — if the row is not rendered (different
+   page/filter after a re-sort), it is a harmless no-op.
+8. Tables that re-fetch after save (e.g. `permission/index.vue`,
+   `auditorium/index.vue`, `auditorium-event/index.vue`) must flash **after**
+   the reload so the refreshed row receives the class.
+
 ## Initial Data Load (asyncData Replacement)
 
 Replaces AUI's `async asyncData()` hook. Loads the initial page data **before the component renders** (component suspends during the await), then suppresses the mount-time `@update:options` to avoid a duplicate request.

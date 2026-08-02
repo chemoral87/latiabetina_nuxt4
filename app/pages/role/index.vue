@@ -33,6 +33,7 @@
           :search="filterRole"
           :response="response"
           :loading="loading"
+          :highlight-id="highlightId"
           v-model:dialog-delete="roleDialogDelete"
           @sorting="handleSorting"
           @editPermissions="editRolePermissions"
@@ -55,6 +56,8 @@
 </template>
 
 <script setup lang="ts">
+import { useRowHighlight } from "~/composables/useRowHighlight"
+
 definePageMeta({
   title: "Roles",
   icon: "mdi-redhat",
@@ -72,6 +75,7 @@ const loading = ref(false)
 const saving = ref(false)
 const roleDialog = ref(false)
 const roleDialogDelete = ref(false)
+const { highlightId, flash } = useRowHighlight()
 
 const lastOptions = ref<Record<string, unknown> | null>(null)
 
@@ -199,6 +203,10 @@ async function saveRole(item: Record<string, unknown>) {
         if (idx !== -1) {
           data[idx] = updated
         }
+        const updatedId = updated.id
+        if (updatedId != null) {
+          flash(updatedId as number)
+        }
       }
     } else {
       const res = await Role.create<Record<string, unknown>>(item)
@@ -206,6 +214,10 @@ async function saveRole(item: Record<string, unknown>) {
       if (created) {
         ;(response.value.data as Record<string, unknown>[]).unshift(created)
         response.value.total = (response.value.total ?? 0) + 1
+        const createdId = created.id
+        if (createdId != null) {
+          flash(createdId as number)
+        }
       }
     }
     roleDialog.value = false

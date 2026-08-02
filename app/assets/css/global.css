@@ -7,3 +7,23 @@
   background-image: none !important;
   background-color: #f5fbff !important;
 }
+
+/* Momentary row flash after edit — driven by row-props + highlight-id in table components */
+.row-highlight td {
+  animation: row-highlight-flash 1.4s ease-out;
+}
+
+@keyframes row-highlight-flash {
+  0% {
+    background-color: rgba(var(--v-theme-success), 0.35);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row-highlight td {
+    animation: none;
+  }
+}

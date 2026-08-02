@@ -10,6 +10,7 @@
       :items="items"
       :items-length="total"
       :loading="loading"
+      :row-props="rowProps"
       class="elevation-1"
       striped="odd"
       mustSort
@@ -119,6 +120,7 @@ const props = defineProps<{
   response?: { total?: number; data?: unknown[] } | null
   loading?: boolean
   search?: string
+  highlightId?: number | null
 }>()
 
 const emit = defineEmits<{
@@ -144,6 +146,13 @@ const headers: Header[] = [
 const total = computed(() => props.response?.total ?? 0)
 const items = computed(() => props.response?.data ?? [])
 const loading = computed(() => props.loading ?? false)
+
+function rowProps(data: { item: unknown }) {
+  const id = (data.item as Record<string, unknown>)?.id
+  return {
+    class: props.highlightId != null && id === props.highlightId ? 'row-highlight' : undefined,
+  }
+}
 
 function onUpdateOptions(val: Record<string, unknown>) {
   emit("sorting", val)

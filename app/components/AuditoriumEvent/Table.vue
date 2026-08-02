@@ -9,6 +9,7 @@
     :items="items"
     :items-length="total"
     :loading="loading"
+    :row-props="rowProps"
     class="elevation-1"
     mustSort
     items-per-page-text="Filas por página"
@@ -61,6 +62,7 @@ const props = defineProps<{
   response?: { total?: number; data?: unknown[] } | null
   options?: Record<string, unknown>
   loading?: boolean
+  highlightId?: number | null
 }>()
 
 const emit = defineEmits<{
@@ -97,6 +99,13 @@ const items = computed(() => {
     }
   })
 })
+
+function rowProps(data: { item: unknown }) {
+  const id = (data.item as Record<string, unknown>)?.id
+  return {
+    class: props.highlightId != null && id === props.highlightId ? 'row-highlight' : undefined,
+  }
+}
 
 onMounted(() => {
   const opts = props.options ?? {}

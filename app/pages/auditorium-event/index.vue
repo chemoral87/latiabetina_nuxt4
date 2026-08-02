@@ -20,7 +20,7 @@
           hide-one density="compact" hide-details clearable variant="outlined" />
       </VCol>
       <VCol cols="12">
-        <AuditoriumEventTable :loading="loading" :response="response" :options="options"
+        <AuditoriumEventTable :loading="loading" :response="response" :options="options" :highlight-id="highlightId"
           @sorting="handleSorting" @download="downloadAuditoriumEvent" @edit="editAuditoriumEvent"
           @mark="markAuditoriumEvent" @delete="beforeDeleteAuditoriumEvent" />
       </VCol>
@@ -35,6 +35,7 @@
 
 <script setup lang="ts">
 import { STATUS_CONFIG } from "~/constants/auditorium"
+import { useRowHighlight } from "~/composables/useRowHighlight"
 
 definePageMeta({
   title: "Eventos de Auditorio",
@@ -55,6 +56,7 @@ const loading = ref(false)
 const auditoriumEventDialog = ref(false)
 const auditoriumEventDialogDelete = ref(false)
 const dialogDelete = ref<Record<string, unknown>>({})
+const { highlightId, flash } = useRowHighlight()
 
 const initialOptions: Record<string, unknown> = {
   page: 1,
@@ -208,13 +210,20 @@ async function deleteAuditoriumEvent(item: unknown) {
 
 async function saveAuditoriumEvent(item: Record<string, unknown>) {
   try {
+    let savedId: number | undefined
     if (item.id) {
       await AuditoriumEvent.update(item.id as number, item)
+      savedId = item.id as number
     } else {
-      await AuditoriumEvent.create(item)
+      const res = await AuditoriumEvent.create(item)
+      const created = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined
+      savedId = created?.id as number | undefined
     }
     auditoriumEventDialog.value = false
     await getAuditoriumEvents()
+    if (savedId != null) {
+      flash(savedId)
+    }
   } catch (error) {
     notify.notify({ error: "Error guardando evento de auditorio" })
   }
