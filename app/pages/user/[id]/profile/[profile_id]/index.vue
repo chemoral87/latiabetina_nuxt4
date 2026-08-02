@@ -38,22 +38,21 @@ const { User, Profile } = useRepository()
 const mUser = ref<Record<string, unknown>>({})
 const profile = ref<Record<string, unknown>>({})
 
-onMounted(async () => {
+{
   const [_mUser, _profile] = await Promise.all([
     User.show(userId).catch(() => null),
     Profile.show(userId, profileId).catch(() => null),
   ])
   mUser.value = (_mUser as Record<string, unknown>) ?? {}
   profile.value = (_profile as Record<string, unknown>) ?? {}
+}
 
-  // Replicates: eventBus.$emit("setNavBar", { title: `Perfilx: ${mUser.name} ${mUser.last_name}`, icon: "mdi-account", back: `/user/${userId}/profile`, showDrawer: false })
-  if (mUser.value.name) {
-    route.meta.title = `Perfil de: ${mUser.value.name} ${mUser.value.last_name ?? ''}`.trim()
-    route.meta.icon = 'mdi-account'
-    route.meta.back = `/user/${userId}/profile`
-    route.meta.showDrawer = false
-  }
-})
+if (mUser.value.name) {
+  route.meta.title = `Perfil de: ${mUser.value.name} ${mUser.value.last_name ?? ''}`.trim()
+  route.meta.icon = 'mdi-account'
+  route.meta.back = `/user/${userId}/profile`
+  route.meta.showDrawer = false
+}
 
 function setRoles(roles: Record<string, unknown>[]) {
   profile.value.roles = roles

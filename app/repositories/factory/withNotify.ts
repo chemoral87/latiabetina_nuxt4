@@ -7,7 +7,8 @@ const UNKNOWN_ERROR_MESSAGE = "Ha ocurrido un error inesperado"
 // Status codes that carry a user-facing message worth notifying (matches
 // the old axios.js MESSAGE_ERROR_CODES: 401, 404, 405). 422 is intentionally
 // excluded — validation errors are field-level, not a toast, same as before.
-const MESSAGE_ERROR_STATUSES = [401, 404, 405]
+// 403 is included so backend permission denials surface as a danger snackbar.
+const MESSAGE_ERROR_STATUSES = [401, 403, 404, 405]
 
 function notifySuccess(res: unknown) {
   if (!import.meta.client || !res || typeof res !== "object") return
@@ -29,8 +30,11 @@ function notifyError(err: unknown) {
       return
     }
 
-    if (MESSAGE_ERROR_STATUSES.includes(status) && fetchErr.data?.message) {
-      useNotifyStore().notify({ error: fetchErr.data.message })
+    if (MESSAGE_ERROR_STATUSES.includes(status)) {
+      const message = fetchErr.data?.message ?? fetchErr.data?.error
+      if (message) {
+        useNotifyStore().notify({ error: message })
+      }
     }
     return
   }
