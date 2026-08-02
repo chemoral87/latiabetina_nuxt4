@@ -112,7 +112,11 @@ const drawer = ref(false)
 const menu = ref(false)
 const showLogin = ref(true)
 
-const { isLoading } = useGlobalProgress()
+const { isLoading, endNavigation } = useGlobalProgress()
+
+onMounted(() => {
+  endNavigation()
+})
 
 const auth = useAuthStore()
 const notify = useNotifyStore()
