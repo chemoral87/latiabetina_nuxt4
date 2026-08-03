@@ -2,7 +2,7 @@
   <VContainer fluid>
     <VRow density="comfortable">
       <VCol cols="12" md="3">
-        <MyDateRange v-model="filterAuditoriumEvent" />
+        <MyDateRange v-model="filterAuditoriumEvent" variant="outlined" />
       </VCol>
       <VCol cols="auto" class="d-flex align-center">
         <VBtn color="primary" :loading="loading" class="mr-1" id="btn-auditoriumevent-refresh"
@@ -56,7 +56,7 @@ const loading = ref(false)
 const auditoriumEventDialog = ref(false)
 const auditoriumEventDialogDelete = ref(false)
 const dialogDelete = ref<Record<string, unknown>>({})
-const { highlightId, flash } = useRowHighlight()
+const { highlightId, flash, prependCreated } = useRowHighlight()
 
 const initialOptions: Record<string, unknown> = {
   page: 1,
@@ -210,19 +210,18 @@ async function deleteAuditoriumEvent(item: unknown) {
 
 async function saveAuditoriumEvent(item: Record<string, unknown>) {
   try {
-    let savedId: number | undefined
     if (item.id) {
       await AuditoriumEvent.update(item.id as number, item)
-      savedId = item.id as number
+      auditoriumEventDialog.value = false
+      await getAuditoriumEvents()
+      flash(item.id as number)
     } else {
       const res = await AuditoriumEvent.create(item)
       const created = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined
-      savedId = created?.id as number | undefined
-    }
-    auditoriumEventDialog.value = false
-    await getAuditoriumEvents()
-    if (savedId != null) {
-      flash(savedId)
+      if (created) {
+        prependCreated(response, created)
+      }
+      auditoriumEventDialog.value = false
     }
   } catch (error) {
     notify.notify({ error: "Error guardando evento de auditorio" })

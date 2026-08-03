@@ -1,6 +1,7 @@
 import { createCommonRepository } from "~/repositories/factory/createCommonRepository"
 import { createParentRepository } from "~/repositories/factory/createParentRepository"
 import { createRoleRepository } from "~/repositories/RoleRepository"
+import { withNotify } from "~/repositories/factory/withNotify"
 
 export function useRepository() {
   const { $api } = useApi()
@@ -21,6 +22,34 @@ export function useRepository() {
     },
   }
 
+  const Sale = {
+    ...createCommonRepository($api, "/sale"),
+    // KDS kitchen display: all sales with preparation items (GET /sale/kds)
+    kds<T = unknown>() {
+      return withNotify($api<T>("/sale/kds"))
+    },
+    updateItem<T = unknown>(saleId: number | string, itemId: number | string, status: string) {
+      return withNotify($api<T>(`/sale/${saleId}/item/${itemId}`, { method: "PATCH", body: { status } }))
+    },
+  }
+
+  const Testimony = {
+    ...createCommonRepository($api, "/testimony"),
+    updateStatus<T = unknown>(id: number | string, status: string) {
+      return withNotify($api<T>(`/testimony/${id}/status`, { method: "PUT", body: { status } }))
+    },
+  }
+
+  const ChurchEvent = {
+    ...createCommonRepository($api, "/church-event"),
+    copy<T = unknown>(id: number | string, payload: Record<string, unknown>) {
+      return withNotify($api<T>(`/church-event/${id}/copy`, { method: "POST", body: payload }))
+    },
+    calendar<T = unknown>(params: Record<string, unknown>) {
+      return withNotify($api<T>("/church-event/calendar", { params }))
+    },
+  }
+
   return {
     Organization: createCommonRepository($api, "/organization"),
     OrganizationConfig,
@@ -37,5 +66,10 @@ export function useRepository() {
       },
     },
     Profile,
+    Testimony,
+    ChurchEvent,
+    Sale,
+    ConsoSheet: createCommonRepository($api, "/conso-sheet"),
+    ChurchMember: createCommonRepository($api, "/church-member"),
   }
 }

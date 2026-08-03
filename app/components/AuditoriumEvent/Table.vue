@@ -25,9 +25,9 @@
     </template>
 
     <template #[`item.marks`]="{ item }">
-      <VBtn title="Marcar" class="mr-1 my-1" color="primary" variant="outlined" icon size="x-small"
+      <VBtn title="Marcar" class="mr-1 my-1" color="primary" variant="outlined" icon size="small"
         id="btn-auditoriumevent-table-mark" @click="emit('mark', item)">
-        <VIcon>mdi-eye</VIcon>
+        <VIcon size="x-large">mdi-eye</VIcon>
       </VBtn>
     </template>
 

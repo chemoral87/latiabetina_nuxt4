@@ -9,6 +9,11 @@ export default defineNuxtConfig({
     moduleOptions: {
       importComposables: ['useDate', 'useLocale', 'useDefaults', 'useDisplay', 'useRtl', 'useTheme'],
     },
+    localeMessages: ['es'],
+    locale: {
+      locale: 'es',
+      fallback: 'en',
+    },
   },
   runtimeConfig: {
     public: {

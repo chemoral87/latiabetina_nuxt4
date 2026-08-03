@@ -19,11 +19,48 @@ export function useRowHighlight() {
     }, 1600)
   }
 
+  /**
+   * Prepend a newly created record to the top of the table data, bump the
+   * total count, and flash the new row. Call after a successful create,
+   * passing the same `response` ref that is fed to the table component.
+   */
+  function prependCreated(response: Ref<{ data?: unknown[]; total?: number }>, created: Record<string, unknown>) {
+    if (!response.value.data) {
+      response.value.data = []
+    }
+    response.value.data.unshift(created)
+    response.value.total = (response.value.total ?? 0) + 1
+    const createdId = created.id
+    if (createdId != null) {
+      flash(createdId as number)
+    }
+  }
+
+  /**
+   * Replace the matching row (by id) in the table data with the
+   * server-returned updated record, then flash the row. Call after a
+   * successful update. If the row isn't in the current data (e.g. filtered
+   * out or on another page), it's a harmless no-op — the flash simply won't
+   * match any rendered row.
+   */
+  function updateRow(response: Ref<{ data?: unknown[]; total?: number }>, updated: Record<string, unknown>) {
+    if (response.value.data) {
+      const idx = response.value.data.findIndex((r) => (r as Record<string, unknown>)?.id === updated.id)
+      if (idx !== -1) {
+        response.value.data[idx] = updated
+      }
+    }
+    const updatedId = updated.id
+    if (updatedId != null) {
+      flash(updatedId as number)
+    }
+  }
+
   onUnmounted(() => {
     if (highlightTimer) clearTimeout(highlightTimer)
   })
 
-  return { highlightId, flash }
+  return { highlightId, flash, prependCreated, updateRow }
 }
 
 /**

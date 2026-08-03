@@ -13,6 +13,11 @@
   animation: row-highlight-flash 1.4s ease-out;
 }
 
+/* Momentary flash for a newly created permission chip — see Permission/Combobox.vue */
+.chip-highlight {
+  animation: row-highlight-flash 1.4s ease-out;
+}
+
 @keyframes row-highlight-flash {
   0% {
     background-color: rgba(var(--v-theme-success), 0.35);
@@ -23,7 +28,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .row-highlight td {
+  .row-highlight td,
+  .chip-highlight {
     animation: none;
   }
 }

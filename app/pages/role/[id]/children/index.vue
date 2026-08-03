@@ -13,6 +13,7 @@
               :key="comboboxKey"
               label="Buscar y asignar permisos"
               :permissionsx="(mRole.permissions as Record<string, unknown>[]) ?? []"
+              :highlight-id="highlightId"
               @model-change="setPermissions"
             />
           </VCardText>
@@ -80,6 +81,8 @@
 </template>
 
 <script setup lang="ts">
+import { useRowHighlight } from "~/composables/useRowHighlight"
+
 definePageMeta({
   title: "Permisos del Rol",
   middleware: "authenticated",
@@ -90,6 +93,7 @@ const roleId = route.params.id as string
 
 const { Role } = useRepository()
 const { $api } = useApi()
+const { highlightId, flash } = useRowHighlight()
 
 const mRole = ref<Record<string, unknown>>({})
 const comboboxKey = ref(0)
@@ -138,6 +142,10 @@ async function createAndAddPermission() {
     mRole.value.permissions = [...(mRole.value.permissions as Record<string, unknown>[]), res.permission]
     comboboxKey.value++
     newPermissionName.value = ""
+    const newId = res.permission?.id
+    if (newId != null) {
+      flash(newId as number)
+    }
     notify.notify({ success: `Permiso "${res.permission.name}" agregado al rol.` })
   } catch (e) {
     const errMsg = (e as Record<string, unknown>)?.response

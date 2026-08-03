@@ -43,7 +43,7 @@ const loading = ref(false)
 const saving = ref(false)
 const organization = ref<Record<string, unknown> | null>(null)
 const lastOptions = ref<Record<string, unknown> | null>(null)
-const { highlightId, flash } = useRowHighlight()
+const { highlightId, prependCreated, updateRow } = useRowHighlight()
 
 const { Organization } = useRepository()
 
@@ -154,26 +154,13 @@ async function saveOrganization(item: Record<string, unknown>) {
       const res = await Organization.update<Record<string, unknown>>(item.id as number, item)
       const updated = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined
       if (updated) {
-        const data = response.value.data as Record<string, unknown>[]
-        const idx = data.findIndex((r) => r.id === updated.id)
-        if (idx !== -1) {
-          data[idx] = updated
-        }
-        const updatedId = updated.id
-        if (updatedId != null) {
-          flash(updatedId as number)
-        }
+        updateRow(response, updated)
       }
     } else {
       const res = await Organization.create<Record<string, unknown>>(item)
       const created = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined
       if (created) {
-        ;(response.value.data as Record<string, unknown>[]).unshift(created)
-        response.value.total = (response.value.total ?? 0) + 1
-        const createdId = created.id
-        if (createdId != null) {
-          flash(createdId as number)
-        }
+        prependCreated(response, created)
       }
     }
     organizationFormDialog.value = false

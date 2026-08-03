@@ -49,7 +49,7 @@ const loading = ref(false)
 const saving = ref(false)
 const auditorium = ref<Record<string, unknown> | null>(null)
 const lastOptions = ref<Record<string, unknown> | null>(null)
-const { highlightId, flash } = useRowHighlight()
+const { highlightId, flash, prependCreated } = useRowHighlight()
 const { Auditorium } = useRepository()
 
 // Top-level await — loads initial data before render (asyncData equivalent)
@@ -169,18 +169,16 @@ async function saveAuditorium(item: Record<string, unknown>) {
   }
 
   try {
-    let savedId: number | undefined
     if (payload.id) {
       await Auditorium.update<Record<string, unknown>>(payload.id as number, payload)
-      savedId = payload.id as number
+      await indexAuditoriums(lastOptions.value ?? {})
+      flash(payload.id as number)
     } else {
       const res = await Auditorium.create<Record<string, unknown>>(payload)
       const created = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined
-      savedId = created?.id as number | undefined
-    }
-    await indexAuditoriums(lastOptions.value ?? {})
-    if (savedId != null) {
-      flash(savedId)
+      if (created) {
+        prependCreated(response, created)
+      }
     }
     auditoriumDialog.value = false
   } catch (e) {

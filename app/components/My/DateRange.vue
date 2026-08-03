@@ -8,10 +8,10 @@
         :placeholder="placeholder"
         :prepend-inner-icon="prependIcon"
         readonly
-        clearable
+        :clearable="clearable"
         :hide-details="hideDetails"
         :density="density ?? (dense ? 'compact' : undefined)"
-        :variant="variant ?? (outlined ? 'outlined' : undefined)"
+        :variant="variant ?? (outlined ? 'outlined' : 'underlined')"
         :disabled="disabled"
         :error-messages="errorMessages"
         v-bind="props"
@@ -22,16 +22,36 @@
       v-model="pendingValue"
       multiple="range"
       :show-adjacent-months="scrollable"
-      :locale="locale"
+      weekday-format="short"
+      first-day-of-week="1"
+      hide-header
+      elevation="5"
     >
+      <template #controls="{ disabled, nextMonth, prevMonth, monthYearText }">
+        <VBtn
+          :disabled="disabled?.includes?.('prev-month')"
+          color="primary"
+          icon="mdi-chevron-left"
+          variant="text"
+          @click="prevMonth"
+        />
+        <VSpacer />
+        <div class="text-center text-body-1 font-weight-medium">
+          {{ capitalizeFirst(monthYearText) }}
+        </div>
+        <VSpacer />
+        <VBtn
+          :disabled="disabled?.includes?.('next-month')"
+          color="primary"
+          icon="mdi-chevron-right"
+          variant="text"
+          @click="nextMonth"
+        />
+      </template>
       <template #actions>
         <VBtn color="primary" variant="outlined" class="mr-2" id="btn-my-daterange-clear" @click="clearRange">
           <VIcon start>mdi-close</VIcon>
           Limpiar
-        </VBtn>
-        <VBtn color="primary" id="btn-my-daterange-confirm" @click="confirm">
-          <VIcon start>mdi-check</VIcon>
-          OK
         </VBtn>
       </template>
     </VDatePicker>
@@ -39,6 +59,8 @@
 </template>
 
 <script setup lang="ts">
+import { formatShortDateSlash, capitalizeFirst } from "~/utils/date"
+
 const props = withDefaults(defineProps<{
   modelValue?: (string | null)[]
   label?: string
@@ -53,7 +75,6 @@ const props = withDefaults(defineProps<{
   clearable?: boolean
   noTitle?: boolean
   scrollable?: boolean
-  locale?: string
   errorMessages?: string | string[]
   separator?: string
 }>(), {
@@ -68,7 +89,6 @@ const props = withDefaults(defineProps<{
   clearable: true,
   noTitle: true,
   scrollable: true,
-  locale: "es-mx",
   errorMessages: () => [],
   separator: " ~ ",
 })
@@ -84,7 +104,11 @@ const pendingSyncDone = ref(false)
 
 const dateRangeText = computed(() => {
   if (!props.modelValue || props.modelValue.length === 0) return ""
-  return [...props.modelValue].sort().join(props.separator)
+  return [...props.modelValue]
+    .filter(Boolean)
+    .sort()
+    .map((d) => formatShortDateSlash(d))
+    .join(props.separator)
 })
 
 watch(dateMenu, (open) => {

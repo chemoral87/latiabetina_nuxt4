@@ -73,7 +73,7 @@ const loading = ref(false)
 const saving = ref(false)
 const permissionDialog = ref(false)
 const permissionDialogDelete = ref(false)
-const { highlightId, flash } = useRowHighlight()
+const { highlightId, flash, prependCreated } = useRowHighlight()
 
 const lastOptions = ref<Record<string, unknown> | null>(null)
 
@@ -188,20 +188,20 @@ async function deletePermission(item: Record<string, unknown>) {
 async function savePermission(item: Record<string, unknown>) {
   try {
     saving.value = true
-    let savedId: number | undefined
     if (item.id) {
       await Permission.update(item.id as number, item)
-      savedId = item.id as number
+      permissionDialog.value = false
+      permission.value = null
+      await refreshPermissions()
+      flash(item.id as number)
     } else {
       const res = await Permission.create(item)
       const created = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined
-      savedId = created?.id as number | undefined
-    }
-    permissionDialog.value = false
-    permission.value = null
-    await refreshPermissions()
-    if (savedId != null) {
-      flash(savedId)
+      if (created) {
+        prependCreated(response, created)
+      }
+      permissionDialog.value = false
+      permission.value = null
     }
   } catch (e) {
     console.error("Error al guardar el permiso", e)

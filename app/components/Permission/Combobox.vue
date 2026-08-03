@@ -29,6 +29,7 @@
          size="large"
           variant="elevated"
           closable
+          :class="highlightId != null && highlightId === (item as PermissionItem).id ? 'chip-highlight' : undefined"
           @click:close="removePermission(item as PermissionItem)"
         >
           {{ (item as PermissionItem).name }}
@@ -55,6 +56,7 @@ interface PermissionItem {
 const props = defineProps<{
   permissionsx?: PermissionItem[]
   label?: string
+  highlightId?: number | null
 }>()
 
 const emit = defineEmits<{

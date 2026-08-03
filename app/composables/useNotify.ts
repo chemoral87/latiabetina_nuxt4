@@ -8,6 +8,7 @@ export interface NotifyPayload {
   success?: string
   warning?: string
   error?: string
+  info?: string
 }
 
 export const useNotifyStore = defineStore("notify", () => {
@@ -22,6 +23,9 @@ export const useNotifyStore = defineStore("notify", () => {
     if (data.success) {
       text = data.success
       color = "primary"
+    } else if (data.info) {
+      text = data.info
+      color = "info"
     } else if (data.warning) {
       text = data.warning
       color = "warning"

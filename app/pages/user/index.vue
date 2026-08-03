@@ -43,7 +43,7 @@ const loading = ref(false)
 const saving = ref(false)
 const userx = ref<Record<string, unknown> | null>(null)
 const lastOptions = ref<Record<string, unknown> | null>(null)
-const { highlightId, flash } = useRowHighlight()
+const { highlightId, prependCreated, updateRow } = useRowHighlight()
 
 const { User } = useRepository()
 
@@ -154,27 +154,14 @@ async function saveUser(item: Record<string, unknown>) {
       const res = await User.update<Record<string, unknown>>(item.id as number, item)
       const updated = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined
       if (updated) {
-        const data = response.value.data as Record<string, unknown>[]
-        const idx = data.findIndex((r) => r.id === updated.id)
-        if (idx !== -1) {
-          data[idx] = updated
-        }
-        const updatedId = updated.id
-        if (updatedId != null) {
-          flash(updatedId as number)
-        }
+        updateRow(response, updated)
       }
       userDialog.value = false
     } else {
       const res = await User.create<Record<string, unknown>>(item)
       const created = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined
       if (created) {
-        ;(response.value.data as Record<string, unknown>[]).unshift(created)
-        response.value.total = (response.value.total ?? 0) + 1
-        const createdId = created.id
-        if (createdId != null) {
-          flash(createdId as number)
-        }
+        prependCreated(response, created)
       }
       userDialog.value = false
       if ((res as Record<string, unknown>)?.data) {

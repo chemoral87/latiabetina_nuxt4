@@ -22,7 +22,8 @@
       :model-value="modelValue ?? null"
       @update:model-value="pickDate"
       :show-adjacent-months="scrollable"
-      :locale="locale"
+      weekday-format="short"
+      first-day-of-week="1"
       hide-header
       elevation="5"
     >
@@ -35,8 +36,8 @@
           @click="prevMonth"
         />
         <VSpacer />
-        <div class="text-center text-body-1 font-weight-medium text-capitalize">
-          {{ monthYearText }}
+        <div class="text-center text-body-1 font-weight-medium">
+          {{ capitalizeFirst(monthYearText) }}
         </div>
         <VSpacer />
         <VBtn
@@ -65,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { formatShortDateSlash } from "~/utils/date"
+import { formatShortDateSlash, capitalizeFirst } from "~/utils/date"
 const props = withDefaults(defineProps<{
   modelValue?: string | null
   label?: string
@@ -82,7 +83,6 @@ const props = withDefaults(defineProps<{
   clearable?: boolean
   noTitle?: boolean
   scrollable?: boolean
-  locale?: string
 }>(), {
   modelValue: null,
   label: "Fecha",
@@ -97,7 +97,6 @@ const props = withDefaults(defineProps<{
   clearable: true,
   noTitle: true,
   scrollable: true,
-  locale: "es-mx",
 })
 
 const emit = defineEmits<{
