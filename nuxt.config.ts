@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { es } from "vuetify/locale"
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
@@ -14,7 +16,12 @@ export default defineNuxtConfig({
         locale: 'es',
         fallback: 'en',
         messages: {
+          // Vuetify only loads the built-in "en" locale by default; any other
+          // locale must be supplied entirely by the app. Spread the full
+          // built-in Spanish messages so all `$vuetify.*` keys resolve, then
+          // override the date labels with the app's own Spanish values.
           es: {
+            ...es,
             date: {
               months: {
                 short: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']

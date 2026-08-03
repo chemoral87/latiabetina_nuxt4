@@ -1,5 +1,5 @@
 <template>
-  <v-group id="cmp-auditorium-seats-stage-subsection" :config="{ x: 0, y: 0 }">
+  <v-group :config="{ x: 0, y: 0, id: 'cmp-auditorium-seats-stage-subsection' }">
     <v-rect :config="{
       x: 1,
       y: 3,

@@ -90,7 +90,10 @@
             <VBtn class="mb-1" icon :title="config.label"
               :style="`background-color: ${config.color} !important; color: white`"
               @click="setEventSeat(key == 'e' ? null : key)">
-              <VIcon>{{ getIconName(key) }}</VIcon>
+              <svg v-if="config?.icon" viewBox="0 0 24 24" style="width: 32px; height: 32px; fill: currentColor">
+                <path :d="config.icon" />
+              </svg>
+              <VIcon v-else>{{ getIconName(key) }}</VIcon>
             </VBtn>
             <span class="mark-label">{{ config.label }}</span>
           </div>

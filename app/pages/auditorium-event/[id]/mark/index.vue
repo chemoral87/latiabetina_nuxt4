@@ -147,9 +147,11 @@ function measureHeaderHeight() {
 watch(() => eventAuditorium.value?.auditorium_name, () => nextTick(measureHeaderHeight))
 
 {
-  const res = await AuditoriumEvent.show<AuditoriumEvent>(String(route.params.id)).catch(() => null)
-  eventAuditorium.value = res || {}
-  last_timestamp.value = (res as any)?.timestamp ?? null
+  // The event is fetched only on the client (onMounted). The API base URL is
+  // not configured for the server (only SUFFIX_URL is set), so an SSR fetch
+  // always fails and leaves eventAuditorium empty while the client fetch
+  // succeeds — a server/client v-if mismatch that breaks hydration. Fetching
+  // in onMounted makes both sides render the same initial empty state.
 }
 
 const activeStatusCfg = computed(() => {
@@ -265,15 +267,23 @@ const percentageColor = computed(() => {
 })
 
 onMounted(() => {
-  loadConfiguration()
-
-  setupRealtimeListeners()
+  initEvent()
 
   document.addEventListener("visibilitychange", handleVisibilityChange)
 
   nextTick(measureHeaderHeight)
   window.addEventListener('resize', measureHeaderHeight)
 })
+
+async function initEvent() {
+  const res = await AuditoriumEvent.show<AuditoriumEvent>(String(route.params.id)).catch(() => null)
+  eventAuditorium.value = res || {}
+  last_timestamp.value = (res as any)?.timestamp ?? null
+
+  loadConfiguration()
+  setupRealtimeListeners()
+  nextTick(measureHeaderHeight)
+}
 
 onBeforeUnmount(() => {
   if (_realtimeCleanup) _realtimeCleanup()
