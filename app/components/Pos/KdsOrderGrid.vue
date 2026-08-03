@@ -32,7 +32,7 @@
 
         <VDivider class="mx-3 my-2" />
 
-        <KdsItemsList
+        <PosKdsItemsList
           :order="order"
           :done-map="doneMap"
           :is-item-completed="isItemCompleted"

@@ -16,7 +16,7 @@
       <div class="text-h6 mt-4 text-grey">Sin órdenes pendientes</div>
       <div class="text-body-2 text-grey mt-1">Todas las órdenes han sido completadas</div>
       <div class="mt-6">
-        <VBtn variant="outlined" color="grey" id="btn-kds-reload" @click="emit('reload')">
+        <VBtn variant="elevated" color="primary" id="btn-kds-reload" @click="emit('reload')">
           <VIcon start size="small">mdi-refresh</VIcon>
           Recargar
         </VBtn>
@@ -70,7 +70,7 @@
         </VCol>
       </VRow>
 
-      <KdsOrderGrid
+      <PosKdsOrderGrid
         :active-orders="activeOrders"
         :done-map="doneMap"
         :is-item-completed="isItemCompleted"

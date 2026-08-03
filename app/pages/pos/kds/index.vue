@@ -1,6 +1,6 @@
 <template>
   <VContainer id="pos-kds-page" fluid class="kds-page pa-3">
-    <KdsOrdersBoard
+    <PosKdsOrdersBoard
       :active-orders="activeOrders"
       :done-map="doneMap"
       :loading="initialLoading"
