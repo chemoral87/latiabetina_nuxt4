@@ -1,7 +1,8 @@
 <template>
   <VContainer fluid class="pa-0">
     <div v-if="eventAuditorium && eventAuditorium.id">
-      <div class="pa-2 grey lighten-4 d-flex align-center" style="position: relative">
+      <div ref="headerBar" class="pa-2 bg-grey-lighten-4 d-flex align-center"
+        :style="{ position: 'fixed', top: headerTop, left: 0, right: 0, width: '100%', zIndex: 20 }">
         <span class="text-subtitle-2">{{ eventAuditorium.auditorium_name }}</span>
         |<span class="text-subtitle-2">{{ formatShortDate(eventAuditorium.event_date) }}</span>
 
@@ -38,14 +39,19 @@
         </MyDragPanel>
       </div>
 
+      <!-- Spacer to offset the fixed header above. Height is measured from
+           the real header element (see headerBar ref) instead of guessed,
+           so it can never be shorter than the actual rendered header and
+           clip the control row underneath it. -->
+      <div :style="{ height: `${headerHeight}px` }"></div>
+
       <div>
         <AuditoriumSeatsStageOp :sections="sections" :stage-config="stageConfig"
           :auditorium-event-id="eventAuditorium.id" :categories="stageCategories" :loading-seats="loadingSeats"
+          :top-offset="headerHeight"
           @setEventSeat="handleSetEventSeat" />
       </div>
     </div>
-
-    <VAlert v-else type="error" variant="outlined" class="ma-2">Evento no encontrado.</VAlert>
   </VContainer>
 </template>
 
@@ -54,6 +60,7 @@ import { DEFAULT_SETTINGS, STAGE_CATEGORIES, STATUS_CONFIG } from "~/constants/a
 import { createRealtimeListeners } from "~/utils/realtime"
 import { formatShortDate } from "~/utils/date"
 import { useUAParser } from "~/utils/userAgent"
+import { useLayout } from "vuetify"
 
 definePageMeta({
   title: "Evento Auditorio",
@@ -109,6 +116,12 @@ const route = useRoute()
 const { AuditoriumEvent, AuditoriumEventSeat } = useRepository()
 const { $echo } = useNuxtApp()
 const uaParser = useUAParser()
+const { mainRect } = useLayout()
+
+// Pin the custom info bar just below the real VAppBar (whose height Vuetify
+// reports via useLayout().mainRect.top), instead of a hardcoded top: 0 which
+// would overlap the app bar.
+const headerTop = computed(() => `${mainRect.value?.top ?? 0}px`)
 
 let _realtimeCleanup: (() => void) | null = null
 
@@ -120,6 +133,18 @@ const stageCategories = STAGE_CATEGORIES
 const loading = ref(false)
 const loadingSeats = ref<(number | string)[]>([])
 const statsPanel = ref(false)
+
+// Measure the header's real rendered height (instead of guessing a constant)
+// so the spacer div below it is never too short and never clips the
+// SeatsStageOp control row that follows.
+const headerBar = ref<HTMLElement | null>(null)
+const headerHeight = ref(44)
+function measureHeaderHeight() {
+  if (headerBar.value?.offsetHeight) {
+    headerHeight.value = headerBar.value.offsetHeight
+  }
+}
+watch(() => eventAuditorium.value?.auditorium_name, () => nextTick(measureHeaderHeight))
 
 {
   const res = await AuditoriumEvent.show<AuditoriumEvent>(String(route.params.id)).catch(() => null)
@@ -245,12 +270,16 @@ onMounted(() => {
   setupRealtimeListeners()
 
   document.addEventListener("visibilitychange", handleVisibilityChange)
+
+  nextTick(measureHeaderHeight)
+  window.addEventListener('resize', measureHeaderHeight)
 })
 
 onBeforeUnmount(() => {
   if (_realtimeCleanup) _realtimeCleanup()
 
   document.removeEventListener("visibilitychange", handleVisibilityChange)
+  window.removeEventListener('resize', measureHeaderHeight)
 })
 
 function getStatusPercentage(key: string) {

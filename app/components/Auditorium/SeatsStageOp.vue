@@ -54,9 +54,14 @@
 
                 <template v-if="!(section.l || section.isLabel)">
                   <VGroup v-for="(sub, subIdx) in (section.ss || section.subsections)"
-                    :key="`sub-${sIdx}-${subIdx}`" :config="getSubsectionPosition(section, subIdx)"
-                    @click="handleSubsectionClick(sub)" @tap="handleSubsectionClick(sub)"
-                    @mouseenter="handleSeatHover" @mouseleave="handleSeatLeave">
+                    :key="`sub-${sIdx}-${subIdx}`"
+                    :config="{
+                      ...getSubsectionPosition(section, subIdx),
+                      onClick: () => handleSubsectionClick(sub),
+                      onTap: () => handleSubsectionClick(sub),
+                      onMouseenter: handleSeatHover,
+                      onMouseleave: handleSeatLeave,
+                    }">
                     <template v-if="sub.l || sub.isLabel">
                       <AuditoriumSeatsStageSubsectionLabel :subsection="sub"
                         :section-height="getSectionHeight(section)" />
@@ -76,7 +81,7 @@
       </div>
     </div>
 
-    <MyDragPanel v-model="showMarkPanel" :title="'Asientos: ' + selectedSeatsArray.length" mode="fixed"
+    <MyDragPanel id="cmp-my-drag-panel-mark" v-model="showMarkPanel" :title="'Asientos: ' + selectedSeatsArray.length" mode="fixed"
       :top="panelVerticalPos.top" :bottom="panelVerticalPos.bottom" left="calc(50% - 95px)">
       <div class="mark-grid">
         <template v-for="(config, key) in activeStatusConfig" :key="key">
@@ -93,7 +98,7 @@
       </div>
     </MyDragPanel>
 
-    <AuditoriumSeatsHistory v-model="historyDialog" :history-loading="historyLoading" :history-log="historyLog"
+    <AuditoriumSeatsHistory id="cmp-auditorium-seats-history" v-model="historyDialog" :history-loading="historyLoading" :history-log="historyLog"
       :history-users="historyUsers" />
   </div>
 </template>
@@ -143,6 +148,11 @@ const props = defineProps<{
   sectionPrefix?: string | null
   categories?: unknown[]
   loadingSeats?: unknown[]
+  // Height (px) of any fixed page header rendered above this component. It is
+  // reserved in-flow by the page (a spacer div) but is NOT part of the
+  // viewport space the stage can fill, so it must be subtracted here or the
+  // stage overflows the viewport bottom and the page shows a scrollbar.
+  topOffset?: number
 }>()
 
 const emit = defineEmits<{
@@ -284,7 +294,12 @@ const appBarHeight = computed(() => {
 const containerOuterHeight = computed(() => {
   const controlH = controlHeight.value
   const appBarH = appBarHeight.value
-  return `calc(100dvh - ${controlH}px - ${appBarH}px - 44px - env(safe-area-inset-bottom, 10px))`
+  const offset = props.topOffset ?? 0
+  // The page's fixed info bar reserves its real, measured height in-flow via
+  // a spacer div before this component mounts. That height is part of the
+  // page's vertical budget but not usable stage space, so it must be
+  // subtracted alongside the control row and the real VAppBar.
+  return `calc(100dvh - ${controlH}px - ${appBarH}px - ${offset}px - env(safe-area-inset-bottom, 10px))`
 })
 
 const containerWidth = computed(() => {
@@ -296,8 +311,9 @@ const containerHeightPx = computed(() => {
   if (typeof window === "undefined") return 600
   const controlH = controlHeight.value
   const appBarH = appBarHeight.value
+  const offset = props.topOffset ?? 0
   const baseHeight = window.innerHeight || document.documentElement.clientHeight
-  return baseHeight - controlH - appBarH - 38 - 10
+  return baseHeight - controlH - appBarH - offset - 10
 })
 
 const subsectionStats = computed(() => {
@@ -331,6 +347,19 @@ watch(selectedSubsection, () => {
 
 watch(selectedSeatsArray, (arr) => {
   markPanelVisible.value = arr.length > 0
+})
+
+// Vuetify 3's layout system (useLayout) can report `mainRect.top` as 0 on the
+// very first render, before the VAppBar has registered its height with the
+// layout provider. If we size/fit the Konva stage against that stale 0, the
+// stage ends up taller than the actual space below the app bar and visually
+// overlaps it (cropped/overlapping header). Re-run the fit once the real
+// app-bar height comes through.
+watch(appBarHeight, () => {
+  nextTick(() => {
+    cachedControlHeight.value = getControlRowHeight()
+    applyCurrentFit()
+  })
 })
 
 onMounted(() => {
@@ -744,11 +773,9 @@ function handleSeatClick(payload: { seat: Seat; event?: any }) {
   const seatId = seat.id
   const index = selectedSeatsArray.value.indexOf(seatId)
 
-  if (index > -1) {
-    selectedSeatsArray.value.splice(index, 1)
-  } else {
-    selectedSeatsArray.value.push(seatId)
-  }
+  selectedSeatsArray.value = index > -1
+    ? selectedSeatsArray.value.filter((id) => id !== seatId)
+    : [...selectedSeatsArray.value, seatId]
 }
 
 function setEventSeat(status: string | null) {
