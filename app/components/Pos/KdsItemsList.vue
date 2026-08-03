@@ -1,5 +1,5 @@
 <template>
-  <div class="kds-items-list pa-3 pt-0">
+  <div id="cmp-pos-kds-items-list" class="kds-items-list pa-3 pt-0">
     <div
       v-for="(row, rowIndex) in preparationRows"
       :key="`${row.item.id}-${rowIndex}`"

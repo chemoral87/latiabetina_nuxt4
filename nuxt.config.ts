@@ -9,10 +9,22 @@ export default defineNuxtConfig({
     moduleOptions: {
       importComposables: ['useDate', 'useLocale', 'useDefaults', 'useDisplay', 'useRtl', 'useTheme'],
     },
-    localeMessages: ['es'],
-    locale: {
-      locale: 'es',
-      fallback: 'en',
+    vuetifyOptions: {
+      locale: {
+        locale: 'es',
+        fallback: 'en',
+        messages: {
+          es: {
+            date: {
+              months: {
+                short: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
+              },
+              weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+              weekdaysShort: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa']
+            }
+          }
+        }
+      }
     },
   },
   runtimeConfig: {

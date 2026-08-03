@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="cmp-user-table">
     <VDataTableServer
       id="dt-user-table-items-1"
       v-model:page="page"

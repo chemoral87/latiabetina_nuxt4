@@ -1,5 +1,5 @@
 <template>
-  <VMenu ref="timeMenuRef" v-model="timeMenu" :close-on-content-click="false" transition="scale-transition" offset-y :disabled="disabled">
+  <VMenu id="cmp-my-time-picker" ref="timeMenuRef" v-model="timeMenu" :close-on-content-click="false" transition="scale-transition" offset-y :disabled="disabled">
     <template #activator="{ props: menuProps }">
       <VTextField
         id="tf-my-timep-label-1"

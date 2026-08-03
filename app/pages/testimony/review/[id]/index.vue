@@ -2,7 +2,7 @@
   <VContainer>
     <VRow dense>
       <VCol cols="12" md="8" class="mx-auto">
-        <VCard>
+        <VCard id="card-rev-main">
           <VCardTitle class="d-flex flex-column align-start">
             <div class="d-flex align-center justify-space-between" style="width: 100%">
               <div>
@@ -10,14 +10,14 @@
                 <div class="text-caption text-grey">ID: {{ mTestimony.id }}</div>
               </div>
               <div class="text-right">
-                <VChip v-if="mTestimony.status === 'approved'" color="success" size="small">APROBADO</VChip>
-                <VChip v-else-if="mTestimony.status === 'rejected'" color="error" size="small">RECHAZADO</VChip>
-                <VChip v-else size="small">Pendiente</VChip>
+                <VChip id="chip-rev-status-approved" v-if="mTestimony.status === 'approved'" color="success" size="small">APROBADO</VChip>
+                <VChip id="chip-rev-status-rejected" v-else-if="mTestimony.status === 'rejected'" color="error" size="small">RECHAZADO</VChip>
+                <VChip id="chip-rev-status-pending" v-else size="small">Pendiente</VChip>
                 <div v-if="mTestimony.status_username" class="text-caption text-grey mt-1">Por: {{ mTestimony.status_username }}</div>
               </div>
             </div>
             <div class="mt-2">
-              <VChip v-for="(c, i) in (mTestimony.categories as string[] || [])" :key="i" class="ma-1" color="primary" size="small">
+              <VChip id="chip-rev-category" v-for="(c, i) in (mTestimony.categories as string[] || [])" :key="i" class="ma-1" color="primary" size="small">
                 {{ c }}
               </VChip>
             </div>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="cmp-pos-kds-orders-board">
     <!-- ── Loading ──────────────────────────────────────────────────── -->
     <div v-if="loading" class="kds-state kds-state--loading">
       <VProgressCircular indeterminate color="primary" size="56" />

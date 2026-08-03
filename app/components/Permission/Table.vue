@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="cmp-permission-table">
     <VDataTableServer
       id="dt-permission-table-items-1"
       v-model:page="page"

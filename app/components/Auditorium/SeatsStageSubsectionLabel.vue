@@ -1,5 +1,5 @@
 <template>
-  <v-group :config="{ y: 3 }">
+  <v-group id="cmp-auditorium-seats-stage-subsection-label" :config="{ y: 3 }">
     <v-rect :config="labelBgConfig" />
     <v-text :config="labelTextConfig" />
   </v-group>

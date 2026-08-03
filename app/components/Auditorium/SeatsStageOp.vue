@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="cmp-auditorium-seats-stage-op">
     <div ref="controlRow">
       <div class="d-flex flex-wrap align-center py-1" style="gap: 6px">
         <template v-if="selectedSubsection">

@@ -35,13 +35,13 @@
             <MyDatePicker v-model="date" label="Selecciona una fecha" dense outlined />
             <div class="mt-3 d-flex align-center">
               <span class="text-caption text-grey mr-2">Valor:</span>
-              <VChip size="small" :color="date ? 'success' : 'grey-lighten-3'" variant="elevated" label class="font-weight-mono">
+              <VChip id="chip-my-date-value" size="small" :color="date ? 'success' : 'grey-lighten-3'" variant="elevated" label class="font-weight-mono">
                 {{ date || "null" }}
               </VChip>
             </div>
             <div class="mt-2 d-flex align-center">
               <span class="text-caption text-grey mr-2">Mostrar:</span>
-              <VChip size="small" color="primary" variant="outlined" label>
+              <VChip id="chip-my-date-formatted" size="small" color="primary" variant="outlined" label>
                 {{ formattedDate || "—" }}
               </VChip>
             </div>
@@ -71,8 +71,14 @@
             <MyDateRange v-model="dateRange" label="Rango de fechas" dense outlined />
             <div class="mt-3 d-flex align-center">
               <span class="text-caption text-grey mr-2">Valor:</span>
-              <VChip size="small" :color="dateRange.length ? 'success' : 'grey-lighten-3'" variant="elevated" label class="font-weight-mono">
+              <VChip id="chip-my-daterange-value" size="small" :color="dateRange.length ? 'success' : 'grey-lighten-3'" variant="elevated" label class="font-weight-mono">
                 {{ dateRange.length ? dateRange.join(" ~ ") : "[]" }}
+              </VChip>
+            </div>
+            <div class="mt-2 d-flex align-center">
+              <span class="text-caption text-grey mr-2">Mostrar:</span>
+              <VChip id="chip-my-daterange-formatted" size="small" color="primary" variant="outlined" label>
+                {{ formattedDateRange || "—" }}
               </VChip>
             </div>
           </VCardText>
@@ -97,7 +103,7 @@
             <MyTimePicker v-model="time" label="Selecciona hora" dense outlined />
             <div class="mt-3 d-flex align-center">
               <span class="text-caption text-grey mr-2">Valor (24h):</span>
-              <VChip size="small" :color="time ? 'success' : 'grey-lighten-3'" variant="elevated" label class="font-weight-mono">
+              <VChip id="chip-my-time-value" size="small" :color="time ? 'success' : 'grey-lighten-3'" variant="elevated" label class="font-weight-mono">
                 {{ time || "null" }}
               </VChip>
             </div>
@@ -147,7 +153,7 @@
               />
             </div>
             <div class="mt-2 d-flex align-center">
-              <VSwitch v-model="previewLoading" density="compact" hide-details label="Forzar loading" class="mt-0 pt-0 mr-3" />
+              <VSwitch id="sw-my-preview-loading" v-model="previewLoading" density="compact" hide-details label="Forzar loading" class="mt-0 pt-0 mr-3" />
               <VTextField
                 id="tf-my-index-delay-s-2"
                 v-model.number="previewDelay"
@@ -262,7 +268,7 @@
             </VRow>
             <div class="mt-2 text-caption">
               Estado:
-              <VChip size="x-small" :color="dragPanelVisible ? 'success' : 'grey'" variant="elevated" label>
+              <VChip id="chip-my-drag-state" size="x-small" :color="dragPanelVisible ? 'success' : 'grey'" variant="elevated" label>
                 {{ dragPanelVisible ? "Visible" : "Oculto" }}
               </VChip>
             </div>
@@ -391,6 +397,14 @@ const loadingMessage = ref("Cargando…")
 const loadingTimer = ref<ReturnType<typeof setTimeout> | null>(null)
 
 const formattedDate = computed(() => formatShortDateSlash(date.value))
+
+const formattedDateRange = computed(() => {
+  if (!dateRange.value || dateRange.value.length === 0) return ""
+  return [...dateRange.value]
+    .map((d) => formatShortDateSlash(d))
+    .sort()
+    .join(" ~ ")
+})
 
 const stateDump = computed(() => {
   const dump = {

@@ -24,7 +24,7 @@
             <VIcon start size="small" color="primary">mdi-redhat</VIcon>
             Roles con el permiso {{ permission.name }}
             <VSpacer />
-            <VChip color="info" size="small" variant="elevated">{{ filteredRoles.length }} roles</VChip>
+            <VChip id="chip-pdi-count" color="info" size="small" variant="elevated">{{ filteredRoles.length }} roles</VChip>
           </VCardTitle>
 
           <VCardText class="pt-0">

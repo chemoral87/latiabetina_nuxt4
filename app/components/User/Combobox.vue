@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="cmp-user-combobox">
     <VAutocomplete
       v-model="model"
       :filter="customFilter"

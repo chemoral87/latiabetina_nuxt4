@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="cmp-role-combobox">
     <VCombobox
       v-model="model"
       variant="outlined"

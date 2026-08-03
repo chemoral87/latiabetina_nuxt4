@@ -1,5 +1,5 @@
 <template>
-  <VSelect v-model="selected" :disabled="disabled" :items="items" :loading="loading" :label="label" item-title="name" item-value="id" v-bind="$attrs" />
+  <VSelect id="cmp-auditorium-select" v-model="selected" :disabled="disabled" :items="items" :loading="loading" :label="label" item-title="name" item-value="id" v-bind="$attrs" />
 </template>
 
 <script setup lang="ts">

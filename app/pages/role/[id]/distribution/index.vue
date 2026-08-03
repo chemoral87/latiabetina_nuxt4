@@ -24,7 +24,7 @@
             <VIcon start size="small" color="primary">mdi-shield-key-outline</VIcon>
             Perfiles con el rol {{ role.name }}
             <VSpacer />
-            <VChip color="info" size="small" variant="elevated">{{ filteredProfiles.length }} perfiles</VChip>
+            <VChip id="chip-rdi-count" color="info" size="small" variant="elevated">{{ filteredProfiles.length }} perfiles</VChip>
           </VCardTitle>
 
           <VCardText class="pt-0">

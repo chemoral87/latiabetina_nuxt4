@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="cmp-my-uploadimage">
     <input
       ref="fileInput"
       type="file"

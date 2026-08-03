@@ -1,5 +1,5 @@
 <template>
-  <VRow justify="center" class="mb-2" density="comfortable">
+  <VRow id="cmp-church-event-calendar-view" justify="center" class="mb-2" density="comfortable">
     <VCol cols="12">
       <VCard id="card-churc-calen-1" elevation="1">
         <div class="d-flex align-center justify-space-between px-4 py-1 calendar-toolbar">

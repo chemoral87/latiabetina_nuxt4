@@ -15,6 +15,7 @@
 
       <VCol cols="12" md="2" sm="4">
         <VSelect
+          id="sel-tes-status"
           v-model="statusFilter"
           :items="[
             { title: 'Pendientes', value: '' },

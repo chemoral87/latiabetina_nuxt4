@@ -60,28 +60,28 @@
                 <VIcon start size="x-small">mdi-code-json</VIcon>JSON
               </VBtn>
             </VBtnToggle>
-            <VChip size="x-small" :color="saveFormat === 'csv' ? 'success' : 'info'" class="ml-2">
+            <VChip id="chip-aed-format" size="x-small" :color="saveFormat === 'csv' ? 'success' : 'info'" class="ml-2">
               {{ saveFormat === 'csv' ? 'Plano CSV' : 'JSON anidado' }}
             </VChip>
           </div>
 
           <JsonConfig :config-data="configData" :config-data-csv="configDataCsv" :save-format="saveFormat" @imported="handleImportedConfig" @import-error="onImportError" />
 
-          <VSlider v-model="settings.SEAT_SIZE" :min="5" :max="20" :step="1" label="Tamaño de asiento" thumb-label density="compact" class="mb-1" />
-          <VSlider v-model="settings.SEATS_DISTANCE" :min="2" :max="8" :step="1" label="Distancia entre asientos" thumb-label density="compact" class="mb-1" />
-          <VSlider v-model="settings.SECTION_TOP_PADDING" :min="0" :max="160" :step="5" label="Padding superior sección" thumb-label density="compact" class="mb-0" />
+          <VSlider id="sld-aed-seat-size" v-model="settings.SEAT_SIZE" :min="5" :max="20" :step="1" label="Tamaño de asiento" thumb-label density="compact" class="mb-1" />
+          <VSlider id="sld-aed-seat-distance" v-model="settings.SEATS_DISTANCE" :min="2" :max="8" :step="1" label="Distancia entre asientos" thumb-label density="compact" class="mb-1" />
+          <VSlider id="sld-aed-section-padding" v-model="settings.SECTION_TOP_PADDING" :min="0" :max="160" :step="5" label="Padding superior sección" thumb-label density="compact" class="mb-0" />
         </VCard>
 
         <!-- Lista de Secciones -->
         <div class="text-subtitle-2 mb-2">Secciones</div>
         <div v-for="(section, sIdx) in sections" :key="`section-${sIdx}`">
-          <VCard variant="outlined" class="mb-2">
+          <VCard id="card-aed-section" variant="outlined" class="mb-2">
             <div class="d-flex align-center pa-2">
               <VBtn icon size="x-small" class="mr-1" id="btn-audid-section-toggle" @click="toggleSection(sIdx)">
                 <VIcon size="x-small">{{ openSections[sIdx] ? 'mdi-chevron-down' : 'mdi-chevron-right' }}</VIcon>
               </VBtn>
               <VTextField id="tf-audid-section-name" v-model="section.name" density="compact" variant="solo" hide-details :style="mobile ? 'max-width: 120px' : 'max-width: 140px'" />
-              <VChip v-if="section.isLabel" size="x-small" color="secondary" class="ml-1 ml-md-2">Etiqueta</VChip>
+              <VChip id="chip-aed-label" v-if="section.isLabel" size="x-small" color="secondary" class="ml-1 ml-md-2">Etiqueta</VChip>
               <VSpacer />
               <VBtn icon size="x-small" color="error" id="btn-audid-section-remove" @click="removeSection(sIdx)">
                 <VIcon size="x-small">mdi-delete</VIcon>
@@ -105,14 +105,14 @@
               </VRow>
 
               <!-- Subsecciones -->
-              <VCard v-for="(sub, subIdx) in section.subsections" :key="`sub-${subIdx}`" variant="outlined" class="mb-2" :class="mobile ? 'pa-1' : 'pa-2'">
+              <VCard id="card-aed-subsection" v-for="(sub, subIdx) in section.subsections" :key="`sub-${subIdx}`" variant="outlined" class="mb-2" :class="mobile ? 'pa-1' : 'pa-2'">
                 <div class="d-flex align-center mb-2">
                   <VTextField id="tf-audid-sub-name" v-model="sub.name" :label="sub.isLabel ? 'Nombre área' : 'Nombre subsección'" density="compact" hide-details :style="mobile ? 'font-size: 14px' : ''" />
-                  <VChip v-if="sub.isLabel" size="x-small" color="accent" class="ml-1 ml-md-2">Área</VChip>
+                  <VChip id="chip-aed-area" v-if="sub.isLabel" size="x-small" color="accent" class="ml-1 ml-md-2">Área</VChip>
                 </div>
 
                 <!-- Ancho de área (solo para etiquetas) -->
-                <VSlider v-if="sub.isLabel" v-model="sub.width" :min="50" :max="300" :step="10" label="Ancho del área" thumb-label density="compact" hide-details class="mb-2" />
+                <VSlider id="sld-aed-area-width" v-if="sub.isLabel" v-model="sub.width" :min="50" :max="300" :step="10" label="Ancho del área" thumb-label density="compact" hide-details class="mb-2" />
 
                 <template v-if="!sub.isLabel">
                   <!-- Definir filas y columnas -->

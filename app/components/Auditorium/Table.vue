@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="cmp-auditorium-table">
     <VDataTableServer
       id="dt-audit-table-items-1"
       v-model:page="page"

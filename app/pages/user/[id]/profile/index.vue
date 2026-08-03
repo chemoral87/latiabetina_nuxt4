@@ -11,7 +11,7 @@
 
     <VRow>
       <VCol v-for="profile in profiles" :key="profile.id as number" cols="12" class="mb-3">
-        <VCard variant="outlined" class="bg-white rounded-lg">
+        <VCard :id="'card-usp-profile-' + profile.id" variant="outlined" class="bg-white rounded-lg">
           <VCardItem class="pb-2">
             <div class="d-flex align-center justify-space-between">
               <div class="text-h6 font-weight-regular text-body-1">
@@ -39,7 +39,7 @@
                   Roles
                 </div>
                 <div class="d-flex flex-wrap ga-2">
-                  <VChip v-for="it in (profile.roles as Record<string, unknown>[])" :key="it.id as number" color="primary" variant="flat" size="small" rounded="pill">
+                  <VChip :id="'chip-usp-role-' + it.id" v-for="it in (profile.roles as Record<string, unknown>[])" :key="it.id as number" color="primary" variant="flat" size="small" rounded="pill">
                     {{ it.name as string }}
                   </VChip>
                 </div>
@@ -50,7 +50,7 @@
                   Permisos Directos
                 </div>
                 <div class="d-flex flex-wrap ga-2">
-                  <VChip v-for="it in (profile.permissions as Record<string, unknown>[])" :key="it.id as number" color="info" variant="flat" size="small" rounded="pill">
+                  <VChip :id="'chip-usp-permission-' + it.id" v-for="it in (profile.permissions as Record<string, unknown>[])" :key="it.id as number" color="info" variant="flat" size="small" rounded="pill">
                     {{ it.name as string }}
                   </VChip>
                 </div>
@@ -63,7 +63,7 @@
 
     <VRow>
       <VCol cols="12">
-        <VCard border>
+        <VCard id="card-usp-actions" border>
           <VCardText class="d-flex justify-end pa-4">
             <VBtn id="btn-user-profile-back" color="primary" variant="outlined" @click="navigateTo('/user')">
               <VIcon start>mdi-arrow-left</VIcon>

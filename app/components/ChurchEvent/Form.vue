@@ -1,5 +1,5 @@
 <template>
-  <VCard>
+  <VCard id="cmp-church-event-form">
     <VCardTitle class="d-flex align-center">
       <VIcon class="mr-2">{{ iconTitle }}</VIcon>
       <span class="text-h5">{{ formTitle }}</span>

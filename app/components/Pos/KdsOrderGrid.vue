@@ -1,5 +1,5 @@
 <template>
-  <VRow>
+  <VRow id="cmp-pos-kds-order-grid">
     <VCol
       v-for="order in activeOrders"
       :id="'pos-kds-order-' + order.id"

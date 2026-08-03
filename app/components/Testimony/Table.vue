@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="cmp-testimony-table">
     <VDataTableServer
       id="dt-testi-table-localitems-1"
       v-model:page="page"

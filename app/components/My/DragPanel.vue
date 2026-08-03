@@ -1,6 +1,7 @@
 <template>
   <div
     v-if="modelValue"
+    id="cmp-my-drag-panel"
     ref="panel"
     class="drag-panel elevation-8"
     :style="panelStyle"

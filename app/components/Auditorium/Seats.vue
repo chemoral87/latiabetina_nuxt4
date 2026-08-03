@@ -1,5 +1,5 @@
 <template>
-  <VSheet elevation="2" class="pa-2 stage-container" style="background: #f5f5f5; min-height: 500px; overflow-x: auto; overflow-y: hidden">
+  <VSheet id="cmp-auditorium-seats" elevation="2" class="pa-2 stage-container" style="background: #f5f5f5; min-height: 500px; overflow-x: auto; overflow-y: hidden">
     <v-stage :config="stageConfig" @click="handleStageClick" @tap="handleStageClick">
       <v-layer>
         <v-group v-for="(section, sIdx) in sections" :key="`section-${sIdx}`" :config="getSectionConfig(sIdx)">

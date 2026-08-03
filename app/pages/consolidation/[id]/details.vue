@@ -52,6 +52,7 @@
               </VCol>
               <VCol cols="12" md="2">
                 <VAutocomplete
+                  id="ac-det-consolidator"
                   v-model="sheet.consolidator_id"
                   :items="users"
                   item-title="name"
@@ -67,6 +68,7 @@
               </VCol>
               <VCol cols="12" md="2">
                 <VSelect
+                  id="sel-det-first-church"
                   v-model="sheet.first_time_christian_church"
                   :items="[{ title: 'SI', value: true }, { title: 'NO', value: false }]"
                   label="¿Primera vez en iglesia cristiana?"
@@ -84,6 +86,7 @@
 
               <VCol cols="12" md="6" class="mt-1">
                 <VTextarea
+                  id="ta-det-comments"
                   v-model="sheet.comments"
                   label="Comentarios"
                   variant="outlined"
@@ -97,6 +100,7 @@
               </VCol>
               <VCol cols="12" md="6" class="mt-1">
                 <VTextarea
+                  id="ta-det-special-request"
                   v-model="sheet.special_request"
                   label="Petición especial"
                   rows="2"
