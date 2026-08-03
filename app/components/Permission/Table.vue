@@ -79,6 +79,8 @@
 </template>
 
 <script setup lang="ts">
+import { rowPropsFor } from "~/composables/useRowHighlight"
+
 interface Header {
   title: string
   value: string
@@ -117,12 +119,7 @@ const total = computed(() => props.response?.total ?? 0)
 const items = computed(() => props.response?.data ?? [])
 const loading = computed(() => props.loading ?? false)
 
-function rowProps(data: { item: unknown }) {
-  const id = (data.item as Record<string, unknown>)?.id
-  return {
-    class: props.highlightId != null && id === props.highlightId ? 'row-highlight' : undefined,
-  }
-}
+const rowProps = rowPropsFor(() => props.highlightId)
 
 function onUpdateOptions(val: Record<string, unknown>) {
   emit("sorting", val)

@@ -50,6 +50,7 @@
 
 <script setup lang="ts">
 import { formatShortDate, formatHourTime } from "~/utils/date"
+import { rowPropsFor } from "~/composables/useRowHighlight"
 
 interface Header {
   title: string
@@ -100,12 +101,7 @@ const items = computed(() => {
   })
 })
 
-function rowProps(data: { item: unknown }) {
-  const id = (data.item as Record<string, unknown>)?.id
-  return {
-    class: props.highlightId != null && id === props.highlightId ? 'row-highlight' : undefined,
-  }
-}
+const rowProps = rowPropsFor(() => props.highlightId)
 
 onMounted(() => {
   const opts = props.options ?? {}

@@ -836,24 +836,24 @@ the **Role**, **User**, **Organization**, **Permission**, **Auditorium** and
 
 1. Add a `highlightId` prop.
 2. Bind `:row-props="rowProps"` on `VDataTableServer`.
-3. Return the `row-highlight` class only for the matching row:
+3. Build `rowProps` with the shared **`rowPropsFor`** factory (same file as
+   `useRowHighlight`) — it returns the `row-highlight` class only for the
+   matching row and reads the **current** `highlightId` on every Vuetify row
+   render (passing a plain value captured at setup time would not be reactive):
 
 ```vue
 <VDataTableServer ... :row-props="rowProps" />
 ```
 
 ```ts
+import { rowPropsFor } from "~/composables/useRowHighlight"
+
 const props = defineProps<{
   // ...
   highlightId?: number | null
 }>()
 
-function rowProps(data: { item: unknown }) {
-  const id = (data.item as Record<string, unknown>)?.id
-  return {
-    class: props.highlightId != null && id === props.highlightId ? 'row-highlight' : undefined,
-  }
-}
+const rowProps = rowPropsFor(() => props.highlightId)
 ```
 
 No scoped CSS in the component — the animation lives **once** in
@@ -883,11 +883,11 @@ No scoped CSS in the component — the animation lives **once** in
 
 ### Parent page (e.g. `role/index.vue`)
 
-Use the shared **`useRowHighlight`** composable
-(`app/composables/useRowHighlight.ts`) — it owns the `highlightId` ref, the
-**resettable** timer, the `null` → `nextTick` re-set (so the animation
-re-triggers even when the **same** row is edited twice in a row), and the
-`onUnmounted` timer cleanup:
+Use the shared helpers in **`app/composables/useRowHighlight.ts`**:
+`useRowHighlight()` on the page side and `rowPropsFor(...)` on the table side.
+`useRowHighlight()` owns the `highlightId` ref, the **resettable** timer, the
+`null` → `nextTick` re-set (so the animation re-triggers even when the
+**same** row is edited twice in a row), and the `onUnmounted` timer cleanup:
 
 ```ts
 import { useRowHighlight } from "~/composables/useRowHighlight"
@@ -918,8 +918,10 @@ if (updatedId != null) {
    `tr` would hide a `tr` `background-color` flash on odd rows.
 3. Keep the CSS **global** (single definition in `app/assets/css/global.css`).
    Do **not** add scoped `:deep(.row-highlight td)` copies per component.
-4. Use the shared `useRowHighlight` composable — do **not** copy the
-   ref/timer/`nextTick` helper into pages. Import it explicitly.
+4. Use the shared helpers in `app/composables/useRowHighlight.ts` —
+   `useRowHighlight()` on the page side and `rowPropsFor(...)` on the table
+   side. Do **not** copy the ref/timer/`nextTick` helper into pages or the
+   inline `rowProps` function into table components. Import them **explicitly**.
 5. `flash()` clears the id and re-sets it on `nextTick` — otherwise a fast
    re-edit of the same row silently no-ops (the class never leaves the DOM, so
    the animation never restarts).
