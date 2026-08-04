@@ -27,6 +27,7 @@
           icon
           rounded="circle"
           size="small"
+          class="ma-1"
           id="btn-testimony-table-show"
           @click="emit('show', item)"
         >
@@ -55,7 +56,7 @@
             icon
             rounded="circle"
             size="small"
-            class="mr-2"
+                    class="ma-1"
             id="btn-testimony-table-edit"
             @click="emit('edit', item)"
           >
@@ -67,6 +68,7 @@
             color="error"
             variant="outlined"
             icon
+                    class="ma-1"
             rounded="circle"
             size="small"
             id="btn-testimony-table-delete"

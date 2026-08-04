@@ -23,6 +23,7 @@
         :disabled="disabled"
         :error-messages="errorMessages"
         v-bind="props"
+        @update:model-value="onActivatorClear"
       />
     </template>
 
@@ -311,6 +312,15 @@ function onClear() {
   nextTick(() => {
     dateMenuRef.value?.$el?.querySelector?.("input")?.focus?.()
   })
+}
+
+function onActivatorClear(val: unknown) {
+  // The activator field is read-only and controlled by "dateRangeText", so the
+  // only way it emits an update is via the clearable X icon. Reset the real
+  // model so page watchers fire and refresh the table.
+  if (val === null || val === "" || (Array.isArray(val) && val.length === 0)) {
+    onClear()
+  }
 }
 </script>
 

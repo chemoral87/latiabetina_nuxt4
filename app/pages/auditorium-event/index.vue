@@ -47,6 +47,7 @@ const { AuditoriumEvent } = useRepository()
 const notify = useNotifyStore()
 
 const filterAuditoriumEvent = ref<(string | null)[]>([])
+const filterAuditoriumEventDebounced = ref<(string | null)[]>([])
 const filterOrgId = ref<string | number | null>(null)
 const orgFilterHidden = ref(false)
 const auditoriumEvent = ref<Record<string, unknown>>({})
@@ -78,10 +79,21 @@ const initialOptions: Record<string, unknown> = {
 
 let initialLoaded = false
 
+let filterDebounceTimer: ReturnType<typeof setTimeout> | null = null
+
 watch(filterAuditoriumEvent, (value) => {
-  if (value && value.length > 0) {
-    value = [...value].sort() as (string | null)[]
+  if (filterDebounceTimer) clearTimeout(filterDebounceTimer)
+  const sorted = value && value.length > 0 ? ([...value].sort() as (string | null)[]) : []
+  if (sorted.length === 0) {
+    filterAuditoriumEventDebounced.value = sorted
+    return
   }
+  filterDebounceTimer = setTimeout(() => {
+    filterAuditoriumEventDebounced.value = sorted
+  }, 300)
+})
+
+watch(filterAuditoriumEventDebounced, (value) => {
   getAuditoriumEvents({ filter: value, page: 1 })
 })
 

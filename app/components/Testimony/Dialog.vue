@@ -12,7 +12,7 @@
 
       <VCardText class="py-1">
         <VForm ref="formRef" @submit.prevent="save">
-          <VRow>
+          <VRow density="comfortable">
             <VCol cols="12">
               <OrganizationSelect
                 v-model="item.org_id"
@@ -22,7 +22,7 @@
                 density="compact"
                 prepend-inner-icon="mdi-domain"
                 :disabled="loading || saving || isEditMode"
-                :rules="[vrules.required]"
+                :rules="[vrules.requiredField('Organización')]"
               />
             </VCol>
             <VCol cols="12">
@@ -30,10 +30,11 @@
                 id="tf-testi-dialo-item-name-1"
                 v-model="item.name"
                 label="Nombre"
+                variant="outlined"
                 prepend-inner-icon="mdi-account-outline"
                 :error-messages="errors?.name"
                 :disabled="loading || saving"
-                required
+                :rules="[vrules.requiredField('Nombre')]"
                 autofocus
                 @keyup.enter="save"
               />
@@ -43,6 +44,7 @@
                 id="tf-testi-dialo-item-phone_number-2"
                 v-model="item.phone_number"
                 label="Teléfono"
+                variant="outlined"
                 prepend-inner-icon="mdi-phone"
                 :error-messages="errors?.phone_number"
                 :disabled="loading || saving"
@@ -53,6 +55,7 @@
                 id="tf-testi-dialo-categoriesstring-3"
                 v-model="categoriesString"
                 label="Categorías (coma separadas)"
+                variant="outlined"
                 prepend-inner-icon="mdi-tag-multiple-outline"
                 :disabled="loading || saving"
               />
@@ -62,6 +65,7 @@
                 id="tf-testi-dialo-item-link-4"
                 v-model="item.link"
                 label="Enlace"
+                variant="outlined"
                 prepend-inner-icon="mdi-link"
                 :disabled="loading || saving"
               />
@@ -70,6 +74,7 @@
               <VTextarea
                 v-model="item.description"
                 label="Descripción"
+                variant="outlined"
                 rows="4"
                 prepend-inner-icon="mdi-text-box-outline"
                 :error-messages="errors?.description"

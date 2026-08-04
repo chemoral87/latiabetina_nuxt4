@@ -32,15 +32,15 @@
     </template>
 
     <template #[`item.actions`]="{ item }">
-      <VBtn title="Descargar Excel" class="mr-1 my-1" color="success" variant="outlined" icon size="small"
+      <VBtn title="Descargar Excel" class="mr-1 my-1" color="success" variant="outlined" icon  size="small"
         id="btn-auditoriumevent-table-download" @click="emit('download', item)">
         <VIcon size="x-large">mdi-file-excel</VIcon>
       </VBtn>
-      <VBtn title="Editar" class="mr-1 my-1" color="primary" variant="outlined" icon size="small"
+      <VBtn title="Editar" class="mr-1 my-1" color="primary" variant="outlined" icon  size="small"
         id="btn-auditoriumevent-table-edit" @click="emit('edit', item)">
         <VIcon size="x-large">mdi-pencil</VIcon>
       </VBtn>
-      <VBtn title="Eliminar" class="my-1" color="error" variant="outlined" icon size="small"
+      <VBtn title="Eliminar" class="my-1" color="error" variant="outlined" icon    size="small"
         id="btn-auditoriumevent-table-delete" @click="emit('delete', item)">
         <VIcon size="x-large">mdi-delete</VIcon>
       </VBtn>

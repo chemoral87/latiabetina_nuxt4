@@ -9,8 +9,13 @@
           clearable
           hide-details
           density="compact"
+          variant="outlined"
           placeholder="Filtro"
         />
+      </VCol>
+
+      <VCol cols="12" md="3" sm="6">
+        <MyDateRange v-model="filterDateRange" variant="outlined" />
       </VCol>
 
       <VCol cols="12" md="2" sm="4">
@@ -26,6 +31,7 @@
           clearable
           density="compact"
           hide-details
+          variant="outlined"
           @update:model-value="onStatusChange"
         />
       </VCol>
@@ -88,6 +94,7 @@ const notify = useNotifyStore()
 const { highlightId, prependCreated, updateRow } = useRowHighlight()
 
 const filterTestimony = ref("")
+const filterDateRange = ref<(string | null)[]>([])
 const statusFilter = ref("")
 const filterOrgId = ref<string | number | null>(null)
 const orgFilterHidden = ref(false)
@@ -141,6 +148,15 @@ watch(filterOrgId, (value) => {
   loadTestimonies(overrides)
 })
 
+watch(filterDateRange, (value) => {
+  const range = value && value.length > 0 ? ([...value].sort() as string[]) : []
+  loadTestimonies({
+    page: 1,
+    date_from: range[0] || undefined,
+    date_to: range[1] || undefined,
+  })
+})
+
 async function loadTestimonies(overrides: Record<string, unknown> = {}) {
   try {
     loading.value = true
@@ -157,6 +173,12 @@ async function loadTestimonies(overrides: Record<string, unknown> = {}) {
     }
     if (Object.prototype.hasOwnProperty.call(overrides, "org_id") && !overrides.org_id) {
       delete requestOptions.org_id
+    }
+    if (Object.prototype.hasOwnProperty.call(overrides, "date_from") && !overrides.date_from) {
+      delete requestOptions.date_from
+    }
+    if (Object.prototype.hasOwnProperty.call(overrides, "date_to") && !overrides.date_to) {
+      delete requestOptions.date_to
     }
 
     const params = buildApiParams(requestOptions)
@@ -182,6 +204,8 @@ function buildApiParams(opts: Record<string, unknown>): Record<string, unknown> 
   if (opts.filter) params.filter = opts.filter
   if (opts.status) params.status = opts.status
   if (opts.org_id) params.org_id = opts.org_id
+  if (opts.date_from) params.date_from = opts.date_from
+  if (opts.date_to) params.date_to = opts.date_to
   return params
 }
 
