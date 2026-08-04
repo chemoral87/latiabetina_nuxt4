@@ -30,11 +30,11 @@
       <!-- Sales table -->
       <VCol cols="12">
         <SaleTable
+          v-model:dialog-delete="saleDialogDelete"
           :response="response"
           :loading="loading"
           :highlight-id="highlightId"
           :removing-id="removingId"
-          v-model:dialog-delete="saleDialogDelete"
           @sorting="handleSorting"
           @view="viewDetail"
           @edit="editSale"

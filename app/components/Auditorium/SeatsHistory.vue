@@ -5,7 +5,7 @@
         <VIcon start color="info">mdi-history</VIcon>
         Historial de asientos
         <VSpacer />
-        <VBtn icon id="btn-aushi-close" @click="localVisible = false">
+        <VBtn id="btn-aushi-close" icon @click="localVisible = false">
           <VIcon>mdi-close</VIcon>
         </VBtn>
       </VCardTitle>
@@ -101,7 +101,7 @@
       <VDivider />
       <VCardActions>
         <VSpacer />
-        <VBtn text id="btn-aushi-close-btn" @click="localVisible = false">Cerrar</VBtn>
+        <VBtn id="btn-aushi-close-btn" text @click="localVisible = false">Cerrar</VBtn>
       </VCardActions>
     </VCard>
   </VDialog>

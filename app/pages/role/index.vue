@@ -30,12 +30,12 @@
       <!-- Role table -->
       <VCol cols="12">
         <RoleTable
+          v-model:dialog-delete="roleDialogDelete"
           :search="filterRole"
           :response="response"
           :loading="loading"
           :highlight-id="highlightId"
           :removing-id="removingId"
-          v-model:dialog-delete="roleDialogDelete"
           @sorting="handleSorting"
           @editPermissions="editRolePermissions"
           @distribution="distributeRole"

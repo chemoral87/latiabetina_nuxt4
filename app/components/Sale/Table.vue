@@ -40,6 +40,7 @@
 
       <template #[`item.actions`]="{ item }">
         <VBtn
+          id="btn-sale-table-view"
           title="Ver detalle"
           class="ma-1"
           color="primary"
@@ -47,12 +48,12 @@
           size="small"
           icon
           rounded="circle"
-          id="btn-sale-table-view"
           @click="emitView(item)"
         >
           <VIcon size="x-large">mdi-eye</VIcon>
         </VBtn>
         <VBtn
+          id="btn-sale-table-edit"
           title="Editar"
           class="ma-1"
           color="info"
@@ -60,12 +61,12 @@
           size="small"
           icon
           rounded="circle"
-          id="btn-sale-table-edit"
           @click="emitEdit(item)"
         >
           <VIcon size="x-large">mdi-pencil</VIcon>
         </VBtn>
         <VBtn
+          id="btn-sale-table-delete"
           title="Eliminar"
           class="ma-1"
           color="error"
@@ -73,7 +74,6 @@
           size="small"
           icon
           rounded="circle"
-          id="btn-sale-table-delete"
           @click="confirmDelete(item)"
         >
           <VIcon size="x-large">mdi-delete</VIcon>

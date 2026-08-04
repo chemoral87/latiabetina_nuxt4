@@ -117,8 +117,8 @@
           <VCol cols="12" md="6">
             <MyUploadimage
               v-model="item.image_file"
-              label="Imagen del evento"
               v-model:url="item.url_image"
+              label="Imagen del evento"
               :disabled="disabled"
               @loading="imageLoading = true"
               @change="imageLoading = false"
@@ -135,15 +135,15 @@
     </VCardText>
 
     <div class="d-flex justify-end px-4 pb-4">
-      <VBtn color="primary" variant="text" :disabled="disabled || imageLoading" id="btn-churchevent-form-cancel" @click="close">
+      <VBtn id="btn-churchevent-form-cancel" color="primary" variant="text" :disabled="disabled || imageLoading" @click="close">
         Cancelar
       </VBtn>
       <VBtn
+        id="btn-churchevent-form-save"
         color="primary"
         variant="elevated"
         :loading="saving || loading"
         :disabled="saving || loading || imageLoading"
-        id="btn-churchevent-form-save"
         @click="save"
       >
         Guardar

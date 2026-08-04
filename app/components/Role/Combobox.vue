@@ -2,6 +2,7 @@
   <div id="cmp-role-combobox">
     <VCombobox
       v-model="model"
+      v-model:search="search"
       variant="outlined"
       :filter="customFilter"
       item-value="id"
@@ -10,7 +11,6 @@
       hide-selected
       :hide-no-data="!search"
       :items="items"
-      v-model:search="search"
       multiple
       return-object
     >

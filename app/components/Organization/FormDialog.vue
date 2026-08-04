@@ -5,7 +5,7 @@
         <VIcon start size="small" color="primary">mdi-domain</VIcon>
         {{ formTitle }}
         <VSpacer />
-        <VBtn icon size="x-small" id="btn-organization-dialog-close" @click="close">
+        <VBtn id="btn-organization-dialog-close" icon size="x-small" @click="close">
           <VIcon>mdi-close</VIcon>
         </VBtn>
       </VCardTitle>
@@ -47,11 +47,11 @@
       </VCardText>
 
       <div class="d-flex justify-end px-4 pb-4">
-        <VBtn color="primary" variant="outlined" class="mr-4" id="btn-organization-dialog-cancel" @click="close">
+        <VBtn id="btn-organization-dialog-cancel" color="primary" variant="outlined" class="mr-4" @click="close">
           <VIcon start>mdi-close</VIcon>
           Cancelar
         </VBtn>
-        <VBtn color="primary" variant="elevated" :loading="saving || loading" :disabled="saving || loading" id="btn-organization-dialog-save" @click="save">
+        <VBtn id="btn-organization-dialog-save" color="primary" variant="elevated" :loading="saving || loading" :disabled="saving || loading" @click="save">
           <VIcon start>mdi-content-save</VIcon>
           Guardar
         </VBtn>

@@ -39,7 +39,7 @@
                   Roles
                 </div>
                 <div class="d-flex flex-wrap ga-2">
-                  <VChip :id="'chip-usp-role-' + it.id" v-for="it in (profile.roles as Record<string, unknown>[])" :key="it.id as number" color="primary" variant="flat" size="small" rounded="pill">
+                  <VChip v-for="it in (profile.roles as Record<string, unknown>[])" :id="'chip-usp-role-' + it.id" :key="it.id as number" color="primary" variant="flat" size="small" rounded="pill">
                     {{ it.name as string }}
                   </VChip>
                 </div>
@@ -50,7 +50,7 @@
                   Permisos Directos
                 </div>
                 <div class="d-flex flex-wrap ga-2">
-                  <VChip :id="'chip-usp-permission-' + it.id" v-for="it in (profile.permissions as Record<string, unknown>[])" :key="it.id as number" color="info" variant="flat" size="small" rounded="pill">
+                  <VChip v-for="it in (profile.permissions as Record<string, unknown>[])" :id="'chip-usp-permission-' + it.id" :key="it.id as number" color="info" variant="flat" size="small" rounded="pill">
                     {{ it.name as string }}
                   </VChip>
                 </div>

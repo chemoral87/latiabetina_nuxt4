@@ -25,23 +25,23 @@
     </template>
 
     <template #[`item.marks`]="{ item }">
-      <VBtn title="Marcar" class="mr-1 my-1" color="primary" variant="outlined" icon size="small"
-        id="btn-auditoriumevent-table-mark" @click="emit('mark', item)">
+      <VBtn id="btn-auditoriumevent-table-mark" title="Marcar" class="mr-1 my-1" color="primary" variant="outlined" icon
+        size="small" @click="emit('mark', item)">
         <VIcon size="x-large">mdi-eye</VIcon>
       </VBtn>
     </template>
 
     <template #[`item.actions`]="{ item }">
-      <VBtn title="Descargar Excel" class="mr-1 my-1" color="success" variant="outlined" icon  size="small"
-        id="btn-auditoriumevent-table-download" @click="emit('download', item)">
+      <VBtn id="btn-auditoriumevent-table-download" title="Descargar Excel" class="mr-1 my-1" color="success" variant="outlined"  icon
+        size="small" @click="emit('download', item)">
         <VIcon size="x-large">mdi-file-excel</VIcon>
       </VBtn>
-      <VBtn title="Editar" class="mr-1 my-1" color="primary" variant="outlined" icon  size="small"
-        id="btn-auditoriumevent-table-edit" @click="emit('edit', item)">
+      <VBtn id="btn-auditoriumevent-table-edit" title="Editar" class="mr-1 my-1" color="primary" variant="outlined"  icon
+        size="small" @click="emit('edit', item)">
         <VIcon size="x-large">mdi-pencil</VIcon>
       </VBtn>
-      <VBtn title="Eliminar" class="my-1" color="error" variant="outlined" icon    size="small"
-        id="btn-auditoriumevent-table-delete" @click="emit('delete', item)">
+      <VBtn id="btn-auditoriumevent-table-delete" title="Eliminar" class="my-1" color="error" variant="outlined"    icon
+        size="small" @click="emit('delete', item)">
         <VIcon size="x-large">mdi-delete</VIcon>
       </VBtn>
     </template>

@@ -79,7 +79,7 @@
                 <td class="text-right">${{ formatNumber(item.unit_price) }}</td>
                 <td class="text-right font-weight-medium">${{ formatNumber(item.total_price) }}</td>
                 <td class="text-center pa-1">
-                  <VBtn icon size="small" color="error" :id="`btn-psed-remove-item-${index}`" @click="removeItem(index)">
+                  <VBtn :id="`btn-psed-remove-item-${index}`" icon size="small" color="error" @click="removeItem(index)">
                     <VIcon size="small">mdi-delete</VIcon>
                   </VBtn>
                 </td>

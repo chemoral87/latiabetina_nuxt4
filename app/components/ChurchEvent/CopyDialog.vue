@@ -5,7 +5,7 @@
         <VIcon class="mr-2">mdi-content-copy</VIcon>
         <span class="text-h5">Copiar Evento</span>
         <VSpacer />
-        <VBtn icon :disabled="loading" id="btn-churchevent-copydialog-close" @click="close">
+        <VBtn id="btn-churchevent-copydialog-close" icon :disabled="loading" @click="close">
           <VIcon>mdi-close</VIcon>
         </VBtn>
       </VCardTitle>
@@ -16,21 +16,21 @@
         </p>
 
         <VBtnToggle v-model="mode" mandatory density="compact" class="mb-4">
-          <VBtn value="dates" size="small" id="btn-churchevent-copydialog-mode-dates">Por calendario</VBtn>
-          <VBtn value="recurrence" size="small" id="btn-churchevent-copydialog-mode-recurrence">Por rango y días</VBtn>
+          <VBtn id="btn-churchevent-copydialog-mode-dates" value="dates" size="small">Por calendario</VBtn>
+          <VBtn id="btn-churchevent-copydialog-mode-recurrence" value="recurrence" size="small">Por rango y días</VBtn>
         </VBtnToggle>
 
         <template v-if="mode === 'dates'">
           <VDatePicker
             v-model="selectedDates"
+            v-model:month="pickerMonth"
+            v-model:year="pickerYear"
             multiple
             full-width
             :disabled="loading"
             :events="eventDateArray"
             event-color="#fb8c00"
             :allowed-dates="isAllowedDate"
-            v-model:month="pickerMonth"
-            v-model:year="pickerYear"
           />
 
           <div v-if="selectedDates.length" class="mt-2">
@@ -98,10 +98,10 @@
       </VCardText>
 
       <div class="d-flex justify-end px-4 pb-4">
-        <VBtn color="primary" variant="text" :disabled="loading" id="btn-churchevent-copydialog-cancel" @click="close">
+        <VBtn id="btn-churchevent-copydialog-cancel" color="primary" variant="text" :disabled="loading" @click="close">
           Cancelar
         </VBtn>
-        <VBtn color="primary" variant="elevated" :loading="loading" :disabled="!canCopy" id="btn-churchevent-copydialog-copy" @click="copy">
+        <VBtn id="btn-churchevent-copydialog-copy" color="primary" variant="elevated" :loading="loading" :disabled="!canCopy" @click="copy">
           <VIcon start size="small">mdi-content-copy</VIcon>
           Copiar
         </VBtn>

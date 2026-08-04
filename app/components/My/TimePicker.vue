@@ -43,11 +43,11 @@
       </VRow>
 
       <div class="d-flex justify-end px-4 pb-4 pt-2">
-        <VBtn color="primary" variant="outlined" class="mr-4" id="btn-my-timepicker-clear" @click="clearTime">
+        <VBtn id="btn-my-timepicker-clear" color="primary" variant="outlined" class="mr-4" @click="clearTime">
           <VIcon start>mdi-close</VIcon>
           Limpiar
         </VBtn>
-        <VBtn color="primary" variant="elevated" id="btn-my-timepicker-confirm" @click="confirmTime">
+        <VBtn id="btn-my-timepicker-confirm" color="primary" variant="elevated" @click="confirmTime">
           <VIcon start>mdi-check</VIcon>
           OK
         </VBtn>

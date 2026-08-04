@@ -21,13 +21,13 @@
       @update:options="onUpdateOptions"
     >
       <template #[`item.actions`]="{ item }">
-        <VBtn title="Editar" class="ma-1" color="primary" variant="outlined" size="small" icon rounded="circle" id="btn-organization-table-edit" @click="emitEdit(item)">
+        <VBtn id="btn-organization-table-edit" title="Editar" class="ma-1" color="primary" variant="outlined" size="small" icon rounded="circle" @click="emitEdit(item)">
           <VIcon size="x-large">mdi-pencil</VIcon>
         </VBtn>
-        <VBtn title="Config" class="ma-1" color="info" variant="outlined" size="small" icon rounded="circle" id="btn-organization-table-config" @click="emitConfig(item)">
+        <VBtn id="btn-organization-table-config" title="Config" class="ma-1" color="info" variant="outlined" size="small" icon rounded="circle" @click="emitConfig(item)">
           <VIcon size="x-large">mdi-cog</VIcon>
         </VBtn>
-        <VBtn title="Delete" class="ma-1" color="error" variant="outlined" size="small" icon rounded="circle" id="btn-organization-table-delete" @click="confirmDelete(item)">
+        <VBtn id="btn-organization-table-delete" title="Delete" class="ma-1" color="error" variant="outlined" size="small" icon rounded="circle" @click="confirmDelete(item)">
           <VIcon size="x-large">mdi-delete</VIcon>
         </VBtn>
       </template>

@@ -94,7 +94,7 @@
         >
           <span class="text-subtitle-1 font-weight-bold">{{ snack.text }}</span>
           <template #actions>
-            <VBtn color="grey" icon size="small" id="btn-layout-snack-close" @click="notify.closeSnackbar(snack.id)">
+            <VBtn id="btn-layout-snack-close" color="grey" icon size="small" @click="notify.closeSnackbar(snack.id)">
               <VIcon>mdi-close</VIcon>
             </VBtn>
           </template>

@@ -10,14 +10,14 @@
                 <div class="text-caption text-grey">ID: {{ mTestimony.id }}</div>
               </div>
               <div class="text-right">
-                <VChip id="chip-rev-status-approved" v-if="mTestimony.status === 'approved'" color="success" size="small">APROBADO</VChip>
-                <VChip id="chip-rev-status-rejected" v-else-if="mTestimony.status === 'rejected'" color="error" size="small">RECHAZADO</VChip>
-                <VChip id="chip-rev-status-pending" v-else size="small">Pendiente</VChip>
+                <VChip v-if="mTestimony.status === 'approved'" id="chip-rev-status-approved" color="success" size="small">APROBADO</VChip>
+                <VChip v-else-if="mTestimony.status === 'rejected'" id="chip-rev-status-rejected" color="error" size="small">RECHAZADO</VChip>
+                <VChip v-else id="chip-rev-status-pending" size="small">Pendiente</VChip>
                 <div v-if="mTestimony.status_username" class="text-caption text-grey mt-1">Por: {{ mTestimony.status_username }}</div>
               </div>
             </div>
             <div class="mt-2">
-              <VChip id="chip-rev-category" v-for="(c, i) in (mTestimony.categories as string[] || [])" :key="i" class="ma-1" color="primary" size="small">
+              <VChip v-for="(c, i) in (mTestimony.categories as string[] || [])" id="chip-rev-category" :key="i" class="ma-1" color="primary" size="small">
                 {{ c }}
               </VChip>
             </div>

@@ -30,12 +30,12 @@
       <!-- Permission table -->
       <VCol cols="12">
         <PermissionTable
+          v-model:dialog-delete="permissionDialogDelete"
           :search="filterPermission"
           :response="response"
           :loading="loading"
           :highlight-id="highlightId"
           :removing-id="removingId"
-          v-model:dialog-delete="permissionDialogDelete"
           @sorting="handleSorting"
           @edit="editPermission"
           @distribution="distributePermission"

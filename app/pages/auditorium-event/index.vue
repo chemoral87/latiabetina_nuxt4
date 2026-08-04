@@ -5,12 +5,12 @@
         <MyDateRange v-model="filterAuditoriumEvent" variant="outlined" />
       </VCol>
       <VCol cols="auto" class="d-flex align-center">
-        <VBtn color="primary" :loading="loading" class="mr-1" id="btn-auditoriumevent-refresh"
+        <VBtn id="btn-auditoriumevent-refresh" color="primary" :loading="loading" class="mr-1"
           @click="getAuditoriumEvents()">
           <VIcon start>mdi-reload</VIcon>
           Refrescar
         </VBtn>
-        <VBtn color="success" class="mr-1" id="btn-auditoriumevent-new" @click="newAuditoriumEvent()">
+        <VBtn id="btn-auditoriumevent-new" color="success" class="mr-1" @click="newAuditoriumEvent()">
           <VIcon start>mdi-plus</VIcon>
           Nuevo
         </VBtn>

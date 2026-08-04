@@ -18,13 +18,13 @@
         </slot>
         <VSpacer />
         <VBtn
+          id="btn-mydrag-close"
           variant="outlined"
           icon
           size="x-small"
           color="white"
           title="Cerrar"
           class="ml-2"
-          id="btn-mydrag-close"
           @click.stop="close"
         >
           <VIcon size="small">mdi-close</VIcon>

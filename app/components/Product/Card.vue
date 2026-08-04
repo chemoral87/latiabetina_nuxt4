@@ -1,10 +1,10 @@
 <template>
   <VCard id="cmp-product-card" variant="outlined" class="d-flex flex-column fill-height" style="position: relative">
     <div class="product-card__order-btns">
-      <VBtn icon size="x-small" class="order-btn" :disabled="isFirst" id="btn-product-card-moveleft" @click="emit('move-left', product)">
+      <VBtn id="btn-product-card-moveleft" icon size="x-small" class="order-btn" :disabled="isFirst" @click="emit('move-left', product)">
         <VIcon size="x-small">mdi-chevron-left</VIcon>
       </VBtn>
-      <VBtn icon size="x-small" class="order-btn" :disabled="isLast" id="btn-product-card-moveright" @click="emit('move-right', product)">
+      <VBtn id="btn-product-card-moveright" icon size="x-small" class="order-btn" :disabled="isLast" @click="emit('move-right', product)">
         <VIcon size="x-small">mdi-chevron-right</VIcon>
       </VBtn>
     </div>
@@ -61,15 +61,15 @@
     <VDivider></VDivider>
 
     <VCardActions class="justify-end">
-      <VBtn icon size="small" class="mr-1" id="btn-product-card-toggle" @click="emit('toggle-hidden', product)">
+      <VBtn id="btn-product-card-toggle" icon size="small" class="mr-1" @click="emit('toggle-hidden', product)">
         <VIcon size="small" :color="product.hidden ? 'warning' : 'grey'">
           {{ product.hidden ? 'mdi-eye-off' : 'mdi-eye' }}
         </VIcon>
       </VBtn>
-      <VBtn icon size="small" color="primary" id="btn-product-card-edit" @click="emit('edit', product)">
+      <VBtn id="btn-product-card-edit" icon size="small" color="primary" @click="emit('edit', product)">
         <VIcon size="small">mdi-pencil</VIcon>
       </VBtn>
-      <VBtn icon size="small" color="error" id="btn-product-card-delete" @click="emit('delete', product)">
+      <VBtn id="btn-product-card-delete" icon size="small" color="error" @click="emit('delete', product)">
         <VIcon size="small">mdi-delete</VIcon>
       </VBtn>
     </VCardActions>

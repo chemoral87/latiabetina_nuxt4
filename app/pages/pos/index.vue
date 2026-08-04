@@ -1,5 +1,5 @@
 <template>
-  <VContainer :fluid="true" id="pos-page" class="pos-page px-2 pt-2" :style="{ paddingBottom: footerHeight + 'px' }">
+  <VContainer id="pos-page" :fluid="true" class="pos-page px-2 pt-2" :style="{ paddingBottom: footerHeight + 'px' }">
     <!-- Loading -->
     <div v-if="productsStore.loading" id="pos-loading" class="text-center py-10">
       <VProgressCircular indeterminate color="primary" size="48" />
@@ -35,12 +35,12 @@
       </div>
 
       <!-- GRID VIEW -->
-      <div id="pos-grid-view" v-if="viewMode === 'grid'">
+      <div v-if="viewMode === 'grid'" id="pos-grid-view">
         <PosProductGrid :products="productsStore.products" :cart="cart" :show-stock="showStock" @add="addToCart" @decrease="decreaseCart" @remove="removeProduct" />
       </div>
 
       <!-- LIST VIEW -->
-      <div id="pos-list-view" v-if="viewMode === 'list'">
+      <div v-if="viewMode === 'list'" id="pos-list-view">
         <PosProductList :products="productsStore.products" :cart="cart" :show-stock="showStock" @add="addToCart" @decrease="decreaseCart" @remove="removeProduct" />
       </div>
 

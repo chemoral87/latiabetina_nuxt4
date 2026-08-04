@@ -21,6 +21,7 @@
     >
       <template #[`item.review`]="{ item }">
         <VBtn
+          id="btn-testimony-table-show"
           title="Revisar"
           color="primary"
           variant="outlined"
@@ -28,7 +29,6 @@
           rounded="circle"
           size="small"
           class="ma-1"
-          id="btn-testimony-table-show"
           @click="emit('show', item)"
         >
           <VIcon size="x-large">mdi-eye</VIcon>
@@ -50,28 +50,28 @@
       <template #[`item.actions`]="{ item }">
         <div class="d-flex flex-nowrap justify-center">
           <VBtn
+            id="btn-testimony-table-edit"
             title="Editar"
             color="primary"
             variant="outlined"
             icon
             rounded="circle"
-            size="small"
-                    class="ma-1"
-            id="btn-testimony-table-edit"
+                    size="small"
+            class="ma-1"
             @click="emit('edit', item)"
           >
             <VIcon size="x-large">mdi-pencil</VIcon>
           </VBtn>
 
           <VBtn
+            id="btn-testimony-table-delete"
             title="Eliminar"
             color="error"
             variant="outlined"
-            icon
-                    class="ma-1"
+                    icon
+            class="ma-1"
             rounded="circle"
             size="small"
-            id="btn-testimony-table-delete"
             @click="emit('delete', item)"
           >
             <VIcon size="x-large">mdi-delete</VIcon>

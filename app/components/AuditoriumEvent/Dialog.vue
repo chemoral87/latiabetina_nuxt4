@@ -5,7 +5,7 @@
         <VIcon start size="small" color="primary">mdi-theater</VIcon>
         {{ isEditing ? "Editar" : "Nuevo" }} Evento de Auditorio
         <VSpacer />
-        <VBtn icon size="x-small" id="btn-auditoriumevent-dialog-close" @click="closeDialog">
+        <VBtn id="btn-auditoriumevent-dialog-close" icon size="x-small" @click="closeDialog">
           <VIcon>mdi-close</VIcon>
         </VBtn>
       </VCardTitle>
@@ -15,8 +15,8 @@
           <VContainer>
             <VRow>
               <VCol v-if="!orgSelectHidden" cols="12" md="6">
-                <OrganizationSelect v-model="localEvent.org_id" label="Organización *" hide-one
-                  v-model:hidden="orgSelectHidden" :permission="'auditorium-index'" :rules="organizationRules"
+                <OrganizationSelect v-model="localEvent.org_id" v-model:hidden="orgSelectHidden" label="Organización *"
+                  hide-one :permission="'auditorium-index'" :rules="organizationRules"
                   density="compact" variant="outlined" />
               </VCol>
               <VCol cols="12" md="6">
@@ -38,13 +38,13 @@
       </VCardText>
 
       <div class="d-flex justify-end px-4 pb-4">
-        <VBtn color="primary" variant="outlined" class="mr-4" :disabled="saving"
-          id="btn-auditoriumevent-dialog-cancel" @click="closeDialog">
+        <VBtn id="btn-auditoriumevent-dialog-cancel" color="primary" variant="outlined" class="mr-4"
+          :disabled="saving" @click="closeDialog">
           <VIcon start>mdi-close</VIcon>
           Cancelar
         </VBtn>
-        <VBtn color="primary" variant="elevated" :loading="saving"
-          id="btn-auditoriumevent-dialog-save" @click="saveEvent">
+        <VBtn id="btn-auditoriumevent-dialog-save" color="primary" variant="elevated"
+          :loading="saving" @click="saveEvent">
           <VIcon start>mdi-content-save</VIcon>
           Guardar
         </VBtn>

@@ -21,6 +21,7 @@
     <template #[`item.actions`]="{ item }">
       <div class="d-flex flex-nowrap justify-center">
         <VBtn
+          id="btn-consolidation-table-view"
           title="Detalles"
           color="success"
           variant="outlined"
@@ -28,13 +29,13 @@
           rounded="circle"
           size="small"
           class="ma-1"
-          id="btn-consolidation-table-view"
           @click="emit('view', item)"
         >
           <VIcon size="x-large">mdi-clipboard-list</VIcon>
         </VBtn>
 
         <VBtn
+          id="btn-consolidation-table-edit"
           title="Editar"
           color="primary"
           variant="outlined"
@@ -42,13 +43,13 @@
           rounded="circle"
           size="small"
           class="ma-1"
-          id="btn-consolidation-table-edit"
           @click="emit('edit', item)"
         >
           <VIcon size="x-large">mdi-pencil</VIcon>
         </VBtn>
 
         <VBtn
+          id="btn-consolidation-table-delete"
           title="Eliminar"
           color="error"
           variant="outlined"
@@ -56,7 +57,6 @@
           rounded="circle"
           size="small"
           class="ma-1"
-          id="btn-consolidation-table-delete"
           @click="emit('delete', item)"
         >
           <VIcon size="x-large">mdi-delete</VIcon>

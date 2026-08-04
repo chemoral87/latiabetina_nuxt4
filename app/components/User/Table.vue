@@ -31,13 +31,13 @@
         </VChip>
       </template>
       <template #[`item.actions`]="{ item }">
-        <VBtn title="Editar" class="ma-1" color="primary" variant="outlined" size="small" icon rounded="circle" id="btn-user-table-edit" @click="emitEdit(item)">
+        <VBtn id="btn-user-table-edit" title="Editar" class="ma-1" color="primary" variant="outlined" size="small" icon rounded="circle" @click="emitEdit(item)">
           <VIcon size="x-large">mdi-pencil</VIcon>
         </VBtn>
-        <VBtn title="Perfiles" class="ma-1" color="success" variant="outlined" size="small" icon rounded="circle" id="btn-user-table-profiles" @click="emitEditProfiles(item)">
+        <VBtn id="btn-user-table-profiles" title="Perfiles" class="ma-1" color="success" variant="outlined" size="small" icon rounded="circle" @click="emitEditProfiles(item)">
           <VIcon size="x-large">mdi-shield-key-outline</VIcon>
         </VBtn>
-        <VBtn title="Eliminar" class="ma-1" color="error" variant="outlined" size="small" icon rounded="circle" id="btn-user-table-delete" @click="confirmDelete(item)">
+        <VBtn id="btn-user-table-delete" title="Eliminar" class="ma-1" color="error" variant="outlined" size="small" icon rounded="circle" @click="confirmDelete(item)">
           <VIcon size="x-large">mdi-delete</VIcon>
         </VBtn>
       </template>

@@ -21,7 +21,7 @@
       </VCol>
 
       <VCol cols="12">
-        <AuditoriumTable :search="filterAuditorium" :response="response" :loading="loading" :highlight-id="highlightId" v-model:dialog-delete="dialogDeleteAuditorium" @sorting="handleSorting" @edit="editAuditorium" @layout="goToLayout" @delete="deleteAuditorium" />
+        <AuditoriumTable v-model:dialog-delete="dialogDeleteAuditorium" :search="filterAuditorium" :response="response" :loading="loading" :highlight-id="highlightId" @sorting="handleSorting" @edit="editAuditorium" @layout="goToLayout" @delete="deleteAuditorium" />
       </VCol>
     </VRow>
 

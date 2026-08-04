@@ -17,7 +17,7 @@
       </VCol>
 
       <VCol cols="12">
-        <UserTable :search="filterUser" :response="response" :loading="loading" :highlight-id="highlightId" :removing-id="removingId" v-model:dialog-delete="dialogDeleteUser"          @sorting="handleSorting" @edit="editUser" @edit-profiles="editProfiles" @delete="deleteUser" />
+        <UserTable v-model:dialog-delete="dialogDeleteUser" :search="filterUser" :response="response" :loading="loading" :highlight-id="highlightId" :removing-id="removingId"          @sorting="handleSorting" @edit="editUser" @edit-profiles="editProfiles" @delete="deleteUser" />
       </VCol>
     </VRow>
 

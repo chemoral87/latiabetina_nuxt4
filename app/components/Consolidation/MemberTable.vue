@@ -13,6 +13,7 @@
     <template #[`item.actions`]="{ item }">
       <div class="d-flex flex-nowrap justify-center">
         <VBtn
+          id="btn-consolidation-membertable-edit"
           title="Editar"
           color="primary"
           variant="outlined"
@@ -20,20 +21,19 @@
           rounded="circle"
           size="small"
           class="mr-2"
-          id="btn-consolidation-membertable-edit"
           @click="emit('edit', item)"
         >
           <VIcon>mdi-pencil</VIcon>
         </VBtn>
 
         <VBtn
+          id="btn-consolidation-membertable-delete"
           title="Eliminar"
           color="error"
           variant="outlined"
           icon
           rounded="circle"
           size="small"
-          id="btn-consolidation-membertable-delete"
           @click="emit('delete', item)"
         >
           <VIcon>mdi-delete</VIcon>

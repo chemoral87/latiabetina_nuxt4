@@ -5,7 +5,7 @@
         <VIcon start size="small" color="primary">{{ iconTitle }}</VIcon>
         {{ formTitle }}
         <VSpacer />
-        <VBtn icon size="x-small" id="btn-consolidation-dialog-close" :disabled="loading" @click="close">
+        <VBtn id="btn-consolidation-dialog-close" icon size="x-small" :disabled="loading" @click="close">
           <VIcon>mdi-close</VIcon>
         </VBtn>
       </VCardTitle>
@@ -45,11 +45,11 @@
       </VCardText>
 
       <div class="d-flex justify-end px-4 pb-4">
-        <VBtn color="primary" variant="outlined" class="mr-4" :disabled="loading" id="btn-consolidation-dialog-cancel" @click="close">
+        <VBtn id="btn-consolidation-dialog-cancel" color="primary" variant="outlined" class="mr-4" :disabled="loading" @click="close">
           <VIcon start>mdi-close</VIcon>
           Cancelar
         </VBtn>
-        <VBtn color="primary" variant="elevated" :loading="loading" :disabled="!isValid || loading" id="btn-consolidation-dialog-save" @click="save">
+        <VBtn id="btn-consolidation-dialog-save" color="primary" variant="elevated" :loading="loading" :disabled="!isValid || loading" @click="save">
           <VIcon start>mdi-content-save</VIcon>
           Guardar
         </VBtn>

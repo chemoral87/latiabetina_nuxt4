@@ -16,7 +16,7 @@
       <div class="text-h6 mt-4 text-grey">Sin órdenes pendientes</div>
       <div class="text-body-2 text-grey mt-1">Todas las órdenes han sido completadas</div>
       <div class="mt-6">
-        <VBtn variant="elevated" color="primary" id="btn-kds-reload" @click="emit('reload')">
+        <VBtn id="btn-kds-reload" variant="elevated" color="primary" @click="emit('reload')">
           <VIcon start size="small">mdi-refresh</VIcon>
           Recargar
         </VBtn>
@@ -43,12 +43,12 @@
           <VTooltip text="Sonido activado / desactivado" location="bottom">
             <template #activator="{ props: tooltipProps }">
               <VBtn
+                v-bind="tooltipProps"
+                id="btn-kds-sound"
                 icon
                 size="small"
-                v-bind="tooltipProps"
                 :color="soundEnabled ? 'orange-darken-2' : 'grey'"
                 variant="flat"
-                id="btn-kds-sound"
                 @click="emit('update:sound-enabled', !soundEnabled)"
               >
                 <VIcon>{{ soundEnabled ? 'mdi-volume-high' : 'mdi-volume-off' }}</VIcon>

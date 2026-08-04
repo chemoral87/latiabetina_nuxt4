@@ -5,7 +5,7 @@
         <VIcon start size="small" color="primary">mdi-account-plus</VIcon>
         Cambiar Contraseña
         <VSpacer />
-        <VBtn icon size="x-small" id="btn-user-password-close" @click="close">
+        <VBtn id="btn-user-password-close" icon size="x-small" @click="close">
           <VIcon>mdi-close</VIcon>
         </VBtn>
       </VCardTitle>
@@ -19,11 +19,11 @@
               variant="outlined"
               :type="showPassword ? 'text' : 'password'"
               hide-details
-              @keyup.enter="save"
               :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
-              @click:append-inner="showPassword = !showPassword"
               autocomplete="new-password"
               class="password-field"
+              @keyup.enter="save"
+              @click:append-inner="showPassword = !showPassword"
             />
           </VCol>
           <VCol cols="12">
@@ -33,22 +33,22 @@
               variant="outlined"
               :error-messages="localError.confirm_password"
               :type="showConfirmPassword ? 'text' : 'password'"
-              @keyup.enter="save"
               :append-inner-icon="showConfirmPassword ? 'mdi-eye-off' : 'mdi-eye'"
-              @click:append-inner="showConfirmPassword = !showConfirmPassword"
               autocomplete="new-password"
               class="password-field"
+              @keyup.enter="save"
+              @click:append-inner="showConfirmPassword = !showConfirmPassword"
             />
           </VCol>
         </VRow>
       </VCardText>
 
       <div class="d-flex justify-end px-4 pb-4">
-        <VBtn color="primary" variant="outlined" class="mr-4" id="btn-user-password-cancel" @click="close">
+        <VBtn id="btn-user-password-cancel" color="primary" variant="outlined" class="mr-4" @click="close">
           <VIcon start>mdi-close</VIcon>
           Cancelar
         </VBtn>
-        <VBtn color="primary" variant="elevated" :loading="saving || loading" :disabled="saving || loading" id="btn-user-password-save" @click="save">
+        <VBtn id="btn-user-password-save" color="primary" variant="elevated" :loading="saving || loading" :disabled="saving || loading" @click="save">
           <VIcon start>mdi-content-save</VIcon>
           Guardar
         </VBtn>

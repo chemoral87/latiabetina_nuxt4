@@ -5,7 +5,7 @@
         <VIcon start size="small" color="error">mdi-alert</VIcon>
         {{ item.title }}
         <VSpacer />
-        <VBtn icon size="x-small" id="btn-dialog-delete-close" @click="close">
+        <VBtn id="btn-dialog-delete-close" icon size="x-small" @click="close">
           <VIcon>mdi-close</VIcon>
         </VBtn>
       </VCardTitle>
@@ -20,11 +20,11 @@
       </VCardText>
 
       <div class="d-flex justify-end px-4 pb-4">
-        <VBtn color="error" variant="outlined" class="mr-4" :disabled="loading" id="btn-dialog-delete-no" @click="close">
+        <VBtn id="btn-dialog-delete-no" color="error" variant="outlined" class="mr-4" :disabled="loading" @click="close">
           <VIcon start>mdi-close</VIcon>
           NO
         </VBtn>
-        <VBtn color="primary" variant="elevated" :loading="loading" id="btn-dialog-delete-yes" @click="ok">
+        <VBtn id="btn-dialog-delete-yes" color="primary" variant="elevated" :loading="loading" @click="ok">
           <VIcon start>mdi-check</VIcon>
           SI
         </VBtn>

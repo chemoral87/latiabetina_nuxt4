@@ -8,7 +8,7 @@
       @change="onFileSelected"
     />
 
-    <VBtn size="small" color="primary" :loading="loading" id="btn-my-uploadimage-pick" @click="triggerFilePicker">
+    <VBtn id="btn-my-uploadimage-pick" size="small" color="primary" :loading="loading" @click="triggerFilePicker">
       <VIcon start>mdi-camera</VIcon>
       {{ label || 'Seleccionar foto' }}
     </VBtn>
@@ -21,7 +21,7 @@
         <VIcon start size="x-small">mdi-file-image</VIcon>
         {{ selectedFilename }}
       </VChip>
-      <VBtn size="small" variant="outlined" color="error" id="btn-my-uploadimage-clear" @click="clearImage">
+      <VBtn id="btn-my-uploadimage-clear" size="small" variant="outlined" color="error" @click="clearImage">
         <VIcon start size="x-small">mdi-close</VIcon>
         Limpiar
       </VBtn>

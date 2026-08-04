@@ -4,7 +4,7 @@
       <VCol cols="12" md="8">
         <VCard id="card-posn-main" variant="outlined" class="pa-4">
           <div class="text-subtitle-1 font-weight-bold mb-4">Nuevo artículo</div>
-          <VForm ref="formRef" id="form-posn-main">
+          <VForm id="form-posn-main" ref="formRef">
             <VRow density="comfortable">
               <VCol v-if="showOrgSelect" cols="12" md="6">
                 <OrganizationSelect

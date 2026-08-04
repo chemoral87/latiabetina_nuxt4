@@ -27,7 +27,7 @@
           </div>
         </VCard>
 
-        <VCard id="card-accou-index-2" v-if="!combinedView" flat border>
+        <VCard v-if="!combinedView" id="card-accou-index-2" flat border>
           <VCardTitle class="text-subtitle-1 font-weight-bold pb-1">
             <VIcon start size="small" color="primary">mdi-redhat</VIcon>
             Roles
@@ -38,7 +38,7 @@
             <div v-for="(orgIds, role) in roles_org" :key="role" class="mb-2">
               <div class="d-flex align-center flex-wrap" style="gap: 6px">
                 <VChip :id="'chip-acc-role-' + role" size="small" color="primary" variant="elevated" label>{{ role }}</VChip>
-                <VChip :id="'chip-acc-role-org-' + oid" v-for="oid in orgIds" :key="oid" size="x-small" variant="outlined" color="primary">
+                <VChip v-for="oid in orgIds" :id="'chip-acc-role-org-' + oid" :key="oid" size="x-small" variant="outlined" color="primary">
                   {{ getOrgNameById(oid) }}
                 </VChip>
               </div>
@@ -68,7 +68,7 @@
                 <VCol v-for="(orgIds, perm) in permissions_org" :key="perm" cols="12" sm="6">
                   <div class="d-flex align-center flex-wrap" style="gap: 4px">
                     <VChip :id="'chip-acc-permission-' + perm" size="small" color="secondary" variant="elevated" label class="mr-1">{{ perm }}</VChip>
-                    <VChip :id="'chip-acc-permission-org-' + oid" v-for="oid in orgIds" :key="oid" size="x-small" variant="outlined" color="secondary">
+                    <VChip v-for="oid in orgIds" :id="'chip-acc-permission-org-' + oid" :key="oid" size="x-small" variant="outlined" color="secondary">
                       {{ getOrgNameById(oid) }}
                     </VChip>
                   </div>
@@ -85,7 +85,7 @@
                       <VIcon start size="small">mdi-redhat</VIcon>
                       {{ roleName }}
                     </VChip>
-                    <VChip :id="'chip-acc-combined-org-' + oid" v-for="oid in orgIds" :key="oid" size="x-small" variant="outlined" color="primary">
+                    <VChip v-for="oid in orgIds" :id="'chip-acc-combined-org-' + oid" :key="oid" size="x-small" variant="outlined" color="primary">
                       {{ getOrgNameById(oid) }}
                     </VChip>
                     <VChip :id="'chip-acc-permission-count-' + roleName" size="small" variant="outlined" color="secondary" class="ml-1">
@@ -94,7 +94,7 @@
                   </div>
 
                   <div v-if="roles_permissions[roleName] && roles_permissions[roleName].length > 0" class="pl-2">
-                    <VChip :id="'chip-acc-permission-combined-' + perm" v-for="perm in roles_permissions[roleName]" :key="perm" size="small" variant="elevated" label color="secondary" class="mr-1 mb-1">
+                    <VChip v-for="perm in roles_permissions[roleName]" :id="'chip-acc-permission-combined-' + perm" :key="perm" size="small" variant="elevated" label color="secondary" class="mr-1 mb-1">
                       {{ perm }}
                     </VChip>
                   </div>

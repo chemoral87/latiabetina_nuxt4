@@ -7,6 +7,8 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
+    "lint": "eslint app",
+    "lint:fix": "eslint app --fix",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
@@ -25,7 +27,13 @@
     "vuetify-nuxt-module": "^1.0.0-rc.3"
   },
   "devDependencies": {
+    "@babel/core": "^8.0.1",
+    "@babel/eslint-parser": "^8.0.1",
+    "@babel/preset-typescript": "^8.0.1",
+    "eslint": "^9.39.5",
+    "eslint-plugin-vue": "^10.10.0",
     "typescript": "^7.0.2",
+    "vue-eslint-parser": "^10.4.1",
     "vue-tsc": "^3.3.8"
   }
 }

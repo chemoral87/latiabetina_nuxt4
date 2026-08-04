@@ -17,7 +17,7 @@
       </VCol>
 
       <VCol cols="12">
-        <OrganizationTable :search="filterOrganization" :response="response" :loading="loading" :highlight-id="highlightId" :removing-id="removingId" v-model:dialog-delete="dialogDeleteOrganization"          @sorting="handleSorting" @edit="editOrganization" @delete="deleteOrganization" @config="goConfig" />
+        <OrganizationTable v-model:dialog-delete="dialogDeleteOrganization" :search="filterOrganization" :response="response" :loading="loading" :highlight-id="highlightId" :removing-id="removingId"          @sorting="handleSorting" @edit="editOrganization" @delete="deleteOrganization" @config="goConfig" />
       </VCol>
     </VRow>
 

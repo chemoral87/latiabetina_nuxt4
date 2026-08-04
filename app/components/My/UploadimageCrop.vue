@@ -8,7 +8,7 @@
       @change="onFileSelected"
     />
 
-    <VBtn size="small" color="primary" :loading="loading" id="btn-my-uploadimagecrop-pick" @click="triggerFilePicker">
+    <VBtn id="btn-my-uploadimagecrop-pick" size="small" color="primary" :loading="loading" @click="triggerFilePicker">
       <VIcon start>mdi-camera</VIcon>
       {{ label || 'Subir foto' }}
     </VBtn>
@@ -21,7 +21,7 @@
         <VIcon start size="x-small">mdi-file-image</VIcon>
         {{ filename }}
       </VChip>
-      <VBtn size="small" variant="outlined" color="error" id="btn-my-uploadimagecrop-clear" @click="clearImage">
+      <VBtn id="btn-my-uploadimagecrop-clear" size="small" variant="outlined" color="error" @click="clearImage">
         <VIcon start size="x-small">mdi-close</VIcon>
         Limpiar
       </VBtn>
@@ -46,7 +46,7 @@
           <VIcon start size="small" color="primary">mdi-crop</VIcon>
           {{ label || 'Recortar foto' }}
           <VSpacer />
-          <VBtn icon size="x-small" id="btn-my-uploadimagecrop-close" @click="cancel()">
+          <VBtn id="btn-my-uploadimagecrop-close" icon size="x-small" @click="cancel()">
             <VIcon>mdi-close</VIcon>
           </VBtn>
         </VCardTitle>
@@ -71,11 +71,11 @@
         </VCardText>
 
         <div class="d-flex justify-end px-4 pb-4">
-          <VBtn color="primary" variant="outlined" class="mr-4" id="btn-my-uploadimagecrop-cancel" @click="cancel()">
+          <VBtn id="btn-my-uploadimagecrop-cancel" color="primary" variant="outlined" class="mr-4" @click="cancel()">
             <VIcon start>mdi-close</VIcon>
             Cancelar
           </VBtn>
-          <VBtn color="primary" variant="elevated" id="btn-my-uploadimagecrop-save" @click="save()">
+          <VBtn id="btn-my-uploadimagecrop-save" color="primary" variant="elevated" @click="save()">
             <VIcon start>mdi-content-save</VIcon>
             Guardar
           </VBtn>

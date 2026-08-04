@@ -21,6 +21,7 @@
     >
       <template #[`item.actions`]="{ item }">
         <VBtn
+          id="btn-permission-table-edit"
           title="Editar"
           class="ma-1"
           color="primary"
@@ -28,12 +29,12 @@
           size="small"
           icon
           rounded="circle"
-          id="btn-permission-table-edit"
           @click="emitEdit(item)"
         >
           <VIcon size="x-large">mdi-pencil</VIcon>
         </VBtn>
         <VBtn
+          id="btn-permission-table-distribute"
           title="Distribuir"
           class="ma-1"
           color="info"
@@ -41,12 +42,12 @@
           size="small"
           icon
           rounded="circle"
-          id="btn-permission-table-distribute"
           @click="emitDistribution(item)"
         >
           <VIcon size="x-large">mdi-share-variant</VIcon>
         </VBtn>
         <VBtn
+          id="btn-permission-table-delete"
           title="Eliminar"
           class="ma-1"
           color="error"
@@ -54,7 +55,6 @@
           size="small"
           icon
           rounded="circle"
-          id="btn-permission-table-delete"
           @click="confirmDelete(item)"
         >
           <VIcon size="x-large">mdi-delete</VIcon>

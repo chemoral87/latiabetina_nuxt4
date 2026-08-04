@@ -47,6 +47,7 @@
       <template #[`item.actions`]="{ item }">
         <div class="d-flex flex-nowrap justify-center">
           <VBtn
+            id="btn-churchevent-table-edit"
             title="Editar"
             color="primary"
             variant="outlined"
@@ -54,12 +55,12 @@
             rounded="circle"
             size="small"
             class="mr-2"
-            id="btn-churchevent-table-edit"
             @click="emit('edit', item)"
           >
             <VIcon size="x-large">mdi-pencil</VIcon>
           </VBtn>
           <VBtn
+            id="btn-churchevent-table-copy"
             title="Copiar"
             color="success"
             variant="outlined"
@@ -67,19 +68,18 @@
             rounded="circle"
             size="small"
             class="mr-2"
-            id="btn-churchevent-table-copy"
             @click="emit('copy', item)"
           >
             <VIcon size="x-large">mdi-content-copy</VIcon>
           </VBtn>
           <VBtn
+            id="btn-churchevent-table-delete"
             title="Eliminar"
             color="error"
             variant="outlined"
             icon
             rounded="circle"
             size="small"
-            id="btn-churchevent-table-delete"
             @click="emit('delete', item)"
           >
             <VIcon size="x-large">mdi-delete</VIcon>

@@ -63,21 +63,21 @@
                 <div class="event-actions">
                   <VTooltip text="Editar" location="bottom">
                     <template #activator="{ props: tooltipProps }">
-                      <VBtn icon size="small" color="primary" v-bind="tooltipProps" id="btn-churchevent-calendar-edit" @click.stop="emit('edit', event)">
+                      <VBtn v-bind="tooltipProps" id="btn-churchevent-calendar-edit" icon size="small" color="primary" @click.stop="emit('edit', event)">
                         <VIcon size="18">mdi-pencil</VIcon>
                       </VBtn>
                     </template>
                   </VTooltip>
                   <VTooltip text="Copiar" location="bottom">
                     <template #activator="{ props: tooltipProps }">
-                      <VBtn icon size="small" color="orange" v-bind="tooltipProps" id="btn-churchevent-calendar-copy" @click.stop="emit('copy', event)">
+                      <VBtn v-bind="tooltipProps" id="btn-churchevent-calendar-copy" icon size="small" color="orange" @click.stop="emit('copy', event)">
                         <VIcon size="18">mdi-content-copy</VIcon>
                       </VBtn>
                     </template>
                   </VTooltip>
                   <VTooltip text="Eliminar" location="bottom">
                     <template #activator="{ props: tooltipProps }">
-                      <VBtn icon size="small" color="error" v-bind="tooltipProps" id="btn-churchevent-calendar-delete" @click.stop="emit('delete', event)">
+                      <VBtn v-bind="tooltipProps" id="btn-churchevent-calendar-delete" icon size="small" color="error" @click.stop="emit('delete', event)">
                         <VIcon size="18">mdi-delete</VIcon>
                       </VBtn>
                     </template>
@@ -117,13 +117,13 @@
                 </div>
               </div>
               <div class="d-flex flex-nowrap ml-2">
-                <VBtn icon size="small" color="primary" aria-label="Editar" id="btn-churchevent-calendar-mobile-edit" @click.stop="emit('edit', event)">
+                <VBtn id="btn-churchevent-calendar-mobile-edit" icon size="small" color="primary" aria-label="Editar" @click.stop="emit('edit', event)">
                   <VIcon size="16">mdi-pencil</VIcon>
                 </VBtn>
-                <VBtn icon size="small" color="orange" aria-label="Copiar" id="btn-churchevent-calendar-mobile-copy" @click.stop="emit('copy', event)">
+                <VBtn id="btn-churchevent-calendar-mobile-copy" icon size="small" color="orange" aria-label="Copiar" @click.stop="emit('copy', event)">
                   <VIcon size="16">mdi-content-copy</VIcon>
                 </VBtn>
-                <VBtn icon size="small" color="error" aria-label="Eliminar" id="btn-churchevent-calendar-mobile-delete" @click.stop="emit('delete', event)">
+                <VBtn id="btn-churchevent-calendar-mobile-delete" icon size="small" color="error" aria-label="Eliminar" @click.stop="emit('delete', event)">
                   <VIcon size="16">mdi-delete</VIcon>
                 </VBtn>
               </div>

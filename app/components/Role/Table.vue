@@ -36,6 +36,7 @@
 
       <template #[`item.actions`]="{ item }">
         <VBtn
+          id="btn-role-table-edit"
           title="Editar"
           class="ma-1"
           color="primary"
@@ -43,12 +44,12 @@
           size="small"
           icon
           rounded="circle"
-          id="btn-role-table-edit"
           @click="emitEdit(item)"
         >
           <VIcon size="x-large">mdi-pencil</VIcon>
         </VBtn>
         <VBtn
+          id="btn-role-table-permissions"
           title="Permisos"
           class="ma-1"
           color="success"
@@ -56,12 +57,12 @@
           size="small"
           icon
           rounded="circle"
-          id="btn-role-table-permissions"
           @click="emitEditPermissions(item)"
         >
           <VIcon size="x-large">mdi-key-variant</VIcon>
         </VBtn>
         <VBtn
+          id="btn-role-table-distribute"
           title="Distribuir"
           class="ma-1"
           color="info"
@@ -69,12 +70,12 @@
           size="small"
           icon
           rounded="circle"
-          id="btn-role-table-distribute"
           @click="emitDistribution(item)"
         >
           <VIcon size="x-large">mdi-share-variant</VIcon>
         </VBtn>
         <VBtn
+          id="btn-role-table-delete"
           title="Eliminar"
           class="ma-1"
           color="error"
@@ -82,7 +83,6 @@
           size="small"
           icon
           rounded="circle"
-          id="btn-role-table-delete"
           @click="confirmDelete(item)"
         >
           <VIcon size="x-large">mdi-delete</VIcon>

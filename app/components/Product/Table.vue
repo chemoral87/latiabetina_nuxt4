@@ -38,6 +38,7 @@
 
       <template #[`item.actions`]="{ item }">
         <VBtn
+          id="btn-product-table-edit"
           title="Editar"
           class="ma-1"
           color="primary"
@@ -45,12 +46,12 @@
           size="small"
           icon
           rounded="circle"
-          id="btn-product-table-edit"
           @click="emitEdit(item)"
         >
           <VIcon size="x-large">mdi-pencil</VIcon>
         </VBtn>
         <VBtn
+          id="btn-product-table-delete"
           title="Eliminar"
           class="ma-1"
           color="error"
@@ -58,7 +59,6 @@
           size="small"
           icon
           rounded="circle"
-          id="btn-product-table-delete"
           @click="confirmDelete(item)"
         >
           <VIcon size="x-large">mdi-delete</VIcon>

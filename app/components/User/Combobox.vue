@@ -2,6 +2,7 @@
   <div id="cmp-user-combobox">
     <VAutocomplete
       v-model="model"
+      v-model:search="search"
       :filter="customFilter"
       item-value="id"
       item-title="name"
@@ -10,7 +11,6 @@
       hide-selected
       :hide-no-data="!search"
       :items="items"
-      v-model:search="search"
       multiple
       return-object
     >

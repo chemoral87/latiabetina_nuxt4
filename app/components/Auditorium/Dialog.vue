@@ -5,7 +5,7 @@
         <VIcon start size="small" color="primary">mdi-seat</VIcon>
         {{ formTitle }}
         <VSpacer />
-        <VBtn icon size="x-small" id="btn-auditorium-dialog-close" @click="close">
+        <VBtn id="btn-auditorium-dialog-close" icon size="x-small" @click="close">
           <VIcon>mdi-close</VIcon>
         </VBtn>
       </VCardTitle>
@@ -33,11 +33,11 @@
       </VCardText>
 
       <div class="d-flex justify-end px-4 pb-4">
-        <VBtn color="primary" variant="outlined" class="mr-4" :disabled="saving || loading" id="btn-auditorium-dialog-cancel" @click="close">
+        <VBtn id="btn-auditorium-dialog-cancel" color="primary" variant="outlined" class="mr-4" :disabled="saving || loading" @click="close">
           <VIcon start>mdi-close</VIcon>
           Cancelar
         </VBtn>
-        <VBtn color="primary" variant="elevated" :loading="saving || loading" :disabled="saving || loading" id="btn-auditorium-dialog-save" @click="save">
+        <VBtn id="btn-auditorium-dialog-save" color="primary" variant="elevated" :loading="saving || loading" :disabled="saving || loading" @click="save">
           <VIcon start>mdi-content-save</VIcon>
           Guardar
         </VBtn>
