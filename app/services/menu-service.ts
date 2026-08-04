@@ -51,7 +51,7 @@ export class MenuService {
 
       if (this.hasPermission("sale-index")) {
         menu.push({ icon: "mdi-point-of-sale", title: "POS", to: "/pos" })
-        menu.push({ icon: "mdi-receipt-text", title: "Ventas", to: "/pos/sales" })
+        menu.push({ icon: "mdi-sale", title: "Ventas", to: "/pos/sales" })
         menu.push({ icon: "mdi-cash-register", title: "Cierre de Caja", to: "/pos/cash-close" })
       }
 

@@ -34,6 +34,7 @@
           :response="response"
           :loading="loading"
           :highlight-id="highlightId"
+          :removing-id="removingId"
           v-model:dialog-delete="permissionDialogDelete"
           @sorting="handleSorting"
           @edit="editPermission"
@@ -73,7 +74,7 @@ const loading = ref(false)
 const saving = ref(false)
 const permissionDialog = ref(false)
 const permissionDialogDelete = ref(false)
-const { highlightId, flash, prependCreated } = useRowHighlight()
+const { highlightId, flash, prependCreated, removingId, removeWithAnimation } = useRowHighlight()
 
 const lastOptions = ref<Record<string, unknown> | null>(null)
 
@@ -171,13 +172,8 @@ async function deletePermission(item: Record<string, unknown>) {
   try {
     saving.value = true
     await Permission.delete(item.id as number)
-    const data = response.value.data as Record<string, unknown>[]
-    const idx = data.findIndex((r) => r.id === item.id)
-    if (idx !== -1) {
-      data.splice(idx, 1)
-      response.value.total = Math.max(0, (response.value.total ?? 0) - 1)
-    }
     permissionDialogDelete.value = false
+    await removeWithAnimation(response, item.id as number)
   } catch (e) {
     console.error("Error al eliminar el permiso", e)
   } finally {

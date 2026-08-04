@@ -34,6 +34,7 @@
           :response="response"
           :loading="loading"
           :highlight-id="highlightId"
+          :removing-id="removingId"
           v-model:dialog-delete="roleDialogDelete"
           @sorting="handleSorting"
           @editPermissions="editRolePermissions"
@@ -75,7 +76,7 @@ const loading = ref(false)
 const saving = ref(false)
 const roleDialog = ref(false)
 const roleDialogDelete = ref(false)
-const { highlightId, prependCreated, updateRow } = useRowHighlight()
+const { highlightId, prependCreated, updateRow, removingId, removeWithAnimation } = useRowHighlight()
 
 const lastOptions = ref<Record<string, unknown> | null>(null)
 
@@ -177,13 +178,8 @@ async function deleteRole(item: Record<string, unknown>) {
   try {
     saving.value = true
     await Role.delete(item.id as number)
-    const data = response.value.data as Record<string, unknown>[]
-    const idx = data.findIndex((r) => r.id === item.id)
-    if (idx !== -1) {
-      data.splice(idx, 1)
-      response.value.total = Math.max(0, (response.value.total ?? 0) - 1)
-    }
     roleDialogDelete.value = false
+    await removeWithAnimation(response, item.id as number)
   } catch (e) {
     console.error("Error al eliminar el rol", e)
   } finally {

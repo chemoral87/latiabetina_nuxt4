@@ -204,13 +204,8 @@ async function deleteX(item: Record<string, unknown>) {
   try {
     saving.value = true
     await Role.delete(item.id as number)
-    const data = response.value.data as Record<string, unknown>[]
-    const idx = data.findIndex((r) => r.id === item.id)
-    if (idx !== -1) {
-      data.splice(idx, 1)
-      response.value.total = Math.max(0, (response.value.total ?? 0) - 1)
-    }
     roleDialogDelete.value = false
+    await removeWithAnimation(response, item.id as number)
   } catch (e) {
     console.error("Error al eliminar el rol", e)
   } finally {
@@ -219,7 +214,34 @@ async function deleteX(item: Record<string, unknown>) {
 }
 ```
 
-Remove the row locally — do **not** re-fetch the whole list after delete.
+`removeWithAnimation` (from `useRowHighlight`) tints the row light red, waits
+for the CSS collapse animation, then drops the row locally and decrements the
+total. Do **not** re-fetch the whole list after delete and do **not** splice
+manually — use the shared helper.
+
+### Row removal animation (delete)
+
+- Page owns the `removingId` ref from `useRowHighlight()` and passes it to the
+  table as `:removing-id="removingId"`.
+- Table component receives the `removingId` prop and forwards it to
+  `rowPropsFor`:
+
+  ```ts
+  const props = defineProps<{
+    ...
+    removingId?: number | string | null
+  }>()
+  const rowProps = rowPropsFor(() => props.highlightId, () => props.removingId)
+  ```
+
+- CSS (single definition in `app/assets/css/global.css`): `.row-removing td`
+  gets a light red background and the `row-remove-collapse` animation
+  (fade + vertical padding collapse). Animation duration is 0.6s — keep
+  `ROW_REMOVE_ANIMATION_MS` (600) in `useRowHighlight.ts` in sync with it.
+- Flow: confirm delete → `Repository.delete(id)` → close dialog →
+  `await removeWithAnimation(response, id)` (marks, waits, splices, unmarks).
+- Pages that re-fetch after save/delete (`permission/index.vue`,
+  `auditorium-event/index.vue`) run `removeWithAnimation` before the refetch.
 
 ### 6. closeDialog
 
@@ -360,7 +382,10 @@ The table owns the confirmation; the page only listens for `@delete`. The
 
 ## Do Not
 
-- Do not re-fetch the list after delete — splice locally and decrement total.
+- Do not re-fetch the list after delete — splice locally via
+  `removeWithAnimation` and decrement total.
+- Do not splice/remove rows manually in pages — use the shared
+  `removeWithAnimation` helper.
 - Do not watch `options` deeply to emit sorting — use `@update:options` only.
 - Do not skip the `initialLoaded` guard — the page will double-fetch on mount.
 - Do not use `onMounted` for the initial list load — the first paint would be

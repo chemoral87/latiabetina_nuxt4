@@ -20,7 +20,7 @@
           hide-one density="compact" hide-details clearable variant="outlined" />
       </VCol>
       <VCol cols="12">
-        <AuditoriumEventTable :loading="loading" :response="response" :options="options" :highlight-id="highlightId"
+        <AuditoriumEventTable :loading="loading" :response="response" :options="options" :highlight-id="highlightId" :removing-id="removingId"
           @sorting="handleSorting" @download="downloadAuditoriumEvent" @edit="editAuditoriumEvent"
           @mark="markAuditoriumEvent" @delete="beforeDeleteAuditoriumEvent" />
       </VCol>
@@ -57,7 +57,7 @@ const loading = ref(false)
 const auditoriumEventDialog = ref(false)
 const auditoriumEventDialogDelete = ref(false)
 const dialogDelete = ref<Record<string, unknown>>({})
-const { highlightId, flash, prependCreated } = useRowHighlight()
+const { highlightId, flash, prependCreated, removingId, removeWithAnimation } = useRowHighlight()
 
 const initialOptions: Record<string, unknown> = {
   page: 1,
@@ -219,6 +219,7 @@ async function deleteAuditoriumEvent(item: unknown) {
   const event = item as Record<string, unknown>
   try {
     await AuditoriumEvent.delete(event.id as number)
+    await removeWithAnimation(response, event.id as number)
     await getAuditoriumEvents()
   } catch (error) {
     notify.notify({ error: "Error eliminando evento de auditorio" })

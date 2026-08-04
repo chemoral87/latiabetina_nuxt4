@@ -3,8 +3,15 @@
 // re-triggers even when the same row is edited twice in a row. Pair with the
 // `highlightId` prop + `rowPropsFor()` factory on VDataTableServer
 // (see migration guide).
+export const ROW_REMOVE_ANIMATION_MS = 600
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
 export function useRowHighlight() {
   const highlightId = ref<number | null>(null)
+  const removingId = ref<number | string | null>(null)
   let highlightTimer: ReturnType<typeof setTimeout> | null = null
 
   function flash(id: number) {
@@ -56,11 +63,39 @@ export function useRowHighlight() {
     }
   }
 
+  function beginRemove(id: number | string | null | undefined) {
+    removingId.value = id ?? null
+  }
+
+  function endRemove() {
+    removingId.value = null
+  }
+
+  /**
+   * Mark the row as `row-removing` (light red flash + height collapse), wait
+   * for the CSS animation, then drop the row from the table data and decrement
+   * the total. Call AFTER a successful repository delete, passing the same
+   * `response` ref that is fed to the table component. On failure, call
+   * `endRemove()` to cancel the animation.
+   */
+  async function removeWithAnimation(response: Ref<{ data?: unknown[]; total?: number }>, id: number | string) {
+    beginRemove(id)
+    await sleep(ROW_REMOVE_ANIMATION_MS)
+    if (response.value.data) {
+      const idx = response.value.data.findIndex((r) => (r as Record<string, unknown>)?.id === id)
+      if (idx !== -1) {
+        response.value.data.splice(idx, 1)
+        response.value.total = Math.max(0, (response.value.total ?? 0) - 1)
+      }
+    }
+    endRemove()
+  }
+
   onUnmounted(() => {
     if (highlightTimer) clearTimeout(highlightTimer)
   })
 
-  return { highlightId, flash, prependCreated, updateRow }
+  return { highlightId, flash, prependCreated, updateRow, removingId, beginRemove, endRemove, removeWithAnimation }
 }
 
 /**
@@ -68,15 +103,28 @@ export function useRowHighlight() {
  * ref, getter, or plain value so the returned function reads the *current*
  * value on every Vuetify row render (a plain value captured at setup time
  * would not be reactive). Returns attrs to merge onto each `<tr>`:
- * `{ class: 'row-highlight' }` for the highlighted row, `{ class: undefined }`
- * otherwise.
+ * `{ class: 'row-highlight' }` for the highlighted row, `{ class: 'row-removing' }`
+ * for a row being deleted (see `useRowHighlight`), or `{ class: undefined }`.
  */
-export function rowPropsFor(highlightId: MaybeRefOrGetter<number | null | undefined>) {
+export function rowPropsFor(
+  highlightId: MaybeRefOrGetter<number | null | undefined>,
+  removingId?: MaybeRefOrGetter<number | string | null | undefined>,
+) {
   return (data: { item: unknown }): Record<string, unknown> => {
     const id = (data.item as Record<string, unknown>)?.id
-    const target = toValue(highlightId)
+    const classes: string[] = []
+    const highlightTarget = toValue(highlightId)
+    if (highlightTarget != null && id === highlightTarget) {
+      classes.push('row-highlight')
+    }
+    if (removingId) {
+      const removeTarget = toValue(removingId)
+      if (removeTarget != null && id === removeTarget) {
+        classes.push('row-removing')
+      }
+    }
     return {
-      class: target != null && id === target ? 'row-highlight' : undefined,
+      class: classes.length > 0 ? classes.join(' ') : undefined,
     }
   }
 }

@@ -67,6 +67,7 @@ const props = defineProps<{
   loading?: boolean
   search?: string
   highlightId?: number | null
+  removingId?: number | string | null
 }>()
 
 const emit = defineEmits<{
@@ -96,7 +97,7 @@ const total = computed(() => props.response?.total ?? 0)
 const items = computed(() => props.response?.data ?? [])
 const loading = computed(() => props.loading ?? false)
 
-const rowProps = rowPropsFor(() => props.highlightId)
+const rowProps = rowPropsFor(() => props.highlightId, () => props.removingId)
 
 function onUpdateOptions(val: Record<string, unknown>) {
   emit("sorting", val)

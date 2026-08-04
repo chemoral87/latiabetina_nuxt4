@@ -17,7 +17,7 @@
       </VCol>
 
       <VCol cols="12">
-        <UserTable :search="filterUser" :response="response" :loading="loading" :highlight-id="highlightId" v-model:dialog-delete="dialogDeleteUser"          @sorting="handleSorting" @edit="editUser" @edit-profiles="editProfiles" @delete="deleteUser" />
+        <UserTable :search="filterUser" :response="response" :loading="loading" :highlight-id="highlightId" :removing-id="removingId" v-model:dialog-delete="dialogDeleteUser"          @sorting="handleSorting" @edit="editUser" @edit-profiles="editProfiles" @delete="deleteUser" />
       </VCol>
     </VRow>
 
@@ -43,7 +43,7 @@ const loading = ref(false)
 const saving = ref(false)
 const userx = ref<Record<string, unknown> | null>(null)
 const lastOptions = ref<Record<string, unknown> | null>(null)
-const { highlightId, prependCreated, updateRow } = useRowHighlight()
+const { highlightId, prependCreated, updateRow, removingId, removeWithAnimation } = useRowHighlight()
 
 const { User } = useRepository()
 
@@ -135,13 +135,8 @@ function editProfiles(item: Record<string, unknown>) {
 async function deleteUser(item: Record<string, unknown>) {
   try {
     await User.delete(item.id as number)
-    const data = response.value.data as Record<string, unknown>[]
-    const idx = data.findIndex((r) => r.id === item.id)
-    if (idx !== -1) {
-      data.splice(idx, 1)
-      response.value.total = Math.max(0, (response.value.total ?? 0) - 1)
-    }
     dialogDeleteUser.value = false
+    await removeWithAnimation(response, item.id as number)
   } catch (e) {
     console.error(e)
   }

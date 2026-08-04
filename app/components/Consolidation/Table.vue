@@ -27,7 +27,7 @@
           icon
           rounded="circle"
           size="small"
-          class="mr-2"
+          class="ma-1"
           id="btn-consolidation-table-view"
           @click="emit('view', item)"
         >
@@ -41,7 +41,7 @@
           icon
           rounded="circle"
           size="small"
-          class="mr-2"
+          class="ma-1"
           id="btn-consolidation-table-edit"
           @click="emit('edit', item)"
         >
@@ -55,6 +55,7 @@
           icon
           rounded="circle"
           size="small"
+          class="ma-1"
           id="btn-consolidation-table-delete"
           @click="emit('delete', item)"
         >
@@ -64,11 +65,11 @@
     </template>
 
     <template #[`item.creator`]="{ item }">
-      {{ item.creator ? item.creator.name : 'N/A' }}
+      {{ item.creator ? item.creator.name : "N/A" }}
     </template>
 
     <template #[`item.organization`]="{ item }">
-      {{ item.organization ? item.organization.name : 'N/A' }}
+      {{ item.organization ? item.organization.name : "N/A" }}
     </template>
 
     <template #[`item.date`]="{ item }">
@@ -78,63 +79,76 @@
     <template #no-data>
       <div class="text-center pa-4">
         <VIcon color="grey-lighten-1">mdi-clipboard-list</VIcon>
-        <span class="text-body-1 text-grey ml-1">No se encontraron consolidados</span>
+        <span class="text-body-1 text-grey ml-1"
+          >No se encontraron consolidados</span
+        >
       </div>
     </template>
   </VDataTableServer>
 </template>
 
 <script setup lang="ts">
-import { rowPropsFor } from "~/composables/useRowHighlight"
-import { formatShortDate } from "~/utils/date"
+import { rowPropsFor } from "~/composables/useRowHighlight";
+import { formatShortDate } from "~/utils/date";
 
 interface Header {
-  title: string
-  value: string
-  sortable: boolean
-  align?: string
-  width?: string
+  title: string;
+  value: string;
+  sortable: boolean;
+  align?: string;
+  width?: string;
 }
 
-const props = withDefaults(defineProps<{
-  response?: { total?: number; data?: unknown[] } | null
-  loading?: boolean
-  search?: string
-  highlightId?: number | null
-}>(), {
-  response: null,
-  loading: false,
-  search: "",
-  highlightId: null,
-})
+const props = withDefaults(
+  defineProps<{
+    response?: { total?: number; data?: unknown[] } | null;
+    loading?: boolean;
+    search?: string;
+    highlightId?: number | null;
+  }>(),
+  {
+    response: null,
+    loading: false,
+    search: "",
+    highlightId: null,
+  },
+);
 
 const emit = defineEmits<{
-  (e: 'sorting', val: Record<string, unknown>): void
-  (e: 'view', val: unknown): void
-  (e: 'edit', val: unknown): void
-  (e: 'delete', val: unknown): void
-}>()
+  (e: "sorting", val: Record<string, unknown>): void;
+  (e: "view", val: unknown): void;
+  (e: "edit", val: unknown): void;
+  (e: "delete", val: unknown): void;
+}>();
 
-const page = ref(1)
-const itemsPerPage = ref(10)
-const sortBy = ref<{ key: string; order: string }[]>([{ key: "id", order: "asc" }])
+const page = ref(1);
+const itemsPerPage = ref(10);
+const sortBy = ref<{ key: string; order: string }[]>([
+  { key: "id", order: "asc" },
+]);
 
 const headers: Header[] = [
   { title: "Folio", value: "folio_number" },
   { title: "Fecha", value: "date" },
   { title: "Organización", value: "organization" },
   { title: "Creado por", value: "creator" },
-  { title: "Acciones", value: "actions", sortable: false, align: "center", width: "200px" },
-]
+  {
+    title: "Acciones",
+    value: "actions",
+    sortable: false,
+    align: "center",
+    width: "200px",
+  },
+];
 
-const total = computed(() => props.response?.total ?? 0)
-const items = computed(() => props.response?.data ?? [])
-const loading = computed(() => props.loading ?? false)
+const total = computed(() => props.response?.total ?? 0);
+const items = computed(() => props.response?.data ?? []);
+const loading = computed(() => props.loading ?? false);
 
-const rowProps = rowPropsFor(() => props.highlightId)
+const rowProps = rowPropsFor(() => props.highlightId);
 
 function onUpdateOptions(val: Record<string, unknown>) {
-  emit("sorting", val)
+  emit("sorting", val);
 }
 </script>
 

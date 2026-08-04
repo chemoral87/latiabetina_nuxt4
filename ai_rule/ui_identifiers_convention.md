@@ -73,7 +73,16 @@ All interactive and structural elements must include an `id` attribute following
 | `church-event/calendar.vue` | `cal` |
 | `consolidation/index.vue` | `con` |
 | `consolidation/[id]/details.vue` | `det` |
+| `pos/index.vue` | `pos` |
+| `pos/new.vue` | `posn` |
+| `pos/cash-close.vue` | `posc` |
 | `pos/kds/index.vue` | `kds` |
+| `pos/sales/index.vue` | `poss` |
+| `pos/sales/[id]/index.vue` | `psid` |
+| `pos/sales/[id]/edit.vue` | `psed` |
+| `pos/product/index.vue` | `prd` |
+| `pos/product/new.vue` | `prn` |
+| `pos/product/[id]/index.vue` | `pre` |
 
 ## Page Rule
 

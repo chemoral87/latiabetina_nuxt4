@@ -1,7 +1,7 @@
 <template>
-  <div id="cmp-role-table">
+  <div id="cmp-sale-table">
     <VDataTableServer
-      id="dt-role-table-items-1"
+      id="dt-sale-table-items-1"
       v-model:page="page"
       v-model:items-per-page="itemsPerPage"
       v-model:sort-by="sortBy"
@@ -14,65 +14,56 @@
       class="elevation-1"
       striped="odd"
       mustSort
-      :search="props.search"
       items-per-page-text="Filas por página"
       :items-per-page-options="[10, 15, 30]"
       @update:options="onUpdateOptions"
     >
-      <template #[`item.permissions`]="{ item }">
-        <div v-if="hasPermissions(item as Record<string, unknown>)" class="d-flex flex-wrap ga-1">
-          <VChip
-            v-for="permission in (item as Record<string, unknown>).permissions as Record<string, unknown>[]"
-            :key="permission.id as number"
-            color="primary"
-            size="small"
-            variant="elevated"
-          >
-            {{ permission.name as string }}
-          </VChip>
-        </div>
-        <span v-else class="text-grey text-caption">Sin permisos</span>
+      <template #[`item.total`]="{ item }">
+        <span class="font-weight-medium">${{ formatNumber((item as Record<string, unknown>).total) }}</span>
+      </template>
+
+      <template #[`item.created_at`]="{ item }">
+        <span>{{ formatShortDateTime((item as Record<string, unknown>).created_at as string | null) }}</span>
+      </template>
+
+      <template #[`item.payment_method`]="{ item }">
+        <VChip size="small" :color="salePaymentColor((item as Record<string, unknown>).payment_method as string | null)" text-color="white" class="font-weight-medium">
+          {{ salePaymentLabel((item as Record<string, unknown>).payment_method as string | null) }}
+        </VChip>
+      </template>
+
+      <template #[`item.status`]="{ item }">
+        <VChip size="small" :color="saleStatusColor((item as Record<string, unknown>).status as string | null)" text-color="white" class="font-weight-medium">
+          {{ saleStatusLabel((item as Record<string, unknown>).status as string | null) }}
+        </VChip>
       </template>
 
       <template #[`item.actions`]="{ item }">
         <VBtn
-          title="Editar"
+          title="Ver detalle"
           class="ma-1"
           color="primary"
           variant="outlined"
           size="small"
           icon
           rounded="circle"
-          id="btn-role-table-edit"
-          @click="emitEdit(item)"
+          id="btn-sale-table-view"
+          @click="emitView(item)"
         >
-          <VIcon size="x-large">mdi-pencil</VIcon>
+          <VIcon size="x-large">mdi-eye</VIcon>
         </VBtn>
         <VBtn
-          title="Permisos"
-          class="ma-1"
-          color="success"
-          variant="outlined"
-          size="small"
-          icon
-          rounded="circle"
-          id="btn-role-table-permissions"
-          @click="emitEditPermissions(item)"
-        >
-          <VIcon size="x-large">mdi-key-variant</VIcon>
-        </VBtn>
-        <VBtn
-          title="Distribuir"
+          title="Editar"
           class="ma-1"
           color="info"
           variant="outlined"
           size="small"
           icon
           rounded="circle"
-          id="btn-role-table-distribute"
-          @click="emitDistribution(item)"
+          id="btn-sale-table-edit"
+          @click="emitEdit(item)"
         >
-          <VIcon size="x-large">mdi-share-variant</VIcon>
+          <VIcon size="x-large">mdi-pencil</VIcon>
         </VBtn>
         <VBtn
           title="Eliminar"
@@ -82,7 +73,7 @@
           size="small"
           icon
           rounded="circle"
-          id="btn-role-table-delete"
+          id="btn-sale-table-delete"
           @click="confirmDelete(item)"
         >
           <VIcon size="x-large">mdi-delete</VIcon>
@@ -91,8 +82,8 @@
 
       <template #no-data>
         <div class="text-center pa-4">
-          <VIcon color="grey-lighten-1">mdi-redhat</VIcon>
-          <span class="text-body-1 text-grey">No se encontraron roles</span>
+          <VIcon color="grey-lighten-1">mdi-receipt</VIcon>
+          <span class="text-body-1 text-grey">No se encontraron ventas</span>
         </div>
       </template>
     </VDataTableServer>
@@ -108,6 +99,8 @@
 
 <script setup lang="ts">
 import { rowPropsFor } from "~/composables/useRowHighlight"
+import { formatShortDateTime } from "~/utils/date"
+import { salePaymentColor, salePaymentLabel, saleStatusColor, saleStatusLabel } from "~/utils/sale"
 
 interface Header {
   title: string
@@ -121,7 +114,6 @@ const props = defineProps<{
   dialogDelete: unknown
   response?: { total?: number; data?: unknown[] } | null
   loading?: boolean
-  search?: string
   highlightId?: number | null
   removingId?: number | string | null
 }>()
@@ -129,21 +121,25 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'update:dialogDelete', val: boolean): void
   (e: 'sorting', val: Record<string, unknown>): void
+  (e: 'view', val: unknown): void
   (e: 'edit', val: unknown): void
-  (e: 'editPermissions', val: unknown): void
-  (e: 'distribution', val: unknown): void
   (e: 'delete', val: unknown): void
 }>()
 
 const page = ref(1)
 const itemsPerPage = ref(10)
-const sortBy = ref<{ key: string; order: string }[]>([{ key: "name", order: "asc" }])
+const sortBy = ref<{ key: string; order: string }[]>([{ key: "created_at", order: "desc" }])
 const dialogDeleteProp = ref<Record<string, unknown>>({})
 
 const headers: Header[] = [
-  { title: "Nombre", value: "name", align: "start", sortable: true },
-  { title: "Permisos", value: "permissions", sortable: false },
-  { title: "Acciones", value: "actions", sortable: false, align: "center", width: "240px" },
+  { title: "Número", value: "number", align: "start", sortable: true },
+  { title: "Cliente", value: "customer_name", sortable: false },
+  { title: "Teléfono", value: "customer_phone", sortable: false },
+  { title: "Pago", value: "payment_method", sortable: false },
+  { title: "Estado", value: "status", sortable: false },
+  { title: "Total", value: "total", align: "end", sortable: false },
+  { title: "Fecha", value: "created_at", sortable: true },
+  { title: "Acciones", value: "actions", sortable: false, align: "center", width: "200px" },
 ]
 
 const total = computed(() => props.response?.total ?? 0)
@@ -156,22 +152,23 @@ function onUpdateOptions(val: Record<string, unknown>) {
   emit("sorting", val)
 }
 
-function hasPermissions(item: Record<string, unknown>): boolean {
-  return !!(item.permissions && Array.isArray(item.permissions) && (item.permissions as unknown[]).length > 0)
+function formatNumber(val: unknown): string {
+  const num = Number(val)
+  if (isNaN(num)) return String(val ?? "")
+  return num.toLocaleString()
 }
 
 function confirmDelete(item: unknown) {
   dialogDeleteProp.value = {
-    text: "¿Desea eliminar el Rol ",
-    strong: (item as Record<string, unknown>).name,
+    text: "¿Desea eliminar la venta ",
+    strong: (item as Record<string, unknown>).number as string,
     payload: item,
   }
   emit("update:dialogDelete", true)
 }
 
+function emitView(item: unknown) { emit("view", item) }
 function emitEdit(item: unknown) { emit("edit", item) }
-function emitEditPermissions(item: unknown) { emit("editPermissions", item) }
-function emitDistribution(item: unknown) { emit("distribution", item) }
 </script>
 
 <style scoped></style>

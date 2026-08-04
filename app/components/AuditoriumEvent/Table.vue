@@ -64,6 +64,7 @@ const props = defineProps<{
   options?: Record<string, unknown>
   loading?: boolean
   highlightId?: number | null
+  removingId?: number | string | null
 }>()
 
 const emit = defineEmits<{
@@ -101,7 +102,7 @@ const items = computed(() => {
   })
 })
 
-const rowProps = rowPropsFor(() => props.highlightId)
+const rowProps = rowPropsFor(() => props.highlightId, () => props.removingId)
 
 onMounted(() => {
   const opts = props.options ?? {}

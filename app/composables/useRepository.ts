@@ -24,12 +24,31 @@ export function useRepository() {
 
   const Sale = {
     ...createCommonRepository($api, "/sale"),
+    // Daily summary for cash close: GET /sale/daily?date=YYYY-MM-DD&org_id=X
+    daily<T = unknown>(date: string, orgId: number | string | null = null) {
+      const params: Record<string, unknown> = { date }
+      if (orgId) params.org_id = orgId
+      return withNotify($api<T>("/sale/daily", { params }))
+    },
     // KDS kitchen display: all sales with preparation items (GET /sale/kds)
     kds<T = unknown>() {
       return withNotify($api<T>("/sale/kds"))
     },
     updateItem<T = unknown>(saleId: number | string, itemId: number | string, status: string) {
       return withNotify($api<T>(`/sale/${saleId}/item/${itemId}`, { method: "PATCH", body: { status } }))
+    },
+  }
+
+  const Product = {
+    ...createCommonRepository($api, "/product"),
+    // POS catalog: GET /product/pos (optionally filtered by org)
+    pos<T = unknown>(orgId: number | string | null = null) {
+      const params: Record<string, unknown> = orgId ? { org_id: orgId } : {}
+      return withNotify($api<T>("/product/pos", { params }))
+    },
+    // Persist card drag order: POST /product/reorder with { ids }
+    reorder<T = unknown>(ids: (number | string)[]) {
+      return withNotify($api<T>("/product/reorder", { method: "POST", body: { ids } }))
     },
   }
 
@@ -69,6 +88,7 @@ export function useRepository() {
     Testimony,
     ChurchEvent,
     Sale,
+    Product,
     ConsoSheet: createCommonRepository($api, "/conso-sheet"),
     ChurchMember: createCommonRepository($api, "/church-member"),
   }
