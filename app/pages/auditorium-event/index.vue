@@ -65,17 +65,24 @@ const initialOptions: Record<string, unknown> = {
   sortBy: [{ key: "event_date", order: "desc" }],
 }
 
-onMounted(async () => {
-  const apiParams: Record<string, unknown> = {
-    page: 1,
-    itemsPerPage: 10,
-    sortBy: ["event_date"],
-    sortDesc: [true],
-  }
-  const initialResponse = await AuditoriumEvent.index(apiParams).catch(() => ({ data: [], total: 0 }))
-  response.value = initialResponse as { data: unknown[]; total: number }
-  options.value = initialOptions
-})
+// Fetch the first page during SSR/top-level await so the table renders with
+// data already present, instead of showing an empty state until onMounted runs.
+const { data: initialData } = await useAsyncData(
+  "auditorium-event-index",
+  async () => {
+    const apiParams: Record<string, unknown> = {
+      page: 1,
+      itemsPerPage: 10,
+      sortBy: ["event_date"],
+      sortDesc: [true],
+    }
+    return await AuditoriumEvent.index<{ data: unknown[]; total: number }>(apiParams).catch(() => ({ data: [], total: 0 }))
+  },
+  { default: () => ({ data: [] as unknown[], total: 0 }) },
+)
+
+response.value = initialData.value
+options.value = initialOptions
 
 let initialLoaded = false
 
