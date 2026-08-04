@@ -65,7 +65,7 @@ const initialOptions: Record<string, unknown> = {
   sortBy: [{ key: "event_date", order: "desc" }],
 }
 
-{
+onMounted(async () => {
   const apiParams: Record<string, unknown> = {
     page: 1,
     itemsPerPage: 10,
@@ -75,7 +75,7 @@ const initialOptions: Record<string, unknown> = {
   const initialResponse = await AuditoriumEvent.index(apiParams).catch(() => ({ data: [], total: 0 }))
   response.value = initialResponse as { data: unknown[]; total: number }
   options.value = initialOptions
-}
+})
 
 let initialLoaded = false
 

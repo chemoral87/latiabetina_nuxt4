@@ -52,21 +52,25 @@ const lastOptions = ref<Record<string, unknown> | null>(null)
 const { highlightId, flash, prependCreated } = useRowHighlight()
 const { Auditorium } = useRepository()
 
-// Top-level await — loads initial data before render (asyncData equivalent)
-{
-  const apiParams: Record<string, unknown> = {
-    page: 1,
-    itemsPerPage: 10,
-    sortBy: ["name"],
-    sortDesc: [false],
-  }
-  const initialResponse = await Auditorium.index(apiParams).catch(() => ({ data: [], total: 0 }))
-  response.value = initialResponse as { data: unknown[]; total: number }
-  lastOptions.value = {
-    page: 1,
-    itemsPerPage: 10,
-    sortBy: [{ key: "name", order: "asc" }],
-  }
+const { data: initialData } = await useAsyncData(
+  "auditorium-index",
+  async () => {
+    const apiParams: Record<string, unknown> = {
+      page: 1,
+      itemsPerPage: 10,
+      sortBy: ["name"],
+      sortDesc: [false],
+    }
+    return await Auditorium.index<{ data: unknown[]; total: number }>(apiParams).catch(() => ({ data: [], total: 0 }))
+  },
+  { default: () => ({ data: [] as unknown[], total: 0 }) },
+)
+
+response.value = initialData.value
+lastOptions.value = {
+  page: 1,
+  itemsPerPage: 10,
+  sortBy: [{ key: "name", order: "asc" }],
 }
 
 let debounceTimer: ReturnType<typeof setTimeout> | null = null
