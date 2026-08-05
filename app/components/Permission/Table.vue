@@ -70,60 +70,71 @@
     </VDataTableServer>
 
     <DialogDelete
-      v-if="dialogDelete"
-      :dialog="dialogDeleteProp"
-      @ok="(item) => emit('delete', item)"
       @close="emit('update:dialogDelete', false)"
+      :dialog="dialogDeleteProp"
+      v-if="dialogDelete"
+      @ok="(item) => emit('delete', item)"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { rowPropsFor } from "~/composables/useRowHighlight"
+import { rowPropsFor } from "~/composables/useRowHighlight";
 
 interface Header {
-  title: string
-  value: string
-  sortable: boolean
-  align?: string
-  width?: string
+  title: string;
+  value: string;
+  sortable: boolean;
+  align?: string;
+  width?: string;
 }
 
 const props = defineProps<{
-  dialogDelete: unknown
-  response?: { total?: number; data?: unknown[] } | null
-  loading?: boolean
-  search?: string
-  highlightId?: number | null
-  removingId?: number | string | null
-}>()
+  dialogDelete: unknown;
+  response?: { total?: number; data?: unknown[] } | null;
+  loading?: boolean;
+  search?: string;
+  highlightId?: number | null;
+  removingId?: number | string | null;
+}>();
 
 const emit = defineEmits<{
-  (e: 'update:dialogDelete', val: boolean): void
-  (e: 'sorting', val: Record<string, unknown>): void
-  (e: 'edit', val: unknown): void
-  (e: 'distribution', val: unknown): void
-  (e: 'delete', val: unknown): void
-}>()
+  (e: "update:dialogDelete", val: boolean): void;
+  (e: "sorting", val: Record<string, unknown>): void;
+  (e: "edit", val: unknown): void;
+  (e: "distribution", val: unknown): void;
+  (e: "delete", val: unknown): void;
+}>();
 
-const page = ref(1)
-const itemsPerPage = ref(10)
-const sortBy = ref<{ key: string; order: string }[]>([{ key: "name", order: "asc" }])
-const dialogDeleteProp = ref<Record<string, unknown>>({})
+const page = ref(1);
+const itemsPerPage = ref(10);
+const sortBy = ref<{ key: string; order: string }[]>([
+  { key: "name", order: "asc" },
+]);
+const dialogDeleteProp = ref<Record<string, unknown>>({});
 
 const headers: Header[] = [
   { title: "Nombre", value: "name", align: "start", sortable: true },
-  { title: "Acciones", value: "actions", sortable: false, align: "center", width: "200px" },
-]
+  {
+    title: "Acciones",
+    value: "actions",
+    sortable: false,
+    align: "center",
+    width: "200px",
+  },
+];
 
-const total = computed(() => props.response?.total ?? 0)
-const items = computed(() => props.response?.data ?? [])
-const loading = computed(() => props.loading ?? false)
+const total = computed(() => props.response?.total ?? 0);
+const items = computed(() => props.response?.data ?? []);
+const loading = computed(() => props.loading ?? false);
 
-const rowProps = rowPropsFor(() => props.highlightId, () => props.removingId)
+const rowProps = rowPropsFor(
+  () => props.highlightId,
+  () => props.removingId,
+);
 
 function onUpdateOptions(val: Record<string, unknown>) {
-  emit("sorting", val)
+  emit("sorting", val);
 }
 
 function confirmDelete(item: unknown) {
@@ -131,12 +142,16 @@ function confirmDelete(item: unknown) {
     text: "¿Desea eliminar el Permiso ",
     strong: (item as Record<string, unknown>).name,
     payload: item,
-  }
-  emit("update:dialogDelete", true)
+  };
+  emit("update:dialogDelete", true);
 }
 
-function emitEdit(item: unknown) { emit("edit", item) }
-function emitDistribution(item: unknown) { emit("distribution", item) }
+function emitEdit(item: unknown) {
+  emit("edit", item);
+}
+function emitDistribution(item: unknown) {
+  emit("distribution", item);
+}
 </script>
 
 <style scoped></style>

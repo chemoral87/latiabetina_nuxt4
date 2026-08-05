@@ -11,7 +11,8 @@
 
               <VCol cols="12">
                 <VBtn id="login-google-btn" variant="outlined" block size="large" class="mb-4"
-                  style="border-color: #dadce0; color: #3c4043; background-color: white" @click="loginWithGoogle">
+                  style="border-color: #dadce0; color: #3c4043; background-color: white" @click="loginWithGoogle"
+                  :loading="isSubmitting" :disabled="isSubmitting">
                   <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"
                     style="width: 18px; height: 18px; margin-right: 12px" />
                   Acceder con Google
@@ -42,7 +43,8 @@
               </VCol>
 
               <VCol cols="12">
-                <VBtn id="login-submit" type="submit" color="primary" variant="elevated" block size="large">Ingresar</VBtn>
+                <VBtn id="login-submit" type="submit" color="primary" variant="elevated" block size="large"
+                  :loading="isSubmitting" :disabled="isSubmitting">Ingresar</VBtn>
               </VCol>
             </VRow>
           </VForm>
@@ -65,8 +67,12 @@ definePageMeta({
 const email = ref("")
 const password = ref("")
 const showed = ref(false)
+const isSubmitting = ref(false)
 
 function loginWithGoogle() {
+  if (isSubmitting.value) return
+  isSubmitting.value = true
+  
   const redirect = route.query.redirect || localStorage.getItem("loginRedirect")
 
   const config = useRuntimeConfig()
@@ -83,6 +89,8 @@ function loginWithGoogle() {
 }
 
 async function submitLogin() {
+  if (isSubmitting.value) return
+  isSubmitting.value = true
   try {
     const credentials = { email: email.value, password: password.value }
     await auth.loginWith("laravelJWT", { data: credentials })
@@ -91,6 +99,8 @@ async function submitLogin() {
     navigateTo(redirect as string)
   } catch (e) {
     console.error(e)
+  } finally {
+    isSubmitting.value = false
   }
 }
 </script>
