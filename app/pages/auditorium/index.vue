@@ -1,12 +1,12 @@
 <template>
   <VContainer :fluid="true">
     <VRow density="comfortable">
-      <VCol cols="12" md="2">
-        <VTextField id="tf-audit-index-filterauditorium-1" v-model="filterInput" append-inner-icon="mdi-magnify" variant="outlined" density="compact" clearable hide-details placeholder="Filtro" />
+      <VCol md="2" cols="12">
+        <VTextField id="tf-audit-index-filterauditorium-1" v-model="filterInput" clearable hide-details density="compact" variant="outlined" placeholder="Filtro" append-inner-icon="mdi-magnify" />
       </VCol>
 
       <VCol cols="auto" class="d-flex align-center">
-        <VBtn id="btn-auditorium-refresh" color="primary" :loading="loading" class="mr-4" @click="refresh">
+        <VBtn id="btn-auditorium-refresh" class="mr-4" color="primary" :loading="loading" @click="refresh">
           <VIcon start>mdi-reload</VIcon>
           Refrescar
         </VBtn>
@@ -17,15 +17,15 @@
       </VCol>
 
       <VCol v-if="!orgFilterHidden" cols="2">
-        <OrganizationSelect v-model="filterOrgId" v-model:hidden="orgFilterHidden" permission="auditorium-index" hide-one density="compact" hide-details clearable variant="outlined" />
+        <OrganizationSelect v-model="filterOrgId" v-model:hidden="orgFilterHidden" hide-one clearable hide-details density="compact" variant="outlined" prevent-auto-select permission="auditorium-index" />
       </VCol>
 
       <VCol cols="12">
-        <AuditoriumTable v-model:dialog-delete="dialogDeleteAuditorium" :search="filterAuditorium" :response="response" :loading="loading" :highlight-id="highlightId" @sorting="handleSorting" @edit="editAuditorium" @layout="goToLayout" @delete="deleteAuditorium" />
+        <AuditoriumTable v-model:dialog-delete="dialogDeleteAuditorium" :loading="loading" :response="response" :search="filterAuditorium" :highlight-id="highlightId" @layout="goToLayout" @edit="editAuditorium" @sorting="handleSorting" @delete="deleteAuditorium" />
       </VCol>
     </VRow>
 
-    <AuditoriumDialog v-if="auditoriumDialog" :auditorium="auditorium" :loading="saving" @close="closeDialog" @save="saveAuditorium" />
+    <AuditoriumDialog v-if="auditoriumDialog" :loading="saving" :auditorium="auditorium" @close="closeDialog" @save="saveAuditorium" />
   </VContainer>
 </template>
 
@@ -53,16 +53,14 @@ const { highlightId, flash, prependCreated } = useRowHighlight()
 const auth = useAuthStore()
 const { Auditorium } = useRepository()
 
-function getEffectiveOrgId() {
+const effectiveOrgId = computed(() => {
   const orgPermission = auth.permissionsOrg["auditorium-index"] ?? []
   const orgs = auth.user?.orgs ?? []
   if (orgs.length === 1 && orgPermission.includes((orgs[0] as { id: unknown }).id)) {
     return (orgs[0] as { id: unknown }).id
   }
   return null
-}
-
-const effectiveOrgId = getEffectiveOrgId()
+})
 
 const { data: initialData } = await useAsyncData(
   "auditorium-index",
@@ -72,9 +70,6 @@ const { data: initialData } = await useAsyncData(
       itemsPerPage: 10,
       sortBy: ["name"],
       sortDesc: [false],
-    }
-    if (effectiveOrgId) {
-      apiParams.org_id = effectiveOrgId
     }
     return await Auditorium.index<{ data: unknown[]; total: number }>(apiParams).catch(() => ({ data: [], total: 0 }))
   },
@@ -101,13 +96,15 @@ watch(filterInput, (val) => {
   }, 300)
 })
 
-let initialOrgLoadDone = false
+// The initial SSR fetch does NOT include org_id.
+// OrganizationSelect uses prevent-auto-select so it won't trigger a
+// mount-time fetch. When the user has only 1 org, the backend resolves the
+// org from auth context — never send org_id. When 2+ orgs, user's manual
+// selection triggers a request with org_id.
 
 watch(filterOrgId, (val) => {
-  if (!initialOrgLoadDone) {
-    initialOrgLoadDone = true
-    return
-  }
+  // When user has only 1 org, never send org_id — backend resolves it
+  if (effectiveOrgId.value !== null) return
   const overrides: Record<string, unknown> = { page: 1 }
   overrides.org_id = val ?? undefined
   indexAuditoriums(overrides)
@@ -132,8 +129,8 @@ async function indexAuditoriums(overrides: Record<string, unknown> = {}) {
   if (filterAuditorium.value) {
     params.filter = filterAuditorium.value
   }
-  if (filterOrgId.value) {
-    params.org_id = filterOrgId.value
+  if (opts.org_id) {
+    params.org_id = opts.org_id
   }
 
   try {

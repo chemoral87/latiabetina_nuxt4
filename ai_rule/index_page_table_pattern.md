@@ -365,49 +365,76 @@ The table owns the confirmation; the page only listens for `@delete`. The
 | `:search` prop | present on `VDataTableServer` | not used (date-range filter) |
 | Delete dialog | inside `Table.vue` (DialogDelete) | at page level, `DialogDelete` + `dialogDelete` data |
 | Loader signature | `loadX(opts)` | `getAuditoriumEvents(overrides)` merged over `options` ref |
-| Org filter dupe | no org filter | suppress `filterOrgId` watcher on first emit (auto-select) |
+| Org filter dupe | no org filter | suppress `filterOrgId` entirely when 1-org; `prevent-auto-select` on `OrganizationSelect` |
 
 ### Suppress OrganizationSelect auto-select duplicate request
 
-Pages with an `OrganizationSelect` (auditorium-event, auditorium) suffer a
-double request: the initial `useAsyncData` fetch runs without `org_id`, then
-`OrganizationSelect` auto-selects the single available org on mount, emitting
-`update:modelValue` which fires the `filterOrgId` watcher and re-fetches the
-same data with `org_id`.
+Pages with an `OrganizationSelect` (auditorium-event, auditorium) must send a
+single initial fetch **without** `org_id`. The backend resolves the correct org
+from the auth token context — `org_id` is only needed when the user has 2+ orgs
+and manually selects a different one.
 
-**Fix:** Include `org_id` in the SSR/top-level-await fetch by computing it from
-the auth store *before* the await, then guard the `filterOrgId` watcher so it
-skips the first (auto-select) emit:
+**Fix:**
+
+1. **Initial fetch without `org_id`** — the backend handles 1-org users.
+2. **`prevent-auto-select`** on the `OrganizationSelect` — prevents the
+   mount-time auto-select emit entirely.
+3. **Suppress all `filterOrgId` emits when `effectiveOrgId` is set** (1-org
+   case) — never send `org_id` for single-org users.
+4. **`v-if` instead of `v-show`** on the `VSelect` inside `OrganizationSelect`.
 
 ```ts
 const auth = useAuthStore()
 
-function getEffectiveOrgId() {
+// Computed: null when user has 2+ orgs; the org id when user has 1 org.
+const effectiveOrgId = computed(() => {
   const orgPermission = auth.permissionsOrg["auditorium-index"] ?? []
   const orgs = auth.user?.orgs ?? []
   if (orgs.length === 1 && orgPermission.includes((orgs[0] as { id: unknown }).id)) {
     return (orgs[0] as { id: unknown }).id
   }
   return null
-}
+})
 
-const effectiveOrgId = getEffectiveOrgId()
-
-// Include org_id in the initial SSR fetch
-const { data: initialData } = await useAsyncData("auditorium-event-index", async () => {
-  const apiParams: Record<string, unknown> = { page: 1, itemsPerPage: 10, sortBy: ["event_date"], sortDesc: [true] }
-  if (effectiveOrgId) apiParams.org_id = effectiveOrgId
-  return await AuditoriumEvent.index<{ data: unknown[]; total: number }>(apiParams).catch(() => ({ data: [], total: 0 }))
+// Initial SSR fetch — no org_id
+const { data: initialData } = await useAsyncData("auditorium-index", async () => {
+  const apiParams: Record<string, unknown> = { page: 1, itemsPerPage: 10, sortBy: ["name"], sortDesc: [false] }
+  return await Auditorium.index<{ data: unknown[]; total: number }>(apiParams).catch(() => ({ data: [], total: 0 }))
 }, { default: () => ({ data: [] as unknown[], total: 0 }) })
 
-// Suppress the mount-time auto-select emit from OrganizationSelect
-let initialOrgLoadDone = false
+// For 1-org users: never send org_id (backend resolves it from auth token)
+// For 2+ orgs: only send org_id from explicit user selection
 watch(filterOrgId, (val) => {
-  if (!initialOrgLoadDone) { initialOrgLoadDone = true; return }
+  if (effectiveOrgId.value !== null) return
   const overrides: Record<string, unknown> = { page: 1 }
   overrides.org_id = val ?? undefined
-  getAuditoriumEvents(overrides)
+  indexAuditoriums(overrides)
 })
+
+// In the loader: only include org_id from the overrides (user selection),
+// NOT from filterOrgId.value (which includes auto-select):
+async function indexAuditoriums(overrides: Record<string, unknown> = {}) {
+  // ...build params...
+  if (opts.org_id) { params.org_id = opts.org_id }  // ✅ only from overrides
+  // DO NOT add: if (filterOrgId.value) { params.org_id = filterOrgId.value }  ❌
+}
+```
+
+**Template:**
+
+```vue
+<OrganizationSelect
+  v-model="filterOrgId"
+  hide-one
+  prevent-auto-select   <!-- ✅ prevents mount-time auto-select emit -->
+  ...
+/>
+```
+
+**In `app/components/Organization/Select.vue`, use `v-if` not `v-show`:**
+
+```vue
+<VSelect v-if="showSelect" v-model="selected" ... />
 ```
 
 **Rules for new pages:**
@@ -437,5 +464,5 @@ watch(filterOrgId, (val) => {
 - Do not omit `:search="props.search"` on `VDataTableServer` when the page
   passes a search prop — filter changes silently never reach `useOptions`.
 - Do not let `OrganizationSelect` auto-select trigger a duplicate request —
-  include `org_id` in the SSR fetch and guard the `filterOrgId` watcher
-  (see the OrganizationSelect auto-select pattern above).
+  use `prevent-auto-select`, suppress `filterOrgId` when 1-org (`effectiveOrgId !== null`),
+  and only include `org_id` from overrides in the loader (see above).
