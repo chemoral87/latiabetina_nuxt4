@@ -357,7 +357,7 @@ The table owns the confirmation; the page only listens for `@delete`. The
 
 ## Differences between the reference pages (keep the common core)
 
-| Aspect | role / user / permission / organization | auditorium-event |
+| Aspect | role / user / permission / organization / auditorium | auditorium-event |
 |---|---|---|
 | Initial load | plain top-level await | `useAsyncData("auditorium-event-index", ...)` |
 | Filter | single `VTextField` + `filter` param | `MyDateRange` + `OrganizationSelect` (org_id param) |
@@ -365,6 +365,50 @@ The table owns the confirmation; the page only listens for `@delete`. The
 | `:search` prop | present on `VDataTableServer` | not used (date-range filter) |
 | Delete dialog | inside `Table.vue` (DialogDelete) | at page level, `DialogDelete` + `dialogDelete` data |
 | Loader signature | `loadX(opts)` | `getAuditoriumEvents(overrides)` merged over `options` ref |
+| Org filter dupe | no org filter | suppress `filterOrgId` watcher on first emit (auto-select) |
+
+### Suppress OrganizationSelect auto-select duplicate request
+
+Pages with an `OrganizationSelect` (auditorium-event, auditorium) suffer a
+double request: the initial `useAsyncData` fetch runs without `org_id`, then
+`OrganizationSelect` auto-selects the single available org on mount, emitting
+`update:modelValue` which fires the `filterOrgId` watcher and re-fetches the
+same data with `org_id`.
+
+**Fix:** Include `org_id` in the SSR/top-level-await fetch by computing it from
+the auth store *before* the await, then guard the `filterOrgId` watcher so it
+skips the first (auto-select) emit:
+
+```ts
+const auth = useAuthStore()
+
+function getEffectiveOrgId() {
+  const orgPermission = auth.permissionsOrg["auditorium-index"] ?? []
+  const orgs = auth.user?.orgs ?? []
+  if (orgs.length === 1 && orgPermission.includes((orgs[0] as { id: unknown }).id)) {
+    return (orgs[0] as { id: unknown }).id
+  }
+  return null
+}
+
+const effectiveOrgId = getEffectiveOrgId()
+
+// Include org_id in the initial SSR fetch
+const { data: initialData } = await useAsyncData("auditorium-event-index", async () => {
+  const apiParams: Record<string, unknown> = { page: 1, itemsPerPage: 10, sortBy: ["event_date"], sortDesc: [true] }
+  if (effectiveOrgId) apiParams.org_id = effectiveOrgId
+  return await AuditoriumEvent.index<{ data: unknown[]; total: number }>(apiParams).catch(() => ({ data: [], total: 0 }))
+}, { default: () => ({ data: [] as unknown[], total: 0 }) })
+
+// Suppress the mount-time auto-select emit from OrganizationSelect
+let initialOrgLoadDone = false
+watch(filterOrgId, (val) => {
+  if (!initialOrgLoadDone) { initialOrgLoadDone = true; return }
+  const overrides: Record<string, unknown> = { page: 1 }
+  overrides.org_id = val ?? undefined
+  getAuditoriumEvents(overrides)
+})
+```
 
 **Rules for new pages:**
 1. Follow the **role/user/permission/organization** core (top-level await +
@@ -392,3 +436,6 @@ The table owns the confirmation; the page only listens for `@delete`. The
   empty (see `ai_rule/nuxt4_ssr_hydration.md`).
 - Do not omit `:search="props.search"` on `VDataTableServer` when the page
   passes a search prop — filter changes silently never reach `useOptions`.
+- Do not let `OrganizationSelect` auto-select trigger a duplicate request —
+  include `org_id` in the SSR fetch and guard the `filterOrgId` watcher
+  (see the OrganizationSelect auto-select pattern above).

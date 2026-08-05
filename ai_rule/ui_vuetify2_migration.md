@@ -213,6 +213,44 @@ Layout root containers must include layout-scoped identifiers:
 +</script>
 ```
 
+### Auth Middleware — `login` / `logout` must NOT require `authenticated`
+
+Every protected list/detail page uses `middleware: "authenticated"` (or
+`["authenticated", "permission"]`, see `index_page_table_pattern.md`). The
+`login` and `logout` pages are the exception — they must be reachable by a
+logged-out visitor, so they never carry `authenticated`:
+
+```diff
+ // pages/login.vue
+ definePageMeta({
+   title: "Inicio Sesión",
+   icon: "mdi-login",
++  middleware: ["guest"],   // redirects an already-logged-in user away, never blocks a guest
+-  middleware: "authenticated",
+ })
+```
+
+```diff
+ // pages/logout.vue
+ definePageMeta({
+   title: "Cerrando sesión",
+   icon: "mdi-logout",
++  // no middleware — logging out must work even if the token already expired
+ })
+```
+
+- `login.vue` uses the `guest` middleware (`app/middleware/guest.ts`): if the
+  user is **already** logged in it redirects to `/dashboard` (or
+  `?redirect=`), otherwise it lets the page render. It never requires
+  `authenticated`.
+- `logout.vue` carries **no** middleware at all — it must render and run
+  `auth.logout()` regardless of auth state (an expired/invalid token should
+  still be able to clear itself and land back on `/login`).
+- Do **not** add `authenticated` (or `["authenticated", "permission"]`) to
+  either page — that would lock out the exact users who need to reach them
+  (a logged-out user trying to log in, or a user with a stale/expired token
+  trying to log out).
+
 ### Page Icon
 
 Add an `icon` property to `definePageMeta` to display an icon next to the page title in the VAppBar. The layout reads `route.meta.icon` and renders a `VIcon` before the title:

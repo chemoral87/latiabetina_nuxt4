@@ -31,7 +31,8 @@ import { useRowHighlight } from "~/composables/useRowHighlight"
 definePageMeta({
   title: "Usuarios",
   icon: "mdi-account",
-  middleware: "authenticated",
+  permission: "user-index",
+  middleware: ["authenticated", "permission"],
 })
 
 const dialogDeleteUser = ref(false)

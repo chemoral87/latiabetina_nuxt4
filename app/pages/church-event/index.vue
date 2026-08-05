@@ -1,6 +1,6 @@
 <template>
-  <VContainer fluid>
-    <VRow dense>
+  <VContainer :fluid="true">
+    <VRow density="comfortable">
       <!-- Filtro de busqueda -->
       <VCol cols="12" md="2">
         <VTextField
@@ -76,6 +76,7 @@ definePageMeta({
 
 const { ChurchEvent } = useRepository()
 const notify = useNotifyStore()
+const auth = useAuthStore()
 
 const filterChurchEvent = ref("")
 const filterOrgId = ref<string | number | null>(null)
@@ -96,6 +97,17 @@ const lastOptions = ref<Record<string, unknown>>({
   sortBy: [{ key: "event_date", order: "desc" }],
 })
 
+function getEffectiveOrgId() {
+  const orgPermission = auth.permissionsOrg["church-event-index"] ?? []
+  const orgs = auth.user?.orgs ?? []
+  if (orgs.length === 1 && orgPermission.includes((orgs[0] as { id: unknown }).id)) {
+    return (orgs[0] as { id: unknown }).id
+  }
+  return null
+}
+
+const effectiveOrgId = getEffectiveOrgId()
+
 // Initial load (asyncData equivalent)
 {
   const apiParams: Record<string, unknown> = {
@@ -104,6 +116,7 @@ const lastOptions = ref<Record<string, unknown>>({
     sortBy: ["event_date"],
     sortDesc: [true],
   }
+  if (effectiveOrgId) apiParams.org_id = effectiveOrgId
   const initialResponse = await ChurchEvent.index(apiParams).catch(() => ({ data: [], total: 0 }))
   response.value = normalizeResponse(initialResponse)
 }
@@ -133,7 +146,13 @@ watch(filterChurchEvent, (val) => {
   }, 500)
 })
 
+let initialOrgLoadDone = false
+
 watch(filterOrgId, (value) => {
+  if (!initialOrgLoadDone) {
+    initialOrgLoadDone = true
+    return
+  }
   const overrides: Record<string, unknown> = { page: 1 }
   overrides.org_id = value ?? undefined
   loadChurchEvents(overrides)

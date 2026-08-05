@@ -96,6 +96,7 @@ const loading = ref(false);
 const auditoriumEventDialog = ref(false);
 const auditoriumEventDialogDelete = ref(false);
 const dialogDelete = ref<Record<string, unknown>>({});
+const auth = useAuthStore();
 const { highlightId, flash, prependCreated, removingId, removeWithAnimation } =
   useRowHighlight();
 
@@ -105,8 +106,18 @@ const initialOptions: Record<string, unknown> = {
   sortBy: [{ key: "event_date", order: "desc" }],
 };
 
+function getEffectiveOrgId() {
+  const orgPermission = auth.permissionsOrg["auditorium-index"] ?? [];
+  const orgs = auth.user?.orgs ?? [];
+  if (orgs.length === 1 && orgPermission.includes((orgs[0] as { id: unknown }).id)) {
+    return (orgs[0] as { id: unknown }).id;
+  }
+  return null;
+}
+
 // Fetch the first page during SSR/top-level await so the table renders with
 // data already present, instead of showing an empty state until onMounted runs.
+const effectiveOrgId = getEffectiveOrgId();
 const { data: initialData } = await useAsyncData(
   "auditorium-event-index",
   async () => {
@@ -115,6 +126,9 @@ const { data: initialData } = await useAsyncData(
       itemsPerPage: 10,
       sortBy: ["event_date"],
       sortDesc: [true],
+    };
+    if (effectiveOrgId) {
+      apiParams.org_id = effectiveOrgId;
     };
     return await AuditoriumEvent.index<{ data: unknown[]; total: number }>(
       apiParams,
@@ -147,7 +161,13 @@ watch(filterAuditoriumEventDebounced, (value) => {
   getAuditoriumEvents({ filter: value, page: 1 });
 });
 
+let initialOrgLoadDone = false;
+
 watch(filterOrgId, (value) => {
+  if (!initialOrgLoadDone) {
+    initialOrgLoadDone = true;
+    return;
+  }
   const overrides: Record<string, unknown> = { page: 1 };
   overrides.org_id = value ?? undefined;
   getAuditoriumEvents(overrides);

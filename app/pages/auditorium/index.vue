@@ -50,7 +50,19 @@ const saving = ref(false)
 const auditorium = ref<Record<string, unknown> | null>(null)
 const lastOptions = ref<Record<string, unknown> | null>(null)
 const { highlightId, flash, prependCreated } = useRowHighlight()
+const auth = useAuthStore()
 const { Auditorium } = useRepository()
+
+function getEffectiveOrgId() {
+  const orgPermission = auth.permissionsOrg["auditorium-index"] ?? []
+  const orgs = auth.user?.orgs ?? []
+  if (orgs.length === 1 && orgPermission.includes((orgs[0] as { id: unknown }).id)) {
+    return (orgs[0] as { id: unknown }).id
+  }
+  return null
+}
+
+const effectiveOrgId = getEffectiveOrgId()
 
 const { data: initialData } = await useAsyncData(
   "auditorium-index",
@@ -60,6 +72,9 @@ const { data: initialData } = await useAsyncData(
       itemsPerPage: 10,
       sortBy: ["name"],
       sortDesc: [false],
+    }
+    if (effectiveOrgId) {
+      apiParams.org_id = effectiveOrgId
     }
     return await Auditorium.index<{ data: unknown[]; total: number }>(apiParams).catch(() => ({ data: [], total: 0 }))
   },
@@ -86,7 +101,13 @@ watch(filterInput, (val) => {
   }, 300)
 })
 
+let initialOrgLoadDone = false
+
 watch(filterOrgId, (val) => {
+  if (!initialOrgLoadDone) {
+    initialOrgLoadDone = true
+    return
+  }
   const overrides: Record<string, unknown> = { page: 1 }
   overrides.org_id = val ?? undefined
   indexAuditoriums(overrides)
