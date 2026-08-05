@@ -308,10 +308,10 @@ Vuetify 3/4 adds explicit `variant` prop:
 Add `class="mr-4"` to each button except the last in a group to maintain consistent spacing:
 
 ```diff
-+<VBtn id="btn-org-refresh" color="primary" class="mr-4" @click="refresh">
++<VBtn id="org-refresh-btn" color="primary" class="mr-4" @click="refresh">
 +  Refrescar
 +</VBtn>
-+<VBtn id="btn-org-new" color="success" @click="newOrganization()">
++<VBtn id="org-new-btn" color="success" @click="newOrganization()">
 +  Nueva Organización
 +</VBtn>
 ```
@@ -360,7 +360,7 @@ Predefined VIcon sizes (relative to parent font):
 -<v-btn class="ml-3" small fab color="blue white--text" id="btn-layout-account">
 -  <v-icon>mdi-account</v-icon>
 -</v-btn>
-+<VBtn id="btn-layout-account" class="ml-3" size="small" color="blue" variant="flat" icon>
++<VBtn id="lay-account-btn" class="ml-3" size="small" color="blue" variant="flat" icon>
 +  <VIcon color="white">mdi-account</VIcon>
 +</VBtn>
 ```

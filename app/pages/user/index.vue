@@ -2,15 +2,15 @@
   <VContainer :fluid="true">
     <VRow>
       <VCol cols="12" sm="6" md="2">
-        <VTextField id="tf-user-index-filteruser-1" v-model="filterInput" append-inner-icon="mdi-magnify" variant="outlined" density="compact" clearable hide-details placeholder="Filtro" />
+        <VTextField id="usr-index-filteruser-tf-1" v-model="filterInput" append-inner-icon="mdi-magnify" variant="outlined" density="compact" clearable hide-details placeholder="Filtro" />
       </VCol>
 
       <VCol cols="auto" class="d-flex align-center">
-        <VBtn id="btn-user-refresh" color="primary" :loading="loading" class="mr-4" @click="refresh">
+        <VBtn id="usr-refresh-btn" color="primary" :loading="loading" class="mr-4" @click="refresh">
           <VIcon start>mdi-reload</VIcon>
           Refrescar
         </VBtn>
-        <VBtn id="btn-user-new" color="success"  @click="newUser()">
+        <VBtn id="usr-new-btn" color="success"  @click="newUser()">
           <VIcon start>mdi-plus</VIcon>
           Nuevo Usuario
         </VBtn>

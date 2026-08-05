@@ -1,51 +1,90 @@
 <template>
   <VContainer :fluid="true">
     <VRow>
-      <VCol cols="12" sm="6" md="2">
-        <VTextField id="tf-organ-index-filterorganization-1" v-model="filterInput" append-inner-icon="mdi-magnify" variant="outlined" density="compact" clearable hide-details placeholder="Filtro" />
+      <VCol md="2" sm="6" cols="12">
+        <VTextField
+          id="org-index-filterorganization-tf-1"
+          v-model="filterInput"
+          clearable
+          hide-details
+          density="compact"
+          variant="outlined"
+          placeholder="Filtro"
+          append-inner-icon="mdi-magnify"
+        />
       </VCol>
 
       <VCol cols="auto" class="d-flex align-center">
-        <VBtn id="btn-org-refresh" color="primary" :loading="loading" class="mr-4" @click="refresh">
+        <VBtn
+          id="org-refresh-btn"
+          class="mr-4"
+          color="primary"
+          :loading="loading"
+          @click="refresh"
+        >
           <VIcon start>mdi-reload</VIcon>
           Refrescar
         </VBtn>
-        <VBtn id="btn-org-new" color="success" @click="newOrganization()">
+        <VBtn id="org-new-btn" color="success" @click="newOrganization()">
           <VIcon start>mdi-plus</VIcon>
           Nueva Organización
         </VBtn>
       </VCol>
 
       <VCol cols="12">
-        <OrganizationTable v-model:dialog-delete="dialogDeleteOrganization" :search="filterOrganization" :response="response" :loading="loading" :highlight-id="highlightId" :removing-id="removingId"          @sorting="handleSorting" @edit="editOrganization" @delete="deleteOrganization" @config="goConfig" />
+        <OrganizationTable
+          v-model:dialog-delete="dialogDeleteOrganization"
+          :loading="loading"
+          :response="response"
+          :removing-id="removingId"
+          :highlight-id="highlightId"
+          :search="filterOrganization"
+          @config="goConfig"
+          @edit="editOrganization"
+          @sorting="handleSorting"
+          @delete="deleteOrganization"
+        />
       </VCol>
     </VRow>
 
-    <OrganizationFormDialog v-if="organizationFormDialog" :organization="organization" :loading="saving" @close="closeFormDialog()" @save="saveOrganization" />
+    <OrganizationFormDialog
+      v-if="organizationFormDialog"
+      :loading="saving"
+      :organization="organization"
+      @save="saveOrganization"
+      @close="closeFormDialog()"
+    />
   </VContainer>
 </template>
 
 <script setup lang="ts">
-import { useRowHighlight } from "~/composables/useRowHighlight"
+import { useRowHighlight } from "~/composables/useRowHighlight";
 
 definePageMeta({
   title: "Organizaciones",
   icon: "mdi-domain",
-  middleware: "authenticated",
-})
+  permission: "organization-index",
+  middleware: ["authenticated", "permission"],
+});
 
-const dialogDeleteOrganization = ref(false)
-const organizationFormDialog = ref(false)
-const response = ref({})
-const filterInput = ref("")
-const filterOrganization = ref("")
-const loading = ref(false)
-const saving = ref(false)
-const organization = ref<Record<string, unknown> | null>(null)
-const lastOptions = ref<Record<string, unknown> | null>(null)
-const { highlightId, prependCreated, updateRow, removingId, removeWithAnimation } = useRowHighlight()
+const dialogDeleteOrganization = ref(false);
+const organizationFormDialog = ref(false);
+const response = ref({});
+const filterInput = ref("");
+const filterOrganization = ref("");
+const loading = ref(false);
+const saving = ref(false);
+const organization = ref<Record<string, unknown> | null>(null);
+const lastOptions = ref<Record<string, unknown> | null>(null);
+const {
+  highlightId,
+  prependCreated,
+  updateRow,
+  removingId,
+  removeWithAnimation,
+} = useRowHighlight();
 
-const { Organization } = useRepository()
+const { Organization } = useRepository();
 
 // Top-level await — loads initial data before render (asyncData equivalent)
 {
@@ -54,120 +93,130 @@ const { Organization } = useRepository()
     itemsPerPage: 5,
     sortBy: ["name"],
     sortDesc: [false],
-  }
-  const initialResponse = await Organization.index(apiParams).catch(() => ({ data: [], total: 0 }))
-  response.value = initialResponse as { data: unknown[]; total: number }
+  };
+  const initialResponse = await Organization.index(apiParams).catch(() => ({
+    data: [],
+    total: 0,
+  }));
+  response.value = initialResponse as { data: unknown[]; total: number };
   lastOptions.value = {
     page: 1,
     itemsPerPage: 5,
     sortBy: [{ key: "name", order: "asc" }],
-  }
+  };
 }
 
-let debounceTimer: ReturnType<typeof setTimeout> | null = null
+let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
 watch(filterInput, (val) => {
-  if (debounceTimer) clearTimeout(debounceTimer)
+  if (debounceTimer) clearTimeout(debounceTimer);
   if (!val) {
-    filterOrganization.value = ""
-    return
+    filterOrganization.value = "";
+    return;
   }
   debounceTimer = setTimeout(() => {
-    filterOrganization.value = val
-  }, 300)
-})
+    filterOrganization.value = val;
+  }, 300);
+});
 
 async function indexOrganizations(opts: Record<string, unknown>) {
-  lastOptions.value = opts
+  lastOptions.value = opts;
   const params: Record<string, unknown> = {
     page: opts.page ?? 1,
     itemsPerPage: opts.itemsPerPage ?? 5,
-  }
-  const sortBy = (opts.sortBy as { key: string; order: string }[]) ?? []
+  };
+  const sortBy = (opts.sortBy as { key: string; order: string }[]) ?? [];
   if (sortBy.length > 0) {
-    params.sortBy = [sortBy[0].key]
-    params.sortDesc = [sortBy[0].order === 'desc']
+    params.sortBy = [sortBy[0].key];
+    params.sortDesc = [sortBy[0].order === "desc"];
   }
   if (filterOrganization.value) {
-    params.filter = filterOrganization.value
+    params.filter = filterOrganization.value;
   }
   try {
-    loading.value = true
-    response.value = await Organization.index(params)
+    loading.value = true;
+    response.value = await Organization.index(params);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 
-let initialLoaded = false
+let initialLoaded = false;
 
 function handleSorting(opts: Record<string, unknown>) {
   if (!initialLoaded) {
     // Suppress mount-time @update:options — data was already loaded by top-level await
-    initialLoaded = true
-    return
+    initialLoaded = true;
+    return;
   }
-  indexOrganizations(opts)
+  indexOrganizations(opts);
 }
 
 function refresh() {
   if (lastOptions.value) {
-    indexOrganizations(lastOptions.value)
+    indexOrganizations(lastOptions.value);
   }
 }
 
 function goConfig(item: Record<string, unknown>) {
-  navigateTo(`/organization/${item.id}/config`)
+  navigateTo(`/organization/${item.id}/config`);
 }
 
 function newOrganization() {
-  useValidationErrors().clearErrors()
-  organization.value = {}
-  organizationFormDialog.value = true
+  useValidationErrors().clearErrors();
+  organization.value = {};
+  organizationFormDialog.value = true;
 }
 
 function editOrganization(item: Record<string, unknown>) {
-  useValidationErrors().clearErrors()
-  organization.value = { ...item }
-  organizationFormDialog.value = true
+  useValidationErrors().clearErrors();
+  organization.value = { ...item };
+  organizationFormDialog.value = true;
 }
 
 async function deleteOrganization(item: Record<string, unknown>) {
   try {
-    await Organization.delete(item.id as number)
-    dialogDeleteOrganization.value = false
-    await removeWithAnimation(response, item.id as number)
+    await Organization.delete(item.id as number);
+    dialogDeleteOrganization.value = false;
+    await removeWithAnimation(response, item.id as number);
   } catch (e) {
-    console.error(e)
+    console.error(e);
   }
 }
 
 async function saveOrganization(item: Record<string, unknown>) {
-  saving.value = true
+  saving.value = true;
   try {
     if (item.id) {
-      const res = await Organization.update<Record<string, unknown>>(item.id as number, item)
-      const updated = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined
+      const res = await Organization.update<Record<string, unknown>>(
+        item.id as number,
+        item,
+      );
+      const updated = (res as Record<string, unknown>)?.data as
+        | Record<string, unknown>
+        | undefined;
       if (updated) {
-        updateRow(response, updated)
+        updateRow(response, updated);
       }
     } else {
-      const res = await Organization.create<Record<string, unknown>>(item)
-      const created = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined
+      const res = await Organization.create<Record<string, unknown>>(item);
+      const created = (res as Record<string, unknown>)?.data as
+        | Record<string, unknown>
+        | undefined;
       if (created) {
-        prependCreated(response, created)
+        prependCreated(response, created);
       }
     }
-    organizationFormDialog.value = false
+    organizationFormDialog.value = false;
   } catch (e) {
-    console.error(e)
+    console.error(e);
   } finally {
-    saving.value = false
+    saving.value = false;
   }
 }
 
 function closeFormDialog() {
-  organizationFormDialog.value = false
-  useValidationErrors().clearErrors()
+  organizationFormDialog.value = false;
+  useValidationErrors().clearErrors();
 }
 </script>

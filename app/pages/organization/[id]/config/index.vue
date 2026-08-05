@@ -34,11 +34,11 @@
               </VCol>
 
               <VCol class="d-flex justify-end pt-4">
-                <VBtn id="btn-orgcfg-cancel" color="primary" variant="outlined" class="mr-4" @click="goBack()">
+                <VBtn id="orgcfg-cancel-btn" color="primary" variant="outlined" class="mr-4" @click="goBack()">
                   <VIcon start>mdi-close</VIcon>
                   Cancelar
                 </VBtn>
-                <VBtn id="btn-orgcfg-save" color="primary" variant="elevated" @click="saveOrganizationConfig()">
+                <VBtn id="orgcfg-save-btn" color="primary" variant="elevated" @click="saveOrganizationConfig()">
                   <VIcon start>mdi-content-save</VIcon>
                   Guardar
                 </VBtn>

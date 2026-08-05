@@ -1,47 +1,47 @@
 <template>
   <VContainer fluid>
     <VRow dense align="center">
-      <VCol cols="12" md="4" sm="6">
+      <VCol md="4" sm="6" cols="12">
         <VTextField
-          id="tf-testi-index-filtertestimony-1"
+          id="tes-index-filtertestimony-tf-1"
           v-model="filterTestimony"
-          prepend-inner-icon="mdi-magnify"
           clearable
           hide-details
           density="compact"
           variant="outlined"
           placeholder="Filtro"
+          prepend-inner-icon="mdi-magnify"
         />
       </VCol>
 
-      <VCol cols="12" md="3" sm="6">
+      <VCol md="3" sm="6" cols="12">
         <MyDateRange v-model="filterDateRange" variant="outlined" />
       </VCol>
 
-      <VCol cols="12" md="2" sm="4">
+      <VCol md="2" sm="4" cols="12">
         <VSelect
-          id="sel-tes-status"
+          id="tes-status-sel"
           v-model="statusFilter"
+          clearable
+          hide-details
+          density="compact"
+          variant="outlined"
+          placeholder="Estado"
           :items="[
             { title: 'Pendientes', value: '' },
             { title: 'Aprobados', value: 'approved' },
             { title: 'Rechazados', value: 'rejected' },
           ]"
-          placeholder="Estado"
-          clearable
-          density="compact"
-          hide-details
-          variant="outlined"
           @update:model-value="onStatusChange"
         />
       </VCol>
 
       <VCol cols="auto" class="d-flex align-center">
-        <VBtn id="btn-testimony-refresh" color="primary" :loading="loading" class="mr-1" @click="refreshTestimonies">
+        <VBtn id="tes-refresh-btn" class="mr-1" color="primary" :loading="loading" @click="refreshTestimonies">
           <VIcon start>mdi-reload</VIcon>
           Refrescar
         </VBtn>
-        <VBtn id="btn-testimony-new" color="success" class="mr-1" @click="newTestimony">
+        <VBtn id="tes-new-btn" class="mr-1" color="success" @click="newTestimony">
           <VIcon start>mdi-plus</VIcon>
           Nuevo
         </VBtn>
@@ -51,32 +51,33 @@
         <OrganizationSelect
           v-model="filterOrgId"
           v-model:hidden="orgFilterHidden"
-          permission="testimony-index"
           hide-one
-          density="compact"
-          hide-details
           clearable
+          hide-details
+          density="compact"
           variant="outlined"
+          prevent-auto-select
+          permission="testimony-index"
         />
       </VCol>
 
       <VCol cols="12">
         <TestimonyTable
-          :response="response"
           :loading="loading"
+          :response="response"
           :search="filterTestimony"
           :highlight-id="highlightId"
-          @sorting="handleSorting"
           @edit="editTestimony"
           @show="showTestimony"
+          @sorting="handleSorting"
           @delete="beforeDeleteTestimony"
         />
       </VCol>
     </VRow>
 
-    <TestimonyDialog v-if="testimonyDialog" :testimony="testimony" :loading="saving" @close="closeDialog" @save="saveTestimony" />
+    <TestimonyDialog v-if="testimonyDialog" :loading="saving" :testimony="testimony" @close="closeDialog" @save="saveTestimony" />
 
-    <DialogDelete v-if="testimonyDialogDelete" :dialog="dialogDelete" :loading="deleting" @ok="deleteTestimony" @close="testimonyDialogDelete = false" />
+    <DialogDelete v-if="testimonyDialogDelete" :loading="deleting" :dialog="dialogDelete" @ok="deleteTestimony" @close="testimonyDialogDelete = false" />
   </VContainer>
 </template>
 
@@ -91,6 +92,7 @@ definePageMeta({
 
 const { Testimony } = useRepository()
 const notify = useNotifyStore()
+const auth = useAuthStore()
 const { highlightId, prependCreated, updateRow } = useRowHighlight()
 
 const filterTestimony = ref("")
@@ -112,6 +114,15 @@ const lastOptions = ref<Record<string, unknown>>({
   page: 1,
   itemsPerPage: 10,
   sortBy: [{ key: "created_at", order: "desc" }],
+})
+
+const effectiveOrgId = computed(() => {
+  const orgPermission = auth.permissionsOrg["testimony-index"] ?? []
+  const orgs = auth.user?.orgs ?? []
+  if (orgs.length === 1 && orgPermission.includes((orgs[0] as { id: unknown }).id)) {
+    return (orgs[0] as { id: unknown }).id
+  }
+  return null
 })
 
 // Initial load (asyncData equivalent)
@@ -143,6 +154,8 @@ watch(filterTestimony, (val) => {
 })
 
 watch(filterOrgId, (value) => {
+  // When user has only 1 org, never send org_id — backend resolves it.
+  if (effectiveOrgId.value !== null) return
   const overrides: Record<string, unknown> = { page: 1 }
   overrides.org_id = value ?? undefined
   loadTestimonies(overrides)
@@ -167,12 +180,6 @@ async function loadTestimonies(overrides: Record<string, unknown> = {}) {
     }
     if (statusFilter.value && !Object.prototype.hasOwnProperty.call(overrides, "status")) {
       requestOptions.status = statusFilter.value
-    }
-    if (filterOrgId.value && !Object.prototype.hasOwnProperty.call(overrides, "org_id")) {
-      requestOptions.org_id = filterOrgId.value
-    }
-    if (Object.prototype.hasOwnProperty.call(overrides, "org_id") && !overrides.org_id) {
-      delete requestOptions.org_id
     }
     if (Object.prototype.hasOwnProperty.call(overrides, "date_from") && !overrides.date_from) {
       delete requestOptions.date_from

@@ -2,7 +2,7 @@
   <VContainer :fluid="true">
     <VRow dense>
       <VCol cols="12" md="8" class="mx-auto">
-        <VCard id="card-psid-main" variant="outlined" class="pa-4">
+        <VCard id="psid-main-card" variant="outlined" class="pa-4">
           <!-- Header -->
           <div class="d-flex align-center mb-4">
             <VIcon start color="primary" class="mr-2">mdi-receipt</VIcon>
@@ -42,7 +42,7 @@
 
           <!-- Items table -->
           <div class="text-subtitle-2 font-weight-bold mb-2">Artículos</div>
-          <VTable id="tbl-psid-items" density="compact">
+          <VTable id="psid-items-tbl" density="compact">
             <thead>
               <tr>
                 <th class="text-left">Producto</th>
@@ -78,7 +78,7 @@
           <VDivider class="my-4" />
 
           <div class="d-flex justify-end">
-            <VBtn id="btn-psid-back" variant="outlined" color="grey" @click="goBack">
+            <VBtn id="psid-back-btn" variant="outlined" color="grey" @click="goBack">
               <VIcon start size="small">mdi-arrow-left</VIcon>
               Regresar
             </VBtn>

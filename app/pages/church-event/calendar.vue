@@ -4,7 +4,7 @@
       <!-- Filtro de busqueda -->
       <VCol cols="12" md="2">
         <VTextField
-          id="tf-churc-calen-filterchurchevent-1"
+          id="eve-calen-filterchurchevent-tf-1"
           v-model="filterChurchEvent"
           append-inner-icon="mdi-magnify"
           clearable
@@ -16,15 +16,15 @@
 
       <!-- Botones de accion -->
       <VCol cols="auto">
-        <VBtn id="btn-chrcev-new" color="primary" class="mr-2" @click="newChurchEvent">
+        <VBtn id="chrcev-new-btn" color="primary" class="mr-2" @click="newChurchEvent">
           <VIcon start>mdi-plus</VIcon>
           Nuevo
         </VBtn>
-        <VBtn id="btn-chrcev-refresh" color="primary" :loading="loading" class="mr-2" @click="refreshChurchEvents">
+        <VBtn id="chrcev-refresh-btn" color="primary" :loading="loading" class="mr-2" @click="refreshChurchEvents">
           <VIcon start>mdi-reload</VIcon>
           Refrescar
         </VBtn>
-        <VBtn id="btn-chrcev-table" variant="outlined" color="primary" to="/church-event">
+        <VBtn id="chrcev-table-btn" variant="outlined" color="primary" to="/church-event">
           <VIcon start>mdi-table</VIcon>
           Tabla
         </VBtn>
@@ -43,8 +43,8 @@
 
       <VCol cols="auto">
         <VBtnToggle v-model="weekStartsOnMonday" mandatory density="compact" @update:model-value="changeWeekStart">
-          <VBtn id="btn-chrcev-sun" :value="false">Dom</VBtn>
-          <VBtn id="btn-chrcev-mon" :value="true">Lun</VBtn>
+          <VBtn id="chrcev-sun-btn" :value="false">Dom</VBtn>
+          <VBtn id="chrcev-mon-btn" :value="true">Lun</VBtn>
         </VBtnToggle>
       </VCol>
 

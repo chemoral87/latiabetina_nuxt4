@@ -3,7 +3,7 @@
     <VContainer>
     <VRow density="comfortable">
       <VCol cols="12" md="5">
-        <VCard id="card-accou-index-1" flat class="mb-3 pa-4" border>
+        <VCard id="acc-index-card-1" flat class="mb-3 pa-4" border>
           <div class="d-flex align-center mb-3">
             <VAvatar color="primary" size="52" class="mr-3">
               <span class="text-white text-h6">{{ initials }}</span>
@@ -13,21 +13,21 @@
               <div class="text-body-2 text-grey">{{ user.email }}</div>
             </div>
           </div>
-          <VBtn id="btn-account-changepw" color="success" variant="elevated" size="small" @click="dialogPassword = true">
+          <VBtn id="acc-changepw-btn" color="success" variant="elevated" size="small" @click="dialogPassword = true">
             <VIcon start size="small">mdi-lock-reset</VIcon>
             Cambiar contraseña
           </VBtn>
         </VCard>
 
-        <VCard id="card-accou-index-toggle" flat class="mb-3 pa-3" border>
+        <VCard id="acc-index-toggle-card" flat class="mb-3 pa-3" border>
           <div class="d-flex align-center" style="gap: 6px">
             <span class="text-caption text-grey">Separado</span>
-            <VSwitch id="sw-acc-combined-view" v-model="combinedView" hide-details density="compact" inset class="mt-0 pt-0" />
+            <VSwitch id="acc-combined-view-sw" v-model="combinedView" hide-details density="compact" inset class="mt-0 pt-0" />
             <span class="text-caption text-grey">Combinado</span>
           </div>
         </VCard>
 
-        <VCard v-if="!combinedView" id="card-accou-index-2" flat border>
+        <VCard v-if="!combinedView" id="acc-index-card-2" flat border>
           <VCardTitle class="text-subtitle-1 font-weight-bold pb-1">
             <VIcon start size="small" color="primary">mdi-redhat</VIcon>
             Roles
@@ -48,7 +48,7 @@
       </VCol>
 
       <VCol cols="12" md="7">
-        <VCard id="card-acc-permissions" flat border height="100%">
+        <VCard id="acc-permissions-card" flat border height="100%">
           <VCardTitle class="text-subtitle-1 font-weight-bold pb-1">
             <span v-if="!combinedView">
               <VIcon start size="small" color="secondary">mdi-key-variant</VIcon>

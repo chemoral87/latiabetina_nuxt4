@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div id="cmp-user-combobox">
     <VAutocomplete
       v-model="model"

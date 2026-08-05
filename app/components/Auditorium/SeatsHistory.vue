@@ -1,11 +1,11 @@
 <template>
-  <VDialog id="dlg-audit-seats-index-localvisible-1" v-model="localVisible" max-width="700" scrollable>
+  <VDialog id="aud-seats-index-localvisible-dlg-1" v-model="localVisible" max-width="700" scrollable>
     <VCard>
       <VCardTitle class="d-flex align-center">
         <VIcon start color="info">mdi-history</VIcon>
         Historial de asientos
         <VSpacer />
-        <VBtn id="btn-aushi-close" icon @click="localVisible = false">
+        <VBtn id="aushi-close-btn" icon @click="localVisible = false">
           <VIcon>mdi-close</VIcon>
         </VBtn>
       </VCardTitle>
@@ -101,7 +101,7 @@
       <VDivider />
       <VCardActions>
         <VSpacer />
-        <VBtn id="btn-aushi-close-btn" text @click="localVisible = false">Cerrar</VBtn>
+        <VBtn id="aushi-close-btn-btn" text @click="localVisible = false">Cerrar</VBtn>
       </VCardActions>
     </VCard>
   </VDialog>

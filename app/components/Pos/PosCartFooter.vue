@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div id="cmp-pos-cart-footer" ref="posFooter" class="pos-footer">
     <div id="pos-footer-toggle-bar" class="pos-footer-toggle-bar" @click="emit('toggle-cart')">
       <div class="d-flex align-center">
@@ -61,7 +61,7 @@
     <div id="pos-footer-bottom" class="pos-footer-bottom">
       <div id="pos-footer-fields-row" class="pos-footer-fields-row">
         <VTextField
-          id="tf-pos-cliente-1"
+          id="pos-cliente-tf-1"
           :model-value="customerName"
           label="Cliente"
           variant="outlined"
@@ -71,7 +71,7 @@
           @update:model-value="emit('update:customerName', $event)"
         />
         <VSelect
-          id="sel-pos-payment-1"
+          id="pos-payment-sel-1"
           :model-value="paymentMethod"
           :items="paymentMethods"
           item-title="text"

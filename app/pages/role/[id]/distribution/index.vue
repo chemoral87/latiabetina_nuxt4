@@ -4,7 +4,7 @@
       <!-- Organization filter -->
       <VCol cols="12" md="3">
         <VSelect
-          id="sel-roldst-org"
+          id="roldst-org-sel"
           v-model="selectedOrganization"
           :items="organizationOptions"
           item-title="name"
@@ -19,17 +19,17 @@
 
       <!-- Profiles with the role -->
       <VCol cols="12">
-        <VCard id="card-roldst-profiles" variant="outlined">
+        <VCard id="roldst-profiles-card" variant="outlined">
           <VCardTitle class="text-subtitle-1 font-weight-medium pb-2">
             <VIcon start size="small" color="primary">mdi-shield-key-outline</VIcon>
             Perfiles con el rol {{ role.name }}
             <VSpacer />
-            <VChip id="chip-rdi-count" color="info" size="small" variant="elevated">{{ filteredProfiles.length }} perfiles</VChip>
+            <VChip id="rdi-count-chip" color="info" size="small" variant="elevated">{{ filteredProfiles.length }} perfiles</VChip>
           </VCardTitle>
 
           <VCardText class="pt-0">
             <VDataTable
-              id="dt-roldst-profiles-1"
+              id="roldst-profiles-dt-1"
               :headers="headers"
               :items="filteredProfiles"
               :items-per-page="10"
@@ -53,9 +53,9 @@
 
       <!-- Actions -->
       <VCol cols="12">
-        <VCard id="card-roldst-actions" variant="outlined">
+        <VCard id="roldst-actions-card" variant="outlined">
           <VCardText class="d-flex justify-end pa-4">
-            <VBtn id="btn-roldst-back" color="primary" variant="outlined" @click="navigateTo('/role')">
+            <VBtn id="roldst-back-btn" color="primary" variant="outlined" @click="navigateTo('/role')">
               <VIcon start>mdi-arrow-left</VIcon>
               Volver
             </VBtn>

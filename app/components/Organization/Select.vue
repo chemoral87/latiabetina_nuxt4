@@ -1,5 +1,5 @@
 <template>
-  <VSelect v-if="showSelect" id="cmp-organization-select" v-model="selected" :items="items" :label="label" item-value="id" item-title="name" :disabled="isDisabled" v-bind="$attrs" />
+  <VSelect v-if="showSelect" :id="id" v-model="selected" :items="items" :label="label" item-value="id" item-title="name" :disabled="isDisabled" v-bind="$attrs" />
 </template>
 
 <script setup lang="ts">
@@ -10,6 +10,7 @@ interface Org {
 }
 
 const props = withDefaults(defineProps<{
+  id?: string
   permission: string
   hideOne?: boolean
   preventAutoSelect?: boolean
@@ -18,6 +19,7 @@ const props = withDefaults(defineProps<{
   disabled?: boolean
   orgs?: Org[]
 }>(), {
+  id: "cmp-organization-select",
   hideOne: false,
   preventAutoSelect: false,
   modelValue: null,
@@ -54,11 +56,20 @@ function buildItems() {
   const filteredOrgs = source.filter((org) => orgIds.includes(org.id))
   items.value = filteredOrgs
 
-  if (filteredOrgs.length === 1 && !props.preventAutoSelect && (props.modelValue === null || props.modelValue === "" || props.modelValue === undefined)) {
-    nextTick(() => {
-      selected.value = filteredOrgs[0].id
+  if (filteredOrgs.length === 1) {
+    // Only one accessible org — hide the selector (hide-one) so the backend
+    // resolves the org from auth context instead of sending org_id. This must
+    // happen regardless of prevent-auto-select.
+    if (props.hideOne) {
       autoDisabled.value = true
-    })
+    }
+    // Auto-select the single org unless explicitly prevented (prevents the
+    // mount-time update:modelValue emit that would fire a duplicate request).
+    if (!props.preventAutoSelect && (props.modelValue === null || props.modelValue === "" || props.modelValue === undefined)) {
+      nextTick(() => {
+        selected.value = filteredOrgs[0].id
+      })
+    }
   }
 }
 

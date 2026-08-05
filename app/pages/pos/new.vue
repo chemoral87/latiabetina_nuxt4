@@ -2,9 +2,9 @@
   <VContainer fluid>
     <VRow justify="center">
       <VCol cols="12" md="8">
-        <VCard id="card-posn-main" variant="outlined" class="pa-4">
+        <VCard id="posn-main-card" variant="outlined" class="pa-4">
           <div class="text-subtitle-1 font-weight-bold mb-4">Nuevo artículo</div>
-          <VForm id="form-posn-main" ref="formRef">
+          <VForm id="posn-main-form" ref="formRef">
             <VRow density="comfortable">
               <VCol v-if="showOrgSelect" cols="12" md="6">
                 <OrganizationSelect
@@ -17,7 +17,7 @@
               </VCol>
               <VCol cols="12" md="6">
                 <VTextField
-                  id="tf-posn-name"
+                  id="posn-name-tf"
                   v-model="product.name"
                   label="Nombre"
                   variant="outlined"
@@ -26,11 +26,11 @@
                 />
               </VCol>
               <VCol cols="12" md="4">
-                <VTextField id="tf-posn-sku" v-model="product.sku" label="SKU" variant="outlined" density="compact" />
+                <VTextField id="posn-sku-tf" v-model="product.sku" label="SKU" variant="outlined" density="compact" />
               </VCol>
               <VCol cols="12" md="4">
                 <VTextField
-                  id="tf-posn-price"
+                  id="posn-price-tf"
                   v-model.number="product.price"
                   label="Precio"
                   type="number"
@@ -41,7 +41,7 @@
               </VCol>
               <VCol cols="12" md="4">
                 <VTextField
-                  id="tf-posn-stock"
+                  id="posn-stock-tf"
                   v-model.number="product.stock"
                   label="Stock"
                   type="number"
@@ -52,7 +52,7 @@
               </VCol>
               <VCol cols="12">
                 <VTextarea
-                  id="ta-posn-description"
+                  id="posn-description-ta"
                   v-model="product.description"
                   label="Descripción"
                   variant="outlined"
@@ -64,8 +64,8 @@
           </VForm>
 
           <div class="d-flex justify-end">
-            <VBtn id="btn-posn-cancel" variant="text" class="mr-4" @click="goBack">Cancelar</VBtn>
-            <VBtn id="btn-posn-save" color="primary" :loading="saving" @click="saveProduct">Guardar</VBtn>
+            <VBtn id="posn-cancel-btn" variant="text" class="mr-4" @click="goBack">Cancelar</VBtn>
+            <VBtn id="posn-save-btn" color="primary" :loading="saving" @click="saveProduct">Guardar</VBtn>
           </div>
         </VCard>
       </VCol>

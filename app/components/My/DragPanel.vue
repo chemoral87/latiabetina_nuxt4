@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div
     v-if="modelValue"
     id="cmp-my-drag-panel"
@@ -18,7 +18,7 @@
         </slot>
         <VSpacer />
         <VBtn
-          id="btn-mydrag-close"
+          id="mydrag-close-btn"
           variant="outlined"
           icon
           size="x-small"

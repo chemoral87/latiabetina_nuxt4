@@ -1,37 +1,37 @@
 <template>
   <VMenu
-    id="cmp-my-date-picker"
+    :id="id"
     ref="dateMenuRef"
     v-model="dateMenu"
-    :close-on-content-click="false"
-    transition="scale-transition"
     offset-y
     min-width="auto"
+    transition="scale-transition"
+    :close-on-content-click="false"
   >
     <template #activator="{ props }">
       <VTextField
-        id="tf-my-datep-formatteddate-1"
-        :model-value="formattedDate"
-        :label="label"
-        :prepend-inner-icon="prependIcon"
+        id="my-datep-formatteddate-tf-1"
         readonly
-        :required="required"
+        :label="label"
         :rules="rules"
-        :error-messages="errorMessages"
         v-bind="props"
+        :disabled="disabled"
+        :required="required"
+        :clearable="clearable"
+        :hide-details="hideDetails"
+        :model-value="formattedDate"
+        :error-messages="errorMessages"
+        :prepend-inner-icon="prependIcon"
         :density="density ?? (dense ? 'compact' : undefined)"
         :variant="variant ?? (outlined ? 'outlined' : undefined)"
-        :hide-details="hideDetails"
-        :disabled="disabled"
-        :clearable="clearable"
       />
     </template>
 
-    <VCard elevation="4" rounded="lg" class="my-date-picker">
-      <VDatePickerControls :view-mode="viewMode" :disabled="disabled">
+    <VCard rounded="lg" elevation="4" class="my-date-picker">
+      <VDatePickerControls :disabled="disabled" :view-mode="viewMode">
         <template #default="controls">
           <VBtn
-            id="btn-my-datepicker-prev"
+            id="my-datepicker-prev-btn"
             icon
             variant="text"
             color="primary"
@@ -42,9 +42,9 @@
           </VBtn>
           <VSpacer />
           <VBtn
-            id="btn-my-datepicker-title"
-            variant="text"
+            id="my-datepicker-title-btn"
             rounded
+            variant="text"
             class="text-subtitle-1 font-weight-bold text-none px-2"
             @click="onTitleClick"
           >
@@ -52,7 +52,7 @@
           </VBtn>
           <VSpacer />
           <VBtn
-            id="btn-my-datepicker-next"
+            id="my-datepicker-next-btn"
             icon
             variant="text"
             color="primary"
@@ -66,48 +66,48 @@
 
       <VDatePickerMonth
         v-if="viewMode === 'month'"
-        :model-value="selectedModel"
-        :month="displayMonth"
-        :year="displayYear"
-        :min="minDate"
-        :max="maxDate"
-        :first-day-of-week="firstDayOfWeek"
-        :show-adjacent-months="scrollable"
         :color="color"
+        :max="maxDate"
+        :min="minDate"
+        :year="displayYear"
         :disabled="disabled"
-        weeks-in-month="static"
+        :month="displayMonth"
         weekday-format="short"
+        weeks-in-month="static"
+        :model-value="selectedModel"
+        :show-adjacent-months="scrollable"
+        :first-day-of-week="firstDayOfWeek"
+        @update:year="onYearUpdate"
         @update:model-value="pickDay"
         @update:month="onMonthUpdate"
-        @update:year="onYearUpdate"
       />
       <VDatePickerMonths
         v-else-if="viewMode === 'months'"
-        :model-value="highlightMonth"
-        :year="displayYear"
-        :min="minDate"
-        :max="maxDate"
         :columns="3"
-        :height="gridHeight"
         :color="color"
+        :max="maxDate"
+        :min="minDate"
+        :year="displayYear"
+        :height="gridHeight"
+        :model-value="highlightMonth"
         @update:model-value="pickMonth"
       />
       <VDatePickerYears
         v-else
-        :model-value="highlightYear"
-        :min="minDate"
-        :max="maxDate"
-        :height="gridHeight"
         :color="color"
+        :max="maxDate"
+        :min="minDate"
+        :height="gridHeight"
+        :model-value="highlightYear"
         @update:model-value="pickYear"
       />
 
       <VDivider />
       <div class="d-flex justify-space-between pa-2">
-        <VBtn id="btn-my-datepicker-clear" variant="outlined" color="primary" prepend-icon="mdi-close" @click="onClear">
+        <VBtn id="my-datepicker-clear-btn" color="primary" variant="outlined" prepend-icon="mdi-close" @click="onClear">
           LIMPIAR
         </VBtn>
-        <VBtn id="btn-my-datepicker-today" variant="flat" color="primary" prepend-icon="mdi-calendar" @click="onToday">
+        <VBtn id="my-datepicker-today-btn" variant="flat" color="primary" prepend-icon="mdi-calendar" @click="onToday">
           HOY
         </VBtn>
       </div>
@@ -119,6 +119,7 @@
 import { formatShortDateSlash, capitalizeFirst } from "~/utils/date"
 
 const props = withDefaults(defineProps<{
+  id?: string
   modelValue?: Date | string | null
   label?: string
   placeholder?: string
@@ -141,6 +142,7 @@ const props = withDefaults(defineProps<{
   firstDayOfWeek?: number | string
   gridHeight?: number | string
 }>(), {
+  id: "cmp-my-date-picker",
   modelValue: null,
   label: "Fecha",
   placeholder: "Selecciona una fecha",

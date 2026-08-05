@@ -2,12 +2,12 @@
   <VContainer fluid>
     <VRow dense>
       <VCol v-if="sheet.id" cols="12">
-        <VCard id="card-conso-detai-1" variant="outlined" class="mb-3">
+        <VCard id="con-detai-card-1" variant="outlined" class="mb-3">
           <VCardTitle class="text-subtitle-1 font-weight-bold d-flex align-center">
             <VIcon start>mdi-clipboard-list</VIcon>
             Consolidado #{{ sheet.folio_number }}
             <VSpacer />
-            <VBtn id="btn-cnsld-save-sheet" color="primary" size="small" :loading="savingSheet" :disabled="!isDirty || savingSheet" @click="saveSheet">
+            <VBtn id="cnsld-save-sheet-btn" color="primary" size="small" :loading="savingSheet" :disabled="!isDirty || savingSheet" @click="saveSheet">
               <VIcon start size="small">mdi-content-save</VIcon>
               Guardar
             </VBtn>
@@ -52,7 +52,7 @@
               </VCol>
               <VCol cols="12" md="2">
                 <VAutocomplete
-                  id="ac-det-consolidator"
+                  id="det-consolidator-ac"
                   v-model="sheet.consolidator_id"
                   :items="users"
                   item-title="name"
@@ -68,7 +68,7 @@
               </VCol>
               <VCol cols="12" md="2">
                 <VSelect
-                  id="sel-det-first-church"
+                  id="det-first-church-sel"
                   v-model="sheet.first_time_christian_church"
                   :items="[{ title: 'SI', value: true }, { title: 'NO', value: false }]"
                   label="¿Primera vez en iglesia cristiana?"
@@ -86,7 +86,7 @@
 
               <VCol cols="12" md="6" class="mt-1">
                 <VTextarea
-                  id="ta-det-comments"
+                  id="det-comments-ta"
                   v-model="sheet.comments"
                   label="Comentarios"
                   variant="outlined"
@@ -100,7 +100,7 @@
               </VCol>
               <VCol cols="12" md="6" class="mt-1">
                 <VTextarea
-                  id="ta-det-special-request"
+                  id="det-special-request-ta"
                   v-model="sheet.special_request"
                   label="Petición especial"
                   rows="2"
@@ -118,7 +118,7 @@
 
       <VCol cols="12" md="4">
         <VTextField
-          id="tf-conso-detai-filterterm-2"
+          id="con-detai-filterterm-tf-2"
           v-model="filterTerm"
           append-inner-icon="mdi-magnify"
           clearable
@@ -128,11 +128,11 @@
         />
       </VCol>
       <VCol cols="12" md="4">
-        <VBtn id="btn-cnsld-new-member" color="primary" class="mr-1" @click="newMember">
+        <VBtn id="cnsld-new-member-btn" color="primary" class="mr-1" @click="newMember">
           <VIcon start>mdi-plus</VIcon>
           Nuevo Miembro
         </VBtn>
-        <VBtn id="btn-cnsld-refresh" color="primary" :loading="loading" @click="fetchMembers">
+        <VBtn id="cnsld-refresh-btn" color="primary" :loading="loading" @click="fetchMembers">
           <VIcon start>mdi-reload</VIcon>
           Refrescar
         </VBtn>

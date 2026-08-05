@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div id="cmp-pos-product-list">
     <div class="pos-list-header d-flex align-center">
       <div class="pos-list-col-thumb"></div>

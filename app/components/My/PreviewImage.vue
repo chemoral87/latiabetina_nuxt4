@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <VExpandTransition id="cmp-my-preview-image">
     <div v-if="loading || isWaiting" class="image-loading-wrapper">
       <VProgressCircular indeterminate color="primary" :size="size" />

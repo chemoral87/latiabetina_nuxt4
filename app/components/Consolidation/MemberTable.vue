@@ -1,6 +1,6 @@
 <template>
   <VDataTable
-    id="dt-conso-membe-members-1"
+    id="con-membe-members-dt-1"
     :headers="headers"
     :items="members"
     :loading="loading"
@@ -13,7 +13,7 @@
     <template #[`item.actions`]="{ item }">
       <div class="d-flex flex-nowrap justify-center">
         <VBtn
-          id="btn-consolidation-membertable-edit"
+          id="con-membertable-edit-btn"
           title="Editar"
           color="primary"
           variant="outlined"
@@ -27,7 +27,7 @@
         </VBtn>
 
         <VBtn
-          id="btn-consolidation-membertable-delete"
+          id="con-membertable-delete-btn"
           title="Eliminar"
           color="error"
           variant="outlined"

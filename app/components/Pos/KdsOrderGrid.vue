@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <VRow id="cmp-pos-kds-order-grid">
     <VCol
       v-for="order in activeOrders"

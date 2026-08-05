@@ -2,7 +2,7 @@
   <VContainer :fluid="true">
     <VRow dense>
       <VCol cols="12" md="8" class="mx-auto">
-        <VCard id="card-psed-main" variant="outlined" class="pa-4">
+        <VCard id="psed-main-card" variant="outlined" class="pa-4">
           <!-- Header -->
           <div class="d-flex align-center mb-4">
             <VIcon start color="warning" class="mr-2">mdi-pencil</VIcon>
@@ -18,7 +18,7 @@
           <VRow dense>
             <VCol cols="12" sm="6">
               <VTextField
-                id="tf-psed-customer-name"
+                id="psed-customer-name-tf"
                 v-model="form.customer_name"
                 label="Cliente"
                 prepend-inner-icon="mdi-account"
@@ -29,7 +29,7 @@
             </VCol>
             <VCol cols="12" sm="6">
               <VTextField
-                id="tf-psed-customer-phone"
+                id="psed-customer-phone-tf"
                 v-model="form.customer_phone"
                 label="Teléfono"
                 prepend-inner-icon="mdi-phone"
@@ -48,7 +48,7 @@
             Artículos
           </div>
 
-          <VTable id="tbl-psed-items" density="compact">
+          <VTable id="psed-items-tbl" density="compact">
             <thead>
               <tr>
                 <th class="text-left">Producto</th>
@@ -154,11 +154,11 @@
 
           <!-- Actions -->
           <div class="d-flex justify-end gap-2">
-            <VBtn id="btn-psed-cancel" variant="outlined" color="grey" class="mr-2" :disabled="saving" @click="goBack">
+            <VBtn id="psed-cancel-btn" variant="outlined" color="grey" class="mr-2" :disabled="saving" @click="goBack">
               <VIcon start size="small">mdi-arrow-left</VIcon>
               Cancelar
             </VBtn>
-            <VBtn id="btn-psed-save" color="warning" :loading="saving" @click="saveSale">
+            <VBtn id="psed-save-btn" color="warning" :loading="saving" @click="saveSale">
               <VIcon start size="small">mdi-content-save</VIcon>
               Guardar cambios
             </VBtn>

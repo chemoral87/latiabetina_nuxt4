@@ -4,7 +4,7 @@
       <!-- Organization filter -->
       <VCol cols="12" md="3">
         <VSelect
-          id="sel-permdst-org"
+          id="permdst-org-sel"
           v-model="selectedOrganization"
           :items="organizationOptions"
           item-title="name"
@@ -19,17 +19,17 @@
 
       <!-- Roles with the permission -->
       <VCol cols="12">
-        <VCard id="card-permdst-roles" variant="outlined">
+        <VCard id="permdst-roles-card" variant="outlined">
           <VCardTitle class="text-subtitle-1 font-weight-medium pb-2">
             <VIcon start size="small" color="primary">mdi-redhat</VIcon>
             Roles con el permiso {{ permission.name }}
             <VSpacer />
-            <VChip id="chip-pdi-count" color="info" size="small" variant="elevated">{{ filteredRoles.length }} roles</VChip>
+            <VChip id="pdi-count-chip" color="info" size="small" variant="elevated">{{ filteredRoles.length }} roles</VChip>
           </VCardTitle>
 
           <VCardText class="pt-0">
             <VDataTable
-              id="dt-permdst-roles-1"
+              id="permdst-roles-dt-1"
               :headers="headers"
               :items="filteredRoles"
               :items-per-page="10"
@@ -47,9 +47,9 @@
 
       <!-- Actions -->
       <VCol cols="12">
-        <VCard id="card-permdst-actions" variant="outlined">
+        <VCard id="permdst-actions-card" variant="outlined">
           <VCardText class="d-flex justify-end pa-4">
-            <VBtn id="btn-permdst-back" color="primary" variant="outlined" @click="navigateTo('/permission')">
+            <VBtn id="permdst-back-btn" color="primary" variant="outlined" @click="navigateTo('/permission')">
               <VIcon start>mdi-arrow-left</VIcon>
               Volver
             </VBtn>

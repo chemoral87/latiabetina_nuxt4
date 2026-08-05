@@ -1,11 +1,11 @@
 <template>
-  <VDialog id="dlg-conso-membe-1" :model-value="true" persistent max-width="600px">
+  <VDialog id="con-membe-dlg-1" :model-value="true" persistent max-width="600px">
     <VCard>
       <VCardTitle class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center">
         <VIcon start size="small" color="primary">{{ iconTitle }}</VIcon>
         {{ formTitle }}
         <VSpacer />
-        <VBtn id="btn-consolidation-memberdialog-close" icon size="x-small" :disabled="loading" @click="close">
+        <VBtn id="con-memberdialog-close-btn" icon size="x-small" :disabled="loading" @click="close">
           <VIcon>mdi-close</VIcon>
         </VBtn>
       </VCardTitle>
@@ -15,7 +15,7 @@
           <VRow dense>
             <VCol cols="12" md="4">
               <VTextField
-                id="tf-conso-membe-item-name-1"
+                id="con-membe-item-name-tf-1"
                 v-model="item.name"
                 label="Nombre"
                 :disabled="loading"
@@ -64,7 +64,7 @@
             </VCol>
             <VCol cols="12" md="4">
               <VTextField
-                id="tf-conso-membe-item-cellphone-6"
+                id="con-membe-item-cellphone-tf-6"
                 v-model="item.cellphone"
                 label="Celular"
                 :disabled="loading"
@@ -82,7 +82,7 @@
             </VCol>
             <VCol cols="12">
               <VTextField
-                id="tf-conso-membe-item-address-7"
+                id="con-membe-item-address-tf-7"
                 v-model="item.address"
                 label="Dirección"
                 :disabled="loading"
@@ -94,11 +94,11 @@
       </VCardText>
 
       <div class="d-flex justify-end px-4 pb-4">
-        <VBtn id="btn-consolidation-memberdialog-cancel" color="primary" variant="outlined" class="mr-4" :disabled="loading" @click="close">
+        <VBtn id="con-memberdialog-cancel-btn" color="primary" variant="outlined" class="mr-4" :disabled="loading" @click="close">
           <VIcon start>mdi-close</VIcon>
           Cancelar
         </VBtn>
-        <VBtn id="btn-consolidation-memberdialog-save" color="primary" variant="elevated" :loading="loading" :disabled="!isValid || loading" @click="save">
+        <VBtn id="con-memberdialog-save-btn" color="primary" variant="elevated" :loading="loading" :disabled="!isValid || loading" @click="save">
           <VIcon start>mdi-content-save</VIcon>
           Guardar
         </VBtn>

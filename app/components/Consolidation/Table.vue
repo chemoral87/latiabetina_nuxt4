@@ -1,6 +1,6 @@
 <template>
   <VDataTableServer
-    id="dt-conso-table-items-1"
+    id="con-table-items-dt-1"
     v-model:page="page"
     v-model:items-per-page="itemsPerPage"
     v-model:sort-by="sortBy"
@@ -21,7 +21,7 @@
     <template #[`item.actions`]="{ item }">
       <div class="d-flex flex-nowrap justify-center">
         <VBtn
-          id="btn-consolidation-table-view"
+          id="con-table-view-btn"
           title="Detalles"
           color="success"
           variant="outlined"
@@ -35,7 +35,7 @@
         </VBtn>
 
         <VBtn
-          id="btn-consolidation-table-edit"
+          id="con-table-edit-btn"
           title="Editar"
           color="primary"
           variant="outlined"
@@ -49,7 +49,7 @@
         </VBtn>
 
         <VBtn
-          id="btn-consolidation-table-delete"
+          id="con-table-delete-btn"
           title="Eliminar"
           color="error"
           variant="outlined"

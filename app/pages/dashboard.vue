@@ -1,6 +1,6 @@
 <template>
   <VContainer :fluid="true">
-    <VCard id="card-dashboard" flat class="pa-4" border>
+    <VCard id="dashboard-card" flat class="pa-4" border>
       <span class="text-h6">Bienvenidos</span>
       <VRow>
         <ClientOnly>

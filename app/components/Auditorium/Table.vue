@@ -1,7 +1,7 @@
-<template>
+﻿<template>
   <div id="cmp-auditorium-table">
     <VDataTableServer
-      id="dt-audit-table-items-1"
+      id="aud-table-items-dt-1"
       v-model:page="page"
       v-model:items-per-page="itemsPerPage"
       v-model:sort-by="sortBy"
@@ -21,13 +21,13 @@
       @update:options="onUpdateOptions"
     >
       <template #[`item.actions`]="{ item }">
-        <VBtn id="btn-auditorium-table-edit" title="Editar" class="ma-1" color="primary" variant="outlined" size="small" icon rounded="circle" @click="emitEdit(item)">
+        <VBtn id="aud-table-edit-btn" title="Editar" class="ma-1" color="primary" variant="outlined" size="small" icon rounded="circle" @click="emitEdit(item)">
           <VIcon size="x-large">mdi-pencil</VIcon>
         </VBtn>
-        <VBtn id="btn-auditorium-table-layout" title="Editar Auditorio" class="ma-1" color="success" variant="outlined" size="small" icon rounded="circle" @click="emitLayout(item)">
+        <VBtn id="aud-table-layout-btn" title="Editar Auditorio" class="ma-1" color="success" variant="outlined" size="small" icon rounded="circle" @click="emitLayout(item)">
           <VIcon size="x-large">mdi-seat</VIcon>
         </VBtn>
-        <VBtn id="btn-auditorium-table-delete" title="Eliminar" class="ma-1" color="error" variant="outlined" size="small" icon rounded="circle" @click="confirmDelete(item)">
+        <VBtn id="aud-table-delete-btn" title="Eliminar" class="ma-1" color="error" variant="outlined" size="small" icon rounded="circle" @click="confirmDelete(item)">
           <VIcon size="x-large">mdi-delete</VIcon>
         </VBtn>
       </template>

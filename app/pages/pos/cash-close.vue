@@ -20,7 +20,7 @@
       <!-- Summary Cards -->
       <VRow density="comfortable" class="mb-4">
         <VCol cols="12" sm="4">
-          <VCard id="card-posc-cash" variant="outlined" class="cash-close-card cash-close-card--cash">
+          <VCard id="posc-cash-card" variant="outlined" class="cash-close-card cash-close-card--cash">
             <div class="d-flex align-center mb-2">
               <VIcon color="green-darken-1" class="mr-2">mdi-cash</VIcon>
               <span class="text-subtitle-2 font-weight-bold">Efectivo</span>
@@ -32,7 +32,7 @@
           </VCard>
         </VCol>
         <VCol cols="12" sm="4">
-          <VCard id="card-posc-card" variant="outlined" class="cash-close-card cash-close-card--card">
+          <VCard id="posc-card-card" variant="outlined" class="cash-close-card cash-close-card--card">
             <div class="d-flex align-center mb-2">
               <VIcon color="blue-darken-1" class="mr-2">mdi-credit-card</VIcon>
               <span class="text-subtitle-2 font-weight-bold">Tarjeta</span>
@@ -44,7 +44,7 @@
           </VCard>
         </VCol>
         <VCol cols="12" sm="4">
-          <VCard id="card-posc-transfer" variant="outlined" class="cash-close-card cash-close-card--transfer">
+          <VCard id="posc-transfer-card" variant="outlined" class="cash-close-card cash-close-card--transfer">
             <div class="d-flex align-center mb-2">
               <VIcon color="purple-darken-1" class="mr-2">mdi-bank-transfer</VIcon>
               <span class="text-subtitle-2 font-weight-bold">Transferencia</span>
@@ -58,7 +58,7 @@
       </VRow>
 
       <!-- Total row -->
-      <VCard id="card-posc-total" variant="outlined" class="cash-close-total-card mb-6">
+      <VCard id="posc-total-card" variant="outlined" class="cash-close-total-card mb-6">
         <div class="d-flex align-center justify-space-between">
           <div>
             <div class="text-caption text-grey">Total del día</div>
@@ -76,8 +76,8 @@
         <span class="text-subtitle-1 font-weight-bold">Totales por producto</span>
       </div>
 
-      <VCard id="card-posc-products" variant="outlined" class="mb-6">
-        <VTable id="tbl-posc-products" density="compact">
+      <VCard id="posc-products-card" variant="outlined" class="mb-6">
+        <VTable id="posc-products-tbl" density="compact">
           <thead>
             <tr>
               <th class="text-left">Producto</th>
@@ -122,7 +122,7 @@
         <span class="text-subtitle-1 font-weight-bold">Detalle de ventas</span>
       </div>
       <VCard variant="outlined">
-        <VTable id="tbl-posc-sales" density="compact">
+        <VTable id="posc-sales-tbl" density="compact">
           <thead>
             <tr>
               <th class="text-left">Venta</th>

@@ -10,11 +10,11 @@
       </VCol>
 
       <VCol cols="12" class="d-flex justify-end">
-        <VBtn id="btn-useprf-cancel" color="primary" variant="outlined" class="mr-4" @click="back()">
+        <VBtn id="useprf-cancel-btn" color="primary" variant="outlined" class="mr-4" @click="back()">
           <VIcon start>mdi-close</VIcon>
           Cancelar
         </VBtn>
-        <VBtn id="btn-useprf-save" color="primary" variant="elevated" @click="saveProfileRolesPermissions()">
+        <VBtn id="useprf-save-btn" color="primary" variant="elevated" @click="saveProfileRolesPermissions()">
           <VIcon start>mdi-content-save</VIcon>
           Guardar
         </VBtn>

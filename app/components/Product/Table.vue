@@ -1,7 +1,7 @@
-<template>
+﻿<template>
   <div id="cmp-product-table">
     <VDataTableServer
-      id="dt-product-table-items-1"
+      id="prd-table-items-dt-1"
       v-model:page="page"
       v-model:items-per-page="itemsPerPage"
       v-model:sort-by="sortBy"
@@ -38,7 +38,7 @@
 
       <template #[`item.actions`]="{ item }">
         <VBtn
-          id="btn-product-table-edit"
+          id="prd-table-edit-btn"
           title="Editar"
           class="ma-1"
           color="primary"
@@ -51,7 +51,7 @@
           <VIcon size="x-large">mdi-pencil</VIcon>
         </VBtn>
         <VBtn
-          id="btn-product-table-delete"
+          id="prd-table-delete-btn"
           title="Eliminar"
           class="ma-1"
           color="error"

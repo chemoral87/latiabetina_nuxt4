@@ -1,7 +1,7 @@
-<template>
+﻿<template>
   <div v-if="quantity === 0" id="cmp-pos-product-controls" class="pos-ctrl-empty">
     <VBtn
-      id="btn-pos-controls-add"
+      id="pos-controls-add-btn"
       icon
       rounded="circle"
       variant="flat"

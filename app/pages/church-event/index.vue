@@ -2,29 +2,29 @@
   <VContainer :fluid="true">
     <VRow density="comfortable">
       <!-- Filtro de busqueda -->
-      <VCol cols="12" md="2">
+      <VCol md="2" cols="12">
         <VTextField
-          id="tf-churc-index-filterchurchevent-1"
+          id="eve-index-filterchurchevent-tf-1"
           v-model="filterChurchEvent"
-          append-inner-icon="mdi-magnify"
           clearable
           hide-details
-          placeholder="Buscar evento..."
           density="compact"
+          placeholder="Buscar evento..."
+          append-inner-icon="mdi-magnify"
         />
       </VCol>
 
       <!-- Botones de accion -->
       <VCol cols="auto" class="d-flex align-center">
-        <VBtn id="btn-chrcev-refresh" color="primary" :loading="loading" class="mr-1" @click="refreshChurchEvents">
+        <VBtn id="chrcev-refresh-btn" class="mr-1" color="primary" :loading="loading" @click="refreshChurchEvents">
           <VIcon start>mdi-reload</VIcon>
           Refrescar
         </VBtn>
-        <VBtn id="btn-chrcev-new" color="success" class="mr-1" @click="newChurchEvent">
+        <VBtn id="chrcev-new-btn" class="mr-1" color="success" @click="newChurchEvent">
           <VIcon start>mdi-plus</VIcon>
           Nuevo
         </VBtn>
-        <VBtn id="btn-chrcev-calendar" variant="outlined" color="primary" to="/church-event/calendar">
+        <VBtn id="chrcev-calendar-btn" color="primary" variant="outlined" to="/church-event/calendar">
           <VIcon start>mdi-calendar-month</VIcon>
           Calendario
         </VBtn>
@@ -33,34 +33,35 @@
         <OrganizationSelect
           v-model="filterOrgId"
           v-model:hidden="orgFilterHidden"
-          permission="church-event-index"
           hide-one
-          density="compact"
-          hide-details
           clearable
+          hide-details
+          density="compact"
           variant="outlined"
+          prevent-auto-select
+          permission="church-event-index"
         />
       </VCol>
 
       <!-- Tabla de eventos -->
       <VCol cols="12">
         <ChurchEventTable
-          :response="response"
           :loading="loading"
+          :response="response"
           :search="filterChurchEvent"
-          @sorting="handleSorting"
-          @edit="editChurchEvent"
-          @delete="beforeDeleteChurchEvent"
           @copy="openCopyDialog"
+          @edit="editChurchEvent"
+          @sorting="handleSorting"
+          @delete="beforeDeleteChurchEvent"
         />
       </VCol>
     </VRow>
 
     <!-- Dialogo de copiar evento en varias fechas -->
-    <ChurchEventCopyDialog v-if="churchEventDialogCopy" :church-event="copyingChurchEvent" :loading="copying" @copy="copyChurchEvent" @close="churchEventDialogCopy = false" />
+    <ChurchEventCopyDialog v-if="churchEventDialogCopy" :loading="copying" :church-event="copyingChurchEvent" @copy="copyChurchEvent" @close="churchEventDialogCopy = false" />
 
     <!-- Dialogo de confirmacion de eliminacion -->
-    <DialogDelete v-if="churchEventDialogDelete" :dialog="dialogDelete" :loading="deleting" @ok="deleteChurchEvent" @close="churchEventDialogDelete = false" />
+    <DialogDelete v-if="churchEventDialogDelete" :loading="deleting" :dialog="dialogDelete" @ok="deleteChurchEvent" @close="churchEventDialogDelete = false" />
   </VContainer>
 </template>
 
@@ -109,6 +110,7 @@ function getEffectiveOrgId() {
 const effectiveOrgId = getEffectiveOrgId()
 
 // Initial load (asyncData equivalent)
+// NOTE: no org_id here — backend resolves the org from auth context.
 {
   const apiParams: Record<string, unknown> = {
     page: 1,
@@ -116,7 +118,6 @@ const effectiveOrgId = getEffectiveOrgId()
     sortBy: ["event_date"],
     sortDesc: [true],
   }
-  if (effectiveOrgId) apiParams.org_id = effectiveOrgId
   const initialResponse = await ChurchEvent.index(apiParams).catch(() => ({ data: [], total: 0 }))
   response.value = normalizeResponse(initialResponse)
 }
@@ -146,13 +147,9 @@ watch(filterChurchEvent, (val) => {
   }, 500)
 })
 
-let initialOrgLoadDone = false
-
 watch(filterOrgId, (value) => {
-  if (!initialOrgLoadDone) {
-    initialOrgLoadDone = true
-    return
-  }
+  // When user has only 1 org, never send org_id — backend resolves it.
+  if (effectiveOrgId) return
   const overrides: Record<string, unknown> = { page: 1 }
   overrides.org_id = value ?? undefined
   loadChurchEvents(overrides)
@@ -166,14 +163,6 @@ async function loadChurchEvents(overrides: Record<string, unknown> = {}) {
 
     if (filterChurchEvent.value && !Object.prototype.hasOwnProperty.call(overrides, "filter")) {
       requestOptions.filter = filterChurchEvent.value
-    }
-
-    if (filterOrgId.value && !Object.prototype.hasOwnProperty.call(overrides, "org_id")) {
-      requestOptions.org_id = filterOrgId.value
-    }
-
-    if (Object.prototype.hasOwnProperty.call(overrides, "org_id") && !overrides.org_id) {
-      delete requestOptions.org_id
     }
 
     const params = buildApiParams(requestOptions)

@@ -1,11 +1,11 @@
 <template>
-  <VDialog id="dlg-churc-copyd-1" :model-value="true" persistent max-width="560px">
+  <VDialog id="eve-copyd-dlg-1" :model-value="true" persistent max-width="560px">
     <VCard>
       <VCardTitle class="d-flex align-center">
         <VIcon class="mr-2">mdi-content-copy</VIcon>
         <span class="text-h5">Copiar Evento</span>
         <VSpacer />
-        <VBtn id="btn-churchevent-copydialog-close" icon :disabled="loading" @click="close">
+        <VBtn id="eve-copydialog-close-btn" icon :disabled="loading" @click="close">
           <VIcon>mdi-close</VIcon>
         </VBtn>
       </VCardTitle>
@@ -16,8 +16,8 @@
         </p>
 
         <VBtnToggle v-model="mode" mandatory density="compact" class="mb-4">
-          <VBtn id="btn-churchevent-copydialog-mode-dates" value="dates" size="small">Por calendario</VBtn>
-          <VBtn id="btn-churchevent-copydialog-mode-recurrence" value="recurrence" size="small">Por rango y días</VBtn>
+          <VBtn id="eve-copydialog-mode-dates-btn" value="dates" size="small">Por calendario</VBtn>
+          <VBtn id="eve-copydialog-mode-recurrence-btn" value="recurrence" size="small">Por rango y días</VBtn>
         </VBtnToggle>
 
         <template v-if="mode === 'dates'">
@@ -98,10 +98,10 @@
       </VCardText>
 
       <div class="d-flex justify-end px-4 pb-4">
-        <VBtn id="btn-churchevent-copydialog-cancel" color="primary" variant="text" :disabled="loading" @click="close">
+        <VBtn id="eve-copydialog-cancel-btn" color="primary" variant="text" :disabled="loading" @click="close">
           Cancelar
         </VBtn>
-        <VBtn id="btn-churchevent-copydialog-copy" color="primary" variant="elevated" :loading="loading" :disabled="!canCopy" @click="copy">
+        <VBtn id="eve-copydialog-copy-btn" color="primary" variant="elevated" :loading="loading" :disabled="!canCopy" @click="copy">
           <VIcon start size="small">mdi-content-copy</VIcon>
           Copiar
         </VBtn>

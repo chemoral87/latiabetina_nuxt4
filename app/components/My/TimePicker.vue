@@ -1,8 +1,8 @@
-<template>
+﻿<template>
   <VMenu id="cmp-my-time-picker" ref="timeMenuRef" v-model="timeMenu" :close-on-content-click="false" transition="scale-transition" offset-y :disabled="disabled">
     <template #activator="{ props: menuProps }">
       <VTextField
-        id="tf-my-timep-label-1"
+        id="my-timep-label-tf-1"
         ref="inputField"
         :model-value="displayValue"
         :label="label"
@@ -18,7 +18,7 @@
       />
     </template>
 
-    <VCard id="card-my-timep-1" min-width="auto">
+    <VCard id="my-timep-card-1" min-width="auto">
       <VRow no-gutters>
         <!-- Hours column -->
         <VCol cols="4" class="tp-col">
@@ -43,11 +43,11 @@
       </VRow>
 
       <div class="d-flex justify-end px-4 pb-4 pt-2">
-        <VBtn id="btn-my-timepicker-clear" color="primary" variant="outlined" class="mr-4" @click="clearTime">
+        <VBtn id="my-timepicker-clear-btn" color="primary" variant="outlined" class="mr-4" @click="clearTime">
           <VIcon start>mdi-close</VIcon>
           Limpiar
         </VBtn>
-        <VBtn id="btn-my-timepicker-confirm" color="primary" variant="elevated" @click="confirmTime">
+        <VBtn id="my-timepicker-confirm-btn" color="primary" variant="elevated" @click="confirmTime">
           <VIcon start>mdi-check</VIcon>
           OK
         </VBtn>

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div id="cmp-my-uploadimage">
     <input
       ref="fileInput"
@@ -8,7 +8,7 @@
       @change="onFileSelected"
     />
 
-    <VBtn id="btn-my-uploadimage-pick" size="small" color="primary" :loading="loading" @click="triggerFilePicker">
+    <VBtn id="my-uploadimage-pick-btn" size="small" color="primary" :loading="loading" @click="triggerFilePicker">
       <VIcon start>mdi-camera</VIcon>
       {{ label || 'Seleccionar foto' }}
     </VBtn>
@@ -21,7 +21,7 @@
         <VIcon start size="x-small">mdi-file-image</VIcon>
         {{ selectedFilename }}
       </VChip>
-      <VBtn id="btn-my-uploadimage-clear" size="small" variant="outlined" color="error" @click="clearImage">
+      <VBtn id="my-uploadimage-clear-btn" size="small" variant="outlined" color="error" @click="clearImage">
         <VIcon start size="x-small">mdi-close</VIcon>
         Limpiar
       </VBtn>

@@ -2,7 +2,7 @@
   <VContainer>
     <VRow dense>
       <VCol cols="12" md="8" class="mx-auto">
-        <VCard id="card-rev-main">
+        <VCard id="rev-main-card">
           <VCardTitle class="d-flex flex-column align-start">
             <div class="d-flex align-center justify-space-between" style="width: 100%">
               <div>
@@ -10,14 +10,14 @@
                 <div class="text-caption text-grey">ID: {{ mTestimony.id }}</div>
               </div>
               <div class="text-right">
-                <VChip v-if="mTestimony.status === 'approved'" id="chip-rev-status-approved" color="success" size="small">APROBADO</VChip>
-                <VChip v-else-if="mTestimony.status === 'rejected'" id="chip-rev-status-rejected" color="error" size="small">RECHAZADO</VChip>
-                <VChip v-else id="chip-rev-status-pending" size="small">Pendiente</VChip>
+                <VChip v-if="mTestimony.status === 'approved'" id="rev-status-approved-chip" color="success" size="small">APROBADO</VChip>
+                <VChip v-else-if="mTestimony.status === 'rejected'" id="rev-status-rejected-chip" color="error" size="small">RECHAZADO</VChip>
+                <VChip v-else id="rev-status-pending-chip" size="small">Pendiente</VChip>
                 <div v-if="mTestimony.status_username" class="text-caption text-grey mt-1">Por: {{ mTestimony.status_username }}</div>
               </div>
             </div>
             <div class="mt-2">
-              <VChip v-for="(c, i) in (mTestimony.categories as string[] || [])" id="chip-rev-category" :key="i" class="ma-1" color="primary" size="small">
+              <VChip v-for="(c, i) in (mTestimony.categories as string[] || [])" id="rev-category-chip" :key="i" class="ma-1" color="primary" size="small">
                 {{ c }}
               </VChip>
             </div>
@@ -84,12 +84,12 @@
           </VCardText>
 
           <div class="d-flex justify-end px-4 pb-4">
-            <VBtn id="btn-tesrev-back" variant="text" color="primary" class="mr-5" @click="navigateTo('/testimony')">Volver</VBtn>
+            <VBtn id="tesrev-back-btn" variant="text" color="primary" class="mr-5" @click="navigateTo('/testimony')">Volver</VBtn>
 
-            <VBtn id="btn-tesrev-reject" class="mr-5" variant="outlined" :loading="saving" color="error" @click="updateStatus('rejected')">
+            <VBtn id="tesrev-reject-btn" class="mr-5" variant="outlined" :loading="saving" color="error" @click="updateStatus('rejected')">
               Rechazar
             </VBtn>
-            <VBtn id="btn-tesrev-approve" :loading="saving" color="success" class="mr-2" @click="updateStatus('approved')">
+            <VBtn id="tesrev-approve-btn" :loading="saving" color="success" class="mr-2" @click="updateStatus('approved')">
               Aprobar
             </VBtn>
           </div>

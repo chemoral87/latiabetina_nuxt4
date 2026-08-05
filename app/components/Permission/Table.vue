@@ -1,7 +1,7 @@
-<template>
+﻿<template>
   <div id="cmp-permission-table">
     <VDataTableServer
-      id="dt-permission-table-items-1"
+      id="per-table-items-dt-1"
       v-model:page="page"
       v-model:items-per-page="itemsPerPage"
       v-model:sort-by="sortBy"
@@ -21,7 +21,7 @@
     >
       <template #[`item.actions`]="{ item }">
         <VBtn
-          id="btn-permission-table-edit"
+          id="per-table-edit-btn"
           title="Editar"
           class="ma-1"
           color="primary"
@@ -34,7 +34,7 @@
           <VIcon size="x-large">mdi-pencil</VIcon>
         </VBtn>
         <VBtn
-          id="btn-permission-table-distribute"
+          id="per-table-distribute-btn"
           title="Distribuir"
           class="ma-1"
           color="info"
@@ -47,7 +47,7 @@
           <VIcon size="x-large">mdi-share-variant</VIcon>
         </VBtn>
         <VBtn
-          id="btn-permission-table-delete"
+          id="per-table-delete-btn"
           title="Eliminar"
           class="ma-1"
           color="error"

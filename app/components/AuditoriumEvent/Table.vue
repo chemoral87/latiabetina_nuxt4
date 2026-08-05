@@ -1,6 +1,6 @@
 <template>
   <VDataTableServer
-    id="dt-audit-table-items-1"
+    id="aud-table-items-dt-1"
     v-model:page="page"
     v-model:sort-by="sortBy"
     v-model:items-per-page="itemsPerPage"
@@ -26,7 +26,7 @@
 
     <template #[`item.marks`]="{ item }">
       <VBtn
-        id="btn-auditoriumevent-table-mark"
+        id="auev-table-mark-btn"
         icon
         size="small"
         title="Marcar"
@@ -41,7 +41,7 @@
 
     <template #[`item.actions`]="{ item }">
       <VBtn
-        id="btn-auditoriumevent-table-download"
+        id="auev-table-download-btn"
         icon
         size="small"
         color="success"
@@ -53,7 +53,7 @@
         <VIcon size="x-large">mdi-file-excel</VIcon>
       </VBtn>
       <VBtn
-        id="btn-auditoriumevent-table-edit"
+        id="auev-table-edit-btn"
         icon
         size="small"
         title="Editar"
@@ -65,7 +65,7 @@
         <VIcon size="x-large">mdi-pencil</VIcon>
       </VBtn>
       <VBtn
-        id="btn-auditoriumevent-table-delete"
+        id="auev-table-delete-btn"
         icon
         class="my-1"
         size="small"
@@ -113,14 +113,31 @@ const sortBy = ref<{ key: string; order: string }[]>([
   { key: "event_date", order: "desc" },
 ]);
 
-const headers: Header[] = [
-  { title: "", value: "marks", sortable: false },
-  { title: "Fecha del Evento", value: "event_date", sortable: true },
-  { title: "Hora", value: "time", sortable: false },
-  { title: "Auditorio", value: "auditorium_name", sortable: false },
-  { title: "Organización", value: "org_name", sortable: false },
-  { title: "Acciones", value: "actions", width: "200px", sortable: false },
-];
+const auth = useAuthStore();
+
+// Hide the "Organización" column when the user has only one org for this
+// permission — the backend resolves the org from auth context.
+const effectiveOrgId = computed(() => {
+  const orgPermission = auth.permissionsOrg["auditorium-event-index"] ?? [];
+  if (orgPermission.length === 1) {
+    return orgPermission[0];
+  }
+  return null;
+});
+
+const headers = computed<Header[]>(() => {
+  const list: Header[] = [
+    { title: "", value: "marks", sortable: false },
+    { title: "Fecha del Evento", value: "event_date", sortable: true },
+    { title: "Hora", value: "time", sortable: false },
+    { title: "Auditorio", value: "auditorium_name", sortable: false },
+  ];
+  if (effectiveOrgId.value === null) {
+    list.push({ title: "Organización", value: "org_name", sortable: false });
+  }
+  list.push({ title: "Acciones", value: "actions", width: "200px", sortable: false });
+  return list;
+});
 
 const total = computed(() => props.response?.total ?? 0);
 

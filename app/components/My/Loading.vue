@@ -1,5 +1,5 @@
 <template>
-  <VDialog id="dlg-my-loadi-1" :model-value="modelValue" persistent content-class="centered-dialog">
+  <VDialog id="my-loadi-dlg-1" :model-value="modelValue" persistent content-class="centered-dialog">
     <VContainer class="fill-height d-flex flex-column justify-center align-center">
       <VProgressCircular indeterminate :size="70" :width="7" :color="progressColor" />
       <span v-if="message != null" class="text-h5 mt-4">{{ message }}</span>

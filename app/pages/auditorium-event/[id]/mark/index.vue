@@ -10,7 +10,7 @@
         <span class="text-subtitle-2">{{ totalSeatsWithStatus }}/{{ totalSeats }}</span>
         <span class="text-subtitle-2 ml-1" :style="{ color: percentageColor }">{{ percentajeTotalSeats }}%</span>
 
-        <VBtn id="btn-auevent-stats" size="x-small" icon color="success" class="ml-1"
+        <VBtn id="auevent-stats-btn" size="x-small" icon color="success" class="ml-1"
           title="Ver desglose por estatus" @click="statsPanel = !statsPanel">
           <VIcon size="small" color="yellow">mdi-chart-bar</VIcon>
         </VBtn>

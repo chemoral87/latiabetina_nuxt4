@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <VCard id="cmp-church-event-form">
     <VCardTitle class="d-flex align-center">
       <VIcon class="mr-2">{{ iconTitle }}</VIcon>
@@ -24,7 +24,7 @@
           </VCol>
           <VCol cols="12" md="3">
             <VTextField
-              id="tf-churc-form-item-name-1"
+              id="eve-form-item-name-tf-1"
               v-model="item.name"
               label="Nombre Evento"
               :error-messages="errors?.name"
@@ -72,7 +72,7 @@
           </VCol>
           <VCol cols="12" md="3">
             <VTextField
-              id="tf-churc-form-item-location-2"
+              id="eve-form-item-location-tf-2"
               v-model="item.location"
               label="Lugar"
               :error-messages="errors?.location"
@@ -135,11 +135,11 @@
     </VCardText>
 
     <div class="d-flex justify-end px-4 pb-4">
-      <VBtn id="btn-churchevent-form-cancel" color="primary" variant="text" :disabled="disabled || imageLoading" @click="close">
+      <VBtn id="eve-form-cancel-btn" color="primary" variant="text" :disabled="disabled || imageLoading" @click="close">
         Cancelar
       </VBtn>
       <VBtn
-        id="btn-churchevent-form-save"
+        id="eve-form-save-btn"
         color="primary"
         variant="elevated"
         :loading="saving || loading"

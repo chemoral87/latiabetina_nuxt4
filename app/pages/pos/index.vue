@@ -9,17 +9,17 @@
     <div v-else>
       <div id="pos-view-toggle" class="pos-view-toggle mb-2">
         <VBtnToggle v-model="viewMode" mandatory density="compact" color="primary" class="bg-grey-lighten-3">
-          <VBtn id="btn-pos-toggle-grid" value="grid" icon>
+          <VBtn id="pos-toggle-grid-btn" value="grid" icon>
             <VIcon>mdi-view-grid</VIcon>
           </VBtn>
-          <VBtn id="btn-pos-toggle-list" value="list" icon>
+          <VBtn id="pos-toggle-list-btn" value="list" icon>
             <VIcon>mdi-view-list</VIcon>
           </VBtn>
         </VBtnToggle>
         <VTooltip location="top">
           <template #activator="{ props }">
             <VBtn
-              id="btn-pos-toggle-stock"
+              id="pos-toggle-stock-btn"
               size="small"
               icon
               class="ml-2 pos-stock-toggle"

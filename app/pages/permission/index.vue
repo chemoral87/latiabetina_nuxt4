@@ -2,26 +2,32 @@
   <VContainer :fluid="true">
     <VRow>
       <!-- Filter -->
-      <VCol cols="12" md="2">
+      <VCol md="2" cols="12">
         <VTextField
-          id="tf-permission-index-filter-1"
+          id="per-index-filter-tf-1"
           v-model="filterInput"
-          append-inner-icon="mdi-magnify"
-          variant="outlined"
-          density="compact"
           clearable
           hide-details
+          density="compact"
+          variant="outlined"
+          append-inner-icon="mdi-magnify"
           placeholder="Buscar permiso..."
         />
       </VCol>
 
       <!-- Action buttons -->
       <VCol cols="auto" class="d-flex align-center">
-        <VBtn id="btn-permission-refresh" color="primary" :loading="loading" class="mr-4" @click="refreshPermissions">
+        <VBtn
+          id="per-refresh-btn"
+          class="mr-4"
+          color="primary"
+          :loading="loading"
+          @click="refreshPermissions"
+        >
           <VIcon start>mdi-reload</VIcon>
           Refrescar
         </VBtn>
-        <VBtn id="btn-permission-new" color="success" @click="newPermission">
+        <VBtn id="per-new-btn" color="success" @click="newPermission">
           <VIcon start>mdi-plus</VIcon>
           Nuevo Permiso
         </VBtn>
@@ -31,15 +37,15 @@
       <VCol cols="12">
         <PermissionTable
           v-model:dialog-delete="permissionDialogDelete"
-          :search="filterPermission"
-          :response="response"
           :loading="loading"
-          :highlight-id="highlightId"
+          :response="response"
           :removing-id="removingId"
-          @sorting="handleSorting"
+          :search="filterPermission"
+          :highlight-id="highlightId"
           @edit="editPermission"
-          @distribution="distributePermission"
+          @sorting="handleSorting"
           @delete="deletePermission"
+          @distribution="distributePermission"
         />
       </VCol>
     </VRow>
@@ -47,8 +53,8 @@
     <!-- Create/Edit dialog -->
     <PermissionDialog
       v-if="permissionDialog"
-      :permission="permission"
       :loading="saving"
+      :permission="permission"
       @close="closeDialog"
       @save="savePermission"
     />
@@ -56,27 +62,29 @@
 </template>
 
 <script setup lang="ts">
-import { useRowHighlight } from "~/composables/useRowHighlight"
+import { useRowHighlight } from "~/composables/useRowHighlight";
 
 definePageMeta({
   title: "Permisos",
   icon: "mdi-key-variant",
-  middleware: "authenticated",
-})
+  permission: "permission-index",
+  middleware: ["authenticated", "permission"],
+});
 
-const { Permission } = useRepository()
+const { Permission } = useRepository();
 
-const filterInput = ref("")
-const filterPermission = ref("")
-const permission = ref<Record<string, unknown> | null>(null)
-const response = ref({ data: [], total: 0 })
-const loading = ref(false)
-const saving = ref(false)
-const permissionDialog = ref(false)
-const permissionDialogDelete = ref(false)
-const { highlightId, flash, prependCreated, removingId, removeWithAnimation } = useRowHighlight()
+const filterInput = ref("");
+const filterPermission = ref("");
+const permission = ref<Record<string, unknown> | null>(null);
+const response = ref({ data: [], total: 0 });
+const loading = ref(false);
+const saving = ref(false);
+const permissionDialog = ref(false);
+const permissionDialogDelete = ref(false);
+const { highlightId, flash, prependCreated, removingId, removeWithAnimation } =
+  useRowHighlight();
 
-const lastOptions = ref<Record<string, unknown> | null>(null)
+const lastOptions = ref<Record<string, unknown> | null>(null);
 
 // Top-level await — loads initial data before render (asyncData equivalent)
 // Use backend-compatible format for the API call, but store Vuetify 4 format
@@ -87,129 +95,134 @@ const lastOptions = ref<Record<string, unknown> | null>(null)
     itemsPerPage: 10,
     sortBy: ["name"],
     sortDesc: [false],
-  }
-  const initialResponse = await Permission.index(apiParams).catch(() => ({ data: [], total: 0 }))
-  response.value = initialResponse as { data: unknown[]; total: number }
+  };
+  const initialResponse = await Permission.index(apiParams).catch(() => ({
+    data: [],
+    total: 0,
+  }));
+  response.value = initialResponse as { data: unknown[]; total: number };
   lastOptions.value = {
     page: 1,
     itemsPerPage: 10,
     sortBy: [{ key: "name", order: "asc" }],
-  }
+  };
 }
 
 // Debounced filter (300ms)
-let debounceTimer: ReturnType<typeof setTimeout> | null = null
+let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
 watch(filterInput, (val) => {
-  if (debounceTimer) clearTimeout(debounceTimer)
+  if (debounceTimer) clearTimeout(debounceTimer);
   if (!val) {
-    filterPermission.value = ""
-    return
+    filterPermission.value = "";
+    return;
   }
   debounceTimer = setTimeout(() => {
-    filterPermission.value = val
-  }, 300)
-})
+    filterPermission.value = val;
+  }, 300);
+});
 
 async function loadPermissions(opts: Record<string, unknown>) {
   try {
-    loading.value = true
-    lastOptions.value = opts
+    loading.value = true;
+    lastOptions.value = opts;
     const params: Record<string, unknown> = {
       page: opts.page ?? 1,
       itemsPerPage: opts.itemsPerPage ?? 10,
-    }
-    const sortBy = (opts.sortBy as { key: string; order: string }[]) ?? []
+    };
+    const sortBy = (opts.sortBy as { key: string; order: string }[]) ?? [];
     if (sortBy.length > 0) {
-      params.sortBy = [sortBy[0].key]
-      params.sortDesc = [sortBy[0].order === 'desc']
+      params.sortBy = [sortBy[0].key];
+      params.sortDesc = [sortBy[0].order === "desc"];
     }
     if (filterPermission.value) {
-      params.filter = filterPermission.value
+      params.filter = filterPermission.value;
     }
-    response.value = await Permission.index(params)
+    response.value = await Permission.index(params);
   } catch (e) {
-    console.error("Error al cargar permisos", e)
+    console.error("Error al cargar permisos", e);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 
 async function refreshPermissions() {
   if (lastOptions.value) {
-    await loadPermissions(lastOptions.value)
+    await loadPermissions(lastOptions.value);
   }
 }
 
-let initialLoaded = false
+let initialLoaded = false;
 
 function handleSorting(opts: Record<string, unknown>) {
   if (!initialLoaded) {
     // Suppress mount-time @update:options — data was already loaded by top-level await
-    initialLoaded = true
-    return
+    initialLoaded = true;
+    return;
   }
-  loadPermissions(opts)
+  loadPermissions(opts);
 }
 
 function newPermission() {
-  useValidationErrors().clearErrors()
-  permission.value = {}
-  permissionDialog.value = true
+  useValidationErrors().clearErrors();
+  permission.value = {};
+  permissionDialog.value = true;
 }
 
 function editPermission(item: Record<string, unknown>) {
-  useValidationErrors().clearErrors()
-  permission.value = { ...item }
-  permissionDialog.value = true
+  useValidationErrors().clearErrors();
+  permission.value = { ...item };
+  permissionDialog.value = true;
 }
 
 function distributePermission(item: Record<string, unknown>) {
-  navigateTo(`/permission/${item.id}/distribution`)
+  navigateTo(`/permission/${item.id}/distribution`);
 }
 
 async function deletePermission(item: Record<string, unknown>) {
   try {
-    saving.value = true
-    await Permission.delete(item.id as number)
-    permissionDialogDelete.value = false
-    await removeWithAnimation(response, item.id as number)
+    saving.value = true;
+    await Permission.delete(item.id as number);
+    permissionDialogDelete.value = false;
+    await removeWithAnimation(response, item.id as number);
   } catch (e) {
-    console.error("Error al eliminar el permiso", e)
+    console.error("Error al eliminar el permiso", e);
   } finally {
-    saving.value = false
+    saving.value = false;
   }
 }
 
 async function savePermission(item: Record<string, unknown>) {
   try {
-    saving.value = true
+    saving.value = true;
     if (item.id) {
-      await Permission.update(item.id as number, item)
-      permissionDialog.value = false
-      permission.value = null
-      await refreshPermissions()
-      flash(item.id as number)
+      await Permission.update(item.id as number, item);
+      permissionDialog.value = false;
+      permission.value = null;
+      await refreshPermissions();
+      flash(item.id as number);
     } else {
-      const res = await Permission.create(item)
-      const created = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined
+      const res = await Permission.create(item);
+      const created = (res as Record<string, unknown>)?.data as
+        | Record<string, unknown>
+        | undefined;
       if (created) {
-        prependCreated(response, created)
+        prependCreated(response, created);
       }
-      permissionDialog.value = false
-      permission.value = null
+      permissionDialog.value = false;
+      permission.value = null;
     }
   } catch (e) {
-    console.error("Error al guardar el permiso", e)
+    console.error("Error al guardar el permiso", e);
   } finally {
-    saving.value = false
+    saving.value = false;
   }
 }
 
 function closeDialog() {
-  permissionDialog.value = false
-  permission.value = null
-  useValidationErrors().clearErrors()
+  permissionDialog.value = false;
+  permission.value = null;
+  useValidationErrors().clearErrors();
 }
 </script>
 

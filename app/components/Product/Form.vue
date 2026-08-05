@@ -1,8 +1,8 @@
-<template>
+﻿<template>
   <div id="cmp-product-form">
     <VForm ref="formRef" @submit.prevent="save">
       <!-- Section 1: Información básica -->
-      <VCard id="card-prd-form-1" variant="outlined">
+      <VCard id="prd-form-card-1" variant="outlined">
         <VCardTitle class="text-subtitle-1 font-weight-medium pb-2">
           <VIcon start size="small" color="primary">mdi-information-outline</VIcon>
           Información del producto
@@ -15,7 +15,7 @@
 
             <VCol cols="12">
               <VTextField
-                id="tf-prd-form-item-name-1"
+                id="prd-form-item-name-tf-1"
                 v-model="item.name"
                 label="Nombre"
                 variant="outlined"
@@ -31,7 +31,7 @@
 
             <VCol cols="12" md="6">
               <VTextField
-                id="tf-prd-form-item-sku-2"
+                id="prd-form-item-sku-tf-2"
                 v-model="item.sku"
                 label="SKU"
                 variant="outlined"
@@ -57,7 +57,7 @@
       </VCard>
 
       <!-- Section 2: Precio, existencias e imagen -->
-      <VCard id="card-prd-form-2" variant="outlined" class="mt-4">
+      <VCard id="prd-form-card-2" variant="outlined" class="mt-4">
         <VCardTitle class="text-subtitle-1 font-weight-medium pb-2">
           <VIcon start size="small" color="primary">mdi-currency-usd</VIcon>
           Precio y existencias
@@ -69,7 +69,7 @@
               <VRow dense>
                 <VCol cols="12" sm="6">
                   <VTextField
-                    id="tf-prd-form-item-price-3"
+                    id="prd-form-item-price-tf-3"
                     v-model="item.price"
                     label="Precio"
                     type="number"
@@ -86,7 +86,7 @@
 
                 <VCol cols="12" sm="6">
                   <VTextField
-                    id="tf-prd-form-item-stock-4"
+                    id="prd-form-item-stock-tf-4"
                     v-model="item.stock"
                     label="Stock"
                     type="number"
@@ -103,7 +103,7 @@
 
                 <VCol cols="12" sm="6">
                   <VTextField
-                    id="tf-prd-form-item-order-5"
+                    id="prd-form-item-order-tf-5"
                     v-model="item.order"
                     label="Orden"
                     type="number"
@@ -156,13 +156,13 @@
       </VCard>
 
       <!-- Section 3: Acciones -->
-      <VCard id="card-prd-form-3" variant="outlined" class="mt-4">
+      <VCard id="prd-form-card-3" variant="outlined" class="mt-4">
         <VCardText class="d-flex justify-end pa-4 flex-wrap">
-          <VBtn id="btn-product-form-cancel" color="primary" variant="outlined" class="mr-2 mb-2 mb-sm-0" :disabled="loading || imageLoading" @click="close">
+          <VBtn id="prd-form-cancel-btn" color="primary" variant="outlined" class="mr-2 mb-2 mb-sm-0" :disabled="loading || imageLoading" @click="close">
             <VIcon start>mdi-close</VIcon>
             Cancelar
           </VBtn>
-          <VBtn id="btn-product-form-save" color="primary" :loading="loading" :disabled="!isValid" @click="save">
+          <VBtn id="prd-form-save-btn" color="primary" :loading="loading" :disabled="!isValid" @click="save">
             <VIcon start>mdi-content-save</VIcon>
             Guardar
           </VBtn>

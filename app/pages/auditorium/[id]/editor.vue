@@ -5,7 +5,7 @@
       <VCol cols="12">
         <div class="d-flex align-center justify-space-between">
           <span v-if="auditorium && auditorium.name" class="text-h6 text-md-h5">{{ auditorium.name }}</span>
-          <VBtn id="btn-audid-save" color="primary" :size="mobile ? 'small' : undefined" :loading="saving" :disabled="saving" @click="saveAuditorium">
+          <VBtn id="audid-save-btn" color="primary" :size="mobile ? 'small' : undefined" :loading="saving" :disabled="saving" @click="saveAuditorium">
             <VIcon :start="!mobile">mdi-content-save</VIcon>
             <span v-if="!mobile">Guardar</span>
           </VBtn>
@@ -26,19 +26,19 @@
         <!-- Botones de Acción -->
         <VRow density="comfortable" class="mb-3">
           <VCol cols="6" md="12">
-            <VBtn id="btn-audid-add-section" color="primary" block :size="mobile ? 'small' : undefined" class="mb-md-2" @click="addSection(false)">
+            <VBtn id="audid-add-section-btn" color="primary" block :size="mobile ? 'small' : undefined" class="mb-md-2" @click="addSection(false)">
               <VIcon :start="mdAndUp" :size="mobile ? 'small' : undefined">mdi-plus</VIcon>
               <span :class="{ 'd-none d-sm-inline': mobile }">Agregar sección</span>
             </VBtn>
           </VCol>
           <VCol cols="6" md="12">
-            <VBtn id="btn-audid-add-label" color="secondary" block :size="mobile ? 'small' : undefined" class="mb-md-2" @click="addSection(true)">
+            <VBtn id="audid-add-label-btn" color="secondary" block :size="mobile ? 'small' : undefined" class="mb-md-2" @click="addSection(true)">
               <VIcon :start="mdAndUp" :size="mobile ? 'small' : undefined">mdi-label</VIcon>
               <span :class="{ 'd-none d-sm-inline': mobile }">Agregar etiqueta sección</span>
             </VBtn>
           </VCol>
           <VCol cols="6" md="12">
-            <VBtn id="btn-audid-clear-cats" color="warning" block :size="mobile ? 'small' : undefined" class="mb-md-2" @click="clearAllSeatStates">
+            <VBtn id="audid-clear-cats-btn" color="warning" block :size="mobile ? 'small' : undefined" class="mb-md-2" @click="clearAllSeatStates">
               <VIcon :start="mdAndUp" :size="mobile ? 'small' : undefined">mdi-broom</VIcon>
               <span :class="{ 'd-none d-sm-inline': mobile }">Limpiar categorías</span>
             </VBtn>
@@ -46,44 +46,44 @@
         </VRow>
 
         <!-- Configuración -->
-        <VCard id="card-audit-edito-1" variant="outlined" class="mb-3 pa-2">
+        <VCard id="aud-edito-card-1" variant="outlined" class="mb-3 pa-2">
           <div class="text-subtitle-2 mb-2">Configuración</div>
 
           <!-- Save Format Toggle -->
           <div class="d-flex align-center mb-2">
             <span class="text-caption mr-2">Formato:</span>
             <VBtnToggle v-model="saveFormat" mandatory density="compact">
-              <VBtn id="btn-audid-fmt-csv" size="x-small" value="csv" color="primary">
+              <VBtn id="audid-fmt-csv-btn" size="x-small" value="csv" color="primary">
                 <VIcon start size="x-small">mdi-file-delimited</VIcon>CSV
               </VBtn>
-              <VBtn id="btn-audid-fmt-json" size="x-small" value="json" color="primary">
+              <VBtn id="audid-fmt-json-btn" size="x-small" value="json" color="primary">
                 <VIcon start size="x-small">mdi-code-json</VIcon>JSON
               </VBtn>
             </VBtnToggle>
-            <VChip id="chip-aed-format" size="x-small" :color="saveFormat === 'csv' ? 'success' : 'info'" class="ml-2">
+            <VChip id="aed-format-chip" size="x-small" :color="saveFormat === 'csv' ? 'success' : 'info'" class="ml-2">
               {{ saveFormat === 'csv' ? 'Plano CSV' : 'JSON anidado' }}
             </VChip>
           </div>
 
           <JsonConfig :config-data="configData" :config-data-csv="configDataCsv" :save-format="saveFormat" @imported="handleImportedConfig" @import-error="onImportError" />
 
-          <VSlider id="sld-aed-seat-size" v-model="settings.SEAT_SIZE" :min="5" :max="20" :step="1" label="Tamaño de asiento" thumb-label density="compact" class="mb-1" />
-          <VSlider id="sld-aed-seat-distance" v-model="settings.SEATS_DISTANCE" :min="2" :max="8" :step="1" label="Distancia entre asientos" thumb-label density="compact" class="mb-1" />
-          <VSlider id="sld-aed-section-padding" v-model="settings.SECTION_TOP_PADDING" :min="0" :max="160" :step="5" label="Padding superior sección" thumb-label density="compact" class="mb-0" />
+          <VSlider id="aed-seat-size-sld" v-model="settings.SEAT_SIZE" :min="5" :max="20" :step="1" label="Tamaño de asiento" thumb-label density="compact" class="mb-1" />
+          <VSlider id="aed-seat-distance-sld" v-model="settings.SEATS_DISTANCE" :min="2" :max="8" :step="1" label="Distancia entre asientos" thumb-label density="compact" class="mb-1" />
+          <VSlider id="aed-section-padding-sld" v-model="settings.SECTION_TOP_PADDING" :min="0" :max="160" :step="5" label="Padding superior sección" thumb-label density="compact" class="mb-0" />
         </VCard>
 
         <!-- Lista de Secciones -->
         <div class="text-subtitle-2 mb-2">Secciones</div>
         <div v-for="(section, sIdx) in sections" :key="`section-${sIdx}`">
-          <VCard id="card-aed-section" variant="outlined" class="mb-2">
+          <VCard id="aed-section-card" variant="outlined" class="mb-2">
             <div class="d-flex align-center pa-2">
-              <VBtn id="btn-audid-section-toggle" icon size="x-small" class="mr-1" @click="toggleSection(sIdx)">
+              <VBtn id="audid-section-toggle-btn" icon size="x-small" class="mr-1" @click="toggleSection(sIdx)">
                 <VIcon size="x-small">{{ openSections[sIdx] ? 'mdi-chevron-down' : 'mdi-chevron-right' }}</VIcon>
               </VBtn>
-              <VTextField id="tf-audid-section-name" v-model="section.name" density="compact" variant="solo" hide-details :style="mobile ? 'max-width: 120px' : 'max-width: 140px'" />
-              <VChip v-if="section.isLabel" id="chip-aed-label" size="x-small" color="secondary" class="ml-1 ml-md-2">Etiqueta</VChip>
+              <VTextField id="audid-section-name-tf" v-model="section.name" density="compact" variant="solo" hide-details :style="mobile ? 'max-width: 120px' : 'max-width: 140px'" />
+              <VChip v-if="section.isLabel" id="aed-label-chip" size="x-small" color="secondary" class="ml-1 ml-md-2">Etiqueta</VChip>
               <VSpacer />
-              <VBtn id="btn-audid-section-remove" icon size="x-small" color="error" @click="removeSection(sIdx)">
+              <VBtn id="audid-section-remove-btn" icon size="x-small" color="error" @click="removeSection(sIdx)">
                 <VIcon size="x-small">mdi-delete</VIcon>
               </VBtn>
             </div>
@@ -91,13 +91,13 @@
             <VCardText v-if="openSections[sIdx] && !section.isLabel" class="pa-2 pt-0">
               <VRow density="comfortable" class="mb-2">
                 <VCol cols="6">
-                  <VBtn id="btn-audid-subsection-add" :size="xs ? 'x-small' : mobile ? 'small' : undefined" block color="secondary" @click="addSubsection(sIdx, false)">
+                  <VBtn id="audid-subsection-add-btn" :size="xs ? 'x-small' : mobile ? 'small' : undefined" block color="secondary" @click="addSubsection(sIdx, false)">
                     <VIcon :start="smAndUp" size="small">mdi-plus</VIcon>
                     <span :class="{ 'd-none d-sm-inline': xs }">Agregar subsección</span>
                   </VBtn>
                 </VCol>
                 <VCol cols="6">
-                  <VBtn id="btn-audid-subsection-add-label" :size="xs ? 'x-small' : mobile ? 'small' : undefined" block color="accent" @click="addSubsection(sIdx, true)">
+                  <VBtn id="audid-subsection-add-label-btn" :size="xs ? 'x-small' : mobile ? 'small' : undefined" block color="accent" @click="addSubsection(sIdx, true)">
                     <VIcon :start="smAndUp" size="small">mdi-label-outline</VIcon>
                     <span :class="{ 'd-none d-sm-inline': xs }">Agregar área</span>
                   </VBtn>
@@ -105,26 +105,26 @@
               </VRow>
 
               <!-- Subsecciones -->
-              <VCard v-for="(sub, subIdx) in section.subsections" id="card-aed-subsection" :key="`sub-${subIdx}`" variant="outlined" class="mb-2" :class="mobile ? 'pa-1' : 'pa-2'">
+              <VCard v-for="(sub, subIdx) in section.subsections" id="aed-subsection-card" :key="`sub-${subIdx}`" variant="outlined" class="mb-2" :class="mobile ? 'pa-1' : 'pa-2'">
                 <div class="d-flex align-center mb-2">
-                  <VTextField id="tf-audid-sub-name" v-model="sub.name" :label="sub.isLabel ? 'Nombre área' : 'Nombre subsección'" density="compact" hide-details :style="mobile ? 'font-size: 14px' : ''" />
-                  <VChip v-if="sub.isLabel" id="chip-aed-area" size="x-small" color="accent" class="ml-1 ml-md-2">Área</VChip>
+                  <VTextField id="audid-sub-name-tf" v-model="sub.name" :label="sub.isLabel ? 'Nombre área' : 'Nombre subsección'" density="compact" hide-details :style="mobile ? 'font-size: 14px' : ''" />
+                  <VChip v-if="sub.isLabel" id="aed-area-chip" size="x-small" color="accent" class="ml-1 ml-md-2">Área</VChip>
                 </div>
 
                 <!-- Ancho de área (solo para etiquetas) -->
-                <VSlider v-if="sub.isLabel" id="sld-aed-area-width" v-model="sub.width" :min="50" :max="300" :step="10" label="Ancho del área" thumb-label density="compact" hide-details class="mb-2" />
+                <VSlider v-if="sub.isLabel" id="aed-area-width-sld" v-model="sub.width" :min="50" :max="300" :step="10" label="Ancho del área" thumb-label density="compact" hide-details class="mb-2" />
 
                 <template v-if="!sub.isLabel">
                   <!-- Definir filas y columnas -->
                   <VRow density="comfortable" class="mb-2">
                     <VCol cols="4" sm="3">
-                      <VTextField id="tf-audid-sub-rows" v-model.number="sub.tempRows" label="Filas" type="text" density="compact" hide-details />
+                      <VTextField id="audid-sub-rows-tf" v-model.number="sub.tempRows" label="Filas" type="text" density="compact" hide-details />
                     </VCol>
                     <VCol cols="4" sm="3">
-                      <VTextField id="tf-audid-sub-cols" v-model.number="sub.tempCols" label="Columnas" type="text" density="compact" hide-details />
+                      <VTextField id="audid-sub-cols-tf" v-model.number="sub.tempCols" label="Columnas" type="text" density="compact" hide-details />
                     </VCol>
                     <VCol cols="4" sm="2">
-                      <VBtn id="btn-audid-sub-grid" :size="xs ? 'x-small' : 'small'" color="primary" @click="setSubsectionGrid(sIdx, subIdx)">Set</VBtn>
+                      <VBtn id="audid-sub-grid-btn" :size="xs ? 'x-small' : 'small'" color="primary" @click="setSubsectionGrid(sIdx, subIdx)">Set</VBtn>
                     </VCol>
                   </VRow>
 
@@ -133,14 +133,14 @@
                   <div class="text-caption mb-1">Agregar asiento individual:</div>
                   <VRow density="comfortable">
                     <VCol cols="12" sm="6">
-                      <VSelect id="sel-audid-sub-row" v-model="selectedRow[`${sIdx}-${subIdx}`]" :items="getRowOptions(sub)" label="Seleccionar fila" density="compact" hide-details />
+                      <VSelect id="audid-sub-row-sel" v-model="selectedRow[`${sIdx}-${subIdx}`]" :items="getRowOptions(sub)" label="Seleccionar fila" density="compact" hide-details />
                     </VCol>
                     <VCol cols="12" sm="6" class="d-flex" style="gap: 4px">
-                      <VBtn id="btn-audid-seat-left" size="x-small" color="primary" block :disabled="!isRowSelected(sIdx, subIdx)" @click="addSeatToRow(sIdx, subIdx, 'left')">
+                      <VBtn id="audid-seat-left-btn" size="x-small" color="primary" block :disabled="!isRowSelected(sIdx, subIdx)" @click="addSeatToRow(sIdx, subIdx, 'left')">
                         <VIcon size="x-small">mdi-arrow-left-circle</VIcon>
                         <span class="ml-1">Izq</span>
                       </VBtn>
-                      <VBtn id="btn-audid-seat-right" size="x-small" color="primary" block :disabled="!isRowSelected(sIdx, subIdx)" @click="addSeatToRow(sIdx, subIdx, 'right')">
+                      <VBtn id="audid-seat-right-btn" size="x-small" color="primary" block :disabled="!isRowSelected(sIdx, subIdx)" @click="addSeatToRow(sIdx, subIdx, 'right')">
                         <VIcon size="x-small">mdi-arrow-right-circle</VIcon>
                         <span class="ml-1">Der</span>
                       </VBtn>
@@ -152,7 +152,7 @@
 
                 <div class="d-flex gap-2">
                   <VSpacer />
-                  <VBtn id="btn-audid-sub-remove" icon size="x-small" color="error" @click="removeSubsection(sIdx, subIdx)">
+                  <VBtn id="audid-sub-remove-btn" icon size="x-small" color="error" @click="removeSubsection(sIdx, subIdx)">
                     <VIcon size="x-small">mdi-delete</VIcon>
                   </VBtn>
                 </div>

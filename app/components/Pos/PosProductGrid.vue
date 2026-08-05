@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <VRow id="cmp-pos-product-grid" density="comfortable">
     <VCol v-for="product in products" :key="product.id" cols="6" sm="4" md="3">
       <VCard

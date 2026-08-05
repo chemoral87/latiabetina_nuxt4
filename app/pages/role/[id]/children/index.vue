@@ -3,7 +3,7 @@
     <VRow>
       <!-- Existing permissions -->
       <VCol cols="12">
-        <VCard id="card-role-permissions" variant="outlined">
+        <VCard id="rol-permissions-card" variant="outlined">
           <VCardTitle class="text-subtitle-1 font-weight-medium pb-2">
             <VIcon start size="small" color="primary">mdi-key-variant</VIcon>
             Permisos del rol
@@ -22,7 +22,7 @@
 
       <!-- Create new permission on the fly -->
       <VCol cols="12">
-        <VCard id="card-role-new-permission" variant="outlined">
+        <VCard id="rol-new-permission-card" variant="outlined">
           <VCardTitle class="text-subtitle-1 font-weight-medium pb-2">
             <VIcon start size="small" color="success">mdi-plus-circle-outline</VIcon>
             Crear nuevo permiso
@@ -31,7 +31,7 @@
             <VRow density="comfortable" align="center">
               <VCol cols="12">
                 <VTextField
-                  id="tf-role-index-newpermissionname-1"
+                  id="rol-index-newpermissionname-tf-1"
                   v-model="newPermissionName"
                   label="Nombre del permiso"
                   placeholder="ej. product-create"
@@ -46,7 +46,7 @@
               </VCol>
               <VCol cols="auto" class="pt-2">
                 <VBtn
-                  id="btn-roldtl-create-perm"
+                  id="roldtl-create-perm-btn"
                   color="success"
                   :disabled="!newPermissionName || creatingPermission"
                   :loading="creatingPermission"
@@ -63,13 +63,13 @@
 
       <!-- Actions -->
       <VCol cols="12">
-        <VCard id="card-roldtl-actions" variant="outlined">
+        <VCard id="roldtl-actions-card" variant="outlined">
           <VCardText class="d-flex justify-end pa-4">
-            <VBtn id="btn-roldtl-cancel" color="primary" variant="outlined" class="mr-4" @click="navigateTo('/role')">
+            <VBtn id="roldtl-cancel-btn" color="primary" variant="outlined" class="mr-4" @click="navigateTo('/role')">
               <VIcon start>mdi-close</VIcon>
               Cancelar
             </VBtn>
-            <VBtn id="btn-roldtl-save" color="primary" variant="elevated" @click="saveRolePermissions()">
+            <VBtn id="roldtl-save-btn" color="primary" variant="elevated" @click="saveRolePermissions()">
               <VIcon start>mdi-content-save</VIcon>
               Guardar
             </VBtn>

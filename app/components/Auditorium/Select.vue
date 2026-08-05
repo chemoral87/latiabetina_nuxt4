@@ -1,5 +1,5 @@
 <template>
-  <VSelect id="cmp-auditorium-select" v-model="selected" :disabled="disabled" :items="items" :loading="loading" :label="label" item-title="name" item-value="id" v-bind="$attrs" />
+  <VSelect :id="id" v-model="selected" :label="label" item-value="id" item-title="name" :loading="loading" :disabled="disabled" :items="displayItems" v-bind="$attrs" />
 </template>
 
 <script setup lang="ts">
@@ -10,13 +10,17 @@ interface AuditoriumItem {
 }
 
 const props = withDefaults(defineProps<{
+  id?: string
   orgId?: string | number | null
   modelValue?: string | number | null
   label?: string
+  selectedName?: string | null
 }>(), {
+  id: "cmp-auditorium-select",
   orgId: null,
   modelValue: null,
   label: "Auditorio",
+  selectedName: null,
 })
 
 const emit = defineEmits<{
@@ -29,6 +33,20 @@ const items = ref<AuditoriumItem[]>([])
 const selected = ref<string | number | null>(null)
 const disabled = ref(false)
 const loading = ref(false)
+
+// When editing, the current auditorium may not be in the fetched items yet
+// (or it fell outside the paged list). Inject a synthetic item built from the
+// passed `selectedName` so the select renders the name instead of the raw id.
+const displayItems = computed<AuditoriumItem[]>(() => {
+  if (!selected.value || !props.selectedName) return items.value
+  const exists = items.value.some((it) => String(it.id) === String(selected.value))
+  if (exists) return items.value
+  return [{ id: selected.value, name: props.selectedName }, ...items.value]
+})
+
+// Cache auditoriums per org so the dropdown only fetches once per org
+// (reopening the dialog shouldn't re-hit api/auditorium).
+const cache = new Map<string, AuditoriumItem[]>()
 
 watch(selected, (val) => {
   emit("update:modelValue", val)
@@ -53,6 +71,15 @@ async function loadAuditoriums() {
     return
   }
 
+  const key = String(props.orgId)
+  if (cache.has(key)) {
+    items.value = cache.get(key)!
+    if (items.value.length === 1 && !selected.value) {
+      selected.value = items.value[0].id
+    }
+    return
+  }
+
   loading.value = true
   try {
     const response = await Auditorium.index<{ data?: AuditoriumItem[] }>({
@@ -62,6 +89,7 @@ async function loadAuditoriums() {
       itemsPerPage: 15,
     })
     items.value = response?.data || []
+    cache.set(key, items.value)
 
     if (items.value.length === 1 && !selected.value) {
       selected.value = items.value[0].id

@@ -1,7 +1,7 @@
-<template>
+﻿<template>
   <div id="cmp-user-table">
     <VDataTableServer
-      id="dt-user-table-items-1"
+      id="usr-table-items-dt-1"
       v-model:page="page"
       v-model:items-per-page="itemsPerPage"
       v-model:sort-by="sortBy"
@@ -31,13 +31,13 @@
         </VChip>
       </template>
       <template #[`item.actions`]="{ item }">
-        <VBtn id="btn-user-table-edit" title="Editar" class="ma-1" color="primary" variant="outlined" size="small" icon rounded="circle" @click="emitEdit(item)">
+        <VBtn id="usr-table-edit-btn" title="Editar" class="ma-1" color="primary" variant="outlined" size="small" icon rounded="circle" @click="emitEdit(item)">
           <VIcon size="x-large">mdi-pencil</VIcon>
         </VBtn>
-        <VBtn id="btn-user-table-profiles" title="Perfiles" class="ma-1" color="success" variant="outlined" size="small" icon rounded="circle" @click="emitEditProfiles(item)">
+        <VBtn id="usr-table-profiles-btn" title="Perfiles" class="ma-1" color="success" variant="outlined" size="small" icon rounded="circle" @click="emitEditProfiles(item)">
           <VIcon size="x-large">mdi-shield-key-outline</VIcon>
         </VBtn>
-        <VBtn id="btn-user-table-delete" title="Eliminar" class="ma-1" color="error" variant="outlined" size="small" icon rounded="circle" @click="confirmDelete(item)">
+        <VBtn id="usr-table-delete-btn" title="Eliminar" class="ma-1" color="error" variant="outlined" size="small" icon rounded="circle" @click="confirmDelete(item)">
           <VIcon size="x-large">mdi-delete</VIcon>
         </VBtn>
       </template>

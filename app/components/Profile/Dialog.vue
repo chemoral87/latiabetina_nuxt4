@@ -1,11 +1,11 @@
 <template>
-  <VDialog id="dlg-profi-dialo-1" v-model="dialogVisible" persistent width="400px">
+  <VDialog id="usp-dialo-dlg-1" v-model="dialogVisible" persistent width="400px">
     <VCard>
       <VCardTitle class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center">
         <VIcon start size="small" color="primary">mdi-plus</VIcon>
         Nuevo Perfil
         <VSpacer />
-        <VBtn id="btn-profile-dialog-close" icon size="x-small" @click="close">
+        <VBtn id="profile-dialog-close-btn" icon size="x-small" @click="close">
           <VIcon>mdi-close</VIcon>
         </VBtn>
       </VCardTitle>
@@ -14,7 +14,7 @@
         <VCardText class="py-1">
           <VRow density="comfortable">
             <VCol cols="12">
-              <VTextField id="tf-profi-dialo-filterprofile-1"
+              <VTextField id="usp-dialo-filterprofile-tf-1"
                 v-model="filterProfile"
                 label="Filtro"
                 variant="outlined"
@@ -39,11 +39,11 @@
         </VCardText>
 
         <div class="d-flex justify-end px-4 pb-4">
-          <VBtn id="btn-profile-dialog-cancel" color="primary" variant="outlined" class="mr-4" @click="close">
+          <VBtn id="profile-dialog-cancel-btn" color="primary" variant="outlined" class="mr-4" @click="close">
             <VIcon start>mdi-close</VIcon>
             Cancelar
           </VBtn>
-          <VBtn id="btn-profile-dialog-save" color="primary" variant="elevated" type="submit" :loading="saving || loading" :disabled="saving || loading">
+          <VBtn id="profile-dialog-save-btn" color="primary" variant="elevated" type="submit" :loading="saving || loading" :disabled="saving || loading">
             <VIcon start>mdi-content-save</VIcon>
             Guardar
           </VBtn>

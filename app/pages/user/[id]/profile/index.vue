@@ -2,7 +2,7 @@
   <VContainer :fluid="true" class="pa-4">
     <VRow class="mb-3">
       <VCol cols="12">
-        <VBtn id="btn-user-profile-new" color="primary" variant="elevated" class="font-weight-bold" @click="newProfile()">
+        <VBtn id="usr-profile-new-btn" color="primary" variant="elevated" class="font-weight-bold" @click="newProfile()">
           <VIcon start>mdi-plus</VIcon>
           Nuevo Perfil
         </VBtn>
@@ -19,13 +19,13 @@
               </div>
 
               <div class="d-flex align-center ga-2">
-                <VBtn id="btn-user-profile-fav" icon variant="text" size="small" :color="getColorFavorite(profile.favorite)" @click="setFavProfile(profile)">
+                <VBtn id="usr-profile-fav-btn" icon variant="text" size="small" :color="getColorFavorite(profile.favorite)" @click="setFavProfile(profile)">
                   <VIcon size="x-large" icon="mdi-star" />
                 </VBtn>
-                <VBtn id="btn-user-profile-edit" icon variant="text" size="small" color="primary" @click="editProfile(profile)">
+                <VBtn id="usr-profile-edit-btn" icon variant="text" size="small" color="primary" @click="editProfile(profile)">
                   <VIcon size="x-large" icon="mdi-pencil" />
                 </VBtn>
-                <VBtn id="btn-user-profile-delete" icon variant="text" size="small" color="error" @click="confirmDeleteProfile(profile)">
+                <VBtn id="usr-profile-delete-btn" icon variant="text" size="small" color="error" @click="confirmDeleteProfile(profile)">
                   <VIcon size="x-large" icon="mdi-delete" />
                 </VBtn>
               </div>
@@ -63,9 +63,9 @@
 
     <VRow>
       <VCol cols="12">
-        <VCard id="card-usp-actions" border>
+        <VCard id="usp-actions-card" border>
           <VCardText class="d-flex justify-end pa-4">
-            <VBtn id="btn-user-profile-back" color="primary" variant="outlined" @click="navigateTo('/user')">
+            <VBtn id="usr-profile-back-btn" color="primary" variant="outlined" @click="navigateTo('/user')">
               <VIcon start>mdi-arrow-left</VIcon>
               Volver
             </VBtn>

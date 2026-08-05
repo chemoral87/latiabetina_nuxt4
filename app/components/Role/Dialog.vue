@@ -1,11 +1,11 @@
 <template>
-  <VDialog id="dlg-role-dialo-1" v-model="dialogVisible" persistent max-width="400px">
+  <VDialog id="rol-dialo-dlg-1" v-model="dialogVisible" persistent max-width="400px">
     <VCard>
       <VCardTitle class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center">
         <VIcon start size="small" color="primary">mdi-redhat</VIcon>
         {{ formTitle }}
         <VSpacer />
-        <VBtn id="btn-role-dialog-close" icon size="x-small" @click="close">
+        <VBtn id="rol-dialog-close-btn" icon size="x-small" @click="close">
           <VIcon>mdi-close</VIcon>
         </VBtn>
       </VCardTitle>
@@ -15,7 +15,7 @@
           <VRow density="comfortable">
             <VCol cols="12">
               <VTextField
-                id="tf-role-dialo-item-name-1"
+                id="rol-dialo-item-name-tf-1"
                 v-model="item.name"
                 label="Nombre"
                 variant="outlined"
@@ -30,11 +30,11 @@
       </VCardText>
 
       <div class="d-flex justify-end px-4 pb-4">
-        <VBtn id="btn-role-dialog-cancel" color="primary" variant="outlined" class="mr-4" :disabled="saving || loading" @click="close">
+        <VBtn id="rol-dialog-cancel-btn" color="primary" variant="outlined" class="mr-4" :disabled="saving || loading" @click="close">
           <VIcon start>mdi-close</VIcon>
           Cancelar
         </VBtn>
-        <VBtn id="btn-role-dialog-save" color="primary" variant="elevated" :loading="saving || loading" :disabled="saving || loading" @click="save">
+        <VBtn id="rol-dialog-save-btn" color="primary" variant="elevated" :loading="saving || loading" :disabled="saving || loading" @click="save">
           <VIcon start>mdi-content-save</VIcon>
           Guardar
         </VBtn>

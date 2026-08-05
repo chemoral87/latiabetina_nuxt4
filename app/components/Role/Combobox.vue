@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div id="cmp-role-combobox">
     <VCombobox
       v-model="model"

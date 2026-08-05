@@ -6,7 +6,7 @@
       </VCol>
       <VCol cols="auto" class="d-flex align-center">
         <VBtn
-          id="btn-auditoriumevent-refresh"
+          id="auev-refresh-btn"
           class="mr-1"
           color="primary"
           :loading="loading"
@@ -16,7 +16,7 @@
           Refrescar
         </VBtn>
         <VBtn
-          id="btn-auditoriumevent-new"
+          id="auev-new-btn"
           class="mr-1"
           color="success"
           @click="newAuditoriumEvent()"
@@ -35,7 +35,7 @@
           density="compact"
           variant="outlined"
           prevent-auto-select
-          permission="auditorium-index"
+          permission="auditorium-event-index"
         />
       </VCol>
       <VCol cols="12">
@@ -77,7 +77,8 @@ import { useRowHighlight } from "~/composables/useRowHighlight";
 definePageMeta({
   title: "Eventos de Auditorio",
   icon: "mdi-theater",
-  middleware: "authenticated",
+  permission: "auditorium-event-index",
+  middleware: ["authenticated", "permission"],
 });
 
 const { AuditoriumEvent } = useRepository();
@@ -98,13 +99,16 @@ const auditoriumEventDialog = ref(false);
 const auditoriumEventDialogDelete = ref(false);
 const dialogDelete = ref<Record<string, unknown>>({});
 const auth = useAuthStore();
-const { highlightId, flash, prependCreated, removingId, removeWithAnimation } =
+const { highlightId, flash, prependCreated, updateRow, removingId, removeWithAnimation } =
   useRowHighlight();
 
 const effectiveOrgId = computed(() => {
   const orgPermission = auth.permissionsOrg["auditorium-index"] ?? [];
   const orgs = auth.user?.orgs ?? [];
-  if (orgs.length === 1 && orgPermission.includes((orgs[0] as { id: unknown }).id)) {
+  if (
+    orgs.length === 1 &&
+    orgPermission.includes((orgs[0] as { id: unknown }).id)
+  ) {
     return (orgs[0] as { id: unknown }).id;
   }
   return null;
@@ -189,7 +193,7 @@ async function getAuditoriumEvents(overrides: Record<string, unknown> = {}) {
     (requestOptions.filter as unknown[]).length > 0
   ) {
     params.filter = requestOptions.filter;
-   }
+  }
   if (requestOptions.org_id) {
     params.org_id = requestOptions.org_id;
   }
@@ -287,8 +291,10 @@ async function deleteAuditoriumEvent(item: unknown) {
   const event = item as Record<string, unknown>;
   try {
     await AuditoriumEvent.delete(event.id as number);
+    // Close the dialog as soon as the delete succeeds, then animate. The row
+    // is spliced locally by removeWithAnimation — do NOT re-fetch the list.
+    auditoriumEventDialogDelete.value = false;
     await removeWithAnimation(response, event.id as number);
-    await getAuditoriumEvents();
   } catch (error) {
     notify.notify({ error: "Error eliminando evento de auditorio" });
   } finally {
@@ -299,9 +305,12 @@ async function deleteAuditoriumEvent(item: unknown) {
 async function saveAuditoriumEvent(item: Record<string, unknown>) {
   try {
     if (item.id) {
-      await AuditoriumEvent.update(item.id as number, item);
+      const res = await AuditoriumEvent.update(item.id as number, item);
+      const updated = (res as Record<string, unknown>)?.data as
+        | Record<string, unknown>
+        | undefined;
+      updateRow(response, updated ?? item);
       auditoriumEventDialog.value = false;
-      await getAuditoriumEvents();
       flash(item.id as number);
     } else {
       const res = await AuditoriumEvent.create(item);

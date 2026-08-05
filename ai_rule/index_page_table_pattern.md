@@ -31,11 +31,12 @@ Reference implementations: `role/index.vue`, `user/index.vue`,
 </VContainer>
 ```
 
-- Filter input: `id="tf-{view}-index-filter-1"`, `v-model="filterInput"`,
+- Filter input: `id="{view}-index-filter"`, `v-model="filterInput"`,
   `append-inner-icon="mdi-magnify"`, `variant="outlined"`, `density="compact"`,
-  `clearable`, `hide-details`.
-- Buttons: `btn-{view}-refresh` (`color="primary"`, `:loading="loading"`,
-  `class="mr-4"`, `@click="refreshX"`) and `btn-{view}-new`
+  `clearable`, `hide-details`. (No `tf-` / `-1` suffix — see
+  `ui_identifiers_convention.md`.)
+- Buttons: `{view}-refresh-btn` (`color="primary"`, `:loading="loading"`,
+  `class="mr-4"`, `@click="refreshX"`) and `{view}-new-btn`
   (`color="success"`, `@click="newX"`). Icons `mdi-reload` / `mdi-plus` with
   `VIcon start`.
 - Table gets `:search`, `:response`, `:loading`, `:highlight-id`, and
@@ -236,8 +237,9 @@ manually — use the shared helper.
 
 - CSS (single definition in `app/assets/css/global.css`): `.row-removing td`
   gets a light red background and the `row-remove-collapse` animation
-  (fade + vertical padding collapse). Animation duration is 0.6s — keep
-  `ROW_REMOVE_ANIMATION_MS` (600) in `useRowHighlight.ts` in sync with it.
+  (fade + vertical padding collapse). Animation duration is 1000ms — keep
+  `ROW_REMOVE_ANIMATION_MS` (1000) in `useRowHighlight.ts` in sync with the
+  `--row-remove-animation-ms` CSS variable.
 - Flow: confirm delete → `Repository.delete(id)` → close dialog →
   `await removeWithAnimation(response, id)` (marks, waits, splices, unmarks).
 - Pages that re-fetch after save/delete (`permission/index.vue`,
@@ -258,7 +260,7 @@ function closeDialog() {
 ```vue
 <div id="cmp-role-table">                       <!-- root component id -->
   <VDataTableServer
-    id="dt-role-table-items-1"
+    id="rol-table-items-dt-1"
     v-model:page="page"
     v-model:items-per-page="itemsPerPage"
     v-model:sort-by="sortBy"
@@ -314,7 +316,7 @@ options (avoids the reactive loop).
 ```vue
 <template #[`item.actions`]="{ item }">
   <VBtn title="Editar" class="ma-1" color="primary" variant="outlined" size="small"
-    icon rounded="circle" id="btn-role-table-edit" @click="emitEdit(item)">
+    icon rounded="circle" id="rol-table-edit-btn" @click="emitEdit(item)">
     <VIcon size="x-large">mdi-pencil</VIcon>
   </VBtn>
   ...
@@ -376,12 +378,18 @@ and manually selects a different one.
 
 **Fix:**
 
-1. **Initial fetch without `org_id`** — the backend handles 1-org users.
+1. **Initial fetch without `org_id`** — the backend resolves the org for 1-org
+   users from the auth token context.
 2. **`prevent-auto-select`** on the `OrganizationSelect` — prevents the
-   mount-time auto-select emit entirely.
+   mount-time auto-select emit entirely (no duplicate request).
 3. **Suppress all `filterOrgId` emits when `effectiveOrgId` is set** (1-org
    case) — never send `org_id` for single-org users.
 4. **`v-if` instead of `v-show`** on the `VSelect` inside `OrganizationSelect`.
+
+`OrganizationSelect`'s `hide-one` (hide the selector for 1-org users) and its
+`prevent-auto-select` (suppress the mount-time emit) are **independent**: hiding
+must still happen even when `preventAutoSelect` is set (see `Select.vue`
+`buildItems`).
 
 ```ts
 const auth = useAuthStore()
@@ -431,10 +439,27 @@ async function indexAuditoriums(overrides: Record<string, unknown> = {}) {
 />
 ```
 
-**In `app/components/Organization/Select.vue`, use `v-if` not `v-show`:**
+**In `app/components/Organization/Select.vue`, use `v-if` not `v-show`, and
+decouple hiding from auto-select:**
 
 ```vue
 <VSelect v-if="showSelect" v-model="selected" ... />
+```
+
+```ts
+// buildItems(): hide-one (autoDisabled) must be set even when
+// preventAutoSelect is on — only the auto-select emit is suppressed.
+function buildItems() {
+  // ...filter orgs by auth.permissionsOrg[props.permission]...
+  if (filteredOrgs.length === 1) {
+    if (props.hideOne) {
+      autoDisabled.value = true          // hides the selector (v-if)
+    }
+    if (!props.preventAutoSelect && modelValue empty) {
+      nextTick(() => { selected.value = filteredOrgs[0].id })  // auto-select
+    }
+  }
+}
 ```
 
 **Rules for new pages:**

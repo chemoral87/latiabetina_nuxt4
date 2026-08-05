@@ -1,11 +1,11 @@
-<template>
-  <VDialog id="dlg-audit-dialo-dialog-1" v-model="dialog" persistent max-width="600px">
+﻿<template>
+  <VDialog id="aud-dialo-dialog-dlg-1" v-model="dialog" persistent max-width="600px">
     <VCard>
       <VCardTitle class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center">
         <VIcon start size="small" color="primary">mdi-theater</VIcon>
         {{ isEditing ? "Editar" : "Nuevo" }} Evento de Auditorio
         <VSpacer />
-        <VBtn id="btn-auditoriumevent-dialog-close" icon size="x-small" @click="closeDialog">
+        <VBtn id="auev-dialog-close-btn" icon size="x-small" @click="closeDialog">
           <VIcon>mdi-close</VIcon>
         </VBtn>
       </VCardTitle>
@@ -14,23 +14,24 @@
         <VForm ref="eventForm">
           <VContainer>
             <VRow>
-              <VCol v-if="!orgSelectHidden" cols="12" md="6">
-                <OrganizationSelect v-model="localEvent.org_id" v-model:hidden="orgSelectHidden" label="Organización *"
-                  hide-one :permission="'auditorium-index'" :rules="organizationRules"
-                  density="compact" variant="outlined" />
+              <VCol v-if="!orgSelectHidden" md="6" cols="12">
+                <OrganizationSelect id="cmp-organization-select" v-model="localEvent.org_id" v-model:hidden="orgSelectHidden" hide-one
+                  density="compact" variant="outlined" label="Organización *"
+                  :rules="organizationRules" :permission="'auditorium-event-index'" />
               </VCol>
-              <VCol cols="12" md="6">
-                <MyDatePicker v-model="localEvent.event_date" label="Fecha del Evento *" :rules="dateRules"
-                  required density="compact" variant="outlined" />
+              <VCol md="6" cols="12">
+                <MyDatePicker id="cmp-my-date-picker" v-model="localEvent.event_date" required density="compact"
+                  :rules="dateRules" variant="outlined" label="Fecha del Evento *" />
               </VCol>
-              <VCol cols="12" md="6">
-                <VSelect v-model="localEvent.time" :items="timeOptions" item-title="text" item-value="value"
-                  label="Hora del Evento *" :rules="timeRules" required density="compact" variant="outlined" />
+              <VCol md="6" cols="12">
+                <VSelect id="auev-dialog-time-sel" v-model="localEvent.time" required density="compact" item-title="text"
+                  item-value="value" :rules="timeRules" variant="outlined" :items="timeOptions" label="Hora del Evento *" />
               </VCol>
-              <VCol cols="12" md="6">
-                <AuditoriumSelect v-model="localEvent.auditorium_id" :org-id="localEvent.org_id"
-                  :loading="loadingAuditoriums" label="Auditorio *" :rules="auditoriumRules" density="compact"
-                  variant="outlined" />
+              <VCol md="6" cols="12">
+                <AuditoriumSelect id="cmp-auditorium-select" v-model="localEvent.auditorium_id" density="compact"
+                  variant="outlined" label="Auditorio *" :rules="auditoriumRules" :org-id="localEvent.org_id"
+                  :loading="loadingAuditoriums"
+                  :selected-name="(localEvent.auditorium_name as string) ?? null" />
               </VCol>
             </VRow>
           </VContainer>
@@ -38,13 +39,13 @@
       </VCardText>
 
       <div class="d-flex justify-end px-4 pb-4">
-        <VBtn id="btn-auditoriumevent-dialog-cancel" color="primary" variant="outlined" class="mr-4"
-          :disabled="saving" @click="closeDialog">
+        <VBtn id="auev-dialog-cancel-btn" class="mr-4" color="primary" :disabled="saving"
+          variant="outlined" @click="closeDialog">
           <VIcon start>mdi-close</VIcon>
           Cancelar
         </VBtn>
-        <VBtn id="btn-auditoriumevent-dialog-save" color="primary" variant="elevated"
-          :loading="saving" @click="saveEvent">
+        <VBtn id="auev-dialog-save-btn" color="primary" :loading="saving"
+          variant="elevated" @click="saveEvent">
           <VIcon start>mdi-content-save</VIcon>
           Guardar
         </VBtn>
@@ -59,6 +60,7 @@ interface AuditoriumEventItem {
   event_date?: string | null
   time?: string | null
   auditorium_id?: number | string | null
+  auditorium_name?: string | null
   org_id?: number | string | null
   config?: string
   [key: string]: unknown
@@ -74,6 +76,8 @@ const emit = defineEmits<{
   (e: 'save', val: Record<string, unknown>): void
   (e: 'close'): void
 }>()
+
+const auth = useAuthStore()
 
 const dialog = ref(false)
 const saving = ref(false)
@@ -131,6 +135,17 @@ watch(dialog, (newVal) => {
   }
 })
 
+// When the org selector is hidden (single org granted for this permission),
+// fill org_id from the permission so AuditoriumSelect can filter correctly.
+watch(orgSelectHidden, (hidden) => {
+  if (hidden) {
+    const orgPermission = auth.permissionsOrg["auditorium-event-index"] ?? []
+    if (orgPermission.length === 1) {
+      localEvent.value.org_id = orgPermission[0]
+    }
+  }
+})
+
 watch(() => props.auditoriumEvent, () => {
   initializeForm()
 }, { immediate: true, deep: true })
@@ -164,6 +179,14 @@ async function saveEvent() {
   saving.value = true
 
   try {
+    // When the org selector is hidden (single org), ensure org_id is set so
+    // the POST includes it — the backend requires it.
+    if (orgSelectHidden.value && !localEvent.value.org_id) {
+      const orgPermission = auth.permissionsOrg["auditorium-event-index"] ?? []
+      if (orgPermission.length === 1) {
+        localEvent.value.org_id = orgPermission[0]
+      }
+    }
     const eventData = { ...localEvent.value }
     emit("save", eventData)
   } catch (error) {

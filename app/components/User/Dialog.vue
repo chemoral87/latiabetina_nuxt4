@@ -1,11 +1,11 @@
 <template>
-  <VDialog id="dlg-user-dialo-1" v-model="dialogVisible" persistent width="400px">
+  <VDialog id="usr-dialo-dlg-1" v-model="dialogVisible" persistent width="400px">
     <VCard>
       <VCardTitle class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center">
         <VIcon start size="small" color="primary">mdi-account</VIcon>
         {{ formTitle }}
         <VSpacer />
-        <VBtn id="btn-user-dialog-close" icon size="x-small" @click="close">
+        <VBtn id="usr-dialog-close-btn" icon size="x-small" @click="close">
           <VIcon>mdi-close</VIcon>
         </VBtn>
       </VCardTitle>
@@ -14,7 +14,7 @@
         <VForm ref="formRef">
           <VRow density="comfortable">
             <VCol cols="12">
-              <VTextField id="tf-user-dialo-item-name-1"
+              <VTextField id="usr-dialo-item-name-tf-1"
                 v-model="item.name"
                 label="Nombre"
                 variant="outlined"
@@ -43,7 +43,7 @@
               />
             </VCol>
             <VCol v-if="!item.id" cols="12">
-              <VTextField id="tf-user-dialo-item-email-4"
+              <VTextField id="usr-dialo-item-email-tf-4"
                 v-model="item.email"
                 label="E-mail"
                 variant="outlined"
@@ -53,7 +53,7 @@
               />
             </VCol>
             <VCol cols="12">
-              <VTextField id="tf-user-dialo-item-cellphone-5"
+              <VTextField id="usr-dialo-item-cellphone-tf-5"
                 v-model="item.cellphone"
                 label="Celular"
                 variant="outlined"
@@ -66,11 +66,11 @@
       </VCardText>
 
       <div class="d-flex justify-end px-4 pb-4">
-        <VBtn id="btn-user-dialog-cancel" color="primary" variant="outlined" class="mr-4" @click="close">
+        <VBtn id="usr-dialog-cancel-btn" color="primary" variant="outlined" class="mr-4" @click="close">
           <VIcon start>mdi-close</VIcon>
           Cancelar
         </VBtn>
-        <VBtn id="btn-user-dialog-save" color="primary" variant="elevated" :loading="saving || loading" :disabled="saving || loading" @click="save">
+        <VBtn id="usr-dialog-save-btn" color="primary" variant="elevated" :loading="saving || loading" :disabled="saving || loading" @click="save">
           <VIcon start>mdi-content-save</VIcon>
           Guardar
         </VBtn>

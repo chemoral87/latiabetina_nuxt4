@@ -1,11 +1,11 @@
 <template>
-  <VDialog id="dlg-conso-dialo-1" :model-value="true" persistent max-width="500px">
+  <VDialog id="con-dialo-dlg-1" :model-value="true" persistent max-width="500px">
     <VCard>
       <VCardTitle class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center">
         <VIcon start size="small" color="primary">{{ iconTitle }}</VIcon>
         {{ formTitle }}
         <VSpacer />
-        <VBtn id="btn-consolidation-dialog-close" icon size="x-small" :disabled="loading" @click="close">
+        <VBtn id="con-dialog-close-btn" icon size="x-small" :disabled="loading" @click="close">
           <VIcon>mdi-close</VIcon>
         </VBtn>
       </VCardTitle>
@@ -45,11 +45,11 @@
       </VCardText>
 
       <div class="d-flex justify-end px-4 pb-4">
-        <VBtn id="btn-consolidation-dialog-cancel" color="primary" variant="outlined" class="mr-4" :disabled="loading" @click="close">
+        <VBtn id="con-dialog-cancel-btn" color="primary" variant="outlined" class="mr-4" :disabled="loading" @click="close">
           <VIcon start>mdi-close</VIcon>
           Cancelar
         </VBtn>
-        <VBtn id="btn-consolidation-dialog-save" color="primary" variant="elevated" :loading="loading" :disabled="!isValid || loading" @click="save">
+        <VBtn id="con-dialog-save-btn" color="primary" variant="elevated" :loading="loading" :disabled="!isValid || loading" @click="save">
           <VIcon start>mdi-content-save</VIcon>
           Guardar
         </VBtn>

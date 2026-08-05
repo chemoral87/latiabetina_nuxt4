@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <VMenu
     id="cmp-my-date-range"
     ref="dateMenuRef"
@@ -10,7 +10,7 @@
   >
     <template #activator="{ props }">
       <VTextField
-        id="tf-my-dater-label-1"
+        id="my-dater-label-tf-1"
         :model-value="dateRangeText"
         :label="label"
         :placeholder="placeholder"
@@ -31,7 +31,7 @@
       <VDatePickerControls :view-mode="viewMode" :disabled="disabled">
         <template #default="controls">
           <VBtn
-            id="btn-my-daterange-prev"
+            id="my-daterange-prev-btn"
             icon
             variant="text"
             color="primary"
@@ -42,7 +42,7 @@
           </VBtn>
           <VSpacer />
           <VBtn
-            id="btn-my-daterange-title"
+            id="my-daterange-title-btn"
             variant="text"
             rounded
             class="text-subtitle-1 font-weight-bold text-none px-2"
@@ -52,7 +52,7 @@
           </VBtn>
           <VSpacer />
           <VBtn
-            id="btn-my-daterange-next"
+            id="my-daterange-next-btn"
             icon
             variant="text"
             color="primary"
@@ -105,7 +105,7 @@
 
       <VDivider />
       <div class="d-flex justify-end pa-2">
-        <VBtn id="btn-my-daterange-clear" variant="outlined" color="primary" prepend-icon="mdi-close" @click="onClear">
+        <VBtn id="my-daterange-clear-btn" variant="outlined" color="primary" prepend-icon="mdi-close" @click="onClear">
           LIMPIAR
         </VBtn>
       </div>

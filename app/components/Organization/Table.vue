@@ -1,7 +1,7 @@
-<template>
+﻿<template>
   <div id="cmp-organization-table">
     <VDataTableServer
-      id="dt-organ-table-items-1"
+      id="org-table-items-dt-1"
       v-model:page="page"
       v-model:items-per-page="itemsPerPage"
       v-model:sort-by="sortBy"
@@ -21,13 +21,13 @@
       @update:options="onUpdateOptions"
     >
       <template #[`item.actions`]="{ item }">
-        <VBtn id="btn-organization-table-edit" title="Editar" class="ma-1" color="primary" variant="outlined" size="small" icon rounded="circle" @click="emitEdit(item)">
+        <VBtn id="org-table-edit-btn" title="Editar" class="ma-1" color="primary" variant="outlined" size="small" icon rounded="circle" @click="emitEdit(item)">
           <VIcon size="x-large">mdi-pencil</VIcon>
         </VBtn>
-        <VBtn id="btn-organization-table-config" title="Config" class="ma-1" color="info" variant="outlined" size="small" icon rounded="circle" @click="emitConfig(item)">
+        <VBtn id="org-table-config-btn" title="Config" class="ma-1" color="info" variant="outlined" size="small" icon rounded="circle" @click="emitConfig(item)">
           <VIcon size="x-large">mdi-cog</VIcon>
         </VBtn>
-        <VBtn id="btn-organization-table-delete" title="Delete" class="ma-1" color="error" variant="outlined" size="small" icon rounded="circle" @click="confirmDelete(item)">
+        <VBtn id="org-table-delete-btn" title="Delete" class="ma-1" color="error" variant="outlined" size="small" icon rounded="circle" @click="confirmDelete(item)">
           <VIcon size="x-large">mdi-delete</VIcon>
         </VBtn>
       </template>

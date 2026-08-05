@@ -25,7 +25,7 @@
 
       <!-- DatePicker -->
       <VCol cols="12" md="4">
-        <VCard id="card-my-index-1" :elevation="4" hover class="rounded-lg h-100">
+        <VCard id="my-index-card-1" :elevation="4" hover class="rounded-lg h-100">
           <VCardTitle class="py-3 text-subtitle-1 font-weight-bold">
             <VIcon start color="blue">mdi-calendar</VIcon>
             MyDatePicker
@@ -35,23 +35,23 @@
             <MyDatePicker v-model="date" label="Selecciona una fecha" dense outlined />
             <div class="mt-3 d-flex align-center">
               <span class="text-caption text-grey mr-2">Valor:</span>
-              <VChip id="chip-my-date-value" size="small" :color="date ? 'success' : 'grey-lighten-3'" variant="elevated" label class="font-weight-mono">
+              <VChip id="my-date-value-chip" size="small" :color="date ? 'success' : 'grey-lighten-3'" variant="elevated" label class="font-weight-mono">
                 {{ date || "null" }}
               </VChip>
             </div>
             <div class="mt-2 d-flex align-center">
               <span class="text-caption text-grey mr-2">Mostrar:</span>
-              <VChip id="chip-my-date-formatted" size="small" color="primary" variant="outlined" label>
+              <VChip id="my-date-formatted-chip" size="small" color="primary" variant="outlined" label>
                 {{ formattedDate || "—" }}
               </VChip>
             </div>
           </VCardText>
           <div class="d-flex px-4 pb-3">
-            <VBtn id="btn-my-date-clear" size="small" variant="outlined" color="error" class="mr-4" @click="date = null">
+            <VBtn id="my-date-clear-btn" size="small" variant="outlined" color="error" class="mr-4" @click="date = null">
               <VIcon start size="x-small">mdi-close</VIcon>
               Limpiar
             </VBtn>
-            <VBtn id="btn-my-date-today" size="small" variant="outlined" color="primary" @click="date = '2026-07-21'">
+            <VBtn id="my-date-today-btn" size="small" variant="outlined" color="primary" @click="date = '2026-07-21'">
               <VIcon start size="x-small">mdi-calendar-today</VIcon>
               Hoy
             </VBtn>
@@ -61,7 +61,7 @@
 
       <!-- DateRange -->
       <VCol cols="12" md="4">
-        <VCard id="card-my-index-2" :elevation="4" hover class="rounded-lg h-100">
+        <VCard id="my-index-card-2" :elevation="4" hover class="rounded-lg h-100">
           <VCardTitle class="py-3 text-subtitle-1 font-weight-bold">
             <VIcon start color="blue">mdi-calendar-range</VIcon>
             MyDateRange
@@ -71,19 +71,19 @@
             <MyDateRange v-model="dateRange" label="Rango de fechas" dense outlined />
             <div class="mt-3 d-flex align-center">
               <span class="text-caption text-grey mr-2">Valor:</span>
-              <VChip id="chip-my-daterange-value" size="small" :color="dateRange.length ? 'success' : 'grey-lighten-3'" variant="elevated" label class="font-weight-mono">
+              <VChip id="my-daterange-value-chip" size="small" :color="dateRange.length ? 'success' : 'grey-lighten-3'" variant="elevated" label class="font-weight-mono">
                 {{ dateRange.length ? dateRange.join(" ~ ") : "[]" }}
               </VChip>
             </div>
             <div class="mt-2 d-flex align-center">
               <span class="text-caption text-grey mr-2">Mostrar:</span>
-              <VChip id="chip-my-daterange-formatted" size="small" color="primary" variant="outlined" label>
+              <VChip id="my-daterange-formatted-chip" size="small" color="primary" variant="outlined" label>
                 {{ formattedDateRange || "—" }}
               </VChip>
             </div>
           </VCardText>
           <div class="d-flex px-4 pb-3">
-            <VBtn id="btn-my-daterange-clear" size="small" variant="outlined" color="error" @click="dateRange = []">
+            <VBtn id="my-daterange-clear-btn" size="small" variant="outlined" color="error" @click="dateRange = []">
               <VIcon start size="x-small">mdi-close</VIcon>
               Limpiar
             </VBtn>
@@ -93,7 +93,7 @@
 
       <!-- TimePicker -->
       <VCol cols="12" md="4">
-        <VCard id="card-my-index-3" :elevation="4" hover class="rounded-lg h-100">
+        <VCard id="my-index-card-3" :elevation="4" hover class="rounded-lg h-100">
           <VCardTitle class="py-3 text-subtitle-1 font-weight-bold">
             <VIcon start color="blue">mdi-clock-outline</VIcon>
             MyTimePicker
@@ -103,17 +103,17 @@
             <MyTimePicker v-model="time" label="Selecciona hora" dense outlined />
             <div class="mt-3 d-flex align-center">
               <span class="text-caption text-grey mr-2">Valor (24h):</span>
-              <VChip id="chip-my-time-value" size="small" :color="time ? 'success' : 'grey-lighten-3'" variant="elevated" label class="font-weight-mono">
+              <VChip id="my-time-value-chip" size="small" :color="time ? 'success' : 'grey-lighten-3'" variant="elevated" label class="font-weight-mono">
                 {{ time || "null" }}
               </VChip>
             </div>
           </VCardText>
           <div class="d-flex px-4 pb-3">
-            <VBtn id="btn-my-time-clear" size="small" variant="outlined" color="error" class="mr-4" @click="time = null">
+            <VBtn id="my-time-clear-btn" size="small" variant="outlined" color="error" class="mr-4" @click="time = null">
               <VIcon start size="x-small">mdi-close</VIcon>
               Limpiar
             </VBtn>
-            <VBtn id="btn-my-time-set" size="small" variant="outlined" color="primary" @click="time = '14:30'">
+            <VBtn id="my-time-set-btn" size="small" variant="outlined" color="primary" @click="time = '14:30'">
               <VIcon start size="x-small">mdi-clock</VIcon>
               14:30
             </VBtn>
@@ -133,7 +133,7 @@
 
       <!-- PreviewImage -->
       <VCol cols="12" md="4">
-        <VCard id="card-my-index-4" :elevation="4" hover class="rounded-lg h-100">
+        <VCard id="my-index-card-4" :elevation="4" hover class="rounded-lg h-100">
           <VCardTitle class="py-3 text-subtitle-1 font-weight-bold">
             <VIcon start color="green">mdi-image-eye</VIcon>
             MyPreviewImage
@@ -143,7 +143,7 @@
             <MyPreviewImage :src="previewSrc" :loading="previewLoading" :delay-seconds="previewDelay" max-height="160" />
             <div class="mt-3">
               <VTextField
-                id="tf-my-index-previewsrc-1"
+                id="my-index-previewsrc-tf-1"
                 v-model="previewSrc"
                 label="URL de imagen"
                 variant="outlined"
@@ -153,9 +153,9 @@
               />
             </div>
             <div class="mt-2 d-flex align-center">
-              <VSwitch id="sw-my-preview-loading" v-model="previewLoading" density="compact" hide-details label="Forzar loading" class="mt-0 pt-0 mr-3" />
+              <VSwitch id="my-preview-loading-sw" v-model="previewLoading" density="compact" hide-details label="Forzar loading" class="mt-0 pt-0 mr-3" />
               <VTextField
-                id="tf-my-index-delay-s-2"
+                id="my-index-delay-s-tf-2"
                 v-model.number="previewDelay"
                 label="Delay (s)"
                 variant="outlined"
@@ -169,11 +169,11 @@
             </div>
           </VCardText>
           <div class="d-flex px-4 pb-3">
-            <VBtn id="btn-my-preview-load" size="small" variant="outlined" color="primary" class="mr-4" @click="previewSrc = 'https://picsum.photos/seed/test/400/300'">
+            <VBtn id="my-preview-load-btn" size="small" variant="outlined" color="primary" class="mr-4" @click="previewSrc = 'https://picsum.photos/seed/test/400/300'">
               <VIcon start size="x-small">mdi-image</VIcon>
               Cargar ejemplo
             </VBtn>
-            <VBtn id="btn-my-preview-clear" size="small" variant="outlined" color="error" @click="previewSrc = ''">
+            <VBtn id="my-preview-clear-btn" size="small" variant="outlined" color="error" @click="previewSrc = ''">
               <VIcon start size="x-small">mdi-close</VIcon>
               Limpiar
             </VBtn>
@@ -183,7 +183,7 @@
 
       <!-- Uploadimage -->
       <VCol cols="12" md="4">
-        <VCard id="card-my-index-5" :elevation="4" hover class="rounded-lg h-100">
+        <VCard id="my-index-card-5" :elevation="4" hover class="rounded-lg h-100">
           <VCardTitle class="py-3 text-subtitle-1 font-weight-bold">
             <VIcon start color="info">mdi-camera</VIcon>
             MyUploadimage
@@ -212,7 +212,7 @@
 
       <!-- UploadimageCrop -->
       <VCol cols="12" md="4">
-        <VCard id="card-my-index-6" :elevation="4" hover class="rounded-lg h-100">
+        <VCard id="my-index-card-6" :elevation="4" hover class="rounded-lg h-100">
           <VCardTitle class="py-3 text-subtitle-1 font-weight-bold">
             <VIcon start color="green">mdi-image-crop</VIcon>
             MyUploadimageCrop
@@ -244,7 +244,7 @@
 
       <!-- DragPanel -->
       <VCol cols="12" md="6">
-        <VCard id="card-my-index-7" :elevation="4" hover class="rounded-lg h-100">
+        <VCard id="my-index-card-7" :elevation="4" hover class="rounded-lg h-100">
           <VCardTitle class="py-3 text-subtitle-1 font-weight-bold">
             <VIcon start color="orange">mdi-drag</VIcon>
             MyDragPanel
@@ -254,13 +254,13 @@
             <p class="text-caption text-grey mb-3">Panel flotante que se puede arrastrar. Aparece animado desde abajo.</p>
             <VRow density="comfortable">
               <VCol cols="auto">
-                <VBtn id="btn-my-drag-open" color="primary" @click="dragPanelVisible = true">
+                <VBtn id="my-drag-open-btn" color="primary" @click="dragPanelVisible = true">
                   <VIcon start>mdi-window-maximize</VIcon>
                   Abrir panel
                 </VBtn>
               </VCol>
               <VCol cols="auto">
-                <VBtn id="btn-my-drag-close" color="error" variant="outlined" @click="dragPanelVisible = false">
+                <VBtn id="my-drag-close-btn" color="error" variant="outlined" @click="dragPanelVisible = false">
                   <VIcon start>mdi-close</VIcon>
                   Cerrar
                 </VBtn>
@@ -268,7 +268,7 @@
             </VRow>
             <div class="mt-2 text-caption">
               Estado:
-              <VChip id="chip-my-drag-state" size="x-small" :color="dragPanelVisible ? 'success' : 'grey'" variant="elevated" label>
+              <VChip id="my-drag-state-chip" size="x-small" :color="dragPanelVisible ? 'success' : 'grey'" variant="elevated" label>
                 {{ dragPanelVisible ? "Visible" : "Oculto" }}
               </VChip>
             </div>
@@ -278,7 +278,7 @@
 
       <!-- Loading -->
       <VCol cols="12" md="6">
-        <VCard id="card-my-index-8" :elevation="4" hover class="rounded-lg h-100">
+        <VCard id="my-index-card-8" :elevation="4" hover class="rounded-lg h-100">
           <VCardTitle class="py-3 text-subtitle-1 font-weight-bold">
             <VIcon start color="orange">mdi-loading</VIcon>
             MyLoading
@@ -288,20 +288,20 @@
             <p class="text-caption text-grey mb-3">Overlay de carga con spinner y mensaje personalizable.</p>
             <VRow density="comfortable">
               <VCol cols="auto">
-                <VBtn id="btn-my-loading-show" color="primary" @click="triggerLoading">
+                <VBtn id="my-loading-show-btn" color="primary" @click="triggerLoading">
                   <VIcon start>mdi-play</VIcon>
                   Mostrar 3s
                 </VBtn>
               </VCol>
               <VCol cols="auto">
-                <VBtn id="btn-my-loading-close" color="error" variant="outlined" @click="loadingVisible = false">
+                <VBtn id="my-loading-close-btn" color="error" variant="outlined" @click="loadingVisible = false">
                   <VIcon start>mdi-stop</VIcon>
                   Cerrar
                 </VBtn>
               </VCol>
             </VRow>
             <VTextField
-              id="tf-my-index-loadingmessage-3"
+              id="my-index-loadingmessage-tf-3"
               v-model="loadingMessage"
               label="Mensaje"
               variant="outlined"
@@ -332,7 +332,7 @@
           <VIcon size="small" class="mr-2">mdi-clock</VIcon>
           <span class="text-caption">Hora: {{ time || "—" }}</span>
         </div>
-        <VBtn id="btn-my-dragpanel-close" block size="small" variant="outlined" color="error" class="mt-2" @click="dragPanelVisible = false">
+        <VBtn id="my-dragpanel-close-btn" block size="small" variant="outlined" color="error" class="mt-2" @click="dragPanelVisible = false">
           <VIcon start size="x-small">mdi-close</VIcon>
           Cerrar panel
         </VBtn>
@@ -345,12 +345,12 @@
     <!-- ─── State Observer (debug panel) ──────────────────────── -->
     <VRow class="mt-4">
       <VCol cols="12">
-        <VCard id="card-my-index-9" :elevation="2" class="rounded-lg">
+        <VCard id="my-index-card-9" :elevation="2" class="rounded-lg">
           <VCardTitle class="py-2 text-subtitle-2 font-weight-bold bg-grey-lighten-3">
             <VIcon start size="small">mdi-code-json</VIcon>
             Estado global de los componentes
             <VSpacer />
-            <VBtn id="btn-my-reset-all" size="x-small" variant="outlined" @click="resetAll">
+            <VBtn id="my-reset-all-btn" size="x-small" variant="outlined" @click="resetAll">
               <VIcon start size="x-small">mdi-restore</VIcon>
               Resetear todo
             </VBtn>

@@ -3,7 +3,7 @@
     <VRow dense>
       <VCol cols="12" md="3">
         <VTextField
-          id="tf-conso-index-filterterm-1"
+          id="con-index-filterterm-tf-1"
           v-model="filterTerm"
           append-inner-icon="mdi-magnify"
           clearable
@@ -13,11 +13,11 @@
         />
       </VCol>
       <VCol cols="12" md="4">
-        <VBtn id="btn-cnsld-new" color="primary" class="mr-1" @click="newSheet">
+        <VBtn id="cnsld-new-btn" color="primary" class="mr-1" @click="newSheet">
           <VIcon start>mdi-plus</VIcon>
           Nuevo
         </VBtn>
-        <VBtn id="btn-cnsld-refresh" color="primary" :loading="loading" @click="fetchData">
+        <VBtn id="cnsld-refresh-btn" color="primary" :loading="loading" @click="fetchData">
           <VIcon start>mdi-reload</VIcon>
           Refrescar
         </VBtn>

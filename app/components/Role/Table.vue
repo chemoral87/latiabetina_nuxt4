@@ -1,7 +1,7 @@
-<template>
+﻿<template>
   <div id="cmp-role-table">
     <VDataTableServer
-      id="dt-role-table-items-1"
+      id="rol-table-items-dt-1"
       v-model:page="page"
       v-model:items-per-page="itemsPerPage"
       v-model:sort-by="sortBy"
@@ -36,7 +36,7 @@
 
       <template #[`item.actions`]="{ item }">
         <VBtn
-          id="btn-role-table-edit"
+          id="rol-table-edit-btn"
           title="Editar"
           class="ma-1"
           color="primary"
@@ -49,7 +49,7 @@
           <VIcon size="x-large">mdi-pencil</VIcon>
         </VBtn>
         <VBtn
-          id="btn-role-table-permissions"
+          id="rol-table-permissions-btn"
           title="Permisos"
           class="ma-1"
           color="success"
@@ -62,7 +62,7 @@
           <VIcon size="x-large">mdi-key-variant</VIcon>
         </VBtn>
         <VBtn
-          id="btn-role-table-distribute"
+          id="rol-table-distribute-btn"
           title="Distribuir"
           class="ma-1"
           color="info"
@@ -75,7 +75,7 @@
           <VIcon size="x-large">mdi-share-variant</VIcon>
         </VBtn>
         <VBtn
-          id="btn-role-table-delete"
+          id="rol-table-delete-btn"
           title="Eliminar"
           class="ma-1"
           color="error"

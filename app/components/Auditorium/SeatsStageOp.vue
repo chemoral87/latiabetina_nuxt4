@@ -1,31 +1,31 @@
-<template>
+﻿<template>
   <div id="cmp-auditorium-seats-stage-op">
     <div ref="controlRow">
       <div class="d-flex flex-wrap align-center py-1" style="gap: 6px">
         <template v-if="selectedSubsection">
-          <VBtn id="btn-auditorium-stageop-main" color="primary" size="small" prepend-icon="mdi-arrow-left"
+          <VBtn id="aud-stageop-main-btn" color="primary" size="small" prepend-icon="mdi-arrow-left"
             @click="goBackToFullView">Main</VBtn>
-          <VBtn id="btn-auditorium-stageop-prev-sub" color="primary" size="x-small" icon class="ml-1"
+          <VBtn id="aud-stageop-prev-sub-btn" color="primary" size="x-small" icon class="ml-1"
             @click="previousSubsection">
             <VIcon>mdi-arrow-left</VIcon>
           </VBtn>
-          <VBtn id="btn-auditorium-stageop-next-sub" color="primary" size="x-small" icon class="ml-1"
+          <VBtn id="aud-stageop-next-sub-btn" color="primary" size="x-small" icon class="ml-1"
             @click="nextSubsection">
             <VIcon>mdi-arrow-right</VIcon>
           </VBtn>
         </template>
 
-        <VBtn id="btn-auditorium-stageop-fit-width" title="Fit Width" color="secondary" size="small"
+        <VBtn id="aud-stageop-fit-width-btn" title="Fit Width" color="secondary" size="small"
           @click="fitToWidth">
           <VIcon>mdi-arrow-expand-horizontal</VIcon>
           Fit
         </VBtn>
-        <VBtn id="btn-auditorium-stageop-fit-height" title="Fit Height" color="secondary" size="small"
+        <VBtn id="aud-stageop-fit-height-btn" title="Fit Height" color="secondary" size="small"
           @click="fitToHeight">
           <VIcon>mdi-arrow-expand-vertical</VIcon>
           Fit
         </VBtn>
-        <VBtn v-if="selectedSubsection" id="btn-auditorium-stageop-history" title="Historial de asientos" color="success"
+        <VBtn v-if="selectedSubsection" id="aud-stageop-history-btn" title="Historial de asientos" color="success"
           size="small" @click="openHistory">
           <VIcon start>mdi-history</VIcon>
           Hist

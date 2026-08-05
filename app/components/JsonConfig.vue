@@ -1,11 +1,11 @@
 <template>
-  <VCard id="card-jsonconfig-1" variant="outlined" class="mb-4 pa-2">
+  <VCard id="jsonconfig-card-1" variant="outlined" class="mb-4 pa-2">
     <div class="text-caption mb-2 font-weight-bold">Importar / Exportar</div>
-    <VBtn id="btn-jsonconfig-export" size="x-small" color="success" block class="mb-2" @click="exportConfiguration">
+    <VBtn id="jsonconfig-export-btn" size="x-small" color="success" block class="mb-2" @click="exportConfiguration">
       <VIcon start size="x-small">{{ saveFormat === 'csv' ? 'mdi-file-delimited' : 'mdi-code-json' }}</VIcon>
       Exportar {{ saveFormat === 'csv' ? 'CSV' : 'JSON' }}
     </VBtn>
-    <VBtn id="btn-jsonconfig-import" size="x-small" color="info" block @click="triggerImport">
+    <VBtn id="jsonconfig-import-btn" size="x-small" color="info" block @click="triggerImport">
       <VIcon start size="x-small">mdi-upload</VIcon>
       Importar {{ saveFormat === 'csv' ? 'CSV' : 'JSON' }}
     </VBtn>

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div id="cmp-pos-kds-orders-board">
     <!-- ── Loading ──────────────────────────────────────────────────── -->
     <div v-if="loading" class="kds-state kds-state--loading">
@@ -16,7 +16,7 @@
       <div class="text-h6 mt-4 text-grey">Sin órdenes pendientes</div>
       <div class="text-body-2 text-grey mt-1">Todas las órdenes han sido completadas</div>
       <div class="mt-6">
-        <VBtn id="btn-kds-reload" variant="elevated" color="primary" @click="emit('reload')">
+        <VBtn id="kds-reload-btn" variant="elevated" color="primary" @click="emit('reload')">
           <VIcon start size="small">mdi-refresh</VIcon>
           Recargar
         </VBtn>
@@ -44,7 +44,7 @@
             <template #activator="{ props: tooltipProps }">
               <VBtn
                 v-bind="tooltipProps"
-                id="btn-kds-sound"
+                id="kds-sound-btn"
                 icon
                 size="small"
                 :color="soundEnabled ? 'orange-darken-2' : 'grey'"

@@ -4,7 +4,7 @@
       <!-- Filter -->
       <VCol cols="12" md="2">
         <VTextField
-          id="tf-role-index-filterrole-1"
+          id="rol-index-filterrole-tf-1"
           v-model="filterInput"
           append-inner-icon="mdi-magnify"
           variant="outlined"
@@ -17,11 +17,11 @@
 
       <!-- Action buttons -->
       <VCol cols="auto" class="d-flex align-center">
-        <VBtn id="btn-role-refresh" color="primary" :loading="loading" class="mr-4" @click="refreshRoles">
+        <VBtn id="rol-refresh-btn" color="primary" :loading="loading" class="mr-4" @click="refreshRoles">
           <VIcon start>mdi-reload</VIcon>
           Refrescar
         </VBtn>
-        <VBtn id="btn-role-new" color="success" @click="newRole">
+        <VBtn id="rol-new-btn" color="success" @click="newRole">
           <VIcon start>mdi-plus</VIcon>
           Nuevo Rol
         </VBtn>

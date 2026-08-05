@@ -1,7 +1,7 @@
-<template>
+﻿<template>
   <div id="cmp-church-event-table">
     <VDataTableServer
-      id="dt-churc-table-items-1"
+      id="eve-table-items-dt-1"
       v-model:page="page"
       v-model:items-per-page="itemsPerPage"
       v-model:sort-by="sortBy"
@@ -47,7 +47,7 @@
       <template #[`item.actions`]="{ item }">
         <div class="d-flex flex-nowrap justify-center">
           <VBtn
-            id="btn-churchevent-table-edit"
+            id="eve-table-edit-btn"
             title="Editar"
             color="primary"
             variant="outlined"
@@ -60,7 +60,7 @@
             <VIcon size="x-large">mdi-pencil</VIcon>
           </VBtn>
           <VBtn
-            id="btn-churchevent-table-copy"
+            id="eve-table-copy-btn"
             title="Copiar"
             color="success"
             variant="outlined"
@@ -73,7 +73,7 @@
             <VIcon size="x-large">mdi-content-copy</VIcon>
           </VBtn>
           <VBtn
-            id="btn-churchevent-table-delete"
+            id="eve-table-delete-btn"
             title="Eliminar"
             color="error"
             variant="outlined"

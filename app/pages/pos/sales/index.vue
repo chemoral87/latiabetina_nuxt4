@@ -4,7 +4,7 @@
       <!-- Filter -->
       <VCol cols="12" md="3">
         <VTextField
-          id="tf-poss-filter-1"
+          id="poss-filter-tf-1"
           v-model="filterInput"
           append-inner-icon="mdi-magnify"
           variant="outlined"
@@ -17,11 +17,11 @@
 
       <!-- Action buttons -->
       <VCol cols="auto" class="d-flex align-center">
-        <VBtn id="btn-poss-refresh" color="primary" :loading="loading" class="mr-4" @click="refreshSales">
+        <VBtn id="poss-refresh-btn" color="primary" :loading="loading" class="mr-4" @click="refreshSales">
           <VIcon start>mdi-reload</VIcon>
           Refrescar
         </VBtn>
-        <VBtn id="btn-poss-goto-pos" color="success" @click="navigateTo('/pos')">
+        <VBtn id="poss-goto-pos-btn" color="success" @click="navigateTo('/pos')">
           <VIcon start>mdi-point-of-sale</VIcon>
           Ir al POS
         </VBtn>

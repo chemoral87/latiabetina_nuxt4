@@ -1,7 +1,7 @@
-<template>
+﻿<template>
   <div id="cmp-testimony-table">
     <VDataTableServer
-      id="dt-testi-table-localitems-1"
+      id="tes-table-localitems-dt-1"
       v-model:page="page"
       v-model:items-per-page="itemsPerPage"
       v-model:sort-by="sortBy"
@@ -21,7 +21,7 @@
     >
       <template #[`item.review`]="{ item }">
         <VBtn
-          id="btn-testimony-table-show"
+          id="tes-table-show-btn"
           title="Revisar"
           color="primary"
           variant="outlined"
@@ -50,7 +50,7 @@
       <template #[`item.actions`]="{ item }">
         <div class="d-flex flex-nowrap justify-center">
           <VBtn
-            id="btn-testimony-table-edit"
+            id="tes-table-edit-btn"
             title="Editar"
             color="primary"
             variant="outlined"
@@ -64,7 +64,7 @@
           </VBtn>
 
           <VBtn
-            id="btn-testimony-table-delete"
+            id="tes-table-delete-btn"
             title="Eliminar"
             color="error"
             variant="outlined"

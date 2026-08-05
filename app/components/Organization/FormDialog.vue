@@ -1,11 +1,11 @@
 <template>
-  <VDialog id="dlg-organ-formd-1" v-model="dialogVisible" persistent width="400px">
+  <VDialog id="org-formd-dlg-1" v-model="dialogVisible" persistent width="400px">
     <VCard>
       <VCardTitle class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center">
         <VIcon start size="small" color="primary">mdi-domain</VIcon>
         {{ formTitle }}
         <VSpacer />
-        <VBtn id="btn-organization-dialog-close" icon size="x-small" @click="close">
+        <VBtn id="org-dialog-close-btn" icon size="x-small" @click="close">
           <VIcon>mdi-close</VIcon>
         </VBtn>
       </VCardTitle>
@@ -14,7 +14,7 @@
         <VForm ref="formRef">
           <VRow density="comfortable">
             <VCol cols="12">
-              <VTextField id="tf-organ-formd-item-name-1"
+              <VTextField id="org-formd-item-name-tf-1"
                 v-model="item.name"
                 label="Nombre"
                 variant="outlined"
@@ -34,7 +34,7 @@
               />
             </VCol>
             <VCol cols="12">
-              <VTextField id="tf-organ-formd-item-description-3"
+              <VTextField id="org-formd-item-description-tf-3"
                 v-model="item.description"
                 label="Descripción"
                 variant="outlined"
@@ -47,11 +47,11 @@
       </VCardText>
 
       <div class="d-flex justify-end px-4 pb-4">
-        <VBtn id="btn-organization-dialog-cancel" color="primary" variant="outlined" class="mr-4" @click="close">
+        <VBtn id="org-dialog-cancel-btn" color="primary" variant="outlined" class="mr-4" @click="close">
           <VIcon start>mdi-close</VIcon>
           Cancelar
         </VBtn>
-        <VBtn id="btn-organization-dialog-save" color="primary" variant="elevated" :loading="saving || loading" :disabled="saving || loading" @click="save">
+        <VBtn id="org-dialog-save-btn" color="primary" variant="elevated" :loading="saving || loading" :disabled="saving || loading" @click="save">
           <VIcon start>mdi-content-save</VIcon>
           Guardar
         </VBtn>
