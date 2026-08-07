@@ -7,9 +7,6 @@
             <VRow density="comfortable">
               <VCol cols="12" class="text-center mb-2">
                 <span class="text-h5">Inicio de Sesión</span>
-                <div class="text-overline text-grey">
-                  <span style="font-size: 10px">v{{ buildVersion }}</span>
-                </div>
               </VCol>
 
               <VCol cols="12">
@@ -103,7 +100,6 @@
 <script setup lang="ts">
 const route = useRoute();
 const auth = useAuthStore();
-const buildVersion = useRuntimeConfig().public.version;
 
 definePageMeta({
   title: "Inicio Sesión",

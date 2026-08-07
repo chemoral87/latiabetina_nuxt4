@@ -106,6 +106,9 @@
         </VCard>
       </VCol>
     </VRow>
+    <div class="text-center mt-4">
+      <span class="text-overline text-grey" style="font-size: 10px">v{{ buildVersion }}</span>
+    </div>
   </VContainer>
   </ClientOnly>
 </template>
@@ -118,6 +121,7 @@ definePageMeta({
 })
 
 const auth = useAuthStore()
+const buildVersion = useRuntimeConfig().public.version
 const user = computed(() => (auth.user ?? {}) as Record<string, unknown>)
 const orgs = computed(() => (user.value?.orgs as Array<{ id: number; name: string; short_code?: string }>) || [])
 const roles_org = computed(() => (user.value?.roles_org as Record<string, number[]>) || {})
