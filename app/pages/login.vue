@@ -120,18 +120,19 @@ function loginWithGoogle() {
   if (isSubmitting.value) return;
   isSubmitting.value = true;
 
-  const redirect =
-    route.query.redirect || localStorage.getItem("loginRedirect");
+  const rawRedirect =
+    route.query.redirect || sessionStorage.getItem("loginRedirect");
+  const redirect = safeInternalRedirect(rawRedirect);
 
   const config = useRuntimeConfig();
   const baseUrl =
     config.public.baseUrl ||
-    `http://${window.location.hostname}${config.public.suffixUrl}`;
+    `${window.location.protocol}//${window.location.hostname}${config.public.suffixUrl}`;
   let googleRedirectUrl = `${baseUrl}/auth/google/redirect`;
 
-  if (redirect) {
-    googleRedirectUrl += `?redirect=${encodeURIComponent(redirect as string)}`;
-    localStorage.setItem("loginRedirect", redirect as string);
+  if (rawRedirect && redirect !== "/dashboard") {
+    googleRedirectUrl += `?redirect=${encodeURIComponent(redirect)}`;
+    sessionStorage.setItem("loginRedirect", redirect);
   }
 
   window.location.href = googleRedirectUrl;
@@ -143,10 +144,12 @@ async function submitLogin() {
   try {
     const credentials = { email: email.value, password: password.value };
     await auth.loginWith("laravelJWT", { data: credentials });
-    const redirect =
-      localStorage.getItem("loginRedirect") || route.query.redirect || "/";
-    localStorage.removeItem("loginRedirect");
-    navigateTo(redirect as string);
+    const redirect = safeInternalRedirect(
+      sessionStorage.getItem("loginRedirect") || route.query.redirect,
+      "/"
+    );
+    sessionStorage.removeItem("loginRedirect");
+    navigateTo(redirect);
   } catch (e) {
     console.error(e);
   } finally {

@@ -9,7 +9,8 @@ export default defineNuxtRouteMiddleware((to) => {
     const loginRedirect = sessionStorage.getItem("loginRedirect")
     if (loginRedirect) {
       sessionStorage.removeItem("loginRedirect")
-      return navigateTo(loginRedirect)
+      // Storage is not trusted just because it's same-origin — validate on read.
+      return navigateTo(safeInternalRedirect(loginRedirect))
     }
     if (to.path === "/" || to.path === "") {
       return navigateTo("/dashboard")

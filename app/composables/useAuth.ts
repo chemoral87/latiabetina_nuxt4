@@ -62,9 +62,8 @@ export const useAuthStore = defineStore("auth", () => {
 
   // Cookies (en vez de localStorage) para que el token esté disponible
   // tanto en servidor (SSR) como en cliente, y consistente con useApi().
-  const tokenCookie = useCookie<string | null>("auth.token")
-  const strategyCookie = useCookie<string | null>("auth.strategy")
-  const refreshTokenCookie = useCookie<string | null>("auth.refreshToken")
+  // Flags compartidos (secure/sameSite) definidos en useAuthCookies().
+  const { tokenCookie, strategyCookie, refreshTokenCookie } = useAuthCookies()
 
   function getBaseUrl() {
     const config = useRuntimeConfig()
@@ -72,7 +71,7 @@ export const useAuthStore = defineStore("auth", () => {
       return config.public.baseUrl
     }
     const reqUrl = useRequestURL()
-    return `http://${reqUrl.hostname}${config.public.suffixUrl}`
+    return `${reqUrl.protocol}//${reqUrl.hostname}${config.public.suffixUrl}`
   }
 
   async function loginWith(name: string, { data }: { data: Record<string, string> }) {

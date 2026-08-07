@@ -14,14 +14,12 @@ function getJwtExp(token: string): number | null {
 export function useApi() {
   const config = useRuntimeConfig()
 
-  const tokenCookie = useCookie<string | null>("auth.token")
-  const refreshTokenCookie = useCookie<string | null>("auth.refreshToken")
-  const strategyCookie = useCookie<string | null>("auth.strategy")
+  const { tokenCookie, refreshTokenCookie, strategyCookie } = useAuthCookies()
 
   function getBaseUrl() {
     if (config.public.baseUrl) return config.public.baseUrl
     if (import.meta.client) {
-      return `http://${window.location.hostname}${config.public.suffixUrl}`
+      return `${window.location.protocol}//${window.location.hostname}${config.public.suffixUrl}`
     }
     return ""
   }

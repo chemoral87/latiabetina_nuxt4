@@ -17,6 +17,11 @@ definePageMeta({
 
 const auth = useAuthStore()
 const processing = ref(false)
+const route = useRoute()
+
+useHead({
+  meta: [{ name: "referrer", content: "no-referrer" }],
+})
 
 onMounted(async () => {
   if (processing.value) return
@@ -25,6 +30,14 @@ onMounted(async () => {
   const urlParams = new URLSearchParams(window.location.search)
   const token = urlParams.get("token")
   const error = urlParams.get("error")
+
+  // Scrub the token (and any other query params) from the address bar and
+  // browser history as soon as it has been read, so it doesn't linger in the
+  // URL for shoulder-surfers or via the back button. The auth flow below uses
+  // the already-extracted values, so clearing the URL is safe to do now.
+  if (window.history.replaceState) {
+    window.history.replaceState(null, "", window.location.pathname)
+  }
 
   if (error) {
     navigateTo("/login")
@@ -46,8 +59,7 @@ onMounted(async () => {
         throw new Error("No se pudo obtener el usuario.")
       }
 
-      const route = useRoute()
-      const redirectPath = (route.query.redirect as string) || "/dashboard"
+      const redirectPath = safeInternalRedirect(route.query.redirect)
       navigateTo(redirectPath)
     } catch (e) {
       console.error("Error during Google authentication:", e)

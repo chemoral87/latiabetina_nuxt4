@@ -8,7 +8,13 @@
 
       <VCardText>
           <div class="error-yellow-box">
-            <div class="text-h6 text-grey-darken-4" v-html="errorMessage" />
+            <div class="text-h6 text-grey-darken-4">
+              {{ errorSummary }}
+              <template v-if="showDetail">
+                <br/><br/>
+                <span class="error-message">{{ errorDetail }}</span>
+              </template>
+            </div>
           </div>
           <div class="text-h6 text-grey-darken-4">Presione el siguiente botón para regresar.</div>
       </VCardText>
@@ -61,13 +67,43 @@ const redirectButtonText = computed(() =>
   authenticated.value ? "Ir al Dashboard" : "Ir al Inicio"
 )
 
-const errorMessage = computed(() => {
-  let message = extractErrorMessage()
-  if (message === AXIOS_GENERIC_403) {
-    message = ERROR_MESSAGES[403]
-  }
-  return formatErrorMessage(message)
+// Static, safe summary line (never interpolates API/user data).
+const errorSummary = computed(() => {
+  const code = statusCode.value
+  const message = extractErrorMessage()
+
+  if (code === 403) return ERROR_MESSAGES[403]
+  if (code && ERROR_MESSAGES[code]) return ERROR_MESSAGES[code]
+
+  // Unknown status code: show the raw message as the sole line.
+  if (message === AXIOS_GENERIC_403) return ERROR_MESSAGES[403]
+  if (message === "This page could not be found") return ERROR_MESSAGES[404]
+  return message || "Ocurrió un error inesperado."
 })
+
+// Dynamic text rendered as plain, auto-escaped content by Vue (no v-html).
+const errorDetail = computed(() => {
+  const code = statusCode.value
+  if (![403, 404, 500, 405].includes(code)) return ""
+
+  const message = extractErrorMessage()
+  if (message === AXIOS_GENERIC_403) return ""
+  if (message === "This page could not be found") return ""
+
+  if (code === 403) {
+    // Read the required permission directly from error.data (structured, no regex needed)
+    const err = props.error as Record<string, unknown> | null
+    const permissionData = err?.data as { permission?: string } | undefined
+    if (permissionData?.permission) {
+      return `Se requiere el permiso: ${permissionData.permission}`
+    }
+    return message
+  }
+  // 404/500/405: the static summary already covers the fallback text.
+  return message
+})
+
+const showDetail = computed(() => !!errorDetail.value)
 
 function extractErrorMessage() {
   if (typeof props.error === "string") return props.error
@@ -76,28 +112,6 @@ function extractErrorMessage() {
   const resp = err?.response as Record<string, unknown> | null
   if (resp?.data) return (resp.data as Record<string, unknown>)?.message as string || ""
   return ""
-}
-
-function formatErrorMessage(message: string) {
-  const code = statusCode.value
-  if (message === "This page could not be found") {
-    message = ERROR_MESSAGES[404]
-  }
-  if (code === 403) {
-    // Read the required permission directly from error.data (structured, no regex needed)
-    const err = props.error as Record<string, unknown> | null
-    const permissionData = err?.data as { permission?: string } | undefined
-    if (permissionData?.permission) {
-      return `${ERROR_MESSAGES[403]}<br/><br/>Se requiere el permiso: <span class="error-message">${permissionData.permission}</span>`
-    }
-    return `${ERROR_MESSAGES[403]}<br/><br/>${message}`
-  }
-  if ([404, 500, 405].includes(code)) {
-    return message
-      ? `<span class="error-message">${message}</span>`
-      : `<span class="error-message">${ERROR_MESSAGES[code]}</span>`
-  }
-  return message || "Ocurrió un error inesperado."
 }
 
 function handleRedirect() {

@@ -35,7 +35,7 @@
           <VDivider />
           <VCardText class="pt-2">
             <div v-if="!hasRoles" class="text-grey text-body-2">Sin roles asignados</div>
-            <div v-for="(orgIds, role) in roles_org" :key="role" class="mb-2">
+            <div v-for="(orgIds, role) in sortedRolesOrg" :key="role" class="mb-2">
               <div class="d-flex align-center flex-wrap" style="gap: 6px">
                 <VChip :id="'chip-acc-role-' + role" size="small" color="primary" variant="elevated" label>{{ role }}</VChip>
                 <VChip v-for="oid in orgIds" :id="'chip-acc-role-org-' + oid" :key="oid" size="x-small" variant="outlined" color="primary">
@@ -65,7 +65,7 @@
             <template v-if="!combinedView">
               <div v-if="!hasPermissions" class="text-grey text-body-2">Sin permisos asignados</div>
               <VRow density="comfortable">
-                <VCol v-for="(orgIds, perm) in permissions_org" :key="perm" cols="12" sm="6">
+                <VCol v-for="(orgIds, perm) in sortedPermissionsOrg" :key="perm" cols="12" sm="6">
                   <div class="d-flex align-center flex-wrap" style="gap: 4px">
                     <VChip :id="'chip-acc-permission-' + perm" size="small" color="secondary" variant="elevated" label class="mr-1">{{ perm }}</VChip>
                     <VChip v-for="oid in orgIds" :id="'chip-acc-permission-org-' + oid" :key="oid" size="x-small" variant="outlined" color="secondary">
@@ -79,7 +79,7 @@
             <template v-else>
               <div v-if="!hasRoles" class="text-grey text-body-2">Sin roles asignados</div>
               <div v-else>
-                <div v-for="(orgIds, roleName) in roles_org" :key="roleName" class="mb-4">
+                <div v-for="(orgIds, roleName) in sortedRolesOrg" :key="roleName" class="mb-4">
                   <div class="d-flex align-center flex-wrap mb-1" style="gap: 6px">
                     <VChip :id="'chip-acc-role-combined-' + roleName" size="small" color="primary" variant="elevated" label>
                       <VIcon start size="small">mdi-redhat</VIcon>
@@ -89,12 +89,12 @@
                       {{ getOrgNameById(oid) }}
                     </VChip>
                     <VChip :id="'chip-acc-permission-count-' + roleName" size="small" variant="outlined" color="secondary" class="ml-1">
-                      {{ (roles_permissions[roleName] || []).length }} permisos
+                      {{ (sortedRolesPermissions[roleName] || []).length }} permisos
                     </VChip>
                   </div>
 
-                  <div v-if="roles_permissions[roleName] && roles_permissions[roleName].length > 0" class="pl-2">
-                    <VChip v-for="perm in roles_permissions[roleName]" :id="'chip-acc-permission-combined-' + perm" :key="perm" size="small" variant="elevated" label color="secondary" class="mr-1 mb-1">
+                  <div v-if="sortedRolesPermissions[roleName] && sortedRolesPermissions[roleName].length > 0" class="pl-2">
+                    <VChip v-for="perm in sortedRolesPermissions[roleName]" :id="'chip-acc-permission-combined-' + perm" :key="perm" size="small" variant="elevated" label color="secondary" class="mr-1 mb-1">
                       {{ perm }}
                     </VChip>
                   </div>
@@ -123,6 +123,20 @@ const orgs = computed(() => (user.value?.orgs as Array<{ id: number; name: strin
 const roles_org = computed(() => (user.value?.roles_org as Record<string, number[]>) || {})
 const permissions_org = computed(() => (user.value?.permissions_org as Record<string, number[]>) || {})
 const roles_permissions = computed(() => (user.value?.roles_permissions as Record<string, string[]>) || {})
+
+const sortedRolesOrg = computed(() =>
+  Object.fromEntries(Object.entries(roles_org.value).sort(([a], [b]) => a.localeCompare(b)))
+)
+const sortedPermissionsOrg = computed(() =>
+  Object.fromEntries(Object.entries(permissions_org.value).sort(([a], [b]) => a.localeCompare(b)))
+)
+const sortedRolesPermissions = computed(() =>
+  Object.fromEntries(
+    Object.entries(roles_permissions.value)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([role, perms]) => [role, [...perms].sort((a, b) => a.localeCompare(b))])
+  )
+)
 const dialogPassword = ref(false)
 const combinedView = ref(false)
 
