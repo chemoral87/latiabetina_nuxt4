@@ -1,56 +1,99 @@
 ﻿<template>
   <div id="cmp-pos-cart-footer" ref="posFooter" class="pos-footer">
-    <div id="pos-footer-toggle-bar" class="pos-footer-toggle-bar" @click="emit('toggle-cart')">
+    <div
+      id="pos-footer-toggle-bar"
+      class="pos-footer-toggle-bar"
+      @click="emit('toggle-cart')"
+    >
       <div class="d-flex align-center">
-        <VIcon size="small" class="mr-1" color="primary">mdi-cart</VIcon>
-        <span class="font-weight-bold">
-          {{ cartItemCount }} artículo(s)
-        </span>
-        <VChip v-if="cart.length > 0" size="x-small" color="primary" variant="elevated" class="ml-2 font-weight-bold">
+        <VIcon class="mr-1" size="small" color="primary">mdi-cart</VIcon>
+        <span class="font-weight-bold"> {{ cartItemCount }} artículo(s) </span>
+        <VChip
+          v-if="cart.length > 0"
+          size="x-small"
+          color="primary"
+          variant="elevated"
+          class="ml-2 font-weight-bold"
+        >
           ${{ formatPrice(total) }}
         </VChip>
       </div>
       <VIcon size="small" :color="showCart ? 'primary' : 'grey'">
-        {{ showCart ? 'mdi-chevron-down' : 'mdi-chevron-up' }}
+        {{ showCart ? "mdi-chevron-down" : "mdi-chevron-up" }}
       </VIcon>
     </div>
 
     <div v-show="showCart" id="pos-cart-panel" class="pos-cart-panel">
-      <div v-if="cart.length === 0" class="text-caption text-grey pa-2 text-center">
+      <div
+        v-if="cart.length === 0"
+        class="text-caption text-grey pa-2 text-center"
+      >
         Sin artículos en el carrito
       </div>
       <table v-else id="pos-cart-table" class="pos-cart-table">
         <thead>
           <tr>
             <th class="text-left">Producto</th>
-            <th class="text-center">Cant.</th>
-            <th class="text-right">Total</th>
-            <th></th>
+            <th class="pos-ct-qty text-center">Cant.</th>
+            <th class="pos-ct-total text-right">Total</th>
+            <th class="pos-ct-del"></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in cart" :key="item.product.id">
             <td class="pos-ct-name">
               {{ item.product.name }}
-              <VIcon v-if="item.product.requires_preparation" size="small" class="ml-1 text-orange">mdi-chef-hat</VIcon>
+              <VIcon
+                v-if="item.product.requires_preparation"
+                size="small"
+                class="ml-1 text-orange"
+                >mdi-chef-hat</VIcon
+              >
             </td>
             <td class="pos-ct-qty">
-              <div class="d-flex align-center justify-center" style="gap:4px">
-                <VBtn icon rounded="circle" size="x-small" variant="flat" color="error" @click="emit('change-qty', { index, delta: -1 })">
-                  <VIcon size="x-small" color="white">mdi-minus</VIcon>
+              <div style="gap: 4px" class="d-flex align-center justify-center">
+                <VBtn
+                  icon
+                  color="error"
+                  size="x-small"
+                  variant="flat"
+                  rounded="circle"
+                  @click="emit('change-qty', { index, delta: -1 })"
+                >
+                  <VIcon color="white" size="x-small">mdi-minus</VIcon>
                 </VBtn>
-                <span class="font-weight-bold">{{ item.quantity }}</span>
-                <VBtn icon rounded="circle" size="x-small" variant="flat" color="success" @click="emit('change-qty', { index, delta: 1 })">
-                  <VIcon size="x-small" color="white">mdi-plus</VIcon>
+                <span class="pos-ct-qty-value font-weight-bold">{{
+                  item.quantity
+                }}</span>
+                <VBtn
+                  icon
+                  size="x-small"
+                  variant="flat"
+                  color="success"
+                  rounded="circle"
+                  @click="emit('change-qty', { index, delta: 1 })"
+                >
+                  <VIcon color="white" size="x-small">mdi-plus</VIcon>
                 </VBtn>
               </div>
             </td>
             <td class="pos-ct-total text-primary font-weight-bold">
-              ${{ formatPrice((item.product.price * item.quantity).toFixed(2)) }}
+              ${{
+                formatPrice((item.product.price * item.quantity).toFixed(2))
+              }}
             </td>
             <td class="pos-ct-del">
-              <VBtn icon rounded="circle" size="x-small" variant="outlined" color="error" @click="emit('remove-cart-item', index)">
-                <VIcon size="small" color="error" class="font-weight-black">mdi-close</VIcon>
+              <VBtn
+                icon
+                color="error"
+                size="x-small"
+                rounded="circle"
+                variant="outlined"
+                @click="emit('remove-cart-item', index)"
+              >
+                <VIcon color="error" size="x-large" class="font-weight-black"
+                  >mdi-close</VIcon
+                >
               </VBtn>
             </td>
           </tr>
@@ -62,40 +105,42 @@
       <div id="pos-footer-fields-row" class="pos-footer-fields-row">
         <VTextField
           id="pos-cliente-tf-1"
-          :model-value="customerName"
-          label="Cliente"
-          variant="outlined"
-          density="compact"
           hide-details
+          label="Cliente"
           class="pos-field"
+          density="compact"
+          variant="outlined"
+          :model-value="customerName"
           @update:model-value="emit('update:customerName', $event)"
         />
         <VSelect
           id="pos-payment-sel-1"
-          :model-value="paymentMethod"
-          :items="paymentMethods"
-          item-title="text"
-          item-value="value"
-          label="Método de pago"
-          variant="outlined"
-          density="compact"
           hide-details
           class="pos-field"
+          density="compact"
+          item-title="text"
+          item-value="value"
+          variant="outlined"
+          label="Método de pago"
+          :items="paymentMethods"
+          :model-value="paymentMethod"
           @update:model-value="emit('update:paymentMethod', $event)"
         />
       </div>
       <div id="pos-footer-action-row" class="pos-footer-action-row">
         <div id="pos-total-block" class="pos-total-block">
-          <div class="text-h5 font-weight-black text-primary">${{ formatPrice(total) }}</div>
+          <div class="text-h5 font-weight-black text-primary">
+            ${{ formatPrice(total) }}
+          </div>
         </div>
         <VBtn
           id="pos-cobrar-btn"
-          color="primary"
-          size="x-large"
           block
+          size="x-large"
+          color="primary"
           :loading="saving"
-          :disabled="cart.length === 0"
           class="pos-cobrar-btn"
+          :disabled="cart.length === 0"
           @click="emit('checkout')"
         >
           <VIcon start>mdi-cash-register</VIcon>
@@ -108,54 +153,57 @@
 
 <script setup lang="ts">
 interface PosProduct {
-  id: number
-  name: string
-  price: number
-  requires_preparation?: boolean
+  id: number;
+  name: string;
+  price: number;
+  requires_preparation?: boolean;
 }
 
 interface CartItem {
-  product: PosProduct
-  quantity: number
+  product: PosProduct;
+  quantity: number;
 }
 
 interface PaymentMethod {
-  text: string
-  value: string
+  text: string;
+  value: string;
 }
 
 const props = defineProps<{
-  cart: CartItem[]
-  showCart: boolean
-  customerName: string
-  paymentMethod: string
-  paymentMethods: PaymentMethod[]
-  saving?: boolean
-}>()
+  cart: CartItem[];
+  showCart: boolean;
+  customerName: string;
+  paymentMethod: string;
+  paymentMethods: PaymentMethod[];
+  saving?: boolean;
+}>();
 
 const emit = defineEmits<{
-  (e: 'toggle-cart'): void
-  (e: 'change-qty', payload: { index: number; delta: number }): void
-  (e: 'remove-cart-item', index: number): void
-  (e: 'update:customerName', val: string): void
-  (e: 'update:paymentMethod', val: string): void
-  (e: 'checkout'): void
-}>()
+  (e: "toggle-cart"): void;
+  (e: "change-qty", payload: { index: number; delta: number }): void;
+  (e: "remove-cart-item", index: number): void;
+  (e: "update:customerName", val: string): void;
+  (e: "update:paymentMethod", val: string): void;
+  (e: "checkout"): void;
+}>();
 
 const total = computed(() =>
   props.cart
     .reduce((acc, item) => acc + item.product.price * item.quantity, 0)
     .toFixed(2),
-)
+);
 
 const cartItemCount = computed(() =>
   props.cart.reduce((acc, item) => acc + item.quantity, 0),
-)
+);
 
 function formatPrice(val: number | string): string {
-  const num = parseFloat(String(val))
-  if (isNaN(num)) return String(val)
-  return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+  const num = parseFloat(String(val));
+  if (isNaN(num)) return String(val);
+  return num.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
 </script>
 
@@ -187,10 +235,13 @@ function formatPrice(val: number | string): string {
 .pos-cart-panel {
   max-height: 220px;
   overflow-y: auto;
+  overflow-x: auto;
   border-bottom: 1px solid #f0f0f0;
 }
 .pos-cart-table {
   width: 100%;
+  min-width: 420px;
+  table-layout: fixed;
   border-collapse: collapse;
   font-size: 0.88rem;
 }
@@ -220,15 +271,22 @@ function formatPrice(val: number | string): string {
   white-space: nowrap;
 }
 .pos-ct-qty {
+  min-width: 220px;
   white-space: nowrap;
 }
+.pos-ct-qty-value {
+  display: inline-block;
+  min-width: 28px;
+  text-align: center;
+}
 .pos-ct-total {
+  width: 96px;
   text-align: right;
   white-space: nowrap;
 }
 .pos-ct-del {
   text-align: center;
-  width: 40px;
+  width: 50px;
 }
 .pos-footer-bottom {
   padding: 8px 10px;
@@ -251,6 +309,8 @@ function formatPrice(val: number | string): string {
 }
 .pos-total-block {
   flex-shrink: 0;
+  min-width: 140px;
+  text-align: right;
   line-height: 1.1;
 }
 .pos-cobrar-btn {
