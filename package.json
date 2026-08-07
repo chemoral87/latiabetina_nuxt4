@@ -1,5 +1,6 @@
 {
   "name": "latiabetina_nuxt4",
+  "version": "1.0.1",
   "type": "module",
   "private": true,
   "scripts": {
@@ -9,6 +10,7 @@
     "preview": "nuxt preview",
     "lint": "eslint app",
     "lint:fix": "eslint app --fix",
+    "bump:version": "node scripts/bump-version.mjs",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {

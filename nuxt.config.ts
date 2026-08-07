@@ -1,5 +1,16 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { execSync } from "node:child_process"
 import { es } from "vuetify/locale"
+
+// Short git commit hash (last 7 chars) for the build version. Falls back to
+// "nogit" when the build runs outside a git checkout.
+function gitShortHash(): string {
+  try {
+    return execSync("git rev-parse --short HEAD", { encoding: "utf8" }).trim()
+  } catch {
+    return "nogit"
+  }
+}
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -38,6 +49,7 @@ export default defineNuxtConfig({
     public: {
       baseUrl: process.env.BASE_URL || '',
       suffixUrl: process.env.SUFFIX_URL || ':8001/api',
+      version: `${process.env.npm_package_version || '1.0.0'}-${gitShortHash()}`,
       reverbAppKey: process.env.REVERB_APP_KEY || '',
       reverbHost: process.env.REVERB_HOST || '',
       reverbPort: process.env.REVERB_PORT || '6001',
