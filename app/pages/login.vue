@@ -7,7 +7,7 @@
             <VRow density="comfortable">
               <VCol cols="12" class="text-center mb-4">
                 <span class="text-h5">Inicio de Sesión</span>
-                <div class="text-caption text-grey mt-1">
+                <div class="text-overline text-grey mt-1">
                   v{{ buildVersion }}
                 </div>
               </VCol>
