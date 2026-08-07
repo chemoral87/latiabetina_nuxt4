@@ -45,6 +45,18 @@
 .xwidth1900 .v-table__wrapper table { min-width: 1900px !important; }
 .xwidth2000 .v-table__wrapper table { min-width: 2000px !important; }
 
+/* Reduced horizontal cell padding for all data tables — port of the rule from
+   latiabetina_aui/assets/global.css. Td with `pa-1` (e.g. a tight edit-action
+   column) is excluded to keep its snugger padding. Vuetify 2 matched `.v-data-table
+   td/th` directly; in Vuetify 4 the cells live under `.v-table__wrapper` and default
+   to `padding: 0 16px` (VTable.css), overridden below per axis so density
+   vertical padding is preserved. */
+.v-data-table .v-table__wrapper td:not(.pa-1),
+.v-data-table .v-table__wrapper th {
+  padding-left: 7px !important;
+  padding-right: 7px !important;
+}
+
 /* Momentary row flash after edit — driven by row-props + highlight-id in table components */
 .row-highlight td {
   animation: row-highlight-flash var(--row-highlight-animation-ms) ease-out;
