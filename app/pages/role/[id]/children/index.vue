@@ -11,9 +11,12 @@
           <VCardText>
             <PermissionCombobox
               :key="comboboxKey"
-              label="Buscar y asignar permisos"
-              :permissionsx="(mRole.permissions as Record<string, unknown>[]) ?? []"
+              density="comfortable"
               :highlight-id="highlightId"
+              label="Buscar y asignar permisos"
+              :permissionsx="
+                (mRole.permissions as Record<string, unknown>[]) ?? []
+              "
               @model-change="setPermissions"
             />
           </VCardText>
@@ -24,23 +27,25 @@
       <VCol cols="12">
         <VCard id="rol-new-permission-card" variant="outlined">
           <VCardTitle class="text-subtitle-1 font-weight-medium pb-2">
-            <VIcon start size="small" color="success">mdi-plus-circle-outline</VIcon>
+            <VIcon start size="small" color="success"
+              >mdi-plus-circle-outline</VIcon
+            >
             Crear nuevo permiso
           </VCardTitle>
           <VCardText class="pb-2">
-            <VRow density="comfortable" align="center">
+            <VRow align="center" density="comfortable">
               <VCol cols="12">
                 <VTextField
                   id="rol-index-newpermissionname-tf-1"
                   v-model="newPermissionName"
-                  label="Nombre del permiso"
-                  placeholder="ej. product-create"
-                  variant="outlined"
-                  density="compact"
                   clearable
                   hide-details
+                  density="compact"
+                  variant="outlined"
+                  label="Nombre del permiso"
                   :loading="creatingPermission"
                   :disabled="creatingPermission"
+                  placeholder="ej. product-create"
                   @keyup.enter="createAndAddPermission"
                 />
               </VCol>
@@ -48,8 +53,8 @@
                 <VBtn
                   id="roldtl-create-perm-btn"
                   color="success"
-                  :disabled="!newPermissionName || creatingPermission"
                   :loading="creatingPermission"
+                  :disabled="!newPermissionName || creatingPermission"
                   @click="createAndAddPermission"
                 >
                   <VIcon start>mdi-plus</VIcon>
@@ -65,11 +70,22 @@
       <VCol cols="12">
         <VCard id="roldtl-actions-card" variant="outlined">
           <VCardText class="d-flex justify-end pa-4">
-            <VBtn id="roldtl-cancel-btn" color="primary" variant="outlined" class="mr-4" @click="navigateTo('/role')">
+            <VBtn
+              id="roldtl-cancel-btn"
+              class="mr-4"
+              color="primary"
+              variant="outlined"
+              @click="navigateTo('/role')"
+            >
               <VIcon start>mdi-close</VIcon>
               Cancelar
             </VBtn>
-            <VBtn id="roldtl-save-btn" color="primary" variant="elevated" @click="saveRolePermissions()">
+            <VBtn
+              id="roldtl-save-btn"
+              color="primary"
+              variant="elevated"
+              @click="saveRolePermissions()"
+            >
               <VIcon start>mdi-content-save</VIcon>
               Guardar
             </VBtn>
@@ -81,90 +97,102 @@
 </template>
 
 <script setup lang="ts">
-import { useRowHighlight } from "~/composables/useRowHighlight"
+import { useRowHighlight } from "~/composables/useRowHighlight";
 
 definePageMeta({
   title: "Permisos del Rol",
   middleware: "authenticated",
-})
+});
 
-const route = useRoute()
-const roleId = route.params.id as string
+const route = useRoute();
+const roleId = route.params.id as string;
 
-const { Role } = useRepository()
-const { $api } = useApi()
-const { highlightId, flash } = useRowHighlight()
+const { Role } = useRepository();
+const { $api } = useApi();
+const { highlightId, flash } = useRowHighlight();
 
-const mRole = ref<Record<string, unknown>>({})
-const comboboxKey = ref(0)
-const newPermissionName = ref("")
-const creatingPermission = ref(false)
+const mRole = ref<Record<string, unknown>>({});
+const comboboxKey = ref(0);
+const newPermissionName = ref("");
+const creatingPermission = ref(false);
 
 // Snackbar
-const notify = useNotifyStore()
+const notify = useNotifyStore();
 
 // Top-level await — data loads before render (asyncData equivalent)
-const res = await Role.show(roleId).catch(() => null)
-mRole.value = (res as Record<string, unknown>) ?? {}
+const res = await Role.show(roleId).catch(() => null);
+mRole.value = (res as Record<string, unknown>) ?? {};
 if (mRole.value.name) {
-  route.meta.title = `Rol ${mRole.value.name}`
-  route.meta.icon = "mdi-redhat"
-  route.meta.back = "/role"
-  route.meta.showDrawer = false
+  route.meta.title = `Rol ${mRole.value.name}`;
+  route.meta.icon = "mdi-redhat";
+  route.meta.back = "/role";
+  route.meta.showDrawer = false;
 } else {
-  route.meta.title = "Permisos del Rol"
+  route.meta.title = "Permisos del Rol";
 }
 
 function setPermissions(permissions: Record<string, unknown>[]) {
-  mRole.value.permissions = permissions
+  mRole.value.permissions = permissions;
 }
 
 async function createAndAddPermission() {
-  const name = (newPermissionName.value || "").trim()
-  if (!name) return
+  const name = (newPermissionName.value || "").trim();
+  if (!name) return;
 
-  const currentPermissions = (mRole.value.permissions as Record<string, unknown>[]) ?? []
+  const currentPermissions =
+    (mRole.value.permissions as Record<string, unknown>[]) ?? [];
   const alreadyAssigned = currentPermissions.some(
-    (p) => (p.name as string).toLowerCase() === name.toLowerCase()
-  )
+    (p) => (p.name as string).toLowerCase() === name.toLowerCase(),
+  );
   if (alreadyAssigned) {
-    notify.notify({ warning: `El permiso "${name}" ya está asignado al rol.` })
-    return
+    notify.notify({ warning: `El permiso "${name}" ya está asignado al rol.` });
+    return;
   }
 
-  creatingPermission.value = true
+  creatingPermission.value = true;
   try {
-    const res = await $api<{ permission: Record<string, unknown> }>(`/role/${mRole.value.id as number}/permission`, {
-      method: "POST",
-      body: { name },
-    })
-    if (!mRole.value.permissions) mRole.value.permissions = []
-    mRole.value.permissions = [...(mRole.value.permissions as Record<string, unknown>[]), res.permission]
-    comboboxKey.value++
-    newPermissionName.value = ""
-    const newId = res.permission?.id
+    const res = await $api<{ permission: Record<string, unknown> }>(
+      `/role/${mRole.value.id as number}/permission`,
+      {
+        method: "POST",
+        body: { name },
+      },
+    );
+    if (!mRole.value.permissions) mRole.value.permissions = [];
+    mRole.value.permissions = [
+      ...(mRole.value.permissions as Record<string, unknown>[]),
+      res.permission,
+    ];
+    comboboxKey.value++;
+    newPermissionName.value = "";
+    const newId = res.permission?.id;
     if (newId != null) {
-      flash(newId as number)
+      flash(newId as number);
     }
-    notify.notify({ success: `Permiso "${res.permission.name}" agregado al rol.` })
+    notify.notify({
+      success: `Permiso "${res.permission.name}" agregado al rol.`,
+    });
   } catch (e) {
     const errMsg = (e as Record<string, unknown>)?.response
-      ? ((e as Record<string, unknown>).response as Record<string, unknown>)?.data as Record<string, unknown>
-      : {}
+      ? (((e as Record<string, unknown>).response as Record<string, unknown>)
+          ?.data as Record<string, unknown>)
+      : {};
     const msg =
-      ((errMsg?.errors as Record<string, string[]>)?.["name"]?.[0]) ??
+      (errMsg?.errors as Record<string, string[]>)?.["name"]?.[0] ??
       (errMsg?.message as string) ??
-      "Error al crear el permiso."
-    notify.notify({ error: msg })
+      "Error al crear el permiso.";
+    notify.notify({ error: msg });
   } finally {
-    creatingPermission.value = false
+    creatingPermission.value = false;
   }
 }
 
 async function saveRolePermissions() {
-  const permissionsIds = ((mRole.value.permissions as Record<string, unknown>[]) ?? []).map((x) => x.id)
-  await Role.children(roleId, { permissionsIds })
-  navigateTo("/role")
+  const permissionsIds = (
+    (mRole.value.permissions as Record<string, unknown>[]) ?? []
+  ).map((x) => x.id);
+  await Role.children(roleId, { permissionsIds });
+  navigateTo("/role");
 }
 </script>
 
