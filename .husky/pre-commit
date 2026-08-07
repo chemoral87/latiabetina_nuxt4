@@ -1,0 +1,6 @@
+# Bump the patch version so every commit ships a new version
+# (shown on the login page as {version}-{git short hash}).
+npm version patch --no-git-tag-version
+
+# Stage the bumped files in the current commit
+git add package.json package-lock.json

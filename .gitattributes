@@ -1,0 +1,2 @@
+# Keep git hooks as LF so sh can execute them on any OS.
+.husky/** text eol=lf
