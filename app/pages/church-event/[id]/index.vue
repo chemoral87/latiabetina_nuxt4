@@ -40,7 +40,7 @@ const churchEvent = ref<Record<string, unknown>>({})
     const dbItem = await ChurchEvent.show<Record<string, unknown>>(route.params.id as string)
     churchEvent.value = dbItem as Record<string, unknown>
   } catch (e) {
-    throw createError({ statusCode: 404, statusMessage: "Evento no encontrado" })
+    throw createError({ statusCode: 404, message: "Evento no encontrado" })
   } finally {
     loadingItem.value = false
   }

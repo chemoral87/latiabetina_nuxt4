@@ -1,12 +1,14 @@
-﻿<template>
+<template>
   <div id="cmp-user-combobox">
     <VAutocomplete
       v-model="model"
       v-model:search="search"
+      v-model:menu="menu"
+      v-bind="$attrs"
       :filter="customFilter"
       item-value="id"
       item-title="name"
-      :label="label || 'Usuarios'"
+      :label="label"
       variant="underlined"
       hide-selected
       :hide-no-data="!search"
@@ -19,11 +21,11 @@
         <VListItem v-else>Buscando...</VListItem>
       </template>
       <template #selection="{ item }">
-        <VChip 
-          color="primary" 
+        <VChip
+          color="primary"
           size="large"
           variant="elevated"
-          closable 
+          closable
           @click:close="removeUser(item as UserItem)"
         >
           {{ (item as UserItem).name }} {{ (item as UserItem).last_name }} ({{ (item as UserItem).email }})
@@ -43,6 +45,8 @@
 </template>
 
 <script setup lang="ts">
+defineOptions({ inheritAttrs: false })
+
 interface UserItem {
   id: number
   name: string
@@ -50,46 +54,72 @@ interface UserItem {
   email?: string
 }
 
-const props = defineProps<{
-  users?: UserItem[]
-  label?: string
-}>()
+const props = withDefaults(
+  defineProps<{
+    users?: UserItem[]
+    label?: string
+  }>(),
+  {
+    label: "Usuarios",
+  },
+)
 
 const emit = defineEmits<{
   (e: 'modelChange', val: UserItem[]): void
 }>()
 
-// items: populated ONLY by the search API — never pre-filled with model data
 const items = ref<UserItem[]>([])
 const model = ref<UserItem[]>([])
 const search = ref<string | null>(null)
 const searching = ref(false)
+const menu = ref(false)
 
 const { User } = useRepository()
 
 const userIds = computed(() => model.value.map((el) => el.id))
 
 let debounceTimer: ReturnType<typeof setTimeout> | null = null
+let requestId = 0
 
-function runSearch(val: string) {
-  if (debounceTimer) clearTimeout(debounceTimer)
-  debounceTimer = setTimeout(async () => {
-    try {
-      const result = await User.filter({ queryText: val, ids: userIds.value })
+async function loadUsers(queryText: string) {
+  const currentRequestId = ++requestId
+  searching.value = true
+  try {
+    const result = await User.filter({ queryText, ids: userIds.value })
+    if (currentRequestId === requestId) {
       items.value = (Array.isArray(result) ? result : []) as UserItem[]
-    } finally {
+      // Merge selected users back into items so VAutocomplete can match them for chips
+      const selected = model.value
+      if (selected.length > 0) {
+        const existingIds = new Set(items.value.map((r) => r.id))
+        for (const user of selected) {
+          if (!existingIds.has(user.id)) {
+            items.value.push(user)
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Unable to load filtered users", error)
+  } finally {
+    if (currentRequestId === requestId) {
       searching.value = false
     }
-  }, 500)
+  }
+}
+
+function runSearch(queryText: string) {
+  if (debounceTimer) clearTimeout(debounceTimer)
+  debounceTimer = setTimeout(() => loadUsers(queryText), 500)
 }
 
 watch(search, (val) => {
-  if (val == null || val.trim() === '') {
+  const q = val?.trim() ?? ''
+  if (!q) {
     searching.value = false
     return
   }
-  searching.value = true
-  runSearch(val)
+  runSearch(q)
 })
 
 watch(model, (val, prev) => {
@@ -99,9 +129,13 @@ watch(model, (val, prev) => {
   while (i--) {
     if (typeof copy[i] === 'string' || typeof copy[i] === 'number') copy.splice(i, 1)
   }
-  
+
   if (val.length > prev.length) {
-    search.value = ''
+    // Keep the menu open and the current search text so the user can
+    // keep clicking additional matching items without retyping the query.
+    nextTick(() => {
+      menu.value = true
+    })
   }
 
   // Only write back if we actually removed strings to avoid infinite loop
@@ -112,14 +146,17 @@ watch(model, (val, prev) => {
   emit('modelChange', copy as UserItem[])
 })
 
-// Use immediate watcher so it reacts if the parent sets users after mount
-watch(
-  () => props.users,
-  (val) => {
-    model.value = val && val.length > 0 ? [...val] : []
-  },
-  { immediate: true },
-)
+// Sync the initial selection from the parent's `users` prop only once,
+// matching the old Vuetify 2 component's `mounted()` behavior. We deliberately
+// do NOT keep this reactive: the parent re-assigns its users ref on every
+// `modelChange` emit, which would otherwise loop back here and overwrite the
+// model/items mid-interaction, wiping out the active search results (see the
+// Permission/Combobox fix). If a parent needs to push NEW users in after
+// mount, force a remount with a `:key` (same pattern as role/[id]/children).
+if (props.users && props.users.length > 0) {
+  model.value = [...props.users]
+  items.value = [...props.users]
+}
 
 function customFilter(value: unknown, query: string, item: { title: string; raw: Record<string, unknown> }) {
   const text = (item.title ?? '').toString().toLowerCase()

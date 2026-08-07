@@ -1,13 +1,15 @@
-﻿<template>
+<template>
   <div id="cmp-role-combobox">
     <VCombobox
       v-model="model"
       v-model:search="search"
+      v-model:menu="menu"
+      v-bind="$attrs"
       variant="outlined"
       :filter="customFilter"
       item-value="id"
       item-title="name"
-      label="Roles"
+      :label="label"
       hide-selected
       :hide-no-data="!search"
       :items="items"
@@ -24,15 +26,14 @@
       </template>
 
       <template #selection="{ item }">
-        <VChip 
-    
+        <VChip
           color="primary"
           size="large"
           variant="elevated"
           closable
           @click:close="removeRole(item as RoleItem)"
         >
-          <span >{{ item.name }}</span>
+          <span>{{ item.name }}</span>
         </VChip>
       </template>
 
@@ -48,14 +49,22 @@
 </template>
 
 <script setup lang="ts">
+defineOptions({ inheritAttrs: false })
+
 interface RoleItem {
   id: number
   name: string
 }
 
-const props = defineProps<{
-  roles?: RoleItem[]
-}>()
+const props = withDefaults(
+  defineProps<{
+    roles?: RoleItem[]
+    label?: string
+  }>(),
+  {
+    label: "Roles",
+  },
+)
 
 const emit = defineEmits<{
   (e: 'modelChange', val: RoleItem[]): void
@@ -65,6 +74,7 @@ const items = ref<RoleItem[]>([])
 const model = ref<RoleItem[]>([])
 const search = ref<string | null>(null)
 const searching = ref(false)
+const menu = ref(false)
 
 const { Role } = useRepository()
 
@@ -107,7 +117,10 @@ function runSearch(queryText: string) {
 
 watch(search, (val) => {
   const q = val?.trim() ?? ''
-  if (!q) return
+  if (!q) {
+    searching.value = false
+    return
+  }
   runSearch(q)
 })
 
@@ -120,7 +133,11 @@ watch(model, (val, prev) => {
   }
 
   if (val.length > prev.length) {
-    search.value = ''
+    // Keep the menu open and the current search text so the user can
+    // keep clicking additional matching items without retyping the query.
+    nextTick(() => {
+      menu.value = true
+    })
   }
 
   if (copy.length !== val.length) {
@@ -130,16 +147,18 @@ watch(model, (val, prev) => {
   emit('modelChange', copy as RoleItem[])
 })
 
-watch(
-  () => props.roles,
-  (val) => {
-    model.value = val && val.length > 0 ? [...val] : []
-    if (val && val.length > 0) {
-      items.value = [...val]
-    }
-  },
-  { immediate: true },
-)
+// Sync the initial selection from the parent's `roles` prop only once,
+// matching the old Vuetify 2 component's `mounted()` behavior. We deliberately
+// do NOT keep this reactive: the parent re-assigns its roles ref on every
+// `modelChange` emit (see user/[id]/profile/[profile_id]/index.vue setRoles),
+// which would otherwise loop back here and overwrite `items` with only the
+// currently selected roles, wiping out the rest of the active search results.
+// If a parent needs to push NEW roles in after mount, force a remount with a
+// `:key` (same pattern as role/[id]/children).
+if (props.roles && props.roles.length > 0) {
+  model.value = [...props.roles]
+  items.value = [...props.roles]
+}
 
 function customFilter(
   value: unknown,

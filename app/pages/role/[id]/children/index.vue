@@ -11,7 +11,7 @@
           <VCardText>
             <PermissionCombobox
               :key="comboboxKey"
-              density="comfortable"
+              density="compact"
               :highlight-id="highlightId"
               label="Buscar y asignar permisos"
               :permissionsx="
