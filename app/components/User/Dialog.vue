@@ -24,6 +24,7 @@
               <VTextField
                 id="usr-dialo-item-name-tf-1"
                 v-model="item.name"
+                required
                 label="Nombre"
                 variant="outlined"
                 :error-messages="errors?.name"
@@ -57,6 +58,7 @@
               <VTextField
                 id="usr-dialo-item-email-tf-4"
                 v-model="item.email"
+                required
                 label="E-mail"
                 variant="outlined"
                 :error-messages="errors?.email"

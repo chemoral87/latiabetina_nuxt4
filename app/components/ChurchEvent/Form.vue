@@ -7,98 +7,99 @@
 
     <VCardText class="py-1">
       <VForm ref="formRef" @submit.prevent="save">
-        <VAlert v-if="errors?.slug_name" type="error" class="mb-4" density="compact">
+        <VAlert v-if="errors?.slug_name" class="mb-4" type="error" density="compact">
           {{ Array.isArray(errors.slug_name) ? errors.slug_name[0] : errors.slug_name }}
         </VAlert>
 
         <VRow>
-          <VCol v-if="showOrgSelect" cols="12" md="3">
+          <VCol v-if="showOrgSelect" md="3" cols="12">
             <OrganizationSelect
               v-model="item.org_id"
-              :permission="permission"
-              variant="outlined"
+              required
               density="compact"
+              variant="outlined"
+              :permission="permission"
               :rules="[vrules.required]"
               :disabled="disabled || isEditMode"
             />
           </VCol>
-          <VCol cols="12" md="3">
+          <VCol md="3" cols="12">
             <VTextField
               id="eve-form-item-name-tf-1"
               v-model="item.name"
-              label="Nombre Evento"
-              :error-messages="errors?.name"
-              :disabled="disabled"
               required
               autofocus
+              :disabled="disabled"
+              label="Nombre Evento"
+              :error-messages="errors?.name"
               @keyup.enter="save"
             />
           </VCol>
-          <VCol cols="12" md="6">
+          <VCol md="6" cols="12">
             <VTextarea
               v-model="item.description"
-              label="Descripción"
-              :error-messages="errors?.description"
-              :disabled="disabled"
               rows="1"
               auto-grow
+              label="Descripción"
+              :disabled="disabled"
+              :error-messages="errors?.description"
             />
           </VCol>
 
-          <VCol cols="12" md="3">
+          <VCol md="3" cols="12">
             <MyDatePicker
               v-model="item.publish_date"
+              required
+              :disabled="disabled"
               label="Fecha Publicación"
               :error-messages="errors?.publish_date"
-              :disabled="disabled"
-              required
             />
           </VCol>
-          <VCol cols="12" md="3">
+          <VCol md="3" cols="12">
             <MyDatePicker
               v-model="item.event_date"
+              :disabled="disabled"
               label="Fecha Evento"
               :error-messages="errors?.event_date"
-              :disabled="disabled"
             />
           </VCol>
-          <VCol cols="12" md="3">
+          <VCol md="3" cols="12">
             <MyTimePicker
               v-model="item.time_start"
               label="Hora"
-              :error-messages="errors?.time_start"
               :disabled="disabled"
+              :error-messages="errors?.time_start"
             />
           </VCol>
-          <VCol cols="12" md="3">
+          <VCol md="3" cols="12">
             <VTextField
               id="eve-form-item-location-tf-2"
               v-model="item.location"
               label="Lugar"
-              :error-messages="errors?.location"
               :disabled="disabled"
+              :error-messages="errors?.location"
             />
           </VCol>
-          <VCol cols="12" md="3">
+          <VCol md="3" cols="12">
             <VSelect
               v-model="item.classification"
-              :items="classificationOptions"
-              item-title="label"
-              item-value="value"
-              label="Clasificación"
-              :error-messages="errors?.classification"
-              :disabled="disabled"
               clearable
               density="compact"
+              item-title="label"
+              item-value="value"
               variant="outlined"
+              :disabled="disabled"
+              label="Clasificación"
+              :items="classificationOptions"
+              :error-messages="errors?.classification"
             >
               <template #item="{ item: optionItem, props: itemProps }">
                 <VListItem v-bind="itemProps" :title="undefined">
                   <VChip
+                    class="mr-2"
                     size="small"
                     variant="elevated"
                     :color="(optionItem.raw as { color?: string })?.color ?? 'grey'"
-                    class="mr-2"
                   >
                     {{ optionItem.title }}
                   </VChip>
@@ -114,14 +115,14 @@
         </VRow>
 
         <VRow>
-          <VCol cols="12" md="6">
+          <VCol md="6" cols="12">
             <MyUploadimage
               v-model="item.image_file"
               v-model:url="item.url_image"
-              label="Imagen del evento"
               :disabled="disabled"
-              @loading="imageLoading = true"
+              label="Imagen del evento"
               @change="imageLoading = false"
+              @loading="imageLoading = true"
             />
           </VCol>
         </VRow>
@@ -135,7 +136,7 @@
     </VCardText>
 
     <div class="d-flex justify-end px-4 pb-4">
-      <VBtn id="eve-form-cancel-btn" color="primary" variant="text" :disabled="disabled || imageLoading" @click="close">
+      <VBtn id="eve-form-cancel-btn" variant="text" color="primary" :disabled="disabled || imageLoading" @click="close">
         Cancelar
       </VBtn>
       <VBtn

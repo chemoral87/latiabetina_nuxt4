@@ -16,22 +16,23 @@
             <VCol cols="12">
               <VTextField id="usp-dialo-filterprofile-tf-1"
                 v-model="filterProfile"
+                clearable
+                hide-details
                 label="Filtro"
                 variant="outlined"
                 append-inner-icon="mdi-magnify"
-                clearable
-                hide-details
                 @keyup.enter="searchOrganizations"
               />
             </VCol>
             <VCol cols="12">
               <VSelect
                 v-model="item.org_id"
-                :items="organizations"
+                required
                 item-value="id"
                 item-title="name"
-                label="Organizaciones"
                 variant="outlined"
+                :items="organizations"
+                label="Organizaciones"
                 :rules="[vrules.required]"
               />
             </VCol>
@@ -39,11 +40,11 @@
         </VCardText>
 
         <div class="d-flex justify-end px-4 pb-4">
-          <VBtn id="profile-dialog-cancel-btn" color="primary" variant="outlined" class="mr-4" @click="close">
+          <VBtn id="profile-dialog-cancel-btn" class="mr-4" color="primary" variant="outlined" @click="close">
             <VIcon start>mdi-close</VIcon>
             Cancelar
           </VBtn>
-          <VBtn id="profile-dialog-save-btn" color="primary" variant="elevated" type="submit" :loading="saving || loading" :disabled="saving || loading">
+          <VBtn id="profile-dialog-save-btn" type="submit" color="primary" variant="elevated" :loading="saving || loading" :disabled="saving || loading">
             <VIcon start>mdi-content-save</VIcon>
             Guardar
           </VBtn>

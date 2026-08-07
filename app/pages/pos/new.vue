@@ -1,52 +1,55 @@
 <template>
   <VContainer fluid>
     <VRow justify="center">
-      <VCol cols="12" md="8">
-        <VCard id="posn-main-card" variant="outlined" class="pa-4">
+      <VCol md="8" cols="12">
+        <VCard id="posn-main-card" class="pa-4" variant="outlined">
           <div class="text-subtitle-1 font-weight-bold mb-4">Nuevo artículo</div>
           <VForm id="posn-main-form" ref="formRef">
             <VRow density="comfortable">
-              <VCol v-if="showOrgSelect" cols="12" md="6">
+              <VCol v-if="showOrgSelect" md="6" cols="12">
                 <OrganizationSelect
                   v-model="product.org_id"
-                  permission="product-insert"
                   hide-one
-                  variant="outlined"
                   density="compact"
+                  variant="outlined"
+                  permission="product-insert"
                 />
               </VCol>
-              <VCol cols="12" md="6">
+              <VCol md="6" cols="12">
                 <VTextField
                   id="posn-name-tf"
                   v-model="product.name"
+                  required
                   label="Nombre"
-                  variant="outlined"
                   density="compact"
+                  variant="outlined"
                   :rules="[vrules.requiredField('Nombre')]"
                 />
               </VCol>
-              <VCol cols="12" md="4">
-                <VTextField id="posn-sku-tf" v-model="product.sku" label="SKU" variant="outlined" density="compact" />
+              <VCol md="4" cols="12">
+                <VTextField id="posn-sku-tf" v-model="product.sku" label="SKU" density="compact" variant="outlined" />
               </VCol>
-              <VCol cols="12" md="4">
+              <VCol md="4" cols="12">
                 <VTextField
                   id="posn-price-tf"
                   v-model.number="product.price"
-                  label="Precio"
+                  required
                   type="number"
-                  variant="outlined"
+                  label="Precio"
                   density="compact"
+                  variant="outlined"
                   :rules="[vrules.requiredField('Precio'), vrules.numeric]"
                 />
               </VCol>
-              <VCol cols="12" md="4">
+              <VCol md="4" cols="12">
                 <VTextField
                   id="posn-stock-tf"
                   v-model.number="product.stock"
+                  required
                   label="Stock"
                   type="number"
-                  variant="outlined"
                   density="compact"
+                  variant="outlined"
                   :rules="[vrules.requiredField('Stock'), vrules.numeric]"
                 />
               </VCol>
@@ -54,17 +57,17 @@
                 <VTextarea
                   id="posn-description-ta"
                   v-model="product.description"
-                  label="Descripción"
-                  variant="outlined"
-                  density="compact"
                   rows="3"
+                  density="compact"
+                  variant="outlined"
+                  label="Descripción"
                 />
               </VCol>
             </VRow>
           </VForm>
 
           <div class="d-flex justify-end">
-            <VBtn id="posn-cancel-btn" variant="text" class="mr-4" @click="goBack">Cancelar</VBtn>
+            <VBtn id="posn-cancel-btn" class="mr-4" variant="text" @click="goBack">Cancelar</VBtn>
             <VBtn id="posn-save-btn" color="primary" :loading="saving" @click="saveProduct">Guardar</VBtn>
           </div>
         </VCard>

@@ -52,6 +52,16 @@
   background-color: rgba(var(--v-theme-error), 0.3) !important;
 }
 
+/* Red asterisk at the end of a label for any required input field. The
+   `required` attribute lands on the native <input>/<textarea>/<select> (via
+   Vuetify attr filtering), so we append a red `*` to the field's label. */
+.v-field:has(input[required]) .v-field-label::after,
+.v-field:has(textarea[required]) .v-field-label::after,
+.v-field:has(select[required]) .v-field-label::after {
+  content: " *";
+  color: rgb(var(--v-theme-error));
+}
+
 @media (prefers-reduced-motion: reduce) {
   .row-highlight td,
   .chip-highlight,

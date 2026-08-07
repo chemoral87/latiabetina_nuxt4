@@ -10,46 +10,46 @@
         <VCardText>
           <VRow dense>
             <VCol v-if="showOrgSelect" cols="12">
-              <OrganizationSelect v-model="item.org_id" :permission="permission" variant="outlined" density="compact" :disabled="loading" :rules="[vrules.required]" />
+              <OrganizationSelect v-model="item.org_id" required density="compact" variant="outlined" :disabled="loading" :permission="permission" :rules="[vrules.required]" />
             </VCol>
 
             <VCol cols="12">
               <VTextField
                 id="prd-form-item-name-tf-1"
                 v-model="item.name"
-                label="Nombre"
-                variant="outlined"
-                density="compact"
-                :error-messages="errors?.name"
-                :disabled="loading"
-                :rules="[vrules.required]"
                 required
                 autofocus
+                label="Nombre"
+                density="compact"
+                variant="outlined"
+                :disabled="loading"
+                :rules="[vrules.required]"
+                :error-messages="errors?.name"
                 @keyup.enter="save"
               />
             </VCol>
 
-            <VCol cols="12" md="6">
+            <VCol md="6" cols="12">
               <VTextField
                 id="prd-form-item-sku-tf-2"
                 v-model="item.sku"
                 label="SKU"
-                variant="outlined"
                 density="compact"
-                :error-messages="errors?.sku"
+                variant="outlined"
                 :disabled="loading"
+                :error-messages="errors?.sku"
               />
             </VCol>
 
             <VCol cols="12">
               <VTextarea
                 v-model="item.description"
-                label="Descripción"
-                variant="outlined"
-                density="compact"
                 rows="3"
-                :error-messages="errors?.description"
+                density="compact"
+                variant="outlined"
                 :disabled="loading"
+                label="Descripción"
+                :error-messages="errors?.description"
               />
             </VCol>
           </VRow>
@@ -57,7 +57,7 @@
       </VCard>
 
       <!-- Section 2: Precio, existencias e imagen -->
-      <VCard id="prd-form-card-2" variant="outlined" class="mt-4">
+      <VCard id="prd-form-card-2" class="mt-4" variant="outlined">
         <VCardTitle class="text-subtitle-1 font-weight-medium pb-2">
           <VIcon start size="small" color="primary">mdi-currency-usd</VIcon>
           Precio y existencias
@@ -65,86 +65,86 @@
         <VCardText>
           <VRow dense>
             <!-- Left column: numeric fields -->
-            <VCol cols="12" md="6">
+            <VCol md="6" cols="12">
               <VRow dense>
-                <VCol cols="12" sm="6">
+                <VCol sm="6" cols="12">
                   <VTextField
                     id="prd-form-item-price-tf-3"
                     v-model="item.price"
-                    label="Precio"
-                    type="number"
-                    placeholder="0"
-                    variant="outlined"
-                    density="compact"
-                    :error-messages="errors?.price"
-                    :disabled="loading"
-                    :rules="[vrules.numeric, vrules.min(0)]"
                     required
+                    type="number"
+                    label="Precio"
+                    placeholder="0"
+                    density="compact"
+                    variant="outlined"
                     class="no-spinners"
+                    :disabled="loading"
+                    :error-messages="errors?.price"
+                    :rules="[vrules.numeric, vrules.min(0)]"
                   />
                 </VCol>
 
-                <VCol cols="12" sm="6">
+                <VCol sm="6" cols="12">
                   <VTextField
                     id="prd-form-item-stock-tf-4"
                     v-model="item.stock"
+                    required
                     label="Stock"
                     type="number"
                     placeholder="0"
-                    variant="outlined"
                     density="compact"
-                    :error-messages="errors?.stock"
-                    :disabled="loading"
-                    :rules="[vrules.numeric, vrules.min(0)]"
-                    required
+                    variant="outlined"
                     class="no-spinners"
+                    :disabled="loading"
+                    :error-messages="errors?.stock"
+                    :rules="[vrules.numeric, vrules.min(0)]"
                   />
                 </VCol>
 
-                <VCol cols="12" sm="6">
+                <VCol sm="6" cols="12">
                   <VTextField
                     id="prd-form-item-order-tf-5"
                     v-model="item.order"
                     label="Orden"
                     type="number"
                     placeholder="0"
-                    variant="outlined"
                     density="compact"
-                    :error-messages="errors?.order"
-                    :disabled="loading"
+                    variant="outlined"
                     class="no-spinners"
+                    :disabled="loading"
+                    :error-messages="errors?.order"
                   />
                 </VCol>
 
-                <VCol cols="12" sm="6">
+                <VCol sm="6" cols="12">
                   <div class="d-flex align-center">
-                    <VIcon size="small" class="mr-2" color="grey-darken-1">mdi-eye</VIcon>
-                    <VSwitch v-model="item.hidden" label="Ocultar producto" density="compact" hide-details />
+                    <VIcon class="mr-2" size="small" color="grey-darken-1">mdi-eye</VIcon>
+                    <VSwitch v-model="item.hidden" hide-details density="compact" label="Ocultar producto" />
                   </div>
                 </VCol>
 
-                <VCol cols="12" sm="6">
+                <VCol sm="6" cols="12">
                   <div class="d-flex align-center">
-                    <VIcon size="small" class="mr-2" color="grey-darken-1">mdi-chef-hat</VIcon>
-                    <VSwitch v-model="item.requires_preparation" label="Requiere preparar" density="compact" hide-details />
+                    <VIcon class="mr-2" size="small" color="grey-darken-1">mdi-chef-hat</VIcon>
+                    <VSwitch v-model="item.requires_preparation" hide-details density="compact" label="Requiere preparar" />
                   </div>
                 </VCol>
               </VRow>
             </VCol>
 
             <!-- Right column: image -->
-            <VCol cols="12" md="6">
+            <VCol md="6" cols="12">
               <div class="text-caption font-weight-medium mb-1 text-grey-darken-1">
-                <VIcon size="small" class="mr-1">mdi-image-outline</VIcon>
+                <VIcon class="mr-1" size="small">mdi-image-outline</VIcon>
                 Imagen del producto
               </div>
               <MyUploadimage
-                v-model="item.image_file"
                 v-model:url="item.image"
-                label="Seleccionar imagen"
+                v-model="item.image_file"
                 :disabled="loading"
-                @loading="imageLoading = true"
+                label="Seleccionar imagen"
                 @change="imageLoading = false"
+                @loading="imageLoading = true"
               />
 
               <div v-if="previewImage || imageLoading" class="mt-2">
@@ -156,7 +156,7 @@
       </VCard>
 
       <!-- Section 3: Acciones -->
-      <VCard id="prd-form-card-3" variant="outlined" class="mt-4">
+      <VCard id="prd-form-card-3" class="mt-4" variant="outlined">
         <VCardText class="d-flex justify-end pa-4 flex-wrap">
           <VBtn id="prd-form-cancel-btn" color="primary" variant="outlined" class="mr-2 mb-2 mb-sm-0" :disabled="loading || imageLoading" @click="close">
             <VIcon start>mdi-close</VIcon>

@@ -1258,6 +1258,30 @@ const { errors, clearErrors } = useValidationErrors()
 +}
 ```
 
+### Required-field red asterisk (CSS)
+
+Any field whose `:rules` include `vrules.required` / `vrules.requiredField(...)` (or
+that is otherwise mandatory) must carry the `required` attribute. A global rule in
+`app/assets/css/global.css` renders a red `*` at the end of the field label:
+
+```css
+.v-field:has(input[required]) .v-field-label::after,
+.v-field:has(textarea[required]) .v-field-label::after,
+.v-field:has(select[required]) .v-field-label::after {
+  content: " *";
+  color: rgb(var(--v-theme-error));
+}
+```
+
+- `required` is not a Vuetify prop, so it falls into `$attrs` and `filterInputAttrs`
+  routes it onto the native `<input>`/`<textarea>`; VSelect/VCombobox render an
+  `<input>` too.
+- Do **not** hardcode `*` in the `label` text (e.g. `label="Organización *"`) — that
+  renders in the label color and duplicates the CSS asterisk.
+- Custom field components already forward `required` to the inner input:
+  `Organization/Select.vue` and `Auditorium/Select.vue` via `v-bind="$attrs"`,
+  `My/DatePicker.vue` via the `required` prop + `:required="required"`.
+
 ## Prevent Double-Submit on Dialog Save Buttons
 
 **Problem:** Vuetify 3/4's `VBtn loading` prop does **NOT** disable clicks. In `VBtn.js`, `isDisabled` only includes `props.disabled` — `loading` only sets `tabindex="-1"` and `aria-busy`. So `:loading` alone never blocks a double-click on "Guardar"; two rapid clicks fire the save handler twice (two API calls).

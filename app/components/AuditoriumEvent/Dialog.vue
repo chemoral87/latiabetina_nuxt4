@@ -16,20 +16,20 @@
             <VRow>
               <VCol v-if="!orgSelectHidden" md="6" cols="12">
                 <OrganizationSelect id="cmp-organization-select" v-model="localEvent.org_id" v-model:hidden="orgSelectHidden" hide-one
-                  density="compact" variant="outlined" label="Organización *"
+                  required density="compact" variant="outlined" label="Organización"
                   :rules="organizationRules" :permission="'auditorium-event-index'" />
               </VCol>
               <VCol md="6" cols="12">
                 <MyDatePicker id="cmp-my-date-picker" v-model="localEvent.event_date" required density="compact"
-                  :rules="dateRules" variant="outlined" label="Fecha del Evento *" />
+                  :rules="dateRules" variant="outlined" label="Fecha del Evento" />
               </VCol>
               <VCol md="6" cols="12">
                 <VSelect id="auev-dialog-time-sel" v-model="localEvent.time" required density="compact" item-title="text"
-                  item-value="value" :rules="timeRules" variant="outlined" :items="timeOptions" label="Hora del Evento *" />
+                  item-value="value" :rules="timeRules" variant="outlined" :items="timeOptions" label="Hora del Evento" />
               </VCol>
               <VCol md="6" cols="12">
-                <AuditoriumSelect id="cmp-auditorium-select" v-model="localEvent.auditorium_id" density="compact"
-                  variant="outlined" label="Auditorio *" :rules="auditoriumRules" :org-id="localEvent.org_id"
+                <AuditoriumSelect id="cmp-auditorium-select" v-model="localEvent.auditorium_id" required
+                  density="compact" label="Auditorio" variant="outlined" :rules="auditoriumRules" :org-id="localEvent.org_id"
                   :loading="loadingAuditoriums"
                   :selected-name="(localEvent.auditorium_name as string) ?? null" />
               </VCol>

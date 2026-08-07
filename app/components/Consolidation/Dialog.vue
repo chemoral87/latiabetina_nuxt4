@@ -1,5 +1,5 @@
 <template>
-  <VDialog id="con-dialo-dlg-1" :model-value="true" persistent max-width="500px">
+  <VDialog id="con-dialo-dlg-1" persistent max-width="500px" :model-value="true">
     <VCard>
       <VCardTitle class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center">
         <VIcon start size="small" color="primary">{{ iconTitle }}</VIcon>
@@ -14,42 +14,43 @@
         <VForm ref="formRef" @submit.prevent="save">
           <OrganizationSelect
             v-model="item.org_id"
-            label="Organización *"
             hide-one
+            required
+            class="mb-2"
+            density="compact"
+            variant="outlined"
+            :disabled="loading"
+            label="Organización"
             permission="conso-sheet-index"
             :error-messages="errors?.org_id"
-            variant="outlined"
-            density="compact"
-            :disabled="loading"
-            class="mb-2"
           />
           <VTextField
             id="tf-conso-dialo-item-folio_number-1"
             v-model="item.folio_number"
-            label="Número de Folio"
-            :error-messages="errors?.folio_number"
-            :disabled="loading"
             required
             autofocus
+            :disabled="loading"
+            label="Número de Folio"
+            :error-messages="errors?.folio_number"
             @keyup.enter="save"
           />
           <MyDatePicker
             v-model="item.date"
-            label="Fecha"
-            :error-messages="errors?.date"
-            :disabled="loading"
             required
             class="mt-2"
+            label="Fecha"
+            :disabled="loading"
+            :error-messages="errors?.date"
           />
         </VForm>
       </VCardText>
 
       <div class="d-flex justify-end px-4 pb-4">
-        <VBtn id="con-dialog-cancel-btn" color="primary" variant="outlined" class="mr-4" :disabled="loading" @click="close">
+        <VBtn id="con-dialog-cancel-btn" class="mr-4" color="primary" variant="outlined" :disabled="loading" @click="close">
           <VIcon start>mdi-close</VIcon>
           Cancelar
         </VBtn>
-        <VBtn id="con-dialog-save-btn" color="primary" variant="elevated" :loading="loading" :disabled="!isValid || loading" @click="save">
+        <VBtn id="con-dialog-save-btn" color="primary" :loading="loading" variant="elevated" :disabled="!isValid || loading" @click="save">
           <VIcon start>mdi-content-save</VIcon>
           Guardar
         </VBtn>

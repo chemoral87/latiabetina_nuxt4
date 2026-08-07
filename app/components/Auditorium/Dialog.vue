@@ -14,17 +14,18 @@
         <VForm ref="formRef" @submit.prevent="save">
           <VRow density="comfortable">
             <VCol v-if="!item.id" cols="12">
-              <OrganizationSelect id="aud-dialog-org" v-model="item.org_id" permission="auditorium-index" hide-one density="compact"  variant="outlined" :rules="[vrules.requiredField('Organización')]" />
+              <OrganizationSelect id="aud-dialog-org" v-model="item.org_id" hide-one required density="compact"  variant="outlined" permission="auditorium-index" :rules="[vrules.requiredField('Organización')]" />
             </VCol>
             <VCol cols="12">
               <VTextField id="aud-dialog-name"
                 v-model="item.name"
+                required
                 label="Nombre"
-                variant="outlined"
                 density="compact"
+                variant="outlined"
+                :disabled="saving || loading"
                 :error-messages="errors?.name"
                 :rules="[vrules.requiredField('Nombre')]"
-                :disabled="saving || loading"
                 @keyup.enter="save"
               />
             </VCol>
@@ -33,7 +34,7 @@
       </VCardText>
 
       <div class="d-flex justify-end px-4 pb-4">
-        <VBtn id="aud-dialog-cancel-btn" color="primary" variant="outlined" class="mr-4" :disabled="saving || loading" @click="close">
+        <VBtn id="aud-dialog-cancel-btn" class="mr-4" color="primary" variant="outlined" :disabled="saving || loading" @click="close">
           <VIcon start>mdi-close</VIcon>
           Cancelar
         </VBtn>

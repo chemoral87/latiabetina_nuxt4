@@ -16,6 +16,7 @@
             <VCol cols="12">
               <VTextField id="org-formd-item-name-tf-1"
                 v-model="item.name"
+                required
                 label="Nombre"
                 variant="outlined"
                 :error-messages="errors?.name"
@@ -26,6 +27,7 @@
             <VCol cols="12">
               <VTextField id="tf-organ-formd-item-short_code-2"
                 v-model="item.short_code"
+                required
                 label="Código"
                 variant="outlined"
                 :error-messages="errors?.short_code"
@@ -36,8 +38,8 @@
             <VCol cols="12">
               <VTextField id="org-formd-item-description-tf-3"
                 v-model="item.description"
-                label="Descripción"
                 variant="outlined"
+                label="Descripción"
                 :error-messages="errors?.description"
                 @keyup.enter="save"
               />
@@ -47,7 +49,7 @@
       </VCardText>
 
       <div class="d-flex justify-end px-4 pb-4">
-        <VBtn id="org-dialog-cancel-btn" color="primary" variant="outlined" class="mr-4" @click="close">
+        <VBtn id="org-dialog-cancel-btn" class="mr-4" color="primary" variant="outlined" @click="close">
           <VIcon start>mdi-close</VIcon>
           Cancelar
         </VBtn>

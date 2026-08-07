@@ -17,11 +17,12 @@
               <VTextField
                 id="rol-dialo-item-name-tf-1"
                 v-model="item.name"
+                required
+                autofocus
                 label="Nombre"
                 variant="outlined"
                 :error-messages="errors?.name"
                 :rules="[vrules.requiredField('Nombre')]"
-                autofocus
                 @keyup.enter="save"
               />
             </VCol>
@@ -30,7 +31,7 @@
       </VCardText>
 
       <div class="d-flex justify-end px-4 pb-4">
-        <VBtn id="rol-dialog-cancel-btn" color="primary" variant="outlined" class="mr-4" :disabled="saving || loading" @click="close">
+        <VBtn id="rol-dialog-cancel-btn" class="mr-4" color="primary" variant="outlined" :disabled="saving || loading" @click="close">
           <VIcon start>mdi-close</VIcon>
           Cancelar
         </VBtn>
