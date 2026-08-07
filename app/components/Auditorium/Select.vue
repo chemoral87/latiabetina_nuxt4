@@ -57,11 +57,13 @@ watch(() => props.modelValue, (val) => {
 }, { immediate: true })
 
 watch(() => props.orgId, (newOrgId) => {
+  // Always clear the current selection when the org changes — a previously
+  // chosen auditorium may belong to a different org and would be stale.
+  selected.value = null
   if (newOrgId) {
     loadAuditoriums()
   } else {
     items.value = []
-    selected.value = null
   }
 }, { immediate: true })
 

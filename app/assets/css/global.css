@@ -33,26 +33,13 @@
 }
 
 /* Row delete animation — driven by row-props + removing-id in table components.
-   Tints the row light red, then collapses its cells' height so the row's
-   layout slot shrinks and the rows below slide up. Duration matches
-   ROW_REMOVE_ANIMATION_MS (1000ms) in useRowHighlight.ts. The transition
-   animates from Vuetify's --v-table-row-height down to 0, so the row really
-   closes instead of just visually scaling (which would leave its layout slot
-   intact until the row is spliced from the data). */
+   The `row-removing` class tints the row light red. The actual height collapse
+   is driven in JS by `removeWithAnimation` in useRowHighlight.ts (tables don't
+   animate cell `height` via CSS), which measures the rendered <tr>, transitions
+   its height to 0, and then the row is spliced from the data so the rows below
+   slide up into its place. */
 .row-removing td {
   background-color: rgba(var(--v-theme-error), 0.3) !important;
-  height: 0 !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  line-height: 0 !important;
-  border-bottom: 0 !important;
-  overflow: hidden !important;
-  opacity: 0;
-  transition:
-    height var(--row-remove-animation-ms) ease-in,
-    padding-top var(--row-remove-animation-ms) ease-in,
-    padding-bottom var(--row-remove-animation-ms) ease-in,
-    opacity var(--row-remove-animation-ms) ease-in !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

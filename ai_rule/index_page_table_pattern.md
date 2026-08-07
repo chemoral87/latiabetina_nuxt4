@@ -236,10 +236,13 @@ manually — use the shared helper.
   ```
 
 - CSS (single definition in `app/assets/css/global.css`): `.row-removing td`
-  gets a light red background and the `row-remove-collapse` animation
-  (fade + vertical padding collapse). Animation duration is 1000ms — keep
-  `ROW_REMOVE_ANIMATION_MS` (1000) in `useRowHighlight.ts` in sync with the
-  `--row-remove-animation-ms` CSS variable.
+  gets a light red background. The height collapse is **driven in JS** by
+  `removeWithAnimation` in `useRowHighlight.ts` — tables don't animate cell
+  `height` via CSS, so the composable measures the rendered `<tr>` (found via
+  the `data-row-id` attribute added by `rowPropsFor`), transitions its inline
+  `height` to `0`, then splices the row from the data so the rows below slide
+  up. Keep `ROW_REMOVE_ANIMATION_MS` (1000) in `useRowHighlight.ts` in sync with
+  any transition timing.
 - Flow: confirm delete → `Repository.delete(id)` → close dialog →
   `await removeWithAnimation(response, id)` (marks, waits, splices, unmarks).
 - Pages that re-fetch after save/delete (`permission/index.vue`,

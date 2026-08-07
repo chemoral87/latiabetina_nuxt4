@@ -5,10 +5,10 @@
 // (see migration guide).
 
 // Highlight flash CSS duration (global.css, .row-highlight td).
-export const ROW_HIGHLIGHT_ANIMATION_MS = 1400;
-// Row remove collapse CSS duration (global.css, .row-removing td). Must stay
-// in sync with --row-remove-animation-ms in global.css (default 1000ms).
-export const ROW_REMOVE_ANIMATION_MS = 1000;
+export const ROW_HIGHLIGHT_ANIMATION_MS = 4000;
+// Row remove collapse duration (ms). Used by removeWithAnimation to drive the
+// JS height-collapse of the <td> cells so the rows below slide up.
+export const ROW_REMOVE_ANIMATION_MS = 4000;
 // How long to keep highlightId after the CSS animation ends (hygiene only).
 export const ROW_HIGHLIGHT_CLEAR_MS = 4000;
 
@@ -97,7 +97,7 @@ export function useRowHighlight() {
     id: number | string,
   ) {
     beginRemove(id);
-    await collapseRow(id);
+    await collapseRowHeight(id);
     if (response.value.data) {
       const idx = response.value.data.findIndex(
         (r) => (r as Record<string, unknown>)?.id === id,
@@ -111,9 +111,11 @@ export function useRowHighlight() {
   }
 
   /**
-   * Collapse the actual `<tr>` for `id` from its rendered height to 0 using an
-   * inline height transition (CSS cell-height animations don't work in table
-   * layout). Falls back to a simple wait when the row can't be found.
+   * Collapse the actual rendered row for `id` down to 0. A table row's height
+   * is driven by its `<td>` cells — setting `height` on the `<tr>` is ignored
+   * by the auto table layout — so we measure a cell, then transition all cells
+   * to zero height/padding/opacity. The rows below then slide up as the cells
+   * shrink. Falls back to a simple wait when the row can't be found.
    */
   async function collapseRowHeight(id: number | string) {
     const row = findRow(id);
@@ -121,18 +123,40 @@ export function useRowHighlight() {
       await sleep(ROW_REMOVE_ANIMATION_MS);
       return;
     }
-    const start = row.getBoundingClientRect().height;
-    row.style.height = `${start}px`;
-    row.style.overflow = "hidden";
+    const cells = Array.from(row.querySelectorAll<HTMLElement>("td"));
+    if (cells.length === 0) {
+      await sleep(ROW_REMOVE_ANIMATION_MS);
+      return;
+    }
+    const start = Math.max(...cells.map((c) => c.getBoundingClientRect().height));
+    const ms = ROW_REMOVE_ANIMATION_MS;
+    const transition =
+      `height ${ms}ms ease-in, ` +
+      `padding-top ${ms}ms ease-in, padding-bottom ${ms}ms ease-in, ` +
+      `line-height ${ms}ms ease-in, opacity ${ms}ms ease-in`;
+    for (const cell of cells) {
+      cell.style.height = `${start}px`;
+      cell.style.overflow = "hidden";
+      cell.style.transition = transition;
+    }
     row.style.background = "rgba(var(--v-theme-error), 0.25)";
-    row.style.transition = `height ${ROW_REMOVE_ANIMATION_MS}ms ease-in, padding-top ${ROW_REMOVE_ANIMATION_MS}ms ease-in, padding-bottom ${ROW_REMOVE_ANIMATION_MS}ms ease-in, opacity ${ROW_REMOVE_ANIMATION_MS}ms ease-in`;
     // Force a reflow so the transition from the measured height is applied.
     void row.offsetHeight;
-    row.style.height = "0px";
-    row.style.paddingTop = "0px";
-    row.style.paddingBottom = "0px";
-    row.style.opacity = "0";
-    await sleep(ROW_REMOVE_ANIMATION_MS);
+    for (const cell of cells) {
+      cell.style.height = "0px";
+      cell.style.paddingTop = "0px";
+      cell.style.paddingBottom = "0px";
+      cell.style.lineHeight = "0px";
+      cell.style.opacity = "0";
+    }
+    await sleep(ms);
+  }
+
+  /** Find the rendered table row for an id (added by rowPropsFor as
+   *  `data-row-id`). Returns the element or null (e.g. during SSR). */
+  function findRow(id: number | string): HTMLElement | null {
+    if (import.meta.server) return null;
+    return document.querySelector<HTMLElement>(`tr[data-row-id="${id}"]`);
   }
 
   onUnmounted(() => {
@@ -152,4 +176,39 @@ export function useRowHighlight() {
 }
 
 /**
- * Factory for the table-side `row-props` functi
+ * Factory for the table-side `row-props` function. Takes the highlight id as a
+ * ref, getter, or plain value so the returned function reads the *current*
+ * value on every Vuetify row render (a plain value captured at setup time
+ * would not be reactive). Returns attrs to merge onto each `<tr>`:
+ * `{ class: 'row-highlight' }` for the highlighted row, `{ class: 'row-removing' }`
+ * for a row being deleted (see `useRowHighlight`), or `{ class: undefined }`.
+ */
+export function rowPropsFor(
+  highlightId: MaybeRefOrGetter<number | null | undefined>,
+  removingId?: MaybeRefOrGetter<number | string | null | undefined>,
+) {
+  return (data: { item: unknown }): Record<string, unknown> => {
+    const id = (data.item as Record<string, unknown>)?.id;
+    const classes: string[] = [];
+    const highlightTarget = toValue(highlightId);
+    if (highlightTarget != null && id === highlightTarget) {
+      classes.push("row-highlight");
+    }
+    let removeTarget: number | string | null | undefined;
+    if (removingId) {
+      removeTarget = toValue(removingId);
+      if (removeTarget != null && id === removeTarget) {
+        classes.push("row-removing");
+      }
+    }
+    if (id == null) {
+      return { class: classes.length > 0 ? classes.join(" ") : undefined };
+    }
+    // data-row-id falls through to the rendered <tr> (VDataTableRow inherits
+    // attrs on its root) so removeWithAnimation can measure+collapse the row.
+    return {
+      class: classes.length > 0 ? classes.join(" ") : undefined,
+      "data-row-id": String(id),
+    };
+  };
+}
