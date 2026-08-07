@@ -2,13 +2,13 @@
   <VContainer>
     <VRow align="center" justify="center" class="fill-height">
       <VCol lg="4" md="6" sm="8" cols="12">
-        <VCard id="login-card" flat class="pa-6">
+        <VCard id="login-card" flat class="pa-4">
           <VForm id="login-form" @submit.prevent="submitLogin">
             <VRow density="comfortable">
-              <VCol cols="12" class="text-center mb-4">
+              <VCol cols="12" class="text-center mb-2">
                 <span class="text-h5">Inicio de Sesión</span>
-                <div class="text-overline text-grey mt-1">
-                  v{{ buildVersion }}
+                <div class="text-overline text-grey">
+                  <span style="font-size: 10px">v{{ buildVersion }}</span>
                 </div>
               </VCol>
 
@@ -16,7 +16,7 @@
                 <VBtn
                   id="login-google-btn"
                   block
-                  class="mb-4"
+                  class="mb-0"
                   size="large"
                   variant="outlined"
                   :loading="isSubmitting"
@@ -37,7 +37,7 @@
                 </VBtn>
               </VCol>
 
-              <VCol cols="12" class="d-flex align-center my-3">
+              <VCol cols="12" class="d-flex align-center my-0">
                 <VDivider></VDivider>
                 <span class="px-3 text-grey-darken-1">o</span>
                 <VDivider></VDivider>
