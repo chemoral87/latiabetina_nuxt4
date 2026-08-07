@@ -3,6 +3,16 @@
   --row-remove-animation-ms: 1000ms;
 }
 
+/* Red asterisk after the label of any required Vuetify input.
+   Vuetify forwards an unrecognized `required` attribute straight onto the
+   native <input>/<textarea> inside `.v-input`, so `:has()` can reach up
+   from there and mark the associated `.v-field-label`. */
+.v-input:has(input[required], textarea[required]) .v-field-label::after {
+  content: " *";
+  color: rgb(var(--v-theme-error));
+  font-size: 1.35em;
+}
+
 .v-table th {
   color: #00000099;
   font-weight: bold;
