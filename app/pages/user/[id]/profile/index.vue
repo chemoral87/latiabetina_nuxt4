@@ -1,5 +1,5 @@
 <template>
-  <VContainer :fluid="true" class="pa-4">
+  <VContainer class="pa-4" :fluid="true">
     <VRow class="mb-3">
       <VCol cols="12">
         <VBtn
@@ -36,7 +36,7 @@
               </div>
 
               <div class="d-flex align-center ga-2">
-                <VBtn
+                <!-- <VBtn
                   id="usr-profile-fav-btn"
                   icon
                   variant="text"
@@ -45,12 +45,12 @@
                   @click="setFavProfile(profile)"
                 >
                   <VIcon size="x-large" icon="mdi-star" />
-                </VBtn>
+                </VBtn> -->
                 <VBtn
                   id="usr-profile-edit-btn"
                   icon
-                  variant="text"
                   size="small"
+                  variant="text"
                   color="primary"
                   @click="editProfile(profile)"
                 >
@@ -59,9 +59,9 @@
                 <VBtn
                   id="usr-profile-delete-btn"
                   icon
-                  variant="text"
                   size="small"
                   color="error"
+                  variant="text"
                   @click="confirmDeleteProfile(profile)"
                 >
                   <VIcon size="x-large" icon="mdi-delete" />
@@ -72,7 +72,7 @@
 
           <VCardText>
             <VRow>
-              <VCol cols="12" md="6">
+              <VCol md="6" cols="12">
                 <div
                   class="text-caption font-weight-medium text-grey-darken-1 mb-2"
                 >
@@ -83,17 +83,17 @@
                     v-for="it in profile.roles as Record<string, unknown>[]"
                     :id="'chip-usp-role-' + it.id"
                     :key="it.id as number"
-                    color="primary"
-                    variant="flat"
                     size="small"
                     rounded="pill"
+                    variant="flat"
+                    color="primary"
                   >
                     {{ it.name as string }}
                   </VChip>
                 </div>
               </VCol>
 
-              <VCol cols="12" md="6">
+              <VCol md="6" cols="12">
                 <div
                   class="text-caption font-weight-medium text-grey-darken-1 mb-2"
                 >
@@ -108,9 +108,9 @@
                     :id="'chip-usp-permission-' + it.id"
                     :key="it.id as number"
                     color="info"
-                    variant="flat"
                     size="small"
                     rounded="pill"
+                    variant="flat"
                   >
                     {{ it.name as string }}
                   </VChip>
@@ -142,20 +142,20 @@
 
     <ProfileDialog
       v-if="profileDialog"
-      :user-id="userId"
       :loading="saving"
-      @close="closeProfileDialog"
+      :user-id="userId"
       @save="saveProfile"
+      @close="closeProfileDialog"
     />
     <DialogDelete
       v-if="dialogDelete"
       :dialog="dialogDeleteProp"
+      @close="dialogDelete = false"
       @ok="
         (item) => {
           deleteProfile(item);
         }
       "
-      @close="dialogDelete = false"
     />
   </VContainer>
 </template>

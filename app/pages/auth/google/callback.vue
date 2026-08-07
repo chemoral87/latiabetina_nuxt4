@@ -36,7 +36,9 @@ onMounted(async () => {
   // URL for shoulder-surfers or via the back button. The auth flow below uses
   // the already-extracted values, so clearing the URL is safe to do now.
   if (window.history.replaceState) {
-    window.history.replaceState(null, "", window.location.pathname)
+    // Preserve the router's own history state keys (back/forward/position),
+    // otherwise vue-router logs VUE_ROUTER_R0121 and scroll restoration breaks.
+    window.history.replaceState({ ...window.history.state }, "", window.location.pathname)
   }
 
   if (error) {
