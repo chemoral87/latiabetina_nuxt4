@@ -1,6 +1,6 @@
 # Nuxt Minimal Starter
 
-test commit
+test commit 2
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
 ## Setup
