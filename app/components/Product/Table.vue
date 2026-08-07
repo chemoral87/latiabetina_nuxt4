@@ -11,7 +11,7 @@
       :items-length="total"
       :loading="loading"
       :row-props="rowProps"
-      class="elevation-1"
+      class="elevation-1 xwidth1100"
       striped="odd"
       must-sort
       items-per-page-text="Filas por página"

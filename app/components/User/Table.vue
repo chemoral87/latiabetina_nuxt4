@@ -11,7 +11,7 @@
       density="compact"
       :headers="headers"
       :loading="loading"
-      class="elevation-1"
+      class="elevation-1 xwidth1100"
       :items-length="total"
       :row-props="rowProps"
       :search="props.search"

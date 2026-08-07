@@ -9,7 +9,7 @@
     density="compact"
     :headers="headers"
     :loading="loading"
-    class="elevation-1"
+    class="elevation-1 xwidth1100"
     :items-length="total"
     :row-props="rowProps"
     :items-per-page-options="[10, 15, 30]"

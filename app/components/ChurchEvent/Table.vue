@@ -10,7 +10,7 @@
       :items="items"
       :items-length="total"
       :loading="loading"
-      class="elevation-1"
+      class="elevation-1 xwidth1100"
       striped="odd"
       mustSort
       :search="props.search"
