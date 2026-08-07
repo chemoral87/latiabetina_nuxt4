@@ -1,0 +1,225 @@
+[
+  {
+    "id": "sqlserver-101",
+    "level": "expert",
+    "question": { "en": "What is the difference between an Index Seek and an Index Scan in an execution plan?", "es": "¿Cuál es la diferencia entre un Index Seek y un Index Scan en un plan de ejecución?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "An Index Seek navigates directly to matching rows using the B-tree structure; an Index Scan reads every row in the index from start to end", "es": "Un Index Seek navega directamente a las filas coincidentes usando la estructura B-tree; un Index Scan lee cada fila del índice de principio a fin" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "An Index Scan is always faster because it reads fewer pages", "es": "Un Index Scan es siempre más rápido porque lee menos páginas" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "An Index Seek reads the entire table and an Index Scan reads only the index", "es": "Un Index Seek lee toda la tabla y un Index Scan lee solo el índice" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Both operations produce identical I/O costs regardless of data volume", "es": "Ambas operaciones producen costos de I/O idénticos independientemente del volumen de datos" } }
+    ]
+  },
+  {
+    "id": "sqlserver-102",
+    "level": "expert",
+    "question": { "en": "What are statistics in SQL Server and why are they important?", "es": "¿Qué son las estadísticas en SQL Server y por qué son importantes?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "Statistics are objects containing histogram data about column value distribution; the query optimizer uses them to estimate cardinality and choose efficient execution plans", "es": "Las estadísticas son objetos que contienen datos de histograma sobre la distribución de valores en columnas; el optimizador de consultas las usa para estimar la cardinalidad y elegir planes de ejecución eficientes" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Statistics track query execution times for performance monitoring only", "es": "Las estadísticas registran los tiempos de ejecución de consultas solo para monitoreo de rendimiento" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Statistics are metadata records that describe table relationships", "es": "Las estadísticas son registros de metadatos que describen las relaciones entre tablas" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Statistics store usage counts for stored procedures", "es": "Las estadísticas almacenan conteos de uso de los procedimientos almacenados" } }
+    ]
+  },
+  {
+    "id": "sqlserver-103",
+    "level": "expert",
+    "question": { "en": "What is index fragmentation and how is it resolved?", "es": "¿Qué es la fragmentación de índices y cómo se resuelve?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "Fragmentation occurs when index pages are out of logical order; it is resolved by REBUILD (recreates the index) for high fragmentation, or REORGANIZE (defragments in place) for moderate fragmentation", "es": "La fragmentación ocurre cuando las páginas del índice están fuera de orden lógico; se resuelve con REBUILD (recrea el índice) para fragmentación alta, o REORGANIZE (desfragmenta en sitio) para fragmentación moderada" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Fragmentation is when an index covers too many columns; it is resolved by dropping unused indexes", "es": "La fragmentación ocurre cuando un índice cubre demasiadas columnas; se resuelve eliminando índices no usados" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Fragmentation is caused by long-running queries and is resolved by restarting the SQL Server service", "es": "La fragmentación es causada por consultas de larga duración y se resuelve reiniciando el servicio de SQL Server" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Fragmentation only occurs in non-clustered indexes and is resolved automatically", "es": "La fragmentación solo ocurre en índices no agrupados y se resuelve automáticamente" } }
+    ]
+  },
+  {
+    "id": "sqlserver-104",
+    "level": "expert",
+    "question": { "en": "What is a covering index?", "es": "¿Qué es un índice de cobertura?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "An index that contains all columns needed by a query so SQL Server can satisfy the query entirely from the index without accessing the base table", "es": "Un índice que contiene todas las columnas necesarias para una consulta, de modo que SQL Server puede satisfacerla completamente desde el índice sin acceder a la tabla base" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "An index that automatically covers all columns of a table", "es": "Un índice que cubre automáticamente todas las columnas de una tabla" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "An index that spans multiple tables in a join", "es": "Un índice que abarca múltiples tablas en un JOIN" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "A partial index that covers only non-NULL rows", "es": "Un índice parcial que cubre solo filas no NULL" } }
+    ]
+  },
+  {
+    "id": "sqlserver-105",
+    "level": "expert",
+    "question": { "en": "What is a columnstore index and when is it beneficial?", "es": "¿Qué es un índice de almacén de columnas y cuándo es beneficioso?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "A columnstore index stores data by column instead of by row, providing high compression and fast aggregation; it is best suited for analytical (OLAP) workloads and data warehouses", "es": "Un índice de almacén de columnas almacena datos por columna en lugar de por fila, ofreciendo alta compresión y agregaciones rápidas; es ideal para cargas de trabajo analíticas (OLAP) y almacenes de datos" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "A columnstore index stores only specific columns defined by the DBA for security purposes", "es": "Un índice de almacén de columnas almacena solo columnas específicas definidas por el DBA por razones de seguridad" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "A columnstore index is identical to a non-clustered index but uses a different storage format", "es": "Un índice de almacén de columnas es idéntico a un índice no agrupado pero usa un formato de almacenamiento diferente" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "A columnstore index is designed for OLTP workloads with high write throughput", "es": "Un índice de almacén de columnas está diseñado para cargas de trabajo OLTP con alto rendimiento de escritura" } }
+    ]
+  }
+  ,
+  {
+    "id": "sqlserver-106",
+    "level": "expert",
+    "question": { "en": "What are memory-optimized tables (In-Memory OLTP) in SQL Server?", "es": "¿Qué son las tablas optimizadas para memoria (In-Memory OLTP) en SQL Server?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "Tables that reside entirely in memory using a lock-free, optimistic concurrency model for extremely high transaction throughput with optional disk durability", "es": "Tablas que residen completamente en memoria usando un modelo de concurrencia optimista sin bloqueos para un altísimo rendimiento de transacciones con durabilidad en disco opcional" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Tables cached in the SQL Server buffer pool automatically", "es": "Tablas almacenadas en caché automáticamente en el buffer pool de SQL Server" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Temporary tables stored in TempDB for the duration of a session", "es": "Tablas temporales almacenadas en TempDB durante la duración de una sesión" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Tables that bypass the transaction log for faster writes", "es": "Tablas que omiten el log de transacciones para escrituras más rápidas" } }
+    ]
+  },
+  {
+    "id": "sqlserver-107",
+    "level": "expert",
+    "question": { "en": "What is the Query Store in SQL Server?", "es": "¿Qué es el Almacén de consultas (Query Store) en SQL Server?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "A feature that captures query text, execution plans, and runtime statistics persistently inside the database, enabling plan regression detection and forced plan stabilization", "es": "Una característica que captura el texto de consultas, planes de ejecución y estadísticas de tiempo de ejecución de forma persistente dentro de la base de datos, permitiendo detectar regresiones de planes y forzar la estabilización de planes" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "A cache area in memory where compiled query plans are stored temporarily", "es": "Un área de caché en memoria donde se almacenan temporalmente los planes de consultas compilados" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "A repository of stored procedures organized by execution frequency", "es": "Un repositorio de procedimientos almacenados organizados por frecuencia de ejecución" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "A feature that stores query results to avoid re-execution", "es": "Una característica que almacena resultados de consultas para evitar volver a ejecutarlas" } }
+    ]
+  },
+  {
+    "id": "sqlserver-108",
+    "level": "expert",
+    "question": { "en": "What is an Always On Availability Group?", "es": "¿Qué es un Grupo de disponibilidad Always On?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "A high-availability and disaster-recovery solution that groups databases whose failover occurs together, replicating data to one or more secondary replicas that can be synchronous or asynchronous", "es": "Una solución de alta disponibilidad y recuperación ante desastres que agrupa bases de datos cuya conmutación por error ocurre en conjunto, replicando datos a una o más réplicas secundarias que pueden ser síncronas o asíncronas" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "A feature that automatically scales SQL Server across multiple servers", "es": "Una característica que escala SQL Server automáticamente entre múltiples servidores" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "A scheduled backup strategy that keeps databases always online", "es": "Una estrategia de copia de seguridad programada que mantiene las bases de datos siempre en línea" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "A clustering technology that shares a single disk between multiple nodes", "es": "Una tecnología de clustering que comparte un solo disco entre múltiples nodos" } }
+    ]
+  },
+  {
+    "id": "sqlserver-109",
+    "level": "expert",
+    "question": { "en": "What is the difference between database mirroring and log shipping?", "es": "¿Cuál es la diferencia entre la creación de reflejos de base de datos y el trasvase de registros?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "Database mirroring provides near-real-time synchronous or asynchronous replication between two servers; log shipping periodically ships transaction log backups to one or more secondary servers on a scheduled basis", "es": "La creación de reflejos de base de datos proporciona replicación síncrona o asíncrona casi en tiempo real entre dos servidores; el trasvase de registros envía periódicamente copias de seguridad del log de transacciones a uno o más servidores secundarios de forma programada" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Log shipping is faster because it uses synchronous replication", "es": "El trasvase de registros es más rápido porque usa replicación síncrona" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Database mirroring and log shipping are synonyms for the same feature", "es": "La creación de reflejos de base de datos y el trasvase de registros son sinónimos de la misma característica" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Log shipping requires a Windows Server Failover Cluster", "es": "El trasvase de registros requiere un Clúster de conmutación por error de Windows Server" } }
+    ]
+  },
+  {
+    "id": "sqlserver-110",
+    "level": "expert",
+    "question": { "en": "What is table partitioning in SQL Server?", "es": "¿Qué es el particionamiento de tablas en SQL Server?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "Dividing a table's data into multiple horizontal segments stored in different filegroups based on a partition function and scheme, improving manageability and query performance on large tables", "es": "Dividir los datos de una tabla en múltiples segmentos horizontales almacenados en diferentes grupos de archivos según una función y esquema de partición, mejorando la manejabilidad y el rendimiento de consultas en tablas grandes" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Splitting a table into two separate tables with a foreign key relationship", "es": "Dividir una tabla en dos tablas separadas con una relación de clave foránea" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Assigning different security permissions to different columns of a table", "es": "Asignar diferentes permisos de seguridad a diferentes columnas de una tabla" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Creating multiple copies of a table across different databases", "es": "Crear múltiples copias de una tabla en diferentes bases de datos" } }
+    ]
+  }
+  ,
+  {
+    "id": "sqlserver-111",
+    "level": "expert",
+    "question": { "en": "What is a deadlock in SQL Server and how can it be avoided?", "es": "¿Qué es un deadlock en SQL Server y cómo se puede evitar?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "A deadlock occurs when two or more sessions hold locks that the other sessions need, causing a circular wait; it can be minimized by accessing resources in a consistent order, using shorter transactions, and appropriate isolation levels", "es": "Un deadlock ocurre cuando dos o más sesiones mantienen bloqueos que las otras sesiones necesitan, causando una espera circular; se puede minimizar accediendo a los recursos en un orden consistente, usando transacciones más cortas y niveles de aislamiento apropiados" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "A deadlock is a query that runs indefinitely and is resolved by increasing server memory", "es": "Un deadlock es una consulta que se ejecuta indefinidamente y se resuelve aumentando la memoria del servidor" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "A deadlock happens only in databases without primary keys", "es": "Un deadlock solo ocurre en bases de datos sin claves primarias" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "A deadlock is a corrupted transaction log that requires a database restore", "es": "Un deadlock es un log de transacciones corrupto que requiere una restauración de la base de datos" } }
+    ]
+  },
+  {
+    "id": "sqlserver-112",
+    "level": "expert",
+    "question": { "en": "What is the SNAPSHOT isolation level in SQL Server?", "es": "¿Qué es el nivel de aislamiento SNAPSHOT en SQL Server?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "A row-versioning-based isolation level where readers see a consistent snapshot of data as of the start of the transaction, avoiding reader-writer blocking without acquiring shared locks", "es": "Un nivel de aislamiento basado en versiones de filas donde los lectores ven una instantánea consistente de los datos al inicio de la transacción, evitando el bloqueo lector-escritor sin adquirir bloqueos compartidos" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "An isolation level that takes a physical copy of the database at the start of the transaction", "es": "Un nivel de aislamiento que toma una copia física de la base de datos al inicio de la transacción" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "An isolation level that allows dirty reads from uncommitted transactions", "es": "Un nivel de aislamiento que permite lecturas sucias de transacciones no confirmadas" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "An isolation level that holds all acquired locks until the end of the transaction", "es": "Un nivel de aislamiento que mantiene todos los bloqueos adquiridos hasta el final de la transacción" } }
+    ]
+  },
+  {
+    "id": "sqlserver-113",
+    "level": "expert",
+    "question": { "en": "What is TempDB contention and how is it addressed in SQL Server?", "es": "¿Qué es la contención en TempDB y cómo se aborda en SQL Server?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "TempDB contention is I/O and latch contention caused by heavy concurrent use of temporary objects; it is addressed by adding multiple TempDB data files (typically one per logical CPU up to 8) and using trace flags or Instant File Initialization", "es": "La contención en TempDB es contención de I/O y latch causada por el uso concurrente intensivo de objetos temporales; se aborda agregando múltiples archivos de datos en TempDB (típicamente uno por CPU lógica hasta 8) y usando trace flags o Inicialización instantánea de archivos" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "TempDB contention is caused by too many stored procedures and is resolved by deleting unused ones", "es": "La contención en TempDB es causada por demasiados procedimientos almacenados y se resuelve eliminando los no usados" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "TempDB contention occurs only in databases with more than 10 GB of data", "es": "La contención en TempDB solo ocurre en bases de datos con más de 10 GB de datos" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "TempDB contention is resolved by moving TempDB to a different drive letter", "es": "La contención en TempDB se resuelve moviendo TempDB a una letra de unidad diferente" } }
+    ]
+  },
+  {
+    "id": "sqlserver-114",
+    "level": "expert",
+    "question": { "en": "What is CLR integration in SQL Server?", "es": "¿Qué es la integración CLR en SQL Server?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "A feature that allows .NET managed code (C# or VB.NET) to be hosted inside SQL Server to create stored procedures, functions, triggers, and types that leverage the .NET framework", "es": "Una característica que permite hospedar código administrado .NET (C# o VB.NET) dentro de SQL Server para crear procedimientos almacenados, funciones, triggers y tipos que aprovechan el framework .NET" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "A feature that integrates SQL Server with Common Language Runtime cloud services", "es": "Una característica que integra SQL Server con los servicios en la nube de Common Language Runtime" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "A built-in feature that automatically optimizes query compilation", "es": "Una característica integrada que optimiza automáticamente la compilación de consultas" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "A replication technology between SQL Server and Oracle databases", "es": "Una tecnología de replicación entre SQL Server y bases de datos Oracle" } }
+    ]
+  },
+  {
+    "id": "sqlserver-115",
+    "level": "expert",
+    "question": { "en": "What is Service Broker in SQL Server?", "es": "¿Qué es Service Broker en SQL Server?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "A native asynchronous messaging and queuing framework built into SQL Server that enables reliable, ordered message exchange between database applications within or across SQL Server instances", "es": "Un framework nativo de mensajería y colas asíncronas integrado en SQL Server que permite el intercambio confiable y ordenado de mensajes entre aplicaciones de base de datos dentro o entre instancias de SQL Server" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "A service that monitors SQL Server performance and sends alerts", "es": "Un servicio que monitorea el rendimiento de SQL Server y envía alertas" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "A built-in load balancer for SQL Server connections", "es": "Un balanceador de carga integrado para conexiones de SQL Server" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "A feature that proxies queries between linked servers", "es": "Una característica que actúa como proxy de consultas entre servidores vinculados" } }
+    ]
+  }
+  ,
+  {
+    "id": "sqlserver-116",
+    "level": "expert",
+    "question": { "en": "What is sp_executesql and why is it preferred over EXEC for dynamic SQL?", "es": "¿Qué es sp_executesql y por qué se prefiere sobre EXEC para SQL dinámico?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "sp_executesql executes a parameterized T-SQL string, enabling plan reuse and preventing SQL injection; EXEC concatenates values directly into the string, creating unique query plans each time and exposing injection risk", "es": "sp_executesql ejecuta una cadena T-SQL parametrizada, permitiendo la reutilización de planes y previniendo la inyección SQL; EXEC concatena valores directamente en la cadena, creando planes de consulta únicos cada vez y exponiendo el riesgo de inyección" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "sp_executesql is faster because it bypasses the query optimizer", "es": "sp_executesql es más rápido porque omite el optimizador de consultas" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "EXEC supports parameters while sp_executesql does not", "es": "EXEC admite parámetros mientras que sp_executesql no" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Both are identical in behavior; the choice is purely stylistic", "es": "Ambos se comportan de manera idéntica; la elección es puramente estilística" } }
+    ]
+  },
+  {
+    "id": "sqlserver-117",
+    "level": "expert",
+    "question": { "en": "What is parameter sniffing in SQL Server?", "es": "¿Qué es el rastreo de parámetros (parameter sniffing) en SQL Server?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "The process where SQL Server uses the parameter values from the first execution to compile and cache a query plan; this can cause performance issues if later calls use very different parameter values", "es": "El proceso por el que SQL Server usa los valores de parámetros de la primera ejecución para compilar y almacenar en caché un plan de consulta; esto puede causar problemas de rendimiento si llamadas posteriores usan valores de parámetros muy diferentes" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "A security feature that detects malicious parameter values in queries", "es": "Una característica de seguridad que detecta valores de parámetros maliciosos en consultas" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "A mechanism that automatically updates statistics when parameters change", "es": "Un mecanismo que actualiza automáticamente las estadísticas cuando los parámetros cambian" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "A feature that logs all parameter values passed to stored procedures", "es": "Una característica que registra todos los valores de parámetros pasados a los procedimientos almacenados" } }
+    ]
+  },
+  {
+    "id": "sqlserver-118",
+    "level": "expert",
+    "question": { "en": "What does Resource Governor do in SQL Server?", "es": "¿Qué hace el Regulador de recursos (Resource Governor) en SQL Server?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "Allows administrators to classify incoming sessions into workload groups and assign CPU, memory, and I/O limits per group to prevent any single workload from monopolizing server resources", "es": "Permite a los administradores clasificar las sesiones entrantes en grupos de carga de trabajo y asignar límites de CPU, memoria e I/O por grupo para evitar que una sola carga de trabajo monopolice los recursos del servidor" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Monitors disk usage and automatically purges old data when space is low", "es": "Monitorea el uso del disco y elimina automáticamente datos antiguos cuando el espacio es escaso" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Manages SQL Server Agent job priorities automatically", "es": "Gestiona automáticamente las prioridades de los trabajos del Agente SQL Server" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Controls user permissions and security access to databases", "es": "Controla los permisos de usuario y el acceso de seguridad a las bases de datos" } }
+    ]
+  },
+  {
+    "id": "sqlserver-119",
+    "level": "expert",
+    "question": { "en": "What are Extended Events in SQL Server?", "es": "¿Qué son los Eventos extendidos en SQL Server?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "A lightweight, highly configurable performance monitoring and troubleshooting framework that replaces SQL Trace/Profiler, allowing granular capture of events with minimal server overhead", "es": "Un framework de monitoreo de rendimiento y resolución de problemas ligero y muy configurable que reemplaza a SQL Trace/Profiler, permitiendo la captura granular de eventos con una sobrecarga mínima en el servidor" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "A set of built-in stored procedures that handle error conditions automatically", "es": "Un conjunto de procedimientos almacenados integrados que manejan condiciones de error automáticamente" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Custom triggers that fire based on calendar events", "es": "Triggers personalizados que se disparan basados en eventos del calendario" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "An API for handling events from external applications connected to SQL Server", "es": "Una API para manejar eventos de aplicaciones externas conectadas a SQL Server" } }
+    ]
+  },
+  {
+    "id": "sqlserver-120",
+    "level": "expert",
+    "question": { "en": "What is a SQL Server Agent job?", "es": "¿Qué es un trabajo del Agente SQL Server?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "A series of T-SQL steps, SSIS packages, or operating-system commands scheduled and managed by SQL Server Agent to run automatically on a defined schedule or in response to an alert", "es": "Una serie de pasos T-SQL, paquetes SSIS o comandos del sistema operativo programados y administrados por el Agente SQL Server para ejecutarse automáticamente según un horario definido o en respuesta a una alerta" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "A background Windows service that handles SQL Server installations and patches", "es": "Un servicio de Windows en segundo plano que gestiona las instalaciones y parches de SQL Server" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "An asynchronous query that runs in a separate thread from the main session", "es": "Una consulta asíncrona que se ejecuta en un hilo separado de la sesión principal" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "A replication task that synchronizes data between two databases", "es": "Una tarea de replicación que sincroniza datos entre dos bases de datos" } }
+    ]
+  }
+]

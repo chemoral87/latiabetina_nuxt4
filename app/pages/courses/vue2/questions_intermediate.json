@@ -1,0 +1,2522 @@
+[
+  {
+    "id": "vue2-51",
+    "level": "intermediate",
+    "question": {
+      "en": "What is a Vuex mutation?",
+      "es": "¿Qué es una mutación en Vuex?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A synchronous function that modifies the state",
+          "es": "Una función síncrona que modifica el estado"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "An async function that fetches data",
+          "es": "Una función asíncrona que obtiene datos"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A computed property helper",
+          "es": "Un helper de propiedad computada"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A component lifecycle method",
+          "es": "Un método del ciclo de vida del componente"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-52",
+    "level": "intermediate",
+    "question": {
+      "en": "What is a Vuex action?",
+      "es": "¿Qué es una acción en Vuex?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "An asynchronous function that commits mutations",
+          "es": "Una función asíncrona que ejecuta mutaciones"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A synchronous state modifier",
+          "es": "Un modificador de estado síncrono"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A computed property",
+          "es": "Una propiedad computada"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A component method",
+          "es": "Un método del componente"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-53",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the Vuex getter used for?",
+      "es": "¿Para qué se usan los getters de Vuex?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Computing derived state based on the store state",
+          "es": "Calcular estado derivado basado en el estado del store"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Getting data from APIs",
+          "es": "Obtener datos de APIs"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Setting state values",
+          "es": "Establecer valores del estado"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Creating new store modules",
+          "es": "Crear nuevos módulos del store"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-54",
+    "level": "intermediate",
+    "question": {
+      "en": "What is a Vue Router navigation guard?",
+      "es": "¿Qué es un guardia de navegación en Vue Router?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A hook that controls navigation in Vue Router",
+          "es": "Un hook que controla la navegación en Vue Router"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A CSS navigation bar",
+          "es": "Una barra de navegación CSS"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A data validation function",
+          "es": "Una función de validación de datos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A component guard",
+          "es": "Un guardia de componente"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-55",
+    "level": "intermediate",
+    "question": {
+      "en": "What are dynamic route matches in Vue Router?",
+      "es": "¿Qué son las rutas dinámicas en Vue Router?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Routes with parameters like /user/:id",
+          "es": "Rutas con parámetros como /user/:id"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Routes that change dynamically",
+          "es": "Rutas que cambian dinámicamente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Routes created at runtime",
+          "es": "Rutas creadas en tiempo de ejecución"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Routes with dynamic components",
+          "es": "Rutas con componentes dinámicos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-56",
+    "level": "intermediate",
+    "question": {
+      "en": "What is a named view in Vue Router?",
+      "es": "¿Qué es una vista con nombre en Vue Router?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Multiple router views with names for complex layouts",
+          "es": "Múltiples router-view con nombres para layouts complejos"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A route with a name property",
+          "es": "Una ruta con una propiedad name"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A named component",
+          "es": "Un componente con nombre"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A view with a title",
+          "es": "Una vista con un título"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-57",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the purpose of the $route object?",
+      "es": "¿Cuál es el propósito del objeto $route?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Contains information about the current route",
+          "es": "Contiene información sobre la ruta actual"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Defines all application routes",
+          "es": "Define todas las rutas de la aplicación"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Navigates to a different route",
+          "es": "Navega a una ruta diferente"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Creates new routes",
+          "es": "Crea nuevas rutas"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-58",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the $router object?",
+      "es": "¿Qué es el objeto $router?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "The Vue Router instance for programmatic navigation",
+          "es": "La instancia de Vue Router para navegación programática"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A list of all routes",
+          "es": "Una lista de todas las rutas"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A route configuration object",
+          "es": "Un objeto de configuración de rutas"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A navigation guard",
+          "es": "Un guardia de navegación"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-59",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the difference between $route and $router?",
+      "es": "¿Cuál es la diferencia entre $route y $router?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "$route has current route info; $router is the instance for navigation",
+          "es": "$route tiene info de la ruta actual; $router es la instancia para navegar"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "They are the same",
+          "es": "Son lo mismo"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "$router has route info; $route navigates",
+          "es": "$router tiene info de ruta; $route navega"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "$route is local; $router is global",
+          "es": "$route es local; $router es global"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-60",
+    "level": "intermediate",
+    "question": {
+      "en": "What is a watcher in Vue 2?",
+      "es": "¿Qué es un watcher en Vue 2?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A function that watches a data property for changes",
+          "es": "Una función que observa una propiedad data por cambios"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A method that watches events",
+          "es": "Un método que observa eventos"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A component that observes other components",
+          "es": "Un componente que observa otros componentes"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A DOM observer",
+          "es": "Un observador del DOM"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-61",
+    "level": "intermediate",
+    "question": {
+      "en": "When would you use a watcher instead of a computed property?",
+      "es": "¿Cuándo usarías un watcher en lugar de una propiedad computada?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "When you need to perform async operations or side effects on data change",
+          "es": "Cuando necesitas realizar operaciones asíncronas o efectos secundarios al cambiar datos"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "When you need to return a derived value",
+          "es": "Cuando necesitas devolver un valor derivado"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "When you need caching",
+          "es": "Cuando necesitas caché"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "When you need performance optimization",
+          "es": "Cuando necesitas optimización de rendimiento"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-62",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the deep option in a watcher?",
+      "es": "¿Qué es la opción deep en un watcher?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Enables deep watching of nested objects",
+          "es": "Habilita la observación profunda de objetos anidados"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Makes the watcher asynchronous",
+          "es": "Hace el watcher asíncrono"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Makes the watcher debounced",
+          "es": "Hace el watcher debounced"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Watches the root level only",
+          "es": "Observa solo el nivel raíz"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-63",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the immediate option in a watcher?",
+      "es": "¿Qué es la opción immediate en un watcher?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Runs the watcher callback immediately with the current value",
+          "es": "Ejecuta el callback del watcher inmediatamente con el valor actual"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Runs the watcher asynchronously",
+          "es": "Ejecuta el watcher asíncronamente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Stops the watcher after first run",
+          "es": "Detiene el watcher después de la primera ejecución"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Runs the watcher outside Vue's reactivity",
+          "es": "Ejecuta el watcher fuera de la reactividad de Vue"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-64",
+    "level": "intermediate",
+    "question": {
+      "en": "What is provide/inject in Vue 2?",
+      "es": "¿Qué es provide/inject en Vue 2?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A way to pass data through the component tree without prop drilling",
+          "es": "Una forma de pasar datos a través del árbol de componentes sin prop drilling"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A dependency injection for services",
+          "es": "Una inyección de dependencias para servicios"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A method for providing props",
+          "es": "Un método para proporcionar props"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A data fetching mechanism",
+          "es": "Un mecanismo de obtención de datos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-65",
+    "level": "intermediate",
+    "question": {
+      "en": "What is a custom directive in Vue 2?",
+      "es": "¿Qué es una directiva personalizada en Vue 2?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A user-defined directive for DOM manipulation",
+          "es": "Una directiva definida por el usuario para manipulación del DOM"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A directive from Vue core library",
+          "es": "Una directiva de la librería core de Vue"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A CSS directive",
+          "es": "Una directiva CSS"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A TypeScript decorator",
+          "es": "Un decorador de TypeScript"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-66",
+    "level": "intermediate",
+    "question": {
+      "en": "What are the hook functions of a custom directive?",
+      "es": "¿Cuáles son los hooks de una directiva personalizada?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "bind, inserted, update, componentUpdated, unbind",
+          "es": "bind, inserted, update, componentUpdated, unbind"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "create, mount, update, destroy",
+          "es": "create, mount, update, destroy"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "init, attach, detach, remove",
+          "es": "init, attach, detach, remove"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "before, after, finally",
+          "es": "before, after, finally"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-67",
+    "level": "intermediate",
+    "question": {
+      "en": "What is Vue.observable() used for?",
+      "es": "¿Para qué se usa Vue.observable()?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Making plain objects reactive outside components",
+          "es": "Hacer objetos planos reactivos fuera de componentes"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Observable API for HTTP requests",
+          "es": "API observable para peticiones HTTP"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Creating observables for RxJS",
+          "es": "Crear observables para RxJS"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Making computed properties",
+          "es": "Hacer propiedades computadas"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-68",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the errorHandler option in Vue 2?",
+      "es": "¿Qué es la opción errorHandler en Vue 2?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A global handler for uncaught errors in components",
+          "es": "Un manejador global para errores no capturados en componentes"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "An error handling middleware",
+          "es": "Un middleware de manejo de errores"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A component error boundary",
+          "es": "Un error boundary de componente"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A try-catch utility",
+          "es": "Una utilidad try-catch"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-69",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the warnHandler option?",
+      "es": "¿Qué es la opción warnHandler?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A handler for Vue runtime warnings",
+          "es": "Un manejador para advertencias de Vue en tiempo de ejecución"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A handler for console warnings",
+          "es": "Un manejador para advertencias de consola"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A logging utility",
+          "es": "Una utilidad de logging"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A development only feature",
+          "es": "Una característica solo de desarrollo"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-70",
+    "level": "intermediate",
+    "question": {
+      "en": "What is Vue.set() used for?",
+      "es": "¿Para qué se usa Vue.set()?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Adding a reactive property to an object",
+          "es": "Añadir una propiedad reactiva a un objeto"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Setting component data",
+          "es": "Establecer datos del componente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Configuring Vue options",
+          "es": "Configurar opciones de Vue"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Setting up routing",
+          "es": "Configurar el enrutamiento"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-71",
+    "level": "intermediate",
+    "question": {
+      "en": "What is Vue.delete() used for?",
+      "es": "¿Para qué se usa Vue.delete()?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Deleting a reactive property from an object",
+          "es": "Eliminar una propiedad reactiva de un objeto"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Deleting a component",
+          "es": "Eliminar un componente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Removing a route",
+          "es": "Remover una ruta"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Deleting a store module",
+          "es": "Eliminar un módulo del store"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-72",
+    "level": "intermediate",
+    "question": {
+      "en": "What are renderless components?",
+      "es": "¿Qué son los componentes sin renderizado (renderless)?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Components that use scoped slots to provide logic without rendering DOM",
+          "es": "Componentes que usan scoped slots para proporcionar lógica sin renderizar DOM"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Components with empty templates",
+          "es": "Componentes con templates vacíos"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Components that render nothing",
+          "es": "Componentes que no renderizan nada"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Server-side only components",
+          "es": "Componentes solo del lado del servidor"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-73",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the function signature of a render function?",
+      "es": "¿Cuál es la firma de la función render?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "createElement (h) that returns VNodes",
+          "es": "createElement (h) que devuelve VNodes"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "render() that returns HTML strings",
+          "es": "render() que devuelve strings HTML"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "render() that returns a template",
+          "es": "render() que devuelve un template"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "h() that returns JSX",
+          "es": "h() que devuelve JSX"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-74",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the transition-group component?",
+      "es": "¿Qué es el componente transition-group?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A wrapper for animating lists with enter/leave transitions",
+          "es": "Un envoltorio para animar listas con transiciones de entrada/salida"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A group of transitions",
+          "es": "Un grupo de transiciones"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A component for grouping elements",
+          "es": "Un componente para agrupar elementos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A transition manager",
+          "es": "Un gestor de transiciones"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-75",
+    "level": "intermediate",
+    "question": {
+      "en": "What are transition classes in Vue 2?",
+      "es": "¿Qué son las clases de transición en Vue 2?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "CSS classes like v-enter, v-leave-to applied during transitions",
+          "es": "Clases CSS como v-enter, v-leave-to aplicadas durante las transiciones"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "CSS transition properties",
+          "es": "Propiedades CSS de transición"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "JavaScript animation classes",
+          "es": "Clases de animación JavaScript"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Vuex actions for transitions",
+          "es": "Acciones de Vuex para transiciones"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-76",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the mode attribute of transition?",
+      "es": "¿Qué es el atributo mode de transition?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Controls timing of enter/leave animations (in-out, out-in)",
+          "es": "Controla el tiempo de las animaciones de entrada/salida (in-out, out-in)"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Sets the animation mode",
+          "es": "Establece el modo de animación"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Enables CSS mode",
+          "es": "Habilita el modo CSS"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Sets JavaScript mode",
+          "es": "Establece el modo JavaScript"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-77",
+    "level": "intermediate",
+    "question": {
+      "en": "What are named slots in Vue 2?",
+      "es": "¿Qué son los slots con nombre en Vue 2?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Slots with a name attribute for multiple slot destinations",
+          "es": "Slots con un atributo name para múltiples destinos de slot"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Slots with CSS class names",
+          "es": "Slots con nombres de clase CSS"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Named component exports",
+          "es": "Exportaciones de componente con nombre"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Named routes for slots",
+          "es": "Rutas con nombre para slots"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-78",
+    "level": "intermediate",
+    "question": {
+      "en": "How do you use named slots in Vue 2?",
+      "es": "¿Cómo usas slots con nombre en Vue 2?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "<template v-slot:name> or <template slot=\"name\">",
+          "es": "<template v-slot:nombre> o <template slot=\"nombre\">"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "<slot name=\"name\"></slot>",
+          "es": "<slot name=\"nombre\"></slot>"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "<named-slot name=\"name\">",
+          "es": "<named-slot name=\"nombre\">"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "@slot(name)",
+          "es": "@slot(nombre)"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-79",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the v-bind.sync modifier?",
+      "es": "¿Qué es el modificador v-bind.sync?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A shorthand for two-way binding on props",
+          "es": "Una abreviatura para el enlace bidireccional en props"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Synchronous binding",
+          "es": "Enlace síncrono"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A binding that syncs immediately",
+          "es": "Un enlace que sincroniza inmediatamente"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A computed property helper",
+          "es": "Un helper de propiedad computada"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-80",
+    "level": "intermediate",
+    "question": {
+      "en": "What is a Vuex module?",
+      "es": "¿Qué es un módulo de Vuex?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A way to organize the Vuex store into smaller, manageable sections",
+          "es": "Una forma de organizar el store Vuex en secciones más pequeñas y manejables"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A Vue component module",
+          "es": "Un módulo de componente Vue"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A dynamic import",
+          "es": "Una importación dinámica"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A JavaScript module",
+          "es": "Un módulo de JavaScript"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-81",
+    "level": "intermediate",
+    "question": {
+      "en": "What is namespacing in Vuex modules?",
+      "es": "¿Qué es namespacing en módulos de Vuex?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Prefixing module state/getters/actions/mutations to avoid naming conflicts",
+          "es": "Prefijar state/getters/actions/mutations del módulo para evitar conflictos de nombres"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Adding CSS namespaces",
+          "es": "Añadir namespaces CSS"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Creating JavaScript namespaces",
+          "es": "Crear namespaces de JavaScript"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Organizing files into namespaces",
+          "es": "Organizar archivos en namespaces"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-82",
+    "level": "intermediate",
+    "question": {
+      "en": "What is a Vuex plugin?",
+      "es": "¿Qué es un plugin de Vuex?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A function that hooks into Vuex store to extend functionality",
+          "es": "Una función que se engancha al store Vuex para extender funcionalidad"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A Vue plugin for Vuex",
+          "es": "Un plugin Vue para Vuex"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A browser extension",
+          "es": "Una extensión de navegador"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A coding utility",
+          "es": "Una utilidad de codificación"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-83",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the mapState helper in Vuex?",
+      "es": "¿Qué es el helper mapState en Vuex?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Maps Vuex state to computed properties in a component",
+          "es": "Mapea el estado de Vuex a propiedades computadas en un componente"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Maps the store state to the DOM",
+          "es": "Mapea el estado del store al DOM"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Creates a state map",
+          "es": "Crea un mapa de estado"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Generates state documentation",
+          "es": "Genera documentación del estado"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-84",
+    "level": "intermediate",
+    "question": {
+      "en": "What is mapGetters in Vuex?",
+      "es": "¿Qué es mapGetters en Vuex?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Maps getters to computed properties",
+          "es": "Mapea getters a propiedades computadas"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Maps getters to methods",
+          "es": "Mapea getters a métodos"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Creates new getters",
+          "es": "Crea nuevos getters"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Generates getter documentation",
+          "es": "Genera documentación de getters"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-85",
+    "level": "intermediate",
+    "question": {
+      "en": "What is mapActions in Vuex?",
+      "es": "¿Qué es mapActions en Vuex?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Maps actions to component methods",
+          "es": "Mapea acciones a métodos del componente"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Maps actions to computed properties",
+          "es": "Mapea acciones a propiedades computadas"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Creates new actions",
+          "es": "Crea nuevas acciones"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Validates actions",
+          "es": "Valida acciones"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-86",
+    "level": "intermediate",
+    "question": {
+      "en": "What is mapMutations in Vuex?",
+      "es": "¿Qué es mapMutations en Vuex?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Maps mutations to component methods",
+          "es": "Mapea mutaciones a métodos del componente"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Maps mutations to getters",
+          "es": "Mapea mutaciones a getters"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Creates new mutations",
+          "es": "Crea nuevas mutaciones"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Maps mutations to state",
+          "es": "Mapea mutaciones al estado"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-87",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the Vuex store's commit method?",
+      "es": "¿Qué es el método commit del store Vuex?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Triggers a mutation to change state",
+          "es": "Ejecuta una mutación para cambiar el estado"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Commits code to version control",
+          "es": "Confirma código al control de versiones"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Finalizes a transaction",
+          "es": "Finaliza una transacción"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Submits form data",
+          "es": "Envía datos de formulario"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-88",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the Vuex store's dispatch method?",
+      "es": "¿Qué es el método dispatch del store Vuex?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Triggers an action (which may be async)",
+          "es": "Ejecuta una acción (que puede ser asíncrona)"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Dispatches events to components",
+          "es": "Envía eventos a componentes"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Sends HTTP requests",
+          "es": "Envía peticiones HTTP"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Dispatches mutations",
+          "es": "Ejecuta mutaciones"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-89",
+    "level": "intermediate",
+    "question": {
+      "en": "What is vue-router's history mode?",
+      "es": "¿Qué es el history mode de vue-router?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Uses HTML5 History API for clean URLs without hash",
+          "es": "Usa la API HTML5 History para URLs limpias sin hash"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Stores navigation history",
+          "es": "Almacena el historial de navegación"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Enables browser back/forward buttons",
+          "es": "Habilita los botones de retroceso/avance del navegador"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A routing history log",
+          "es": "Un registro de historial de rutas"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-90",
+    "level": "intermediate",
+    "question": {
+      "en": "What is a route alias in Vue Router?",
+      "es": "¿Qué es un alias de ruta en Vue Router?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "An alternative path that maps to the same route",
+          "es": "Una ruta alternativa que mapea a la misma ruta"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A shorter route name",
+          "es": "Un nombre de ruta más corto"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A redirect to another route",
+          "es": "Una redirección a otra ruta"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A route that changes name",
+          "es": "Una ruta que cambia de nombre"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-91",
+    "level": "intermediate",
+    "question": {
+      "en": "What is route meta field in Vue Router?",
+      "es": "¿Qué es el campo meta de ruta en Vue Router?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Custom data attached to a route like auth requirements",
+          "es": "Datos personalizados adjuntos a una ruta como requisitos de autenticación"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Metadata for SEO",
+          "es": "Metadatos para SEO"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A route description",
+          "es": "Una descripción de ruta"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Page title configuration",
+          "es": "Configuración del título de página"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-92",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the beforeRouteEnter guard?",
+      "es": "¿Qué es el guardia beforeRouteEnter?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "An in-component guard called before entering the route",
+          "es": "Un guardia en el componente llamado antes de entrar a la ruta"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A global navigation guard",
+          "es": "Un guardia global de navegación"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A guard that runs after route enter",
+          "es": "Un guardia que se ejecuta después de entrar a la ruta"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A CSS animation guard",
+          "es": "Un guardia de animación CSS"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-93",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the beforeRouteLeave guard?",
+      "es": "¿Qué es el guardia beforeRouteLeave?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "An in-component guard called before leaving the route",
+          "es": "Un guardia en el componente llamado antes de salir de la ruta"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A guard for leaving a component",
+          "es": "Un guardia para salir de un componente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A global navigation guard",
+          "es": "Un guardia global de navegación"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A guard for closing the browser",
+          "es": "Un guardia para cerrar el navegador"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-94",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the router-link component?",
+      "es": "¿Qué es el componente router-link?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A component for navigation that renders an anchor tag",
+          "es": "Un componente para navegación que renderiza un anchor tag"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A component for linking external URLs",
+          "es": "Un componente para enlazar URLs externas"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A link to router configuration",
+          "es": "Un enlace a la configuración del router"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A component for breadcrumbs",
+          "es": "Un componente para migas de pan"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-95",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the router-view component?",
+      "es": "¿Qué es el componente router-view?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A component that renders the matched route component",
+          "es": "Un componente que renderiza el componente de la ruta coincidente"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A component for viewing routes",
+          "es": "Un componente para ver rutas"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A navigation menu component",
+          "es": "Un componente de menú de navegación"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A route debugging tool",
+          "es": "Una herramienta de depuración de rutas"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-96",
+    "level": "intermediate",
+    "question": {
+      "en": "How does Vue 2 handle form validation?",
+      "es": "¿Cómo maneja Vue 2 la validación de formularios?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Vue does not have built-in validation; use libraries like VeeValidate",
+          "es": "Vue no tiene validación incorporada; usa librerías como VeeValidate"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Vue has built-in validation with v-validate",
+          "es": "Crea un mixin para un solo componente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Validation is automatic in Vue",
+          "es": "Estilos CSS en línea"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Vue validates all inputs by default",
+          "es": "Filtrar los elementos del array"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-97",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the purpose of Vue.mixin()?",
+      "es": "¿Cuál es el propósito de Vue.mixin()?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Globally mix in options to all Vue instances",
+          "es": "Vue no tiene validación incorporada; usa librerías como VeeValidate"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Create a mixin for a single component",
+          "es": "Crea un mixin para un solo componente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Mix two components together",
+          "es": "Estilos CSS en línea"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Merge two Vue applications",
+          "es": "Filtrar los elementos del array"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-98",
+    "level": "intermediate",
+    "question": {
+      "en": "What are inline templates in Vue 2?",
+      "es": "¿Qué son las plantillas inline en Vue 2?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Templates defined in the DOM using inline-template attribute",
+          "es": "Vue no tiene validación incorporada; usa librerías como VeeValidate"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Templates written inside JavaScript strings",
+          "es": "Crea un mixin para un solo componente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "CSS inline styles",
+          "es": "Estilos CSS en línea"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Templates in HTML comments",
+          "es": "Filtrar los elementos del array"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-99",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the purpose of the key in v-for?",
+      "es": "¿Cuál es el propósito del key en v-for?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Track each node's identity for re-rendering optimization",
+          "es": "Vue no tiene validación incorporada; usa librerías como VeeValidate"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Encrypt the loop data",
+          "es": "Crea un mixin para un solo componente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Add CSS styling to items",
+          "es": "Estilos CSS en línea"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Filter the array items",
+          "es": "Filtrar los elementos del array"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-100",
+    "level": "intermediate",
+    "question": {
+      "en": "How do you use dynamic props in Vue 2?",
+      "es": "¿Cómo se usan las props dinámicas en Vue 2?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using v-bind or : with a dynamic expression",
+          "es": "Vue no tiene validación incorporada; usa librerías como VeeValidate"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using v-model for all props",
+          "es": "Crea un mixin para un solo componente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Props are always static",
+          "es": "Estilos CSS en línea"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using v-if to conditionally pass props",
+          "es": "Filtrar los elementos del array"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-161",
+    "level": "intermediate",
+    "question": {
+      "en": "What is a closure in JavaScript?",
+      "es": "¿Qué es un closure en JavaScript?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A function that has access to its outer function's variables even after the outer function has returned",
+          "es": "Una función que tiene acceso a las variables de su función externa incluso después de que ésta haya retornado"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A function that closes the browser tab",
+          "es": "Una función que cierra la pestaña del navegador"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A block of code wrapped in curly braces",
+          "es": "Un bloque de código envuelto en llaves"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A method that closes all open connections",
+          "es": "Un método que cierra todas las conexiones abiertas"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-162",
+    "level": "intermediate",
+    "question": {
+      "en": "How does the 'this' keyword behave in an arrow function?",
+      "es": "¿Cómo se comporta la palabra clave 'this' en una arrow function?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "It inherits 'this' from the enclosing lexical scope",
+          "es": "Here da 'this' del ámbito léxico que la envuelve"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "It refers to the global object",
+          "es": "Se refiere al objeto global"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "It refers to the function itself",
+          "es": "Se refiere a la función misma"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "It is undefined",
+          "es": "Es undefined"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-163",
+    "level": "intermediate",
+    "question": {
+      "en": "What is a Promise in JavaScript?",
+      "es": "¿Qué es una Promise en JavaScript?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "An object representing the eventual completion or failure of an async operation",
+          "es": "Un objeto que representa la eventual finalización o fallo de una operación asíncrona"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A guarantee that code will execute synchronously",
+          "es": "Una garantía de que el código se ejecutará síncronamente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A callback-based pattern",
+          "es": "Un patrón basado en callbacks"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A way to make HTTP requests",
+          "es": "Una forma de hacer peticiones HTTP"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-164",
+    "level": "intermediate",
+    "question": {
+      "en": "What is hoisting in JavaScript?",
+      "es": "¿Qué es el hoisting en JavaScript?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "The behavior of moving declarations to the top of their scope before code execution",
+          "es": "El comportamiento de mover las declaraciones al inicio de su ámbito antes de ejecutar el código"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Lifting a variable from local to global scope",
+          "es": "Elevar una variable de ámbito local a global"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A DOM manipulation technique",
+          "es": "Una técnica de manipulación del DOM"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A method for optimizing performance",
+          "es": "Un método para optimizar el rendimiento"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-165",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the event loop?",
+      "es": "¿Qué es el event loop?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A mechanism that handles asynchronous callbacks by managing the call stack and task queues",
+          "es": "Un mecanismo que maneja callbacks asíncronos gestionando la pila de llamadas y las colas de tareas"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A loop that iterates over DOM events",
+          "es": "Un bucle que itera sobre eventos del DOM"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A jQuery method for event handling",
+          "es": "Un método de jQuery para manejo de eventos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A browser API for scheduling tasks",
+          "es": "Una API del navegador para programar tareas"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-166",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the spread operator (...) used for?",
+      "es": "¿Para qué sirve el operador spread (...)?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Expanding iterables like arrays or objects into individual elements",
+          "es": "Expandir iterables como arrays u objetos en elementos individuales"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Spreading values across multiple variables",
+          "es": "Distribuir valores entre múltiples variables"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Creating a new function with spread arguments",
+          "es": "Crear una nueva función con argumentos expandidos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Dividing an array into smaller pieces",
+          "es": "Dividir un array en partes más pequeñas"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-167",
+    "level": "intermediate",
+    "question": {
+      "en": "What is prototypal inheritance in JavaScript?",
+      "es": "¿Qué es la herencia prototípica en JavaScript?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Objects can inherit properties and methods from other objects via the prototype chain",
+          "es": "Los objetos pueden heredar propiedades y métodos de otros objetos a través de la cadena de prototipos"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A class-based inheritance model like Java",
+          "es": "Un modelo de herencia basado en clases como Java"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A way to create multiple copies of an object",
+          "es": "Una forma de crear múltiples copias de un objeto"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Inheritance through function constructors only",
+          "es": "Herencia solo a través de constructores de funciones"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-168",
+    "level": "intermediate",
+    "question": {
+      "en": "What does the .map() method do on an array?",
+      "es": "¿Qué hace el método .map() en un array?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Creates a new array by applying a function to each element",
+          "es": "Crea un nuevo array aplicando una función a cada elemento"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Modifies the original array in place",
+          "es": "Modifica el array original directamente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Filters elements based on a condition",
+          "es": "Filtra elementos basado en una condición"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Finds a single element in the array",
+          "es": "Encuentra un solo elemento en el array"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-169",
+    "level": "intermediate",
+    "question": {
+      "en": "What is destructuring in JavaScript?",
+      "es": "¿Qué es la desestructuración en JavaScript?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A syntax that allows unpacking values from arrays or properties from objects into distinct variables",
+          "es": "Una sintaxis que permite extraer valores de arrays o propiedades de objetos en variables distintas"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Removing properties from an object",
+          "es": "Eliminar propiedades de un objeto"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Deleting elements from an array",
+          "es": "Borrar elementos de un array"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A method for resetting variable values",
+          "es": "Un método para reiniciar valores de variables"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-170",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the difference between null and undefined?",
+      "es": "¿Cuál es la diferencia entre null y undefined?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "null is an assigned value representing 'no value'; undefined means a variable has been declared but not assigned",
+          "es": "null es un valor asignado que representa 'sin valor'; undefined significa que una variable fue declarada pero no asignada"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "They are exactly the same",
+          "es": "Son exactamente iguales"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "undefined is a user-assigned value; null is automatic",
+          "es": "undefined es un valor asignado por el usuario; null es automático"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "null is for objects; undefined is for primitives",
+          "es": "null es para objetos; undefined es para primitivos"
+        }
+      }
+    ]
+  }
+]

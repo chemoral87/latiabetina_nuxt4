@@ -9,9 +9,10 @@
     density="compact"
     :headers="headers"
     :loading="loading"
-    class="elevation-1 xwidth1100"
     :items-length="total"
     :row-props="rowProps"
+    style="max-width: 1100px"
+    class="elevation-1 xwidth100"
     :items-per-page-options="[10, 15, 30]"
     items-per-page-text="Filas por página"
     @update:options="onUpdateOptions"
@@ -135,7 +136,12 @@ const headers = computed<Header[]>(() => {
   if (effectiveOrgId.value === null) {
     list.push({ title: "Organización", value: "org_name", sortable: false });
   }
-  list.push({ title: "Acciones", value: "actions", width: "200px", sortable: false });
+  list.push({
+    title: "Acciones",
+    value: "actions",
+    width: "200px",
+    sortable: false,
+  });
   return list;
 });
 

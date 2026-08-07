@@ -1,0 +1,1262 @@
+[
+  {
+    "id": "nodejs-1",
+    "level": "basic",
+    "question": {
+      "en": "What is Node.js?",
+      "es": "¿Qué es Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A JavaScript runtime built on Chrome's V8 engine",
+          "es": "Un entorno de ejecución de JavaScript construido sobre el motor V8 de Chrome"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A JavaScript frontend framework",
+          "es": "Un framework frontend de JavaScript"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A database management system",
+          "es": "Un sistema de gestión de bases de datos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A CSS preprocessor",
+          "es": "Un preprocesador de CSS"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-2",
+    "level": "basic",
+    "question": {
+      "en": "What is npm?",
+      "es": "¿Qué es npm?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Node Package Manager, used to install and manage packages",
+          "es": "Node Package Manager, usado para instalar y gestionar paquetes"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A Node.js module loader",
+          "es": "Un cargador de módulos de Node.js"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A runtime for JavaScript",
+          "es": "Un entorno de ejecución para JavaScript"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A testing framework",
+          "es": "Un framework de pruebas"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-3",
+    "level": "basic",
+    "question": {
+      "en": "Which module system does Node.js use by default?",
+      "es": "¿Qué sistema de módulos usa Node.js por defecto?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "CommonJS (require/module.exports)",
+          "es": "CommonJS (require/module.exports)"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "ES Modules (import/export)",
+          "es": "ES Modules (import/export)"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "AMD (define/require)",
+          "es": "AMD (define/require)"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "UMD",
+          "es": "UMD"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-4",
+    "level": "basic",
+    "question": {
+      "en": "What is the event loop in Node.js?",
+      "es": "¿Qué es el event loop en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A mechanism that allows Node.js to perform non-blocking I/O operations",
+          "es": "Un mecanismo que permite a Node.js realizar operaciones de I/O sin bloqueo"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A loop that runs synchronous code",
+          "es": "Un bucle que ejecuta código síncrono"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A thread pool manager",
+          "es": "Un gestor de pool de hilos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A garbage collector",
+          "es": "Un recolector de basura"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-5",
+    "level": "basic",
+    "question": {
+      "en": "How do you create a simple HTTP server in Node.js?",
+      "es": "¿Cómo creas un servidor HTTP simple en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using the built-in 'http' module with http.createServer()",
+          "es": "Usando el módulo integrado 'http' con http.createServer()"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using the 'server' module",
+          "es": "Usando el módulo 'server'"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using express only",
+          "es": "Usando solo express"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using the 'net' module",
+          "es": "Usando el módulo 'net'"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-6",
+    "level": "basic",
+    "question": {
+      "en": "What is the 'fs' module in Node.js?",
+      "es": "¿Qué es el módulo 'fs' en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "The File System module for reading and writing files",
+          "es": "El módulo de Sistema de Archivos para leer y escribir archivos"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A framework server module",
+          "es": "Un módulo de servidor de framework"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A module for making HTTP requests",
+          "es": "Un módulo para realizar peticiones HTTP"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A fast-stream module",
+          "es": "Un módulo de stream rápido"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-7",
+    "level": "basic",
+    "question": {
+      "en": "What is the 'path' module used for in Node.js?",
+      "es": "¿Para qué se usa el módulo 'path' en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Working with file and directory paths",
+          "es": "Trabajar con rutas de archivos y directorios"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Defining HTTP routes",
+          "es": "Definir rutas HTTP"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Managing module paths",
+          "es": "Gestionar rutas de módulos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Drawing paths on a canvas",
+          "es": "Dibujar rutas en un canvas"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-8",
+    "level": "basic",
+    "question": {
+      "en": "What does the 'require' function do in Node.js?",
+      "es": "¿Qué hace la función 'require' en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Imports a module or file into the current module",
+          "es": "Importa un módulo o archivo en el módulo actual"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Installs a package",
+          "es": "Instala un paquete"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Defines a module's exports",
+          "es": "Define las exportaciones de un módulo"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Makes an HTTP request",
+          "es": "Realiza una petición HTTP"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-9",
+    "level": "basic",
+    "question": {
+      "en": "What is the package.json file used for?",
+      "es": "¿Para qué se usa el archivo package.json?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Defining project metadata, dependencies, and scripts",
+          "es": "Definir metadatos del proyecto, dependencias y scripts"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Storing environment variables",
+          "es": "Almacenar variables de entorno"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Configuring the HTTP server",
+          "es": "Configurar el servidor HTTP"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Defining JavaScript types",
+          "es": "Definir tipos de JavaScript"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-10",
+    "level": "basic",
+    "question": {
+      "en": "What is a callback function in Node.js?",
+      "es": "¿Qué es una función callback en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A function passed as an argument to be executed after an operation completes",
+          "es": "Una función pasada como argumento para ejecutarse después de que una operación termina"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A function that calls itself",
+          "es": "Una función que se llama a sí misma"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A function that returns a value",
+          "es": "Una función que devuelve un valor"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A function that handles HTTP responses",
+          "es": "Una función que maneja respuestas HTTP"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-11",
+    "level": "basic",
+    "question": {
+      "en": "What is the global object in Node.js?",
+      "es": "¿Qué es el objeto global en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "The 'global' object, equivalent to 'window' in browsers",
+          "es": "El objeto 'global', equivalente a 'window' en los navegadores"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "The 'window' object",
+          "es": "El objeto 'window'"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "The 'document' object",
+          "es": "El objeto 'document'"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "The 'process' object",
+          "es": "El objeto 'process'"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-12",
+    "level": "basic",
+    "question": {
+      "en": "What is the 'process' object in Node.js?",
+      "es": "¿Qué es el objeto 'process' en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A global object providing information and control over the current Node.js process",
+          "es": "Un objeto global que proporciona información y control sobre el proceso Node.js actual"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A module for managing child processes",
+          "es": "Un módulo para gestionar procesos hijo"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "An event emitter",
+          "es": "Un emisor de eventos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A timer utility",
+          "es": "Una utilidad de temporizadores"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-13",
+    "level": "basic",
+    "question": {
+      "en": "How do you read environment variables in Node.js?",
+      "es": "¿Cómo lees variables de entorno en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using process.env.VARIABLE_NAME",
+          "es": "Usando process.env.NOMBRE_VARIABLE"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using env.get('VARIABLE_NAME')",
+          "es": "Usando env.get('NOMBRE_VARIABLE')"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using global.env.VARIABLE_NAME",
+          "es": "Usando global.env.NOMBRE_VARIABLE"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using system.getenv('VARIABLE_NAME')",
+          "es": "Usando system.getenv('NOMBRE_VARIABLE')"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-14",
+    "level": "basic",
+    "question": {
+      "en": "What is Express.js?",
+      "es": "¿Qué es Express.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A minimal and flexible Node.js web application framework",
+          "es": "Un framework web minimalista y flexible para Node.js"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A Node.js built-in module",
+          "es": "Un módulo integrado de Node.js"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A database ORM",
+          "es": "Un ORM de base de datos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A testing library",
+          "es": "Una librería de pruebas"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-15",
+    "level": "basic",
+    "question": {
+      "en": "What is middleware in Express.js?",
+      "es": "¿Qué es un middleware en Express.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A function that has access to the request, response, and next middleware",
+          "es": "Una función que tiene acceso al request, response y al siguiente middleware"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A database connection layer",
+          "es": "Una capa de conexión de base de datos"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A route definition",
+          "es": "Una definición de ruta"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "An HTTP module",
+          "es": "Un módulo HTTP"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-16",
+    "level": "basic",
+    "question": {
+      "en": "What is an EventEmitter in Node.js?",
+      "es": "¿Qué es un EventEmitter en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A class that allows objects to emit and listen to named events",
+          "es": "Una clase que permite a los objetos emitir y escuchar eventos con nombre"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A DOM event handler",
+          "es": "Un manejador de eventos del DOM"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A WebSocket emitter",
+          "es": "Un emisor de WebSocket"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A logging utility",
+          "es": "Una utilidad de logging"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-17",
+    "level": "basic",
+    "question": {
+      "en": "What is a stream in Node.js?",
+      "es": "¿Qué es un stream en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "An abstract interface for working with streaming data",
+          "es": "Una interfaz abstracta para trabajar con datos en streaming"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A video streaming protocol",
+          "es": "Un protocolo de streaming de video"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A type of HTTP connection",
+          "es": "Un tipo de conexión HTTP"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A database transaction",
+          "es": "Una transacción de base de datos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-18",
+    "level": "basic",
+    "question": {
+      "en": "What is the difference between synchronous and asynchronous code in Node.js?",
+      "es": "¿Cuál es la diferencia entre código síncrono y asíncrono en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Synchronous code blocks execution; asynchronous code allows other code to run while waiting",
+          "es": "El código síncrono bloquea la ejecución; el asíncrono permite que otro código se ejecute mientras espera"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "They are the same in Node.js",
+          "es": "Son lo mismo en Node.js"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Asynchronous code runs on a separate thread",
+          "es": "El código asíncrono se ejecuta en un hilo separado"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Synchronous code is faster",
+          "es": "El código síncrono es más rápido"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-19",
+    "level": "basic",
+    "question": {
+      "en": "What is a Promise in Node.js?",
+      "es": "¿Qué es una Promise en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "An object representing the eventual completion or failure of an async operation",
+          "es": "Un objeto que representa la finalización o fallo eventual de una operación asíncrona"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A synchronous function",
+          "es": "Una función síncrona"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "An HTTP response object",
+          "es": "Un objeto de respuesta HTTP"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A module export",
+          "es": "Una exportación de módulo"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-20",
+    "level": "basic",
+    "question": {
+      "en": "What does async/await do in Node.js?",
+      "es": "¿Qué hace async/await en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Allows writing asynchronous code in a synchronous-like style",
+          "es": "Permite escribir código asíncrono de forma similar al código síncrono"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Converts async code to sync",
+          "es": "Convierte código asíncrono en síncrono"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Creates new threads",
+          "es": "Crea nuevos hilos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Speeds up I/O operations",
+          "es": "Acelera las operaciones de I/O"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-21",
+    "level": "basic",
+    "question": {
+      "en": "What is the 'os' module in Node.js?",
+      "es": "¿Qué es el módulo 'os' en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Provides operating system-related utility methods",
+          "es": "Proporciona métodos de utilidad relacionados con el sistema operativo"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A module for online services",
+          "es": "Un módulo para servicios en línea"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "An object storage module",
+          "es": "Un módulo de almacenamiento de objetos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A module for orchestrating services",
+          "es": "Un módulo para orquestar servicios"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-22",
+    "level": "basic",
+    "question": {
+      "en": "What is __dirname in Node.js?",
+      "es": "¿Qué es __dirname en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "The absolute path of the directory containing the current file",
+          "es": "La ruta absoluta del directorio que contiene el archivo actual"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "The current working directory",
+          "es": "El directorio de trabajo actual"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "The project root directory",
+          "es": "El directorio raíz del proyecto"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "The directory where Node.js is installed",
+          "es": "El directorio donde está instalado Node.js"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-23",
+    "level": "basic",
+    "question": {
+      "en": "What is __filename in Node.js?",
+      "es": "¿Qué es __filename en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "The absolute path of the current module file",
+          "es": "La ruta absoluta del archivo del módulo actual"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "The name of the file without path",
+          "es": "El nombre del archivo sin ruta"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "The current working directory",
+          "es": "El directorio de trabajo actual"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "The entry point of the application",
+          "es": "El punto de entrada de la aplicación"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-24",
+    "level": "basic",
+    "question": {
+      "en": "What is the 'url' module used for in Node.js?",
+      "es": "¿Para qué se usa el módulo 'url' en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Parsing and formatting URL strings",
+          "es": "Analizar y formatear cadenas URL"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Making HTTP requests to URLs",
+          "es": "Realizar peticiones HTTP a URLs"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Routing URL paths",
+          "es": "Enrutar rutas URL"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Storing URL history",
+          "es": "Almacenar historial de URL"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-25",
+    "level": "basic",
+    "question": {
+      "en": "How do you exit a Node.js process?",
+      "es": "¿Cómo sales de un proceso Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using process.exit() with an optional exit code",
+          "es": "Usando process.exit() con un código de salida opcional"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using node.exit()",
+          "es": "Usando node.exit()"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using process.kill()",
+          "es": "Usando process.kill()"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using global.exit()",
+          "es": "Usando global.exit()"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-26",
+    "level": "basic",
+    "question": {
+      "en": "What is the node_modules folder?",
+      "es": "¿Qué es la carpeta node_modules?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "The directory where npm stores installed project dependencies",
+          "es": "El directorio donde npm almacena las dependencias del proyecto instaladas"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A folder for custom modules",
+          "es": "Una carpeta para módulos personalizados"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "The core Node.js modules directory",
+          "es": "El directorio de módulos core de Node.js"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A cache directory",
+          "es": "Un directorio de caché"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-27",
+    "level": "basic",
+    "question": {
+      "en": "What is the purpose of package-lock.json?",
+      "es": "¿Cuál es el propósito de package-lock.json?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Locking the exact versions of installed dependencies",
+          "es": "Bloquear las versiones exactas de las dependencias instaladas"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Locking the package.json file from editing",
+          "es": "Bloquear el archivo package.json para evitar ediciones"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Storing security certificates",
+          "es": "Almacenar certificados de seguridad"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Defining package scripts",
+          "es": "Definir scripts del paquete"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-28",
+    "level": "basic",
+    "question": {
+      "en": "What is the 'crypto' module in Node.js used for?",
+      "es": "¿Para qué se usa el módulo 'crypto' en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Cryptographic functions like hashing, encryption, and decryption",
+          "es": "Funciones criptográficas como hashing, cifrado y descifrado"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Cryptocurrency transactions",
+          "es": "Transacciones de criptomonedas"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Generating random numbers",
+          "es": "Generar números aleatorios"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Encoding JSON data",
+          "es": "Codificar datos JSON"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-29",
+    "level": "basic",
+    "question": {
+      "en": "What does module.exports do in Node.js?",
+      "es": "¿Qué hace module.exports en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Defines what a module exposes to other files that require it",
+          "es": "Define lo que un módulo expone a otros archivos que lo importan"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Imports a module",
+          "es": "Importa un módulo"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Exports the entire Node.js application",
+          "es": "Exporta toda la aplicación Node.js"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Defines module metadata",
+          "es": "Define los metadatos del módulo"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-30",
+    "level": "basic",
+    "question": {
+      "en": "What is the 'buffer' module in Node.js?",
+      "es": "¿Qué es el módulo 'buffer' en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A way to handle raw binary data directly in memory",
+          "es": "Una forma de manejar datos binarios crudos directamente en memoria"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A module for caching HTTP responses",
+          "es": "Un módulo para cachear respuestas HTTP"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A data queuing system",
+          "es": "Un sistema de cola de datos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A memory management tool",
+          "es": "Una herramienta de gestión de memoria"
+        }
+      }
+    ]
+  }
+]

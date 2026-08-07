@@ -14,6 +14,7 @@
       :items-length="total"
       :row-props="rowProps"
       :search="props.search"
+      style="max-width: 850px"
       initial-sort-order="desc"
       class="elevation-1 xwidth800"
       :items-per-page-options="[10, 15, 30]"

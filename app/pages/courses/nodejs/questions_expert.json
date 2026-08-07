@@ -1,0 +1,842 @@
+[
+  {
+    "id": "nodejs-101",
+    "level": "expert",
+    "question": {
+      "en": "How does Node.js achieve non-blocking I/O on a single thread?",
+      "es": "¿Cómo logra Node.js I/O no bloqueante en un solo hilo?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "By using libuv's event loop and thread pool for I/O operations while the main thread stays free",
+          "es": "Usando el event loop de libuv y un pool de hilos para operaciones de I/O mientras el hilo principal queda libre"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "By spawning a new thread for each request",
+          "es": "Creando un nuevo hilo para cada solicitud"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "By using the V8 engine's multi-threading features",
+          "es": "Usando las características de multi-threading del motor V8"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "By converting I/O operations to synchronous calls",
+          "es": "Convirtiendo operaciones de I/O en llamadas síncronas"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-102",
+    "level": "expert",
+    "question": {
+      "en": "What are the phases of the Node.js event loop?",
+      "es": "¿Cuáles son las fases del event loop de Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Timers, Pending callbacks, Idle/prepare, Poll, Check, Close callbacks",
+          "es": "Timers, Pending callbacks, Idle/prepare, Poll, Check, Close callbacks"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Start, Execute, Wait, End",
+          "es": "Start, Execute, Wait, End"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Request, Process, Respond",
+          "es": "Request, Process, Respond"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Read, Compute, Write",
+          "es": "Read, Compute, Write"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-103",
+    "level": "expert",
+    "question": {
+      "en": "What is the difference between process.nextTick and setImmediate?",
+      "es": "¿Cuál es la diferencia entre process.nextTick y setImmediate?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "process.nextTick fires before the next event loop iteration; setImmediate fires in the check phase",
+          "es": "process.nextTick se ejecuta antes de la siguiente iteración del event loop; setImmediate se ejecuta en la fase check"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "They are identical",
+          "es": "Son idénticos"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "setImmediate is faster than process.nextTick",
+          "es": "setImmediate es más rápido que process.nextTick"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "process.nextTick fires in the timer phase",
+          "es": "process.nextTick se ejecuta en la fase timer"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-104",
+    "level": "expert",
+    "question": {
+      "en": "What is libuv and what role does it play in Node.js?",
+      "es": "¿Qué es libuv y qué papel juega en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A cross-platform C library providing the event loop, thread pool, and async I/O for Node.js",
+          "es": "Una librería C multiplataforma que provee el event loop, pool de hilos e I/O asíncrono para Node.js"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A JavaScript library bundled with Node.js",
+          "es": "Una librería JavaScript incluida con Node.js"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A virtual machine for JavaScript",
+          "es": "Una máquina virtual para JavaScript"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A Node.js networking module",
+          "es": "Un módulo de red de Node.js"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-105",
+    "level": "expert",
+    "question": {
+      "en": "What is backpressure in Node.js streams?",
+      "es": "¿Qué es la contrapresión (backpressure) en los streams de Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A mechanism to signal a readable stream to slow down when the writable stream's buffer is full",
+          "es": "Un mecanismo para indicar a un stream readable que disminuya la velocidad cuando el buffer del writable está lleno"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Pressure on the server from too many requests",
+          "es": "Presión en el servidor por demasiadas solicitudes"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A network congestion control protocol",
+          "es": "Un protocolo de control de congestión de red"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A way to compress stream data",
+          "es": "Una forma de comprimir datos de stream"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-106",
+    "level": "expert",
+    "question": {
+      "en": "What is the V8 engine and what does it do?",
+      "es": "¿Qué es el motor V8 y qué hace?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Google's open-source JavaScript engine that compiles JS to native machine code",
+          "es": "El motor JavaScript de código abierto de Google que compila JS a código máquina nativo"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A Node.js module for parsing JavaScript",
+          "es": "Un módulo de Node.js para analizar JavaScript"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A garbage collection utility",
+          "es": "Una utilidad de recolección de basura"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A Node.js event loop implementation",
+          "es": "Una implementación del event loop de Node.js"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-107",
+    "level": "expert",
+    "question": {
+      "en": "What is memory leak in Node.js and how do you detect it?",
+      "es": "¿Qué es una fuga de memoria en Node.js y cómo se detecta?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "When objects stay in memory after they are no longer needed; detected using heap snapshots and tools like clinic.js",
+          "es": "Cuando los objetos permanecen en memoria después de que ya no se necesitan; se detecta con instantáneas de heap y herramientas como clinic.js"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A disk storage overflow; detected with file system monitoring",
+          "es": "Un desbordamiento de almacenamiento en disco; se detecta con monitoreo del sistema de archivos"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Network connection drops; detected with ping",
+          "es": "Caídas de conexión de red; se detecta con ping"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "CPU overload; detected with task manager",
+          "es": "Sobrecarga de CPU; se detecta con el administrador de tareas"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-108",
+    "level": "expert",
+    "question": {
+      "en": "What is the Node.js module caching mechanism?",
+      "es": "¿Qué es el mecanismo de caché de módulos en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "After the first require(), modules are cached in require.cache and not re-executed on subsequent calls",
+          "es": "Después del primer require(), los módulos se cachean en require.cache y no se re-ejecutan en llamadas posteriores"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Modules are cached to disk for faster startup",
+          "es": "Los módulos se cachean en disco para un inicio más rápido"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Every require() creates a new instance",
+          "es": "Cada require() crea una nueva instancia"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "The V8 engine caches module bytecode",
+          "es": "El motor V8 cachea el bytecode del módulo"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-109",
+    "level": "expert",
+    "question": {
+      "en": "What is the difference between ESM and CommonJS in Node.js?",
+      "es": "¿Cuál es la diferencia entre ESM y CommonJS en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "ESM uses import/export and is static; CommonJS uses require/exports and is dynamic",
+          "es": "ESM usa import/export y es estático; CommonJS usa require/exports y es dinámico"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "They are interchangeable",
+          "es": "Son intercambiables"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "CommonJS is newer than ESM",
+          "es": "CommonJS es más nuevo que ESM"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "ESM cannot be used in Node.js",
+          "es": "ESM no se puede usar en Node.js"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-110",
+    "level": "expert",
+    "question": {
+      "en": "What is the N-API (Node-API)?",
+      "es": "¿Qué es la N-API (Node-API)?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A stable ABI for building native addons independent of the V8 version",
+          "es": "Una ABI estable para construir addons nativos independiente de la versión de V8"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A networking API",
+          "es": "Una API de red"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A Node.js HTTP API specification",
+          "es": "Una especificación de API HTTP de Node.js"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "An npm package API",
+          "es": "Una API de paquetes npm"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-111",
+    "level": "expert",
+    "question": {
+      "en": "What is the purpose of the --inspect flag in Node.js?",
+      "es": "¿Cuál es el propósito del flag --inspect en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Enabling the V8 inspector protocol for debugging with Chrome DevTools",
+          "es": "Habilitar el protocolo inspector de V8 para depuración con Chrome DevTools"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Inspecting package dependencies",
+          "es": "Inspeccionar dependencias de paquetes"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Running code analysis",
+          "es": "Ejecutar análisis de código"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Showing Node.js module information",
+          "es": "Mostrar información del módulo de Node.js"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-112",
+    "level": "expert",
+    "question": {
+      "en": "What is the impact of synchronous code on the Node.js event loop?",
+      "es": "¿Cuál es el impacto del código síncrono en el event loop de Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "It blocks the event loop, preventing processing of other callbacks until it completes",
+          "es": "Bloquea el event loop, impidiendo el procesamiento de otros callbacks hasta que termina"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "It has no impact since Node.js is multi-threaded",
+          "es": "No tiene impacto ya que Node.js es multi-hilo"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "It speeds up the event loop",
+          "es": "Acelera el event loop"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "It gets queued in the microtask queue",
+          "es": "Se encola en la cola de microtasks"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-113",
+    "level": "expert",
+    "question": {
+      "en": "What is the AsyncLocalStorage class?",
+      "es": "¿Qué es la clase AsyncLocalStorage?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Provides a way to store data that persists through async calls within a given context",
+          "es": "Proporciona una forma de almacenar datos que persisten a través de llamadas asíncronas dentro de un contexto dado"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A local storage API for Node.js servers",
+          "es": "Una API de almacenamiento local para servidores Node.js"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A caching mechanism for async results",
+          "es": "Un mecanismo de caché para resultados asíncronos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A database connection pool",
+          "es": "Un pool de conexiones de base de datos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-114",
+    "level": "expert",
+    "question": {
+      "en": "What is the Streams Promises API?",
+      "es": "¿Qué es la API de Streams con Promises?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "An alternative promise-based API in stream/promises for consuming streams with async/await",
+          "es": "Una API alternativa basada en promesas en stream/promises para consumir streams con async/await"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A library for converting streams to promises",
+          "es": "Una librería para convertir streams en promesas"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A way to chain stream events",
+          "es": "Una forma de encadenar eventos de stream"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A deprecated feature",
+          "es": "Una característica deprecada"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-115",
+    "level": "expert",
+    "question": {
+      "en": "What is the difference between a cluster and worker threads?",
+      "es": "¿Cuál es la diferencia entre cluster y worker threads?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Cluster forks full processes sharing network; Worker Threads run in the same process for CPU tasks",
+          "es": "Cluster bifurca procesos completos que comparten red; Worker Threads se ejecutan en el mismo proceso para tareas de CPU"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "They are the same concept",
+          "es": "Son el mismo concepto"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Worker Threads are for I/O; cluster is for CPU",
+          "es": "Worker Threads son para I/O; cluster es para CPU"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Cluster uses shared memory; Worker Threads don't",
+          "es": "Cluster usa memoria compartida; Worker Threads no"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-116",
+    "level": "expert",
+    "question": {
+      "en": "What is the REPL in Node.js?",
+      "es": "¿Qué es el REPL en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Read-Eval-Print-Loop; an interactive shell for executing JavaScript",
+          "es": "Read-Eval-Print-Loop; un shell interactivo para ejecutar JavaScript"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A testing framework",
+          "es": "Un framework de pruebas"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A module for regex expression processing",
+          "es": "Un módulo para procesamiento de expresiones regulares"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A package registry",
+          "es": "Un registro de paquetes"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-117",
+    "level": "expert",
+    "question": {
+      "en": "How do you profile CPU performance in a Node.js application?",
+      "es": "¿Cómo perfilas el rendimiento de CPU en una aplicación Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using the built-in --prof flag or clinic.js flame to generate CPU profiles",
+          "es": "Usando el flag integrado --prof o clinic.js flame para generar perfiles de CPU"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using console.time()",
+          "es": "Usando console.time()"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using the 'performance' npm package",
+          "es": "Usando el paquete npm 'performance'"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using process.cpuUsage() only",
+          "es": "Solo usando process.cpuUsage()"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-118",
+    "level": "expert",
+    "question": {
+      "en": "What is the purpose of the 'perf_hooks' module?",
+      "es": "¿Cuál es el propósito del módulo 'perf_hooks'?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Providing high-resolution performance measurement APIs",
+          "es": "Proporcionar APIs de medición de rendimiento de alta resolución"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Profiling memory usage",
+          "es": "Perfilar el uso de memoria"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Network performance monitoring",
+          "es": "Monitoreo de rendimiento de red"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Hooking into Node.js lifecycle events",
+          "es": "Engancharse a los eventos del ciclo de vida de Node.js"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-119",
+    "level": "expert",
+    "question": {
+      "en": "What is a native addon in Node.js?",
+      "es": "¿Qué es un addon nativo en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A dynamically-linked C/C++ module that can be loaded with require()",
+          "es": "Un módulo C/C++ enlazado dinámicamente que puede cargarse con require()"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A Node.js core built-in module",
+          "es": "Un módulo integrado del core de Node.js"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "An npm package",
+          "es": "Un paquete npm"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "An OS-specific JavaScript file",
+          "es": "Un archivo JavaScript específico del sistema operativo"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-120",
+    "level": "expert",
+    "question": {
+      "en": "What is the diagnostic_channel module?",
+      "es": "¿Qué es el módulo diagnostic_channel?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A pub/sub API enabling instrumentation libraries to share diagnostic data",
+          "es": "Una API pub/sub que permite a las librerías de instrumentación compartir datos de diagnóstico"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A module for error logging",
+          "es": "Un módulo para registro de errores"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A debugging channel for DevTools",
+          "es": "Un canal de depuración para DevTools"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A network diagnostic tool",
+          "es": "Una herramienta de diagnóstico de red"
+        }
+      }
+    ]
+  }
+]

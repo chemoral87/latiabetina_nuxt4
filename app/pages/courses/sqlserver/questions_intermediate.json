@@ -1,0 +1,337 @@
+[
+  {
+    "id": "sqlserver-51",
+    "level": "intermediate",
+    "question": { "en": "What does a LEFT OUTER JOIN return?", "es": "¿Qué devuelve un LEFT OUTER JOIN?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "All rows from the left table and matching rows from the right table; unmatched right rows return NULL", "es": "Todas las filas de la tabla izquierda y las filas coincidentes de la derecha; las filas no coincidentes de la derecha devuelven NULL" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Only rows that match in both tables", "es": "Solo las filas que coinciden en ambas tablas" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "All rows from the right table and matching rows from the left table", "es": "Todas las filas de la tabla derecha y las coincidentes de la izquierda" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "All rows from both tables regardless of matching", "es": "Todas las filas de ambas tablas sin importar coincidencias" } }
+    ]
+  },
+  {
+    "id": "sqlserver-52",
+    "level": "intermediate",
+    "question": { "en": "What does a FULL OUTER JOIN return?", "es": "¿Qué devuelve un FULL OUTER JOIN?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "All rows from both tables, with NULLs where there is no match on either side", "es": "Todas las filas de ambas tablas, con NULLs donde no hay coincidencia en ninguno de los lados" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Only rows with matching values in both tables", "es": "Solo las filas con valores coincidentes en ambas tablas" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "All rows from the left table only", "es": "Todas las filas solo de la tabla izquierda" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "The Cartesian product of both tables", "es": "El producto cartesiano de ambas tablas" } }
+    ]
+  },
+  {
+    "id": "sqlserver-53",
+    "level": "intermediate",
+    "question": { "en": "What is a subquery in SQL Server?", "es": "¿Qué es una subconsulta en SQL Server?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "A query nested inside another query, enclosed in parentheses", "es": "Una consulta anidada dentro de otra consulta, encerrada entre paréntesis" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "A stored procedure called from a trigger", "es": "Un procedimiento almacenado llamado desde un trigger" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "A partial query saved as a view", "es": "Una consulta parcial guardada como una vista" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "A query that runs on a secondary server", "es": "Una consulta que se ejecuta en un servidor secundario" } }
+    ]
+  },
+  {
+    "id": "sqlserver-54",
+    "level": "intermediate",
+    "question": { "en": "What is a CTE (Common Table Expression)?", "es": "¿Qué es una CTE (Common Table Expression)?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "A named temporary result set defined with WITH that can be referenced within a SELECT, INSERT, UPDATE, or DELETE statement", "es": "Un conjunto de resultados temporal con nombre definido con WITH que puede referenciarse en sentencias SELECT, INSERT, UPDATE o DELETE" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "A permanent table created from a SELECT query", "es": "Una tabla permanente creada a partir de una consulta SELECT" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "A type of clustered index", "es": "Un tipo de índice agrupado" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "A cursor that iterates over table rows", "es": "Un cursor que itera sobre filas de una tabla" } }
+    ]
+  },
+  {
+    "id": "sqlserver-55",
+    "level": "intermediate",
+    "question": { "en": "What does ROW_NUMBER() do?", "es": "¿Qué hace ROW_NUMBER()?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "Assigns a unique sequential integer to each row within a partition of a result set", "es": "Asigna un entero secuencial único a cada fila dentro de una partición de un conjunto de resultados" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Counts the total number of rows in a table", "es": "Cuenta el número total de filas en una tabla" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Returns the physical storage row ID", "es": "Devuelve el ID de fila de almacenamiento físico" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Assigns ranks with gaps for tied values", "es": "Asigna rangos con saltos para valores empatados" } }
+    ]
+  }
+  ,
+  {
+    "id": "sqlserver-56",
+    "level": "intermediate",
+    "question": { "en": "What is the difference between RANK() and DENSE_RANK()?", "es": "¿Cuál es la diferencia entre RANK() y DENSE_RANK()?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "RANK() leaves gaps after ties (1,1,3), while DENSE_RANK() does not (1,1,2)", "es": "RANK() deja saltos después de empates (1,1,3), mientras que DENSE_RANK() no los deja (1,1,2)" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "RANK() is for numbers and DENSE_RANK() is for strings", "es": "RANK() es para números y DENSE_RANK() es para cadenas" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "They are identical and produce the same results", "es": "Son idénticos y producen los mismos resultados" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "DENSE_RANK() requires a partition while RANK() does not", "es": "DENSE_RANK() requiere una partición mientras que RANK() no" } }
+    ]
+  },
+  {
+    "id": "sqlserver-57",
+    "level": "intermediate",
+    "question": { "en": "What is the OVER clause used for?", "es": "¿Para qué se usa la cláusula OVER?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "To define the window (partition and order) over which a window function operates", "es": "Para definir la ventana (partición y orden) sobre la que opera una función de ventana" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "To loop over rows in a cursor", "es": "Para iterar sobre filas en un cursor" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "To overlay one result set on top of another", "es": "Para superponer un conjunto de resultados sobre otro" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "To define the scope of a transaction", "es": "Para definir el alcance de una transacción" } }
+    ]
+  },
+  {
+    "id": "sqlserver-58",
+    "level": "intermediate",
+    "question": { "en": "What does the CASE expression do in T-SQL?", "es": "¿Qué hace la expresión CASE en T-SQL?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "Evaluates a list of conditions and returns one of multiple possible result expressions", "es": "Evalúa una lista de condiciones y devuelve una de múltiples expresiones de resultado posibles" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Converts a value from one data type to another", "es": "Convierte un valor de un tipo de dato a otro" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Filters rows based on character patterns", "es": "Filtra filas basándose en patrones de caracteres" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Creates a temporary table with conditional data", "es": "Crea una tabla temporal con datos condicionales" } }
+    ]
+  },
+  {
+    "id": "sqlserver-59",
+    "level": "intermediate",
+    "question": { "en": "What does COALESCE() return?", "es": "¿Qué devuelve COALESCE()?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "The first non-NULL value from a list of expressions", "es": "El primer valor no NULL de una lista de expresiones" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "The sum of all non-NULL values", "es": "La suma de todos los valores no NULL" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "The last value in a list regardless of NULL", "es": "El último valor de una lista independientemente de NULL" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "The count of non-NULL values in a column", "es": "El conteo de valores no NULL en una columna" } }
+    ]
+  },
+  {
+    "id": "sqlserver-60",
+    "level": "intermediate",
+    "question": { "en": "What does the LEN() function return in T-SQL?", "es": "¿Qué devuelve la función LEN() en T-SQL?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "The number of characters in a string, excluding trailing spaces", "es": "El número de caracteres en una cadena, excluyendo los espacios finales" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "The byte length of a string including spaces", "es": "La longitud en bytes de una cadena incluyendo espacios" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "The number of words in a string", "es": "El número de palabras en una cadena" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "The maximum allowed length defined for a column", "es": "La longitud máxima permitida definida para una columna" } }
+    ]
+  }
+  ,
+  {
+    "id": "sqlserver-61",
+    "level": "intermediate",
+    "question": { "en": "What does GETDATE() return in SQL Server?", "es": "¿Qué devuelve GETDATE() en SQL Server?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "The current system date and time as a datetime value", "es": "La fecha y hora actual del sistema como un valor datetime" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "The date the database was created", "es": "La fecha en que se creó la base de datos" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "The current UTC date only, without time", "es": "Solo la fecha UTC actual, sin hora" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "The date the last query was executed", "es": "La fecha en que se ejecutó la última consulta" } }
+    ]
+  },
+  {
+    "id": "sqlserver-62",
+    "level": "intermediate",
+    "question": { "en": "What is the difference between CAST() and CONVERT() in T-SQL?", "es": "¿Cuál es la diferencia entre CAST() y CONVERT() en T-SQL?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "Both convert data types, but CONVERT() also accepts a style parameter for formatting dates and numbers", "es": "Ambos convierten tipos de datos, pero CONVERT() también acepta un parámetro de estilo para dar formato a fechas y números" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "CAST() is faster and CONVERT() is more accurate", "es": "CAST() es más rápido y CONVERT() es más preciso" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "CAST() works only with numbers and CONVERT() works only with strings", "es": "CAST() funciona solo con números y CONVERT() solo con cadenas" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "They are completely different functions with no overlap", "es": "Son funciones completamente distintas sin superposición" } }
+    ]
+  },
+  {
+    "id": "sqlserver-63",
+    "level": "intermediate",
+    "question": { "en": "What is the difference between UNION and UNION ALL?", "es": "¿Cuál es la diferencia entre UNION y UNION ALL?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "UNION removes duplicate rows from the combined result, while UNION ALL keeps all rows including duplicates", "es": "UNION elimina las filas duplicadas del resultado combinado, mientras que UNION ALL conserva todas las filas incluyendo duplicados" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "UNION ALL is slower because it performs additional sorting", "es": "UNION ALL es más lento porque realiza un ordenamiento adicional" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "UNION works only with tables and UNION ALL works only with views", "es": "UNION funciona solo con tablas y UNION ALL solo con vistas" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "They are identical in behavior", "es": "Se comportan de manera idéntica" } }
+    ]
+  },
+  {
+    "id": "sqlserver-64",
+    "level": "intermediate",
+    "question": { "en": "When should you use EXISTS instead of IN?", "es": "¿Cuándo se debe usar EXISTS en lugar de IN?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "EXISTS is preferred for correlated subqueries and large datasets because it stops at the first match, while IN evaluates the full subquery result", "es": "EXISTS es preferible para subconsultas correlacionadas y grandes conjuntos de datos porque se detiene al primer resultado, mientras que IN evalúa toda la subconsulta" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "EXISTS and IN are interchangeable with identical performance", "es": "EXISTS e IN son intercambiables con rendimiento idéntico" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "EXISTS should be used only with NULL values", "es": "EXISTS solo debe usarse con valores NULL" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "IN is always faster than EXISTS regardless of the dataset size", "es": "IN siempre es más rápido que EXISTS independientemente del tamaño del conjunto de datos" } }
+    ]
+  },
+  {
+    "id": "sqlserver-65",
+    "level": "intermediate",
+    "question": { "en": "What does a CROSS JOIN produce?", "es": "¿Qué produce un CROSS JOIN?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "The Cartesian product of both tables — every row from the first table paired with every row from the second", "es": "El producto cartesiano de ambas tablas — cada fila de la primera tabla emparejada con cada fila de la segunda" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Only rows that match in both tables", "es": "Solo las filas que coinciden en ambas tablas" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Rows from both tables where the key columns share no common values", "es": "Filas de ambas tablas donde las columnas clave no comparten valores comunes" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "All rows from both tables sorted by a common column", "es": "Todas las filas de ambas tablas ordenadas por una columna común" } }
+    ]
+  }
+  ,
+  {
+    "id": "sqlserver-66",
+    "level": "intermediate",
+    "question": { "en": "What is a correlated subquery?", "es": "¿Qué es una subconsulta correlacionada?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "A subquery that references columns from the outer query and is re-evaluated for each row processed by the outer query", "es": "Una subconsulta que referencia columnas de la consulta exterior y se reevalúa para cada fila procesada por la consulta exterior" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "A subquery that runs only once and returns a single value", "es": "Una subconsulta que se ejecuta solo una vez y devuelve un solo valor" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "A subquery nested more than two levels deep", "es": "Una subconsulta anidada a más de dos niveles de profundidad" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "A subquery that joins two tables inside the WHERE clause", "es": "Una subconsulta que une dos tablas dentro de la cláusula WHERE" } }
+    ]
+  },
+  {
+    "id": "sqlserver-67",
+    "level": "intermediate",
+    "question": { "en": "What is the difference between a clustered and a non-clustered index?", "es": "¿Cuál es la diferencia entre un índice agrupado y uno no agrupado?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "A clustered index physically sorts and stores the data rows based on the key; a non-clustered index is a separate structure with pointers to the data rows", "es": "Un índice agrupado ordena y almacena físicamente las filas de datos según la clave; un índice no agrupado es una estructura separada con punteros a las filas de datos" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "A clustered index is always faster than a non-clustered index in every scenario", "es": "Un índice agrupado es siempre más rápido que uno no agrupado en todos los escenarios" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "A non-clustered index stores the actual data while a clustered index stores pointers", "es": "Un índice no agrupado almacena los datos reales mientras que el agrupado almacena punteros" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "There is no practical difference between the two", "es": "No hay diferencia práctica entre los dos" } }
+    ]
+  },
+  {
+    "id": "sqlserver-68",
+    "level": "intermediate",
+    "question": { "en": "What is an execution plan in SQL Server?", "es": "¿Qué es un plan de ejecución en SQL Server?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "A graphical or textual representation of the steps SQL Server uses to execute a query, useful for query optimization", "es": "Una representación gráfica o textual de los pasos que SQL Server usa para ejecutar una consulta, útil para optimizar consultas" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "A scheduled maintenance task for a database", "es": "Una tarea de mantenimiento programada para una base de datos" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "A log of all queries executed in a session", "es": "Un registro de todas las consultas ejecutadas en una sesión" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "A list of indexes used in the last backup", "es": "Una lista de índices usados en la última copia de seguridad" } }
+    ]
+  },
+  {
+    "id": "sqlserver-69",
+    "level": "intermediate",
+    "question": { "en": "What is a trigger in SQL Server?", "es": "¿Qué es un trigger en SQL Server?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "A special stored procedure that automatically executes in response to INSERT, UPDATE, or DELETE events on a table", "es": "Un procedimiento almacenado especial que se ejecuta automáticamente en respuesta a eventos INSERT, UPDATE o DELETE sobre una tabla" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "A scheduled job that runs at a specific time", "es": "Un trabajo programado que se ejecuta en un momento específico" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "A constraint that enforces referential integrity", "es": "Una restricción que garantiza la integridad referencial" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "A notification sent to the database administrator", "es": "Una notificación enviada al administrador de la base de datos" } }
+    ]
+  },
+  {
+    "id": "sqlserver-70",
+    "level": "intermediate",
+    "question": { "en": "How do you declare an OUTPUT parameter in a stored procedure?", "es": "¿Cómo se declara un parámetro OUTPUT en un procedimiento almacenado?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "By adding the OUTPUT keyword after the parameter declaration: @Param INT OUTPUT", "es": "Agregando la palabra clave OUTPUT después de la declaración del parámetro: @Param INT OUTPUT" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "By using the RETURN keyword before the parameter name", "es": "Usando la palabra clave RETURN antes del nombre del parámetro" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "By prefixing the parameter name with OUT_", "es": "Usando el prefijo OUT_ en el nombre del parámetro" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "By declaring the parameter inside a SELECT statement", "es": "Declarando el parámetro dentro de una sentencia SELECT" } }
+    ]
+  }
+  ,
+  {
+    "id": "sqlserver-71",
+    "level": "intermediate",
+    "question": { "en": "What is the difference between a scalar and a table-valued function?", "es": "¿Cuál es la diferencia entre una función escalar y una función con valor de tabla?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "A scalar function returns a single value, while a table-valued function returns a table result set", "es": "Una función escalar devuelve un único valor, mientras que una función con valor de tabla devuelve un conjunto de resultados tipo tabla" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "A scalar function can accept parameters and a table-valued function cannot", "es": "Una función escalar puede aceptar parámetros y una función con valor de tabla no" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Both always return the same number of rows", "es": "Ambas siempre devuelven el mismo número de filas" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Table-valued functions cannot be used in a FROM clause", "es": "Las funciones con valor de tabla no pueden usarse en una cláusula FROM" } }
+    ]
+  },
+  {
+    "id": "sqlserver-72",
+    "level": "intermediate",
+    "question": { "en": "What does Third Normal Form (3NF) require?", "es": "¿Qué requiere la Tercera Forma Normal (3FN)?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "All attributes must depend only on the primary key, not on other non-key attributes (no transitive dependencies)", "es": "Todos los atributos deben depender únicamente de la clave primaria, no de otros atributos no clave (sin dependencias transitivas)" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Every column must have atomic (indivisible) values", "es": "Cada columna debe tener valores atómicos (indivisibles)" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Every non-key attribute must depend on the whole composite key", "es": "Cada atributo no clave debe depender de toda la clave compuesta" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "All tables must have exactly one primary key column", "es": "Todas las tablas deben tener exactamente una columna de clave primaria" } }
+    ]
+  },
+  {
+    "id": "sqlserver-73",
+    "level": "intermediate",
+    "question": { "en": "What does the PIVOT operator do in T-SQL?", "es": "¿Qué hace el operador PIVOT en T-SQL?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "Rotates rows into columns, turning unique values from one column into multiple columns in the output", "es": "Rota filas en columnas, convirtiendo valores únicos de una columna en múltiples columnas en la salida" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Transposes the entire result set so columns become rows", "es": "Transpone todo el conjunto de resultados para que las columnas se conviertan en filas" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Sorts data in a circular fashion", "es": "Ordena los datos de forma circular" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Merges duplicate rows into a single row", "es": "Combina filas duplicadas en una sola fila" } }
+    ]
+  },
+  {
+    "id": "sqlserver-74",
+    "level": "intermediate",
+    "question": { "en": "What is the MERGE statement used for?", "es": "¿Para qué se usa la sentencia MERGE?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "To perform INSERT, UPDATE, and DELETE operations in a single statement based on whether rows match between source and target", "es": "Para realizar operaciones INSERT, UPDATE y DELETE en una sola sentencia según si las filas coinciden entre la fuente y el destino" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "To combine two databases into one", "es": "Para combinar dos bases de datos en una" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "To merge two result sets using a JOIN", "es": "Para combinar dos conjuntos de resultados usando un JOIN" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "To concatenate strings from multiple columns", "es": "Para concatenar cadenas de múltiples columnas" } }
+    ]
+  },
+  {
+    "id": "sqlserver-75",
+    "level": "intermediate",
+    "question": { "en": "How does TRY/CATCH work in T-SQL?", "es": "¿Cómo funciona TRY/CATCH en T-SQL?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "Code in the TRY block runs normally; if an error occurs, execution jumps to the CATCH block for error handling", "es": "El código del bloque TRY se ejecuta normalmente; si ocurre un error, la ejecución salta al bloque CATCH para manejar el error" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "TRY validates data types and CATCH rolls back all transactions automatically", "es": "TRY valida tipos de datos y CATCH revierte todas las transacciones automáticamente" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "TRY locks the table and CATCH unlocks it after the operation", "es": "TRY bloquea la tabla y CATCH la desbloquea después de la operación" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Both blocks always execute in sequence regardless of errors", "es": "Ambos bloques siempre se ejecutan en secuencia independientemente de los errores" } }
+    ]
+  }
+  ,
+  {
+    "id": "sqlserver-76",
+    "level": "intermediate",
+    "question": { "en": "What does DATEADD() do in T-SQL?", "es": "¿Qué hace DATEADD() en T-SQL?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "Adds a specified number of date parts (days, months, years, etc.) to a date value", "es": "Agrega un número especificado de partes de fecha (días, meses, años, etc.) a un valor de fecha" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Adds two date values together", "es": "Suma dos valores de fecha" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Returns the difference between two dates", "es": "Devuelve la diferencia entre dos fechas" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Converts a string to a date format", "es": "Convierte una cadena a formato de fecha" } }
+    ]
+  },
+  {
+    "id": "sqlserver-77",
+    "level": "intermediate",
+    "question": { "en": "What does CHARINDEX() do in T-SQL?", "es": "¿Qué hace CHARINDEX() en T-SQL?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "Returns the starting position of one string within another, or 0 if not found", "es": "Devuelve la posición inicial de una cadena dentro de otra, o 0 si no se encuentra" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Returns the character at a specified index position", "es": "Devuelve el carácter en una posición de índice especificada" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Counts the number of occurrences of a character in a string", "es": "Cuenta el número de apariciones de un carácter en una cadena" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Replaces a character at a specific index in a string", "es": "Reemplaza un carácter en un índice específico de una cadena" } }
+    ]
+  },
+  {
+    "id": "sqlserver-78",
+    "level": "intermediate",
+    "question": { "en": "What does PARTITION BY do in a window function?", "es": "¿Qué hace PARTITION BY en una función de ventana?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "Divides the result set into partitions (groups) on which the window function is applied independently", "es": "Divide el conjunto de resultados en particiones (grupos) sobre los que la función de ventana se aplica de forma independiente" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Physically splits a table into multiple filegroups", "es": "Divide físicamente una tabla en múltiples grupos de archivos" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Filters the rows before the window function is calculated", "es": "Filtra las filas antes de que se calcule la función de ventana" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Orders the rows within a window frame", "es": "Ordena las filas dentro de un marco de ventana" } }
+    ]
+  },
+  {
+    "id": "sqlserver-79",
+    "level": "intermediate",
+    "question": { "en": "What does DATEDIFF() return?", "es": "¿Qué devuelve DATEDIFF()?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "The difference between two dates expressed in a specified date part (days, months, years, etc.)", "es": "La diferencia entre dos fechas expresada en una parte de fecha especificada (días, meses, años, etc.)" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "The absolute value of the subtraction of two datetime columns", "es": "El valor absoluto de la resta de dos columnas datetime" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "The number of business days between two dates", "es": "El número de días hábiles entre dos fechas" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "A formatted string showing the time elapsed", "es": "Una cadena formateada que muestra el tiempo transcurrido" } }
+    ]
+  },
+  {
+    "id": "sqlserver-80",
+    "level": "intermediate",
+    "question": { "en": "What does THROW do in T-SQL error handling?", "es": "¿Qué hace THROW en el manejo de errores de T-SQL?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "Raises an exception and transfers execution to a CATCH block, or re-throws the current error if used without parameters inside a CATCH block", "es": "Lanza una excepción y transfiere la ejecución a un bloque CATCH, o relanza el error actual si se usa sin parámetros dentro de un bloque CATCH" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Logs the error to the SQL Server error log", "es": "Registra el error en el log de errores de SQL Server" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Terminates the current session immediately", "es": "Termina la sesión actual de inmediato" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Sends an error notification to the database administrator", "es": "Envía una notificación de error al administrador de la base de datos" } }
+    ]
+  }
+]

@@ -1,0 +1,1262 @@
+[
+  {
+    "id": "nodejs-51",
+    "level": "intermediate",
+    "question": {
+      "en": "What are streams types in Node.js?",
+      "es": "¿Cuáles son los tipos de streams en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Readable, Writable, Duplex, and Transform",
+          "es": "Readable, Writable, Duplex y Transform"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Input, Output, and Buffer",
+          "es": "Input, Output y Buffer"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Sync, Async, and Pipe",
+          "es": "Sync, Async y Pipe"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "TCP, UDP, and HTTP",
+          "es": "TCP, UDP y HTTP"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-52",
+    "level": "intermediate",
+    "question": {
+      "en": "What is piping in Node.js streams?",
+      "es": "¿Qué es el piping en streams de Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Chaining a readable stream's output directly into a writable stream",
+          "es": "Encadenar la salida de un stream readable directamente en un stream writable"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A Unix pipe command",
+          "es": "Un comando pipe de Unix"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A data compression method",
+          "es": "Un método de compresión de datos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A way to create new streams",
+          "es": "Una forma de crear nuevos streams"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-53",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the cluster module in Node.js?",
+      "es": "¿Qué es el módulo cluster en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Allows creating child processes that share the same server port",
+          "es": "Permite crear procesos hijo que comparten el mismo puerto del servidor"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A module for managing database clusters",
+          "es": "Un módulo para gestionar clusters de bases de datos"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A microservice orchestration tool",
+          "es": "Una herramienta de orquestación de microservicios"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A network load balancer",
+          "es": "Un balanceador de carga de red"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-54",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the child_process module used for?",
+      "es": "¿Para qué se usa el módulo child_process?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Spawning child processes to run shell commands or other Node.js scripts",
+          "es": "Crear procesos hijo para ejecutar comandos shell u otros scripts de Node.js"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Managing process memory",
+          "es": "Gestionar la memoria del proceso"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Creating web workers",
+          "es": "Crear web workers"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Handling HTTP child routes",
+          "es": "Gestionar rutas HTTP hijo"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-55",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the difference between spawn and exec in child_process?",
+      "es": "¿Cuál es la diferencia entre spawn y exec en child_process?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "spawn streams data continuously; exec buffers output and returns it in a callback",
+          "es": "spawn transmite datos continuamente; exec almacena la salida y la devuelve en un callback"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "They are identical",
+          "es": "Son idénticos"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "exec is for Unix only; spawn is cross-platform",
+          "es": "exec es solo para Unix; spawn es multiplataforma"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "spawn creates a new Node.js instance; exec runs a shell command",
+          "es": "spawn crea una nueva instancia de Node.js; exec ejecuta un comando de shell"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-56",
+    "level": "intermediate",
+    "question": {
+      "en": "What is Express Router?",
+      "es": "¿Qué es Express Router?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A mini application for organizing routes into separate modules",
+          "es": "Una mini aplicación para organizar rutas en módulos separados"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A URL parser",
+          "es": "Un analizador de URL"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "An HTTP request interceptor",
+          "es": "Un interceptor de peticiones HTTP"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A frontend router",
+          "es": "Un router de frontend"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-57",
+    "level": "intermediate",
+    "question": {
+      "en": "What is error-handling middleware in Express?",
+      "es": "¿Qué es el middleware de manejo de errores en Express?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A middleware with four arguments (err, req, res, next) that handles errors",
+          "es": "Un middleware con cuatro argumentos (err, req, res, next) que maneja errores"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A try-catch block",
+          "es": "Un bloque try-catch"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A module for logging errors",
+          "es": "Un módulo para registrar errores"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A custom error class",
+          "es": "Una clase de error personalizada"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-58",
+    "level": "intermediate",
+    "question": {
+      "en": "What is CORS and how do you enable it in Express?",
+      "es": "¿Qué es CORS y cómo se habilita en Express?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Cross-Origin Resource Sharing; enabled using the 'cors' middleware package",
+          "es": "Compartición de recursos entre orígenes; se habilita usando el paquete middleware 'cors'"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A security certificate; enabled in package.json",
+          "es": "Un certificado de seguridad; se habilita en package.json"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A caching strategy; enabled in the HTTP module",
+          "es": "Una estrategia de caché; se habilita en el módulo HTTP"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A protocol for routing; enabled with Express Router",
+          "es": "Un protocolo de enrutamiento; se habilita con Express Router"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-59",
+    "level": "intermediate",
+    "question": {
+      "en": "What is JWT and how is it used in Node.js?",
+      "es": "¿Qué es JWT y cómo se usa en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "JSON Web Token; used for stateless authentication by signing and verifying tokens",
+          "es": "JSON Web Token; se usa para autenticación sin estado firmando y verificando tokens"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "JavaScript Web Tool; used for bundling modules",
+          "es": "JavaScript Web Tool; se usa para empaquetar módulos"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A session management protocol",
+          "es": "Un protocolo de gestión de sesiones"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A database query language",
+          "es": "Un lenguaje de consulta de bases de datos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-60",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the purpose of the 'dotenv' package?",
+      "es": "¿Cuál es el propósito del paquete 'dotenv'?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Loading environment variables from a .env file into process.env",
+          "es": "Cargar variables de entorno de un archivo .env en process.env"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Encrypting .env files",
+          "es": "Cifrar archivos .env"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Managing environment deployments",
+          "es": "Gestionar despliegues de entorno"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Generating environment configurations",
+          "es": "Generar configuraciones de entorno"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-61",
+    "level": "intermediate",
+    "question": {
+      "en": "What is bcrypt used for in Node.js?",
+      "es": "¿Para qué se usa bcrypt en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Hashing and salting passwords securely",
+          "es": "Hashear y añadir salt a contraseñas de forma segura"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Encrypting network traffic",
+          "es": "Cifrar el tráfico de red"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Generating JWT tokens",
+          "es": "Generar tokens JWT"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Validating form input",
+          "es": "Validar entrada de formularios"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-62",
+    "level": "intermediate",
+    "question": {
+      "en": "What is Mongoose?",
+      "es": "¿Qué es Mongoose?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "An ODM (Object Data Modeling) library for MongoDB and Node.js",
+          "es": "Una librería ODM (Object Data Modeling) para MongoDB y Node.js"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A SQL ORM for Node.js",
+          "es": "Un ORM SQL para Node.js"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A Node.js HTTP framework",
+          "es": "Un framework HTTP de Node.js"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A testing utility for databases",
+          "es": "Una utilidad de pruebas para bases de datos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-63",
+    "level": "intermediate",
+    "question": {
+      "en": "What is Sequelize?",
+      "es": "¿Qué es Sequelize?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A promise-based Node.js ORM for SQL databases",
+          "es": "Un ORM Node.js basado en promesas para bases de datos SQL"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A MongoDB adapter",
+          "es": "Un adaptador de MongoDB"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A query builder only",
+          "es": "Solo un constructor de consultas"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A GraphQL library",
+          "es": "Una librería de GraphQL"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-64",
+    "level": "intermediate",
+    "question": {
+      "en": "What is rate limiting and why is it important in Node.js APIs?",
+      "es": "¿Qué es el rate limiting y por qué es importante en las APIs de Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Limiting the number of requests per time window to prevent abuse and DDoS attacks",
+          "es": "Limitar el número de solicitudes por ventana de tiempo para prevenir abusos y ataques DDoS"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Limiting the size of HTTP responses",
+          "es": "Limitar el tamaño de las respuestas HTTP"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Throttling database queries",
+          "es": "Regular las consultas a la base de datos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Setting server memory limits",
+          "es": "Establecer límites de memoria del servidor"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-65",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the difference between PUT and PATCH in REST APIs?",
+      "es": "¿Cuál es la diferencia entre PUT y PATCH en las APIs REST?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "PUT replaces the entire resource; PATCH applies a partial update",
+          "es": "PUT reemplaza el recurso completo; PATCH aplica una actualización parcial"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "They are identical",
+          "es": "Son idénticos"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "PATCH creates a resource; PUT updates it",
+          "es": "PATCH crea un recurso; PUT lo actualiza"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "PUT is for files; PATCH is for JSON",
+          "es": "PUT es para archivos; PATCH es para JSON"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-66",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the purpose of helmet.js in an Express app?",
+      "es": "¿Cuál es el propósito de helmet.js en una app Express?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Setting security-related HTTP headers to protect against common vulnerabilities",
+          "es": "Establecer encabezados HTTP de seguridad para proteger contra vulnerabilidades comunes"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Compressing HTTP responses",
+          "es": "Comprimir respuestas HTTP"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Managing sessions",
+          "es": "Gestionar sesiones"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Handling file uploads",
+          "es": "Manejar cargas de archivos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-67",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the difference between dependencies and devDependencies?",
+      "es": "¿Cuál es la diferencia entre dependencies y devDependencies?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "dependencies are needed in production; devDependencies are only for development",
+          "es": "dependencies son necesarias en producción; devDependencies son solo para desarrollo"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "They are the same",
+          "es": "Son lo mismo"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "devDependencies are for the frontend",
+          "es": "devDependencies son para el frontend"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "dependencies are optional; devDependencies are required",
+          "es": "dependencies son opcionales; devDependencies son requeridas"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-68",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the purpose of nodemon?",
+      "es": "¿Cuál es el propósito de nodemon?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Automatically restarting the Node.js server when file changes are detected",
+          "es": "Reiniciar automáticamente el servidor Node.js cuando se detectan cambios en los archivos"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Monitoring Node.js performance",
+          "es": "Monitorear el rendimiento de Node.js"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Managing Node.js versions",
+          "es": "Gestionar versiones de Node.js"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Running tests automatically",
+          "es": "Ejecutar pruebas automáticamente"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-69",
+    "level": "intermediate",
+    "question": {
+      "en": "What is PM2 used for in Node.js?",
+      "es": "¿Para qué se usa PM2 en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A production process manager for Node.js with clustering and monitoring",
+          "es": "Un gestor de procesos de producción para Node.js con clustering y monitoreo"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A package manager alternative to npm",
+          "es": "Un gestor de paquetes alternativo a npm"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A performance profiling tool",
+          "es": "Una herramienta de perfilado de rendimiento"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A testing framework",
+          "es": "Un framework de pruebas"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-70",
+    "level": "intermediate",
+    "question": {
+      "en": "What are Worker Threads in Node.js?",
+      "es": "¿Qué son los Worker Threads en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A way to run JavaScript in parallel threads for CPU-intensive tasks",
+          "es": "Una forma de ejecutar JavaScript en hilos paralelos para tareas intensivas de CPU"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Browser web workers",
+          "es": "Web workers del navegador"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Child processes for I/O",
+          "es": "Procesos hijo para I/O"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Background job processors",
+          "es": "Procesadores de trabajos en segundo plano"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-71",
+    "level": "intermediate",
+    "question": {
+      "en": "What is WebSocket and how does it differ from HTTP?",
+      "es": "¿Qué es WebSocket y en qué se diferencia de HTTP?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "WebSocket provides full-duplex communication over a persistent connection; HTTP is request-response",
+          "es": "WebSocket proporciona comunicación dúplex completa sobre una conexión persistente; HTTP es petición-respuesta"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "They are the same protocol",
+          "es": "Son el mismo protocolo"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "WebSocket is older than HTTP",
+          "es": "WebSocket es más antiguo que HTTP"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "HTTP supports persistent connections; WebSocket doesn't",
+          "es": "HTTP soporta conexiones persistentes; WebSocket no"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-72",
+    "level": "intermediate",
+    "question": {
+      "en": "What is Socket.io used for?",
+      "es": "¿Para qué se usa Socket.io?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Real-time bidirectional event-based communication between browser and server",
+          "es": "Comunicación bidireccional en tiempo real basada en eventos entre navegador y servidor"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "HTTP REST API management",
+          "es": "Gestión de API REST HTTP"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "File socket communication",
+          "es": "Comunicación por socket de archivos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "UDP networking",
+          "es": "Redes UDP"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-73",
+    "level": "intermediate",
+    "question": {
+      "en": "What is Passport.js?",
+      "es": "¿Qué es Passport.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "An authentication middleware for Node.js supporting many strategies",
+          "es": "Un middleware de autenticación para Node.js que soporta muchas estrategias"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A session management library",
+          "es": "Una librería de gestión de sesiones"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A role-based access control library",
+          "es": "Una librería de control de acceso basado en roles"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "An OAuth provider",
+          "es": "Un proveedor de OAuth"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-74",
+    "level": "intermediate",
+    "question": {
+      "en": "What is GraphQL in Node.js context?",
+      "es": "¿Qué es GraphQL en el contexto de Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A query language for APIs allowing clients to request exactly the data they need",
+          "es": "Un lenguaje de consulta para APIs que permite a los clientes solicitar exactamente los datos que necesitan"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A graph database query language",
+          "es": "Un lenguaje de consulta para bases de datos de grafos"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A REST API enhancement",
+          "es": "Una mejora de la API REST"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "An SQL alternative",
+          "es": "Una alternativa a SQL"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-75",
+    "level": "intermediate",
+    "question": {
+      "en": "What are npx commands used for?",
+      "es": "¿Para qué se usan los comandos npx?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Executing npm package binaries without installing them globally",
+          "es": "Ejecutar binarios de paquetes npm sin instalarlos globalmente"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Publishing packages to npm registry",
+          "es": "Publicar paquetes en el registro de npm"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Running npm scripts",
+          "es": "Ejecutar scripts de npm"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Installing packages faster",
+          "es": "Instalar paquetes más rápido"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-76",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the difference between fs.readFile and fs.createReadStream?",
+      "es": "¿Cuál es la diferencia entre fs.readFile y fs.createReadStream?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "readFile loads entire file into memory; createReadStream reads in chunks for large files",
+          "es": "readFile carga el archivo completo en memoria; createReadStream lee en trozos para archivos grandes"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "They are identical",
+          "es": "Son idénticos"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "createReadStream is synchronous",
+          "es": "createReadStream es síncrono"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "readFile only reads text files",
+          "es": "readFile solo lee archivos de texto"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-77",
+    "level": "intermediate",
+    "question": {
+      "en": "What is Multer used for in Node.js?",
+      "es": "¿Para qué se usa Multer en Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Handling multipart/form-data for file uploads",
+          "es": "Manejar multipart/form-data para la carga de archivos"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A multi-language translation library",
+          "es": "Una librería de traducción multilingüe"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Managing multiple HTTP requests",
+          "es": "Gestionar múltiples peticiones HTTP"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A multi-threading library",
+          "es": "Una librería de multi-threading"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-78",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the purpose of the 'zlib' module?",
+      "es": "¿Cuál es el propósito del módulo 'zlib'?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Compressing and decompressing data using gzip and deflate algorithms",
+          "es": "Comprimir y descomprimir datos usando algoritmos gzip y deflate"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Working with zip archives",
+          "es": "Trabajar con archivos zip"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Encrypting data",
+          "es": "Cifrar datos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Hashing binary data",
+          "es": "Hashear datos binarios"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-79",
+    "level": "intermediate",
+    "question": {
+      "en": "What is the async_hooks module?",
+      "es": "¿Qué es el módulo async_hooks?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "An API to track asynchronous resources and their lifecycle",
+          "es": "Una API para rastrear recursos asíncronos y su ciclo de vida"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A module for creating async functions",
+          "es": "Un módulo para crear funciones asíncronas"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "React-like hooks for Node.js",
+          "es": "Hooks tipo React para Node.js"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A scheduler for async tasks",
+          "es": "Un planificador de tareas asíncronas"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nodejs-80",
+    "level": "intermediate",
+    "question": {
+      "en": "What is caching and how can it improve Node.js API performance?",
+      "es": "¿Qué es el caché y cómo puede mejorar el rendimiento de una API Node.js?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Storing frequently accessed data in memory to reduce database calls and response time",
+          "es": "Almacenar datos de acceso frecuente en memoria para reducir llamadas a la base de datos y el tiempo de respuesta"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Saving HTTP responses to disk",
+          "es": "Guardar respuestas HTTP en disco"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Compressing API responses",
+          "es": "Comprimir respuestas de la API"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Reducing server startup time",
+          "es": "Reducir el tiempo de inicio del servidor"
+        }
+      }
+    ]
+  }
+]

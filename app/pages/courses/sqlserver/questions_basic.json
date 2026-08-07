@@ -1,0 +1,337 @@
+[
+  {
+    "id": "sqlserver-1",
+    "level": "basic",
+    "question": { "en": "What is Microsoft SQL Server?", "es": "¿Qué es Microsoft SQL Server?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "A relational database management system (RDBMS) developed by Microsoft", "es": "Un sistema de gestión de bases de datos relacionales (RDBMS) desarrollado por Microsoft" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "A NoSQL document database developed by Microsoft", "es": "Una base de datos de documentos NoSQL desarrollada por Microsoft" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "A cloud storage service by Microsoft", "es": "Un servicio de almacenamiento en la nube de Microsoft" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "A web server developed by Microsoft", "es": "Un servidor web desarrollado por Microsoft" } }
+    ]
+  },
+  {
+    "id": "sqlserver-2",
+    "level": "basic",
+    "question": { "en": "What does T-SQL stand for?", "es": "¿Qué significa T-SQL?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "Transact-SQL, Microsoft's proprietary extension of SQL", "es": "Transact-SQL, la extensión propietaria de SQL de Microsoft" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Table-SQL, a language for managing database tables", "es": "Table-SQL, un lenguaje para gestionar tablas de bases de datos" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Typed-SQL, a statically typed version of SQL", "es": "Typed-SQL, una versión de SQL con tipos estáticos" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Transaction-Structured Query Language used only for transactions", "es": "Transaction-Structured Query Language usado solo para transacciones" } }
+    ]
+  },
+  {
+    "id": "sqlserver-3",
+    "level": "basic",
+    "question": { "en": "Which SQL statement is used to retrieve data from a table?", "es": "¿Qué sentencia SQL se usa para recuperar datos de una tabla?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "SELECT", "es": "SELECT" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "GET", "es": "GET" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "FETCH", "es": "FETCH" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "READ", "es": "READ" } }
+    ]
+  },
+  {
+    "id": "sqlserver-4",
+    "level": "basic",
+    "question": { "en": "What does the WHERE clause do in a SELECT statement?", "es": "¿Qué hace la cláusula WHERE en una sentencia SELECT?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "Filters rows based on a specified condition", "es": "Filtra filas según una condición especificada" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Sorts the result set", "es": "Ordena el conjunto de resultados" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Groups rows that share a common value", "es": "Agrupa filas que comparten un valor común" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Joins two tables together", "es": "Une dos tablas" } }
+    ]
+  },
+  {
+    "id": "sqlserver-5",
+    "level": "basic",
+    "question": { "en": "What does ORDER BY do in a SQL query?", "es": "¿Qué hace ORDER BY en una consulta SQL?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "Sorts the result set in ascending or descending order", "es": "Ordena el conjunto de resultados de forma ascendente o descendente" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Filters rows based on a condition", "es": "Filtra filas según una condición" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Groups rows by a column value", "es": "Agrupa filas por el valor de una columna" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Limits the number of rows returned", "es": "Limita el número de filas devueltas" } }
+    ]
+  }
+  ,
+  {
+    "id": "sqlserver-6",
+    "level": "basic",
+    "question": { "en": "Which statement is used to add new rows to a table?", "es": "¿Qué sentencia se usa para agregar nuevas filas a una tabla?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "INSERT INTO", "es": "INSERT INTO" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "ADD ROW", "es": "ADD ROW" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "CREATE ROW", "es": "CREATE ROW" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "APPEND INTO", "es": "APPEND INTO" } }
+    ]
+  },
+  {
+    "id": "sqlserver-7",
+    "level": "basic",
+    "question": { "en": "Which SQL statement modifies existing data in a table?", "es": "¿Qué sentencia SQL modifica datos existentes en una tabla?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "UPDATE", "es": "UPDATE" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "MODIFY", "es": "MODIFY" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "CHANGE", "es": "CHANGE" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "SET VALUES", "es": "SET VALUES" } }
+    ]
+  },
+  {
+    "id": "sqlserver-8",
+    "level": "basic",
+    "question": { "en": "Which SQL statement removes rows from a table?", "es": "¿Qué sentencia SQL elimina filas de una tabla?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "DELETE", "es": "DELETE" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "REMOVE", "es": "REMOVE" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "ERASE", "es": "ERASE" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "PURGE", "es": "PURGE" } }
+    ]
+  },
+  {
+    "id": "sqlserver-9",
+    "level": "basic",
+    "question": { "en": "What is a primary key in SQL Server?", "es": "¿Qué es una clave primaria en SQL Server?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "A column or set of columns that uniquely identifies each row in a table", "es": "Una columna o conjunto de columnas que identifica de forma única cada fila de una tabla" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "A column that stores encrypted passwords", "es": "Una columna que almacena contraseñas cifradas" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "The first column defined in a table", "es": "La primera columna definida en una tabla" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "A column used only for sorting purposes", "es": "Una columna usada solo para ordenar" } }
+    ]
+  },
+  {
+    "id": "sqlserver-10",
+    "level": "basic",
+    "question": { "en": "What is a foreign key?", "es": "¿Qué es una clave foránea?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "A column that references the primary key of another table to enforce referential integrity", "es": "Una columna que referencia la clave primaria de otra tabla para garantizar la integridad referencial" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "A key imported from an external database", "es": "Una clave importada desde una base de datos externa" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "A secondary index on a non-primary column", "es": "Un índice secundario en una columna no primaria" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "A column that stores values from another country", "es": "Una columna que almacena valores de otro país" } }
+    ]
+  }
+  ,
+  {
+    "id": "sqlserver-11",
+    "level": "basic",
+    "question": { "en": "What is an index in SQL Server?", "es": "¿Qué es un índice en SQL Server?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "A database object that speeds up data retrieval operations", "es": "Un objeto de base de datos que acelera las operaciones de recuperación de datos" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "A list of all tables in a database", "es": "Una lista de todas las tablas de una base de datos" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "A constraint that enforces uniqueness", "es": "Una restricción que garantiza unicidad" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "A backup of a database table", "es": "Una copia de seguridad de una tabla de base de datos" } }
+    ]
+  },
+  {
+    "id": "sqlserver-12",
+    "level": "basic",
+    "question": { "en": "What does INNER JOIN do?", "es": "¿Qué hace INNER JOIN?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "Returns only the rows that have matching values in both tables", "es": "Devuelve solo las filas que tienen valores coincidentes en ambas tablas" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Returns all rows from both tables regardless of matches", "es": "Devuelve todas las filas de ambas tablas sin importar coincidencias" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Returns all rows from the left table and matching rows from the right table", "es": "Devuelve todas las filas de la tabla izquierda y las coincidentes de la derecha" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Combines two tables into a single column", "es": "Combina dos tablas en una sola columna" } }
+    ]
+  },
+  {
+    "id": "sqlserver-13",
+    "level": "basic",
+    "question": { "en": "What does NULL represent in SQL Server?", "es": "¿Qué representa NULL en SQL Server?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "The absence of a value or an unknown value", "es": "La ausencia de un valor o un valor desconocido" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "The number zero", "es": "El número cero" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "An empty string", "es": "Una cadena vacía" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "A deleted record marker", "es": "Un marcador de registro eliminado" } }
+    ]
+  },
+  {
+    "id": "sqlserver-14",
+    "level": "basic",
+    "question": { "en": "Which aggregate function counts the number of rows?", "es": "¿Qué función de agregación cuenta el número de filas?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "COUNT", "es": "COUNT" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "SUM", "es": "SUM" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "TOTAL", "es": "TOTAL" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "NUMBER", "es": "NUMBER" } }
+    ]
+  },
+  {
+    "id": "sqlserver-15",
+    "level": "basic",
+    "question": { "en": "What does the GROUP BY clause do?", "es": "¿Qué hace la cláusula GROUP BY?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "Groups rows sharing the same values into summary rows, used with aggregate functions", "es": "Agrupa filas con los mismos valores en filas de resumen, usada con funciones de agregación" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Sorts the result set by a specific column", "es": "Ordena el conjunto de resultados por una columna específica" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Joins multiple tables by a common column", "es": "Une varias tablas por una columna común" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Filters rows using aggregate conditions", "es": "Filtra filas usando condiciones de agregación" } }
+    ]
+  }
+  ,
+  {
+    "id": "sqlserver-16",
+    "level": "basic",
+    "question": { "en": "What is the HAVING clause used for?", "es": "¿Para qué se usa la cláusula HAVING?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "To filter groups after GROUP BY, similar to WHERE but for aggregate functions", "es": "Para filtrar grupos después de GROUP BY, similar a WHERE pero para funciones de agregación" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "To sort grouped results", "es": "Para ordenar resultados agrupados" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "To filter individual rows before grouping", "es": "Para filtrar filas individuales antes de agrupar" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "To define the columns in a GROUP BY query", "es": "Para definir las columnas en una consulta GROUP BY" } }
+    ]
+  },
+  {
+    "id": "sqlserver-17",
+    "level": "basic",
+    "question": { "en": "Which statement creates a new table in SQL Server?", "es": "¿Qué sentencia crea una nueva tabla en SQL Server?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "CREATE TABLE", "es": "CREATE TABLE" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "NEW TABLE", "es": "NEW TABLE" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "MAKE TABLE", "es": "MAKE TABLE" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "ADD TABLE", "es": "ADD TABLE" } }
+    ]
+  },
+  {
+    "id": "sqlserver-18",
+    "level": "basic",
+    "question": { "en": "What does ALTER TABLE allow you to do?", "es": "¿Qué permite hacer ALTER TABLE?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "Add, modify, or drop columns and constraints in an existing table", "es": "Agregar, modificar o eliminar columnas y restricciones en una tabla existente" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Rename a table", "es": "Renombrar una tabla" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Move a table to a different database", "es": "Mover una tabla a una base de datos diferente" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Delete all data from a table", "es": "Eliminar todos los datos de una tabla" } }
+    ]
+  },
+  {
+    "id": "sqlserver-19",
+    "level": "basic",
+    "question": { "en": "What does DROP TABLE do?", "es": "¿Qué hace DROP TABLE?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "Permanently removes the table and all its data from the database", "es": "Elimina permanentemente la tabla y todos sus datos de la base de datos" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Removes only the data but keeps the table structure", "es": "Elimina solo los datos pero mantiene la estructura de la tabla" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Temporarily disables the table", "es": "Desactiva temporalmente la tabla" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Moves the table to the recycle bin", "es": "Mueve la tabla a la papelera de reciclaje" } }
+    ]
+  },
+  {
+    "id": "sqlserver-20",
+    "level": "basic",
+    "question": { "en": "What does the NOT NULL constraint enforce?", "es": "¿Qué impone la restricción NOT NULL?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "That a column cannot store NULL values", "es": "Que una columna no puede almacenar valores NULL" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "That a column must store unique values", "es": "Que una columna debe almacenar valores únicos" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "That a column must be the primary key", "es": "Que una columna debe ser la clave primaria" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "That a column cannot store numeric values", "es": "Que una columna no puede almacenar valores numéricos" } }
+    ]
+  }
+  ,
+  {
+    "id": "sqlserver-21",
+    "level": "basic",
+    "question": { "en": "Which SQL Server data type stores whole numbers?", "es": "¿Qué tipo de dato de SQL Server almacena números enteros?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "INT", "es": "INT" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "VARCHAR", "es": "VARCHAR" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "DATETIME", "es": "DATETIME" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "BIT", "es": "BIT" } }
+    ]
+  },
+  {
+    "id": "sqlserver-22",
+    "level": "basic",
+    "question": { "en": "What data type is used for variable-length character strings in SQL Server?", "es": "¿Qué tipo de dato se usa para cadenas de caracteres de longitud variable en SQL Server?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "VARCHAR", "es": "VARCHAR" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "INT", "es": "INT" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "DECIMAL", "es": "DECIMAL" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "CHAR (fixed-length only)", "es": "CHAR (solo longitud fija)" } }
+    ]
+  },
+  {
+    "id": "sqlserver-23",
+    "level": "basic",
+    "question": { "en": "What is a stored procedure in SQL Server?", "es": "¿Qué es un procedimiento almacenado en SQL Server?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "A precompiled set of T-SQL statements stored in the database that can be executed by name", "es": "Un conjunto de sentencias T-SQL precompiladas almacenadas en la base de datos que se pueden ejecutar por nombre" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "A backup copy of a table", "es": "Una copia de seguridad de una tabla" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "A temporary table that stores results", "es": "Una tabla temporal que almacena resultados" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "A scheduled job that runs automatically", "es": "Un trabajo programado que se ejecuta automáticamente" } }
+    ]
+  },
+  {
+    "id": "sqlserver-24",
+    "level": "basic",
+    "question": { "en": "What is a VIEW in SQL Server?", "es": "¿Qué es una VISTA en SQL Server?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "A virtual table based on a stored SELECT query", "es": "Una tabla virtual basada en una consulta SELECT almacenada" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "A physical copy of a table", "es": "Una copia física de una tabla" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "A graphical representation of database data", "es": "Una representación gráfica de los datos de la base de datos" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "A type of index used for fast lookups", "es": "Un tipo de índice usado para búsquedas rápidas" } }
+    ]
+  },
+  {
+    "id": "sqlserver-25",
+    "level": "basic",
+    "question": { "en": "What is a transaction in SQL Server?", "es": "¿Qué es una transacción en SQL Server?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "A sequence of operations treated as a single unit of work, either all committed or all rolled back", "es": "Una secuencia de operaciones tratada como una unidad de trabajo, que se confirma o revierte completamente" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "A single INSERT statement", "es": "Una sola sentencia INSERT" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "A connection from an application to the database", "es": "Una conexión desde una aplicación a la base de datos" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "A scheduled backup operation", "es": "Una operación de copia de seguridad programada" } }
+    ]
+  }
+  ,
+  {
+    "id": "sqlserver-26",
+    "level": "basic",
+    "question": { "en": "What does the DISTINCT keyword do in a SELECT statement?", "es": "¿Qué hace la palabra clave DISTINCT en una sentencia SELECT?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "Removes duplicate rows from the result set", "es": "Elimina filas duplicadas del conjunto de resultados" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Selects only the first row of each group", "es": "Selecciona solo la primera fila de cada grupo" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Sorts the result set in distinct order", "es": "Ordena el conjunto de resultados en orden distinto" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Filters rows where the value is not NULL", "es": "Filtra filas donde el valor no es NULL" } }
+    ]
+  },
+  {
+    "id": "sqlserver-27",
+    "level": "basic",
+    "question": { "en": "What does SELECT TOP 5 * FROM Employees do?", "es": "¿Qué hace SELECT TOP 5 * FROM Employees?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "Returns only the first 5 rows from the Employees table", "es": "Devuelve solo las primeras 5 filas de la tabla Employees" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Returns the 5 employees with the highest salary", "es": "Devuelve los 5 empleados con el salario más alto" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Returns the last 5 rows from the Employees table", "es": "Devuelve las últimas 5 filas de la tabla Employees" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Returns all rows but only 5 columns", "es": "Devuelve todas las filas pero solo 5 columnas" } }
+    ]
+  },
+  {
+    "id": "sqlserver-28",
+    "level": "basic",
+    "question": { "en": "What is the purpose of the AS keyword in SQL Server?", "es": "¿Cuál es el propósito de la palabra clave AS en SQL Server?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "To assign an alias (temporary name) to a column or table in a query", "es": "Para asignar un alias (nombre temporal) a una columna o tabla en una consulta" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "To cast a value to a different data type", "es": "Para convertir un valor a un tipo de dato diferente" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "To create a new table based on an existing one", "es": "Para crear una nueva tabla basada en una existente" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "To check if a subquery returns a result", "es": "Para verificar si una subconsulta devuelve un resultado" } }
+    ]
+  },
+  {
+    "id": "sqlserver-29",
+    "level": "basic",
+    "question": { "en": "Which constraint ensures all values in a column are unique?", "es": "¿Qué restricción garantiza que todos los valores de una columna son únicos?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "UNIQUE", "es": "UNIQUE" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "NOT NULL", "es": "NOT NULL" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "CHECK", "es": "CHECK" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "DEFAULT", "es": "DEFAULT" } }
+    ]
+  },
+  {
+    "id": "sqlserver-30",
+    "level": "basic",
+    "question": { "en": "What does the DEFAULT constraint do?", "es": "¿Qué hace la restricción DEFAULT?" },
+    "answers": [
+      { "childId": 0, "isCorrect": true,  "text": { "en": "Provides an automatic value for a column when no value is specified during an INSERT", "es": "Proporciona un valor automático para una columna cuando no se especifica ninguno en un INSERT" } },
+      { "childId": 1, "isCorrect": false, "text": { "en": "Resets all column values to zero", "es": "Restablece todos los valores de la columna a cero" } },
+      { "childId": 2, "isCorrect": false, "text": { "en": "Makes a column the primary key", "es": "Convierte una columna en clave primaria" } },
+      { "childId": 3, "isCorrect": false, "text": { "en": "Prevents duplicate values in a column", "es": "Evita valores duplicados en una columna" } }
+    ]
+  }
+]

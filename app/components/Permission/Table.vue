@@ -3,58 +3,59 @@
     <VDataTableServer
       id="per-table-items-dt-1"
       v-model:page="page"
-      v-model:items-per-page="itemsPerPage"
       v-model:sort-by="sortBy"
+      v-model:items-per-page="itemsPerPage"
+      mustSort
+      striped="odd"
+      :items="items"
       density="compact"
       :headers="headers"
-      :items="items"
-      :items-length="total"
       :loading="loading"
+      :items-length="total"
       :row-props="rowProps"
-      class="elevation-1 xwidth800"
-      striped="odd"
-      mustSort
       :search="props.search"
-      items-per-page-text="Filas por página"
+      style="max-width: 850px"
+      class="elevation-1 xwidth800"
       :items-per-page-options="[10, 15, 30]"
+      items-per-page-text="Filas por página"
       @update:options="onUpdateOptions"
     >
       <template #[`item.actions`]="{ item }">
         <VBtn
           id="per-table-edit-btn"
-          title="Editar"
-          class="ma-1"
-          color="primary"
-          variant="outlined"
-          size="small"
           icon
+          class="ma-1"
+          size="small"
+          title="Editar"
+          color="primary"
           rounded="circle"
+          variant="outlined"
           @click="emitEdit(item)"
         >
           <VIcon size="x-large">mdi-pencil</VIcon>
         </VBtn>
         <VBtn
           id="per-table-distribute-btn"
-          title="Distribuir"
+          icon
           class="ma-1"
           color="info"
-          variant="outlined"
           size="small"
-          icon
           rounded="circle"
+          title="Distribuir"
+          variant="outlined"
           @click="emitDistribution(item)"
         >
           <VIcon size="x-large">mdi-share-variant</VIcon>
         </VBtn>
         <VBtn
           id="per-table-delete-btn"
-          title="Eliminar"
-          class="ma-1"
-          color="error"
-          variant="outlined"
-          size="small"
           icon
+          class="ma-1"
+          size="small"
+          color="error"
           rounded="circle"
+          title="Eliminar"
+          variant="outlined"
           @click="confirmDelete(item)"
         >
           <VIcon size="x-large">mdi-delete</VIcon>
@@ -70,10 +71,10 @@
     </VDataTableServer>
 
     <DialogDelete
-      @close="emit('update:dialogDelete', false)"
-      :dialog="dialogDeleteProp"
       v-if="dialogDelete"
+      :dialog="dialogDeleteProp"
       @ok="(item) => emit('delete', item)"
+      @close="emit('update:dialogDelete', false)"
     />
   </div>
 </template>

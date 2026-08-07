@@ -1,0 +1,2943 @@
+[
+  {
+    "id": "vue3-1",
+    "level": "basic",
+    "question": {
+      "en": "What is Vue 3?",
+      "es": "¿Qué es Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A progressive JavaScript framework built with TypeScript",
+          "es": "Un framework progresivo de JavaScript construido con TypeScript"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A Python web framework",
+          "es": "Un framework web de Python"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A CSS framework",
+          "es": "Un framework de CSS"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A database system",
+          "es": "Un sistema de base de datos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-2",
+    "level": "basic",
+    "question": {
+      "en": "How do you create a Vue 3 application?",
+      "es": "¿Cómo creas una aplicación Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using createApp() instead of new Vue()",
+          "es": "Usando createApp() en lugar de new Vue()"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using new Vue()",
+          "es": "Usando new Vue()"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using Vue.create()",
+          "es": "Usando Vue.create()"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using Vue.start()",
+          "es": "Usando Vue.start()"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-3",
+    "level": "basic",
+    "question": {
+      "en": "What is the Composition API in Vue 3?",
+      "es": "¿Qué es la Composition API en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A new way to organize component logic using setup() and composables",
+          "es": "Una nueva forma de organizar la lógica de componentes usando setup() y composables"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "The old Options API renamed",
+          "es": "La antigua Options API renombrada"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A CSS composition tool",
+          "es": "Una herramienta de composición CSS"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A state management library",
+          "es": "Una librería de gestión de estado"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-4",
+    "level": "basic",
+    "question": {
+      "en": "What does the ref() function do in Vue 3?",
+      "es": "¿Qué hace la función ref() en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Creates a reactive reference to a value",
+          "es": "Crea una referencia reactiva a un valor"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Creates a reference to a DOM element",
+          "es": "Crea una referencia a un elemento DOM"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "References another component",
+          "es": "Referencia a otro componente"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Creates a computed reference",
+          "es": "Crea una referencia computada"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-5",
+    "level": "basic",
+    "question": {
+      "en": "How do you access the value of a ref in the script?",
+      "es": "¿Cómo accedes al valor de un ref en el script?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using .value property",
+          "es": "Usando la propiedad .value"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Directly as a variable",
+          "es": "Directamente como variable"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using $ref",
+          "es": "Usando $ref"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using this.ref",
+          "es": "Usando this.ref"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-6",
+    "level": "basic",
+    "question": {
+      "en": "What does reactive() do in Vue 3?",
+      "es": "¿Qué hace reactive() en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Makes an object deeply reactive",
+          "es": "Hace un objeto profundamente reactivo"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Makes a primitive value reactive",
+          "es": "Hace un valor primitivo reactivo"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Reacts to API calls",
+          "es": "Reacciona a llamadas de API"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Creates reactive CSS",
+          "es": "Crea CSS reactivo"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-7",
+    "level": "basic",
+    "question": {
+      "en": "What is the difference between ref and reactive?",
+      "es": "¿Cuál es la diferencia entre ref y reactive?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "ref wraps primitives and objects with .value; reactive only works with objects",
+          "es": "ref envuelve primitivos y objetos con .value; reactive solo funciona con objetos"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "ref is for objects; reactive is for primitives",
+          "es": "ref es para objetos; reactive es para primitivos"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "They are identical",
+          "es": "Son idénticos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "reactive is deprecated in Vue 3",
+          "es": "reactive está deprecado en Vue 3"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-8",
+    "level": "basic",
+    "question": {
+      "en": "What is the setup() function?",
+      "es": "¿Qué es la función setup()?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "The entry point for Composition API where reactive state is declared",
+          "es": "El punto de entrada para Composition API donde se declara el estado reactivo"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A lifecycle hook that runs after mount",
+          "es": "Un hook del ciclo de vida que se ejecuta después del montaje"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A configuration function",
+          "es": "Una función de configuración"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A function for setting props",
+          "es": "Una función para establecer props"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-9",
+    "level": "basic",
+    "question": {
+      "en": "How does v-model work in Vue 3?",
+      "es": "¿Cómo funciona v-model en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "v-model uses :modelValue and @update:modelValue by default",
+          "es": "v-model usa :modelValue y @update:modelValue por defecto"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "v-model uses :value and @input as in Vue 2",
+          "es": "v-model usa :value y @input como en Vue 2"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "v-model was removed",
+          "es": "v-model fue eliminado"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "v-model uses v-bind and v-on",
+          "es": "v-model usa v-bind y v-on"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-10",
+    "level": "basic",
+    "question": {
+      "en": "What is Teleport in Vue 3?",
+      "es": "¿Qué es Teleport en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A built-in component that renders content to a different DOM node",
+          "es": "Un componente integrado que renderiza contenido en un nodo DOM diferente"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A way to send data between components",
+          "es": "Una forma de enviar datos entre componentes"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A CSS positioning technique",
+          "es": "Una técnica de posicionamiento CSS"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A routing feature",
+          "es": "Una característica de enrutamiento"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-11",
+    "level": "basic",
+    "question": {
+      "en": "What is a Fragment in Vue 3?",
+      "es": "¿Qué es un Fragment en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Components can have multiple root nodes, no wrapping required",
+          "es": "Los componentes pueden tener múltiples nodos raíz, sin envoltorio requerido"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A new component type",
+          "es": "Un nuevo tipo de componente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A lifecycle hook",
+          "es": "Un hook del ciclo de vida"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A performance optimization",
+          "es": "Una optimización de rendimiento"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-12",
+    "level": "basic",
+    "question": {
+      "en": "What is onMounted in Vue 3?",
+      "es": "¿Qué es onMounted en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A lifecycle hook registered inside setup() equivalent to mounted",
+          "es": "Un hook del ciclo de vida registrado dentro de setup() equivalente a mounted"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A CSS pseudo-class",
+          "es": "Una pseudo-clase CSS"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A DOM event listener",
+          "es": "Un event listener del DOM"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A computed property",
+          "es": "Una propiedad computada"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-13",
+    "level": "basic",
+    "question": {
+      "en": "How do you define a computed property in Composition API?",
+      "es": "¿Cómo defines una propiedad computada en Composition API?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using the computed() function inside setup()",
+          "es": "Usando la función computed() dentro de setup()"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using the computed option",
+          "es": "Usando la opción computed"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using computed: {} syntax",
+          "es": "Usando la sintaxis computed: {}"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using defineComputed()",
+          "es": "Usando defineComputed()"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-14",
+    "level": "basic",
+    "question": {
+      "en": "How do you watch a reactive value in Vue 3?",
+      "es": "¿Cómo observas un valor reactivo en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using the watch() function",
+          "es": "Usando la función watch()"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using the watch option",
+          "es": "Usando la opción watch"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using observe()",
+          "es": "Usando observe()"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using track()",
+          "es": "Usando track()"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-15",
+    "level": "basic",
+    "question": {
+      "en": "What is script setup in Vue 3?",
+      "es": "¿Qué es script setup en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A syntax sugar for Composition API with less boilerplate",
+          "es": "Un azúcar sintáctico para Composition API con menos código boilerplate"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A way to set up scripts",
+          "es": "Una forma de configurar scripts"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A testing utility",
+          "es": "Una utilidad de testing"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A plugin configuration",
+          "es": "Una configuración de plugin"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-16",
+    "level": "basic",
+    "question": {
+      "en": "How do you define props in script setup?",
+      "es": "¿Cómo defines props en script setup?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using defineProps()",
+          "es": "Usando defineProps()"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using props: {}",
+          "es": "Usando props: {}"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using defineEmits()",
+          "es": "Usando defineEmits()"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using reactive()",
+          "es": "Usando reactive()"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-17",
+    "level": "basic",
+    "question": {
+      "en": "How do you emit events in script setup?",
+      "es": "¿Cómo emites eventos en script setup?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using defineEmits()",
+          "es": "Usando defineEmits()"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using $emit",
+          "es": "Usando $emit"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using emit()",
+          "es": "Usando emit()"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using trigger()",
+          "es": "Usando trigger()"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-18",
+    "level": "basic",
+    "question": {
+      "en": "What is the Suspense component in Vue 3?",
+      "es": "¿Qué es el componente Suspense en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A built-in component for handling async dependencies in the template",
+          "es": "Un componente integrado para manejar dependencias asíncronas en el template"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A component for lazy loading",
+          "es": "Un componente para lazy loading"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A loading spinner",
+          "es": "Un spinner de carga"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A state management tool",
+          "es": "Una herramienta de gestión de estado"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-19",
+    "level": "basic",
+    "question": {
+      "en": "What is the new provide/inject in Vue 3?",
+      "es": "¿Cómo funciona provide/inject en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "provide/inject works with Composition API using provide() and inject()",
+          "es": "provide/inject funciona con Composition API usando provide() y inject()"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "provide/inject was removed",
+          "es": "provide/inject fue eliminado"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "provide/inject only works with Options API",
+          "es": "provide/inject solo funciona con Options API"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "provide/inject is now synchronous",
+          "es": "provide/inject ahora es síncrono"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-20",
+    "level": "basic",
+    "question": {
+      "en": "How does the Composition API replace mixins?",
+      "es": "¿Cómo reemplaza la Composition API a los mixins?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using composable functions (custom hooks) for reusable logic",
+          "es": "Usando funciones composables (custom hooks) para lógica reutilizable"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Mixins are still the only way",
+          "es": "Los mixins siguen siendo la única forma"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using class inheritance",
+          "es": "Usando herencia de clases"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using higher-order components",
+          "es": "Usando componentes de orden superior"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-21",
+    "level": "basic",
+    "question": {
+      "en": "How do you define emits in Options API Vue 3?",
+      "es": "¿Cómo defines emits en Options API Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using the emits option array or object",
+          "es": "Usando la opción emits como array u objeto"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Emits are defined automatically",
+          "es": "Los emits se definen automáticamente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using emit property",
+          "es": "Usando la propiedad emit"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using events option",
+          "es": "Usando la opción events"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-22",
+    "level": "basic",
+    "question": {
+      "en": "What is the defineComponent function?",
+      "es": "¿Qué es la función defineComponent?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A helper for type inference when defining components",
+          "es": "Un helper para inferencia de tipos al definir componentes"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A required function for all components",
+          "es": "Una función requerida para todos los componentes"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A component registration utility",
+          "es": "Una utilidad de registro de componentes"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A runtime component factory",
+          "es": "Un factory de componentes en tiempo de ejecución"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-23",
+    "level": "basic",
+    "question": {
+      "en": "How do you bind multiple values with v-model in Vue 3?",
+      "es": "¿Cómo enlazas múltiples valores con v-model en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using multiple v-model directives like v-model:name, v-model:email",
+          "es": "Usando múltiples directivas v-model como v-model:name, v-model:email"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using v-model with an object",
+          "es": "Usando v-model con un objeto"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Multiple v-model is not supported",
+          "es": "Múltiples v-model no están soportados"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using v-bind.sync",
+          "es": "Usando v-bind.sync"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-24",
+    "level": "basic",
+    "question": {
+      "en": "What is the onUnmounted lifecycle hook?",
+      "es": "¿Qué es el hook onUnmounted?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "The Composition API equivalent of destroyed/beforeDestroy",
+          "es": "El equivalente en Composition API de destroyed/beforeDestroy"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A hook for unmounting components",
+          "es": "Un hook para desmontar componentes"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A CSS animation hook",
+          "es": "Un hook de animación CSS"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A routing hook",
+          "es": "Un hook de enrutamiento"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-25",
+    "level": "basic",
+    "question": {
+      "en": "How do you create a template ref in Vue 3 Composition API?",
+      "es": "¿Cómo creas una template ref en Composition API?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Declare a ref with the same name as the template ref attribute",
+          "es": "Declara un ref con el mismo nombre que el atributo ref del template"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using this.$refs",
+          "es": "Usando this.$refs"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using document.getElementById",
+          "es": "Usando document.getElementById"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using ref() with a string argument",
+          "es": "Usando ref() con un argumento string"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-26",
+    "level": "basic",
+    "question": {
+      "en": "What is nextTick in Vue 3?",
+      "es": "¿Qué es nextTick en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A function that waits for the next DOM update cycle",
+          "es": "Una función que espera el próximo ciclo de actualización del DOM"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A timer utility",
+          "es": "Una utilidad de temporizador"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A lifecycle hook",
+          "es": "Un hook del ciclo de vida"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A computed property helper",
+          "es": "Un helper de propiedad computada"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-27",
+    "level": "basic",
+    "question": {
+      "en": "How do you import nextTick in Vue 3?",
+      "es": "¿Cómo importas nextTick en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "import { nextTick } from 'vue'",
+          "es": "import { nextTick } from 'vue'"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "nextTick is global",
+          "es": "nextTick es global"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "import nextTick from 'vue'",
+          "es": "import nextTick from 'vue'"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Vue.nextTick() only",
+          "es": "Vue.nextTick() solamente"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-28",
+    "level": "basic",
+    "question": {
+      "en": "What is the new v-model modifier for Vue 3?",
+      "es": "¿Cuál es el nuevo modificador de v-model en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": ".number, .trim, and .lazy work the same as Vue 2",
+          "es": ".number, .trim, y .lazy funcionan igual que en Vue 2"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": ".number was removed",
+          "es": ".number fue eliminado"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "All modifiers are new",
+          "es": "Todos los modificadores son nuevos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Modifiers no longer exist",
+          "es": "Los modificadores ya no existen"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-29",
+    "level": "basic",
+    "question": {
+      "en": "Can you use both Options API and Composition API in the same component?",
+      "es": "¿Puedes usar Options API y Composition API en el mismo componente?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Yes, Vue 3 supports both APIs in the same component",
+          "es": "Sí, Vue 3 soporta ambas APIs en el mismo componente"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "No, you must choose one",
+          "es": "No, debes elegir una"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Only in development mode",
+          "es": "Solo en modo desarrollo"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Only with TypeScript",
+          "es": "Solo con TypeScript"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-30",
+    "level": "basic",
+    "question": {
+      "en": "What is the new event API in Vue 3?",
+      "es": "¿Cuál es la nueva API de eventos en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "$on, $once, $off were removed; use external libraries or provide/inject",
+          "es": "$on, $once, $off fueron eliminados; usa librerías externas o provide/inject"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "$on is still available",
+          "es": "$on sigue disponible"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A new $listen method was added",
+          "es": "Un nuevo método $listen fue añadido"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Events use addEventListener now",
+          "es": "Los eventos usan addEventListener ahora"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-31",
+    "level": "basic",
+    "question": {
+      "en": "How do you create a global component in Vue 3?",
+      "es": "¿Cómo creas un componente global en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using app.component('name', Component)",
+          "es": "Usando app.component('nombre', Componente)"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using Vue.component('name', Component)",
+          "es": "Usando Vue.component('nombre', Componente)"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using components: {} in root",
+          "es": "Usando components: {} en la raíz"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using registerComponent()",
+          "es": "Usando registerComponent()"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-32",
+    "level": "basic",
+    "question": {
+      "en": "How do you create a Vue 3 plugin?",
+      "es": "¿Cómo creas un plugin de Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "An object with install(app) method",
+          "es": "Un objeto con método install(app)"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "An object with install(Vue) method",
+          "es": "Un objeto con método install(Vue)"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A function that returns a Vue instance",
+          "es": "Una función que devuelve una instancia Vue"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A class extending VuePlugin",
+          "es": "Una clase que extiende VuePlugin"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-33",
+    "level": "basic",
+    "question": {
+      "en": "What is app.config.globalProperties?",
+      "es": "¿Qué es app.config.globalProperties?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Global properties available to all components in the app",
+          "es": "Propiedades globales disponibles para todos los componentes de la app"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Global CSS properties",
+          "es": "Propiedades CSS globales"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A configuration file",
+          "es": "Un archivo de configuración"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Environment variables",
+          "es": "Variables de entorno"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-34",
+    "level": "basic",
+    "question": {
+      "en": "What is the new CSS v-bind() in Vue 3?",
+      "es": "¿Qué es el nuevo CSS v-bind() en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A way to bind reactive values to CSS properties",
+          "es": "Una forma de enlazar valores reactivos a propiedades CSS"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A CSS framework",
+          "es": "Un framework CSS"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A CSS preprocessor",
+          "es": "Un preprocesador CSS"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A new directive for styling",
+          "es": "Una nueva directiva para estilos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-35",
+    "level": "basic",
+    "question": {
+      "en": "How does the key attribute work in Vue 3 transitions?",
+      "es": "¿Cómo funciona el atributo key en transiciones de Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Same as Vue 2; required for transition-group for element tracking",
+          "es": "Igual que Vue 2; requerido para transition-group para rastreo de elementos"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Key was removed from transitions",
+          "es": "Key fue eliminado de transiciones"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Key is automatic in Vue 3",
+          "es": "Key es automático en Vue 3"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Key is optional",
+          "es": "Key es opcional"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-36",
+    "level": "basic",
+    "question": {
+      "en": "What is the style scoped behavior change in Vue 3?",
+      "es": "¿Cuál es el cambio de comportamiento de style scoped en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Scoped styles use a different hash algorithm but work similarly",
+          "es": "Los estilos scoped usan un algoritmo hash diferente pero funcionan de manera similar"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Scoped styles were removed",
+          "es": "Los estilos scoped fueron eliminados"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Scoped now uses Shadow DOM",
+          "es": "Scoped ahora usa Shadow DOM"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Scoped only works with CSS variables",
+          "es": "Scoped solo funciona con variables CSS"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-37",
+    "level": "basic",
+    "question": {
+      "en": "How do you use render functions in Vue 3?",
+      "es": "¿Cómo usas funciones render en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using the h() function imported from 'vue'",
+          "es": "Usando la función h() importada de 'vue'"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using createElement()",
+          "es": "Usando createElement()"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using render: {}",
+          "es": "Usando render: {}"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using Vue.compile()",
+          "es": "Usando Vue.compile()"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-38",
+    "level": "basic",
+    "question": {
+      "en": "What is the v-once directive in Vue 3?",
+      "es": "¿Qué es la directiva v-once en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Same as Vue 2; renders content only once",
+          "es": "Igual que Vue 2; renderiza contenido solo una vez"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Removed in Vue 3",
+          "es": "Eliminada en Vue 3"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Renamed to v-single",
+          "es": "Renombrada a v-single"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Now requires a value",
+          "es": "Ahora requiere un valor"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-39",
+    "level": "basic",
+    "question": {
+      "en": "What is the v-memo directive in Vue 3?",
+      "es": "¿Qué es la directiva v-memo en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A new directive for memoizing parts of templates",
+          "es": "Una nueva directiva para memoizar partes de templates"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Renamed from v-once",
+          "es": "Renombrada de v-once"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A memory cache directive",
+          "es": "Una directiva de caché de memoria"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A directive for memoizing functions",
+          "es": "Una directiva para memoizar funciones"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-40",
+    "level": "basic",
+    "question": {
+      "en": "How do you handle slot content in Vue 3 Composition API?",
+      "es": "¿Cómo manejas el contenido de slots en Composition API?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using useSlots() and useAttrs()",
+          "es": "Usando useSlots() y useAttrs()"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using this.$slots",
+          "es": "Usando this.$slots"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using slots property",
+          "es": "Usando la propiedad slots"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using context.slots",
+          "es": "Usando context.slots"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-41",
+    "level": "basic",
+    "question": {
+      "en": "What is Vue 3?",
+      "es": "¿Qué es Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "The latest major version of Vue.js with Composition API",
+          "es": "La última versión principal de Vue.js con Composition API"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A CSS framework",
+          "es": "Un framework de CSS"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A backend framework",
+          "es": "Un framework de backend"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A database tool",
+          "es": "Una herramienta de base de datos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-42",
+    "level": "basic",
+    "question": {
+      "en": "What is setup() in Vue 3?",
+      "es": "¿Qué es setup() en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "The new component option that replaces data, computed, and methods",
+          "es": "La nueva opción de componente que reemplaza data, computed y methods"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A lifecycle hook for initialization",
+          "es": "Un hook del ciclo de vida para inicialización"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A method for setting up routes",
+          "es": "Un método para configurar rutas"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A function to configure plugins",
+          "es": "Una función para configurar plugins"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-43",
+    "level": "basic",
+    "question": {
+      "en": "How do you create a reactive property in Vue 3?",
+      "es": "¿Cómo se crea una propiedad reactiva en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using ref() or reactive() from the Composition API",
+          "es": "Usando ref() o reactive() de la Composition API"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using new Reactive()",
+          "es": "Usando new Reactive()"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using Vue.reactive()",
+          "es": "Usando Vue.reactive()"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using createReactive()",
+          "es": "Usando createReactive()"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-44",
+    "level": "basic",
+    "question": {
+      "en": "What is the ref() function in Vue 3?",
+      "es": "¿Qué es la función ref() en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Creates a reactive reference to a value",
+          "es": "Crea una referencia reactiva a un valor"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "References a DOM element",
+          "es": "Referencia un elemento del DOM"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Calls an external API",
+          "es": "Llama a una API externa"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Creates a computed property",
+          "es": "Crea una propiedad computada"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-45",
+    "level": "basic",
+    "question": {
+      "en": "What is reactive() in Vue 3?",
+      "es": "¿Qué es reactive() en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Makes an object deeply reactive",
+          "es": "Hace un objeto profundamente reactivo"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Creates a reactive string",
+          "es": "Crea un string reactivo"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Makes a function reactive",
+          "es": "Hace una función reactiva"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Creates a reactive component",
+          "es": "Crea un componente reactivo"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-46",
+    "level": "basic",
+    "question": {
+      "en": "What is the Composition API in Vue 3?",
+      "es": "¿Qué es la Composition API en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A new way to organize component logic using functions instead of options",
+          "es": "Una nueva forma de organizar la lógica de componentes usando funciones en lugar de opciones"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A CSS composition library",
+          "es": "Una librería de composición CSS"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A function composition tool",
+          "es": "Una herramienta de composición de funciones"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A new templating engine",
+          "es": "Un nuevo motor de plantillas"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-47",
+    "level": "basic",
+    "question": {
+      "en": "What is createApp() in Vue 3?",
+      "es": "¿Qué es createApp() en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "The new way to create a Vue application instance",
+          "es": "La nueva forma de crear una instancia de aplicación Vue"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Creates a new component",
+          "es": "Crea un nuevo componente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Creates a new route",
+          "es": "Crea una nueva ruta"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Creates a new plugin",
+          "es": "Crea un nuevo plugin"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-48",
+    "level": "basic",
+    "question": {
+      "en": "How do you define a computed property in Vue 3 Composition API?",
+      "es": "¿Cómo se define una propiedad computada en la Composition API de Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using the computed() function imported from Vue",
+          "es": "Usando la función computed() importada de Vue"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using new Computed()",
+          "es": "Usando new Computed()"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using Vue.computed()",
+          "es": "Usando Vue.computed()"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using computed: {}",
+          "es": "Usando computed: {}"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-49",
+    "level": "basic",
+    "question": {
+      "en": "What is teleport in Vue 3?",
+      "es": "¿Qué es teleport en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A component that renders its content to a different DOM location",
+          "es": "Un componente que renderiza su contenido en una ubicación DOM diferente"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A function to send data between components",
+          "es": "Una función para enviar datos entre componentes"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A network communication tool",
+          "es": "Una herramienta de comunicación de red"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A CSS transform property",
+          "es": "Una propiedad de transformación CSS"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-50",
+    "level": "basic",
+    "question": {
+      "en": "What is the <Suspense> component in Vue 3?",
+      "es": "¿Qué es el componente <Suspense> en Vue 3?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Handles asynchronous dependencies in the component tree",
+          "es": "Maneja dependencias asíncronas en el árbol de componentes"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A loading spinner component",
+          "es": "Un componente spinner de carga"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A suspenseful animation",
+          "es": "Una animación de suspenso"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A data fetching library",
+          "es": "Una librería de obtención de datos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-151",
+    "level": "basic",
+    "question": {
+      "en": "What is JavaScript?",
+      "es": "¿Qué es JavaScript?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A high-level, interpreted programming language primarily used for web development",
+          "es": "Un lenguaje de programación interpretado de alto nivel usado principalmente para desarrollo web"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A markup language for styling web pages",
+          "es": "Un lenguaje de marcado para estilos de páginas web"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A database query language",
+          "es": "Un lenguaje de consulta de bases de datos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A server-side only language",
+          "es": "Un lenguaje solo del lado del servidor"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-152",
+    "level": "basic",
+    "question": {
+      "en": "How do you declare a constant variable in JavaScript?",
+      "es": "¿Cómo declaras una variable constante en JavaScript?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "const myVar = value",
+          "es": "const miVar = valor"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "let myVar = value",
+          "es": "let miVar = valor"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "var myVar = value",
+          "es": "var miVar = valor"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "constant myVar = value",
+          "es": "constant miVar = valor"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-153",
+    "level": "basic",
+    "question": {
+      "en": "Which of the following is NOT a JavaScript data type?",
+      "es": "¿Cuál de los siguientes NO es un tipo de dato en JavaScript?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Integer",
+          "es": "Integer"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "String",
+          "es": "String"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Boolean",
+          "es": "Boolean"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Object",
+          "es": "Object"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-154",
+    "level": "basic",
+    "question": {
+      "en": "How do you write a comment in JavaScript?",
+      "es": "¿Cómo escribes un comentario en JavaScript?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "// This is a comment",
+          "es": "// Esto es un comentario"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "<!-- This is a comment -->",
+          "es": "<!-- Esto es un comentario -->"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "# This is a comment",
+          "es": "# Esto es un comentario"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "/* This is a comment */ but single-line",
+          "es": "/* Esto es un comentario */ pero de una línea"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-155",
+    "level": "basic",
+    "question": {
+      "en": "What does the === operator do?",
+      "es": "¿Qué hace el operador ===?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Checks strict equality (value and type)",
+          "es": "Comprueba igualdad estricta (valor y tipo)"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Checks value equality only",
+          "es": "Comprueba solo igualdad de valor"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Assigns a value",
+          "es": "Asigna un valor"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Checks if values are different",
+          "es": "Comprueba si los valores son diferentes"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-156",
+    "level": "basic",
+    "question": {
+      "en": "How do you define a function in JavaScript?",
+      "es": "¿Cómo se define una función en JavaScript?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "function myFunc() {}",
+          "es": "function miFuncion() {}"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "def myFunc():",
+          "es": "def miFuncion():"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "func myFunc() {}",
+          "es": "func miFuncion() {}"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "define myFunc()",
+          "es": "define miFuncion()"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-157",
+    "level": "basic",
+    "question": {
+      "en": "What is an array in JavaScript?",
+      "es": "¿Qué es un array en JavaScript?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "An ordered collection of elements",
+          "es": "Una colección ordenada de elementos"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A key-value data structure",
+          "es": "Una estructura de datos clave-valor"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A type of function",
+          "es": "Un tipo de función"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A CSS style rule",
+          "es": "Una regla de estilo CSS"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-158",
+    "level": "basic",
+    "question": {
+      "en": "How do you access the first element of an array called arr?",
+      "es": "¿Cómo accedes al primer elemento de un array llamado arr?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "arr[0]",
+          "es": "arr[0]"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "arr[1]",
+          "es": "arr[1]"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "arr.first()",
+          "es": "arr.first()"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "arr.getItem(0)",
+          "es": "arr.getItem(0)"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-159",
+    "level": "basic",
+    "question": {
+      "en": "What does the typeof operator return for a string?",
+      "es": "¿Qué devuelve el operador typeof para un string?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "'string'",
+          "es": "'string'"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "'String'",
+          "es": "'String'"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "'text'",
+          "es": "'text'"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "'typeof string'",
+          "es": "'typeof string'"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-160",
+    "level": "basic",
+    "question": {
+      "en": "What is the correct way to write an if statement in JavaScript?",
+      "es": "¿Cuál es la forma correcta de escribir un if en JavaScript?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "if (condition) { }",
+          "es": "if (condicion) { }"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "if condition then { }",
+          "es": "if condicion then { }"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "if { condition }",
+          "es": "if { condicion }"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "if condition: { }",
+          "es": "if condicion: { }"
+        }
+      }
+    ]
+  }
+,
+  {
+    "id": "vue3-161",
+    "level": "basic",
+    "question": {
+      "en": "What does this code do?\n```js\nconst count = ref(0)\ncount.value++\n```",
+      "es": "¿Qué hace este código?\n```js\nconst count = ref(0)\ncount.value++\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Creates a reactive reference initialized to 0, then increments its value to 1",
+          "es": "Crea una referencia reactiva inicializada en 0, luego incrementa su valor a 1"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Creates a computed property that auto-increments",
+          "es": "Crea una propiedad computada que se autoincrementa"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Throws an error because ref() values are read-only",
+          "es": "Lanza un error porque los valores de ref() son de solo lectura"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Creates a reactive object with a count property",
+          "es": "Crea un objeto reactivo con una propiedad count"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-162",
+    "level": "basic",
+    "question": {
+      "en": "What does this template directive do?\n```html\n<p v-if=\"isLoggedIn\">Welcome!</p>\n<p v-else>Please log in</p>\n```",
+      "es": "¿Qué hace esta directiva de template?\n```html\n<p v-if=\"isLoggedIn\">Welcome!</p>\n<p v-else>Please log in</p>\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Renders 'Welcome!' if isLoggedIn is truthy, otherwise renders 'Please log in'",
+          "es": "Renderiza 'Welcome!' si isLoggedIn es verdadero, de lo contrario renderiza 'Please log in'"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Renders both paragraphs simultaneously",
+          "es": "Renderiza ambos párrafos simultáneamente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Toggles visibility using CSS display:none",
+          "es": "Alterna la visibilidad usando CSS display:none"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Throws an error because v-else requires a condition",
+          "es": "Lanza un error porque v-else requiere una condición"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-163",
+    "level": "basic",
+    "question": {
+      "en": "What is the output of this template?\n```html\n<ul>\n  <li v-for=\"item in items\" :key=\"item.id\">\n    {{ item.name }}\n  </li>\n</ul>\n```",
+      "es": "¿Cuál es la salida de este template?\n```html\n<ul>\n  <li v-for=\"item in items\" :key=\"item.id\">\n    {{ item.name }}\n  </li>\n</ul>\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Renders an <li> element for each object in the items array, displaying each item's name",
+          "es": "Renderiza un elemento <li> por cada objeto del array items, mostrando el nombre de cada elemento"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Renders only the first item in the array",
+          "es": "Renderiza solo el primer elemento del array"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Throws an error because :key is not allowed on v-for",
+          "es": "Lanza un error porque :key no está permitido en v-for"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Renders a single <li> with all item names joined",
+          "es": "Renderiza un único <li> con todos los nombres de elementos unidos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-164",
+    "level": "basic",
+    "question": {
+      "en": "What does this code produce?\n```js\nconst state = reactive({ name: 'Vue', version: 3 })\nstate.version = 4\n```",
+      "es": "¿Qué produce este código?\n```js\nconst state = reactive({ name: 'Vue', version: 3 })\nstate.version = 4\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Creates a reactive object and updates version to 4, triggering reactivity",
+          "es": "Crea un objeto reactivo y actualiza version a 4, disparando la reactividad"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Throws an error because reactive objects are immutable",
+          "es": "Lanza un error porque los objetos reactivos son inmutables"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Creates a shallow copy of the object with version 4",
+          "es": "Crea una copia superficial del objeto con version 4"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Logs a warning because version was already defined",
+          "es": "Registra una advertencia porque version ya estaba definida"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-165",
+    "level": "basic",
+    "question": {
+      "en": "What does this component emit?\n```js\nconst emit = defineEmits(['submit'])\nfunction handleClick() {\n  emit('submit', { user: 'Alice' })\n}\n```",
+      "es": "¿Qué emite este componente?\n```js\nconst emit = defineEmits(['submit'])\nfunction handleClick() {\n  emit('submit', { user: 'Alice' })\n}\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Emits a 'submit' event with the payload { user: 'Alice' } when handleClick is called",
+          "es": "Emite un evento 'submit' con el payload { user: 'Alice' } cuando se llama handleClick"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Dispatches a native DOM submit event",
+          "es": "Despacha un evento DOM submit nativo"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Throws an error because defineEmits is not a valid composable",
+          "es": "Lanza un error porque defineEmits no es un composable válido"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Emits to all child components automatically",
+          "es": "Emite a todos los componentes hijo automáticamente"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-166",
+    "level": "basic",
+    "question": {
+      "en": "What does v-model do here?\n```html\n<input v-model=\"username\" />\n```",
+      "es": "¿Qué hace v-model aquí?\n```html\n<input v-model=\"username\" />\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Creates two-way binding between the input value and the username reactive variable",
+          "es": "Crea un enlace bidireccional entre el valor del input y la variable reactiva username"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Binds only the initial value of username to the input",
+          "es": "Vincula solo el valor inicial de username al input"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Validates the input against the username prop",
+          "es": "Valida el input contra la prop username"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Renders the username as readonly text inside the input",
+          "es": "Renderiza el username como texto de solo lectura dentro del input"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-167",
+    "level": "basic",
+    "question": {
+      "en": "What will this computed property return when price is 10 and quantity is 3?\n```js\nconst total = computed(() => price.value * quantity.value)\n```",
+      "es": "¿Qué devolverá esta propiedad computada cuando price es 10 y quantity es 3?\n```js\nconst total = computed(() => price.value * quantity.value)\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "30 — it reactively computes the product of price and quantity",
+          "es": "30 — calcula reactivamente el producto de price y quantity"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "\"103\" — it concatenates the values as strings",
+          "es": "\"103\" — concatena los valores como cadenas"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "undefined — computed requires a getter and setter",
+          "es": "undefined — computed requiere un getter y un setter"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "An error because price and quantity must be reactive objects",
+          "es": "Un error porque price y quantity deben ser objetos reactivos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-168",
+    "level": "basic",
+    "question": {
+      "en": "What does this code do?\n```js\nconst props = defineProps({\n  title: String,\n  count: { type: Number, default: 0 }\n})\n```",
+      "es": "¿Qué hace este código?\n```js\nconst props = defineProps({\n  title: String,\n  count: { type: Number, default: 0 }\n})\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Declares a 'title' string prop and a 'count' number prop with a default value of 0",
+          "es": "Declara una prop 'title' de tipo String y una prop 'count' de tipo Number con valor por defecto 0"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Creates reactive data properties inside the component",
+          "es": "Crea propiedades de datos reactivos dentro del componente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Defines two-way bindings that the parent can read",
+          "es": "Define enlaces bidireccionales que el padre puede leer"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Emits title and count events to the parent component",
+          "es": "Emite los eventos title y count al componente padre"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-169",
+    "level": "basic",
+    "question": {
+      "en": "What does this lifecycle hook do?\n```js\nonMounted(() => {\n  console.log('Component is mounted')\n})\n```",
+      "es": "¿Qué hace este hook del ciclo de vida?\n```js\nonMounted(() => {\n  console.log('Component is mounted')\n})\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Runs the callback after the component has been mounted to the DOM",
+          "es": "Ejecuta el callback después de que el componente ha sido montado en el DOM"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Runs the callback before the component template is compiled",
+          "es": "Ejecuta el callback antes de que se compile el template del componente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Runs the callback every time the component re-renders",
+          "es": "Ejecuta el callback cada vez que el componente se vuelve a renderizar"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Runs the callback when the component is destroyed",
+          "es": "Ejecuta el callback cuando el componente es destruido"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue3-170",
+    "level": "basic",
+    "question": {
+      "en": "What does this watcher do?\n```js\nwatch(count, (newVal, oldVal) => {\n  console.log(newVal, oldVal)\n})\n```",
+      "es": "¿Qué hace este watcher?\n```js\nwatch(count, (newVal, oldVal) => {\n  console.log(newVal, oldVal)\n})\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Watches the count ref and logs the new and old values whenever count changes",
+          "es": "Observa la ref count y registra los valores nuevo y anterior cada vez que count cambia"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Watches all reactive data in the component",
+          "es": "Observa todos los datos reactivos del componente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Runs once immediately and then stops watching",
+          "es": "Se ejecuta una vez inmediatamente y luego deja de observar"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Throws an error because watch requires { immediate: true }",
+          "es": "Lanza un error porque watch requiere { immediate: true }"
+        }
+      }
+    ]
+  }
+]

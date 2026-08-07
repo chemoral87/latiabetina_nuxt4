@@ -1,0 +1,2522 @@
+[
+  {
+    "id": "vue2-101",
+    "level": "expert",
+    "question": {
+      "en": "What is the functional component in Vue 2?",
+      "es": "¿Qué son los componentes funcionales en Vue 2?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A stateless, instanceless component with faster rendering",
+          "es": "Un componente sin estado ni instancia con renderizado más rápido"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A component with methods only",
+          "es": "Un componente solo con métodos"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A component with functional programming",
+          "es": "Un componente con programación funcional"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A utility component",
+          "es": "Un componente de utilidad"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-102",
+    "level": "expert",
+    "question": {
+      "en": "What are the limitations of functional components?",
+      "es": "¿Cuáles son las limitaciones de los componentes funcionales?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "No state, no lifecycle hooks, no this context",
+          "es": "Sin estado, sin hooks de ciclo de vida, sin contexto this"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "No template, no data, no CSS",
+          "es": "Sin template, sin data, sin CSS"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "No props, no events, no slots",
+          "es": "Sin props, sin eventos, sin slots"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "No imports, no exports, no name",
+          "es": "Sin imports, sin exports, sin nombre"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-103",
+    "level": "expert",
+    "question": {
+      "en": "How does Vue 2 reactivity system work?",
+      "es": "¿Cómo funciona el sistema de reactividad de Vue 2?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using Object.defineProperty() to convert data properties into getters/setters",
+          "es": "Usando Object.defineProperty() para convertir propiedades data en getters/setters"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using Proxies",
+          "es": "Usando Proxies"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using Web Workers",
+          "es": "Usando Web Workers"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using Immutable.js",
+          "es": "Usando Immutable.js"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-104",
+    "level": "expert",
+    "question": {
+      "en": "What is the limitation of Vue 2 reactivity with arrays?",
+      "es": "¿Cuál es la limitación de la reactividad de Vue 2 con arrays?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Cannot detect direct index assignment like arr[0] = value",
+          "es": "No puede detectar asignación directa por índice como arr[0] = valor"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Cannot detect array length changes",
+          "es": "No puede detectar cambios de longitud del array"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Cannot iterate arrays",
+          "es": "No puede iterar arrays"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Cannot sort arrays reactively",
+          "es": "No puede ordenar arrays reactivamente"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-105",
+    "level": "expert",
+    "question": {
+      "en": "What is Vue.util.defineReactive?",
+      "es": "¿Qué es Vue.util.defineReactive?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A low-level method for making an object property reactive",
+          "es": "Un método de bajo nivel para hacer reactiva una propiedad de objeto"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A method for defining reactive state",
+          "es": "Un método para definir estado reactivo"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A utility for computed properties",
+          "es": "Una utilidad para propiedades computadas"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A reactive data validator",
+          "es": "Un validador de datos reactivos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-106",
+    "level": "expert",
+    "question": {
+      "en": "What is dependency tracking in Vue 2?",
+      "es": "¿Qué es el rastreo de dependencias en Vue 2?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "The mechanism of collecting and notifying dependencies when data changes",
+          "es": "El mecanismo de recolectar y notificar dependencias cuando los datos cambian"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A package manager",
+          "es": "Un gestor de paquetes"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A way to track npm dependencies",
+          "es": "Una forma de rastrear dependencias npm"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A code analysis tool",
+          "es": "Una herramienta de análisis de código"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-107",
+    "level": "expert",
+    "question": {
+      "en": "What is a Watcher in Vue's internal system?",
+      "es": "¿Qué es un Watcher en el sistema interno de Vue?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "An internal class that manages a dependency and its callback",
+          "es": "Una clase interna que gestiona una dependencia y su callback"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "The watch option in components",
+          "es": "La opción watch en componentes"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A DOM observer",
+          "es": "Un observador del DOM"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A debug tool",
+          "es": "Una herramienta de depuración"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-108",
+    "level": "expert",
+    "question": {
+      "en": "What is a Dep (dependency) in Vue 2?",
+      "es": "¿Qué es Dep (dependency) en Vue 2?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "An internal class that manages subscribers for a reactive property",
+          "es": "Una clase interna que gestiona suscriptores para una propiedad reactiva"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A deprecated feature",
+          "es": "Una característica deprecada"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A dependency injection container",
+          "es": "Un contenedor de inyección de dependencias"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A package dependency",
+          "es": "Una dependencia de paquete"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-109",
+    "level": "expert",
+    "question": {
+      "en": "How does Vue 2 handle async updates?",
+      "es": "¿Cómo maneja Vue 2 las actualizaciones asíncronas?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using a microtask queue to batch DOM updates",
+          "es": "Usando una cola de microtasks para agrupar actualizaciones del DOM"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using setTimeout for each update",
+          "es": "Usando setTimeout para cada actualización"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using requestAnimationFrame",
+          "es": "Usando requestAnimationFrame"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using Web Workers",
+          "es": "Usando Web Workers"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-110",
+    "level": "expert",
+    "question": {
+      "en": "What is the virtual DOM in Vue 2?",
+      "es": "¿Qué es el DOM virtual en Vue 2?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A JavaScript representation of the real DOM used for efficient updates",
+          "es": "Una representación en JavaScript del DOM real usada para actualizaciones eficientes"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A virtual reality interface",
+          "es": "Una interfaz de realidad virtual"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A testing environment",
+          "es": "Un entorno de pruebas"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A server-side rendering output",
+          "es": "Una salida de renderizado del servidor"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-111",
+    "level": "expert",
+    "question": {
+      "en": "What is the VNode patching algorithm in Vue 2?",
+      "es": "¿Qué es el algoritmo de parcheo (patching) de VNodes en Vue 2?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "The diff algorithm that compares old and new VNodes for DOM updates",
+          "es": "El algoritmo diff que compara VNodes viejos y nuevos para actualizar el DOM"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A CSS patching algorithm",
+          "es": "Un algoritmo de parcheo CSS"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A bug-fixing algorithm",
+          "es": "Un algoritmo de corrección de bugs"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A data patching method",
+          "es": "Un método de parcheo de datos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-112",
+    "level": "expert",
+    "question": {
+      "en": "What is the difference between v-if and v-show in terms of performance?",
+      "es": "¿Cuál es la diferencia entre v-if y v-show en términos de rendimiento?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "v-show is better for frequent toggles; v-if is better for infrequent/initial renders",
+          "es": "v-show es mejor para cambios frecuentes; v-if es mejor para renderizados iniciales poco frecuentes"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "v-if is always faster",
+          "es": "v-if es siempre más rápido"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "v-show is always faster",
+          "es": "v-show es siempre más rápido"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "They have identical performance",
+          "es": "Tienen rendimiento idéntico"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-113",
+    "level": "expert",
+    "question": {
+      "en": "What is key attribute optimization in Vue 2?",
+      "es": "¿Qué es la optimización con el atributo key en Vue 2?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using unique keys to help the diff algorithm reuse/reorder elements efficiently",
+          "es": "Usar keys únicas para ayudar al algoritmo diff a reutilizar/reordenar elementos eficientemente"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Encrypting DOM elements",
+          "es": "Encriptar elementos del DOM"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A CSS class optimization",
+          "es": "Una optimización de clase CSS"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A performance monitoring tool",
+          "es": "Una herramienta de monitoreo de rendimiento"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-114",
+    "level": "expert",
+    "question": {
+      "en": "How does Vue 2 merge component options?",
+      "es": "¿Cómo fusiona Vue 2 las opciones de componentes?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using merge strategies; some are merged (data, hooks) others overwritten",
+          "es": "Usando estrategias de mezcla; algunas se mezclan (data, hooks) otras se sobrescriben"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "By always overwriting",
+          "es": "Siempre sobrescribiendo"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "By always merging deeply",
+          "es": "Siempre mezclando profundamente"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "By ignoring conflicts",
+          "es": "Ignorando conflictos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-115",
+    "level": "expert",
+    "question": {
+      "en": "What is the Vue.config object?",
+      "es": "¿Qué es el objeto Vue.config?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A global configuration object for Vue runtime settings",
+          "es": "Un objeto de configuración global para ajustes de runtime de Vue"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A component configuration",
+          "es": "Una configuración de componente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A project configuration file",
+          "es": "Un archivo de configuración de proyecto"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A build configuration",
+          "es": "Una configuración de build"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-116",
+    "level": "expert",
+    "question": {
+      "en": "What is Vue.config.performance?",
+      "es": "¿Qué es Vue.config.performance?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Enables performance tracing in the browser devtools",
+          "es": "Habilita el trazado de rendimiento en las devtools del navegador"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Optimizes Vue performance automatically",
+          "es": "Optimiza el rendimiento de Vue automáticamente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Shows FPS counter",
+          "es": "Muestra el contador de FPS"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Enables lazy loading",
+          "es": "Habilita lazy loading"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-117",
+    "level": "expert",
+    "question": {
+      "en": "What is Vue.config.silent?",
+      "es": "¿Qué es Vue.config.silent?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Suppresses all Vue logs and warnings",
+          "es": "Suprime todos los logs y advertencias de Vue"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Mutes audio in the browser",
+          "es": "Silencia el audio en el navegador"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Disables all console output",
+          "es": "Deshabilita toda la salida de consola"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Hides error messages",
+          "es": "Oculta mensajes de error"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-118",
+    "level": "expert",
+    "question": {
+      "en": "What is Vue.config.devtools?",
+      "es": "¿Qué es Vue.config.devtools?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Enables or disables Vue devtools inspection",
+          "es": "Habilita o deshabilita la inspección de Vue devtools"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Configures dev tools settings",
+          "es": "Configura ajustes de dev tools"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Enables development mode",
+          "es": "Habilita el modo desarrollo"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Installs browser extensions",
+          "es": "Instala extensiones de navegador"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-119",
+    "level": "expert",
+    "question": {
+      "en": "What is the key attribute on transition-group?",
+      "es": "¿Cuál es el atributo key en transition-group?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Required for transition-group to track element identity for animations",
+          "es": "Requerido para que transition-group rastree la identidad del elemento para animaciones"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Optional for styling",
+          "es": "Opcional para estilos"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Used for CSS transitions",
+          "es": "Usado para transiciones CSS"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A performance optimization",
+          "es": "Una optimización de rendimiento"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-120",
+    "level": "expert",
+    "question": {
+      "en": "How do you create a reusable transition in Vue 2?",
+      "es": "¿Cómo creas una transición reutilizable en Vue 2?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "By creating a functional component that wraps transition with predefined classes",
+          "es": "Creando un componente funcional que envuelve transition con clases predefinidas"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "By using CSS animations only",
+          "es": "Usando solo animaciones CSS"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "By using JavaScript animation libraries",
+          "es": "Usando librerías de animación JavaScript"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "By using web animations API",
+          "es": "Usando la API web animations"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-121",
+    "level": "expert",
+    "question": {
+      "en": "What is the move-class in transition-group?",
+      "es": "¿Qué es move-class en transition-group?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A CSS class applied to elements changing position in a list transition",
+          "es": "Una clase CSS aplicada a elementos que cambian de posición en una transición de lista"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A class for moving elements",
+          "es": "Una clase para mover elementos"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "An animation for movement",
+          "es": "Una animación para movimiento"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A JavaScript transition hook",
+          "es": "Un hook de transición JavaScript"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-122",
+    "level": "expert",
+    "question": {
+      "en": "What are JavaScript hooks in transitions?",
+      "es": "¿Qué son los hooks de JavaScript en transiciones?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Callbacks like before-enter, enter, after-enter for JS animations",
+          "es": "Callbacks como before-enter, enter, after-enter para animaciones JS"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "JavaScript lifecycle hooks",
+          "es": "Hooks del ciclo de vida de JavaScript"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "CSS animation hooks",
+          "es": "Hooks de animación CSS"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Event listener hooks",
+          "es": "Hooks de event listeners"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-123",
+    "level": "expert",
+    "question": {
+      "en": "How does Vue 2 handle server-side rendering (SSR)?",
+      "es": "¿Cómo maneja Vue 2 el renderizado del lado del servidor (SSR)?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using vue-server-renderer to render components to HTML strings on the server",
+          "es": "Usando vue-server-renderer para renderizar componentes a strings HTML en el servidor"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using a headless browser",
+          "es": "Usando un navegador headless"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using Web Workers",
+          "es": "Usando Web Workers"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using Nuxt.js only",
+          "es": "Usando solo Nuxt.js"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-124",
+    "level": "expert",
+    "question": {
+      "en": "What is client-side hydration in Vue SSR?",
+      "es": "¿Qué es la hidratación del lado del cliente en Vue SSR?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Attaching Vue event listeners to server-rendered HTML to make it interactive",
+          "es": "Adjuntar event listeners de Vue al HTML renderizado por el servidor para hacerlo interactivo"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Adding water to the server",
+          "es": "Añadir agua al servidor"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A CSS hydration concept",
+          "es": "Un concepto de hidratación CSS"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A build optimization",
+          "es": "Una optimización de build"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-125",
+    "level": "expert",
+    "question": {
+      "en": "What is the vue-ssr-webpack-plugin?",
+      "es": "¿Qué es vue-ssr-webpack-plugin?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A webpack plugin for generating SSR server bundle",
+          "es": "Un plugin de webpack para generar el bundle SSR del servidor"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A plugin for optimizing CSS",
+          "es": "Un plugin para optimizar CSS"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A development server",
+          "es": "Un servidor de desarrollo"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A testing plugin",
+          "es": "Un plugin de testing"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-126",
+    "level": "expert",
+    "question": {
+      "en": "How do you handle async data in SSR?",
+      "es": "¿Cómo manejas datos asíncronos en SSR?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using serverPrefetch hook or asyncData in Nuxt",
+          "es": "Usando el hook serverPrefetch o asyncData en Nuxt"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using beforeMount",
+          "es": "Usando beforeMount"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using created hook",
+          "es": "Usando el hook created"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using computed properties",
+          "es": "Usando propiedades computadas"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-127",
+    "level": "expert",
+    "question": {
+      "en": "What is the difference between created and mounted in SSR context?",
+      "es": "¿Cuál es la diferencia entre created y mounted en el contexto SSR?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "created runs on both server and client; mounted only runs on client",
+          "es": "created se ejecuta tanto en servidor como en cliente; mounted solo se ejecuta en cliente"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "mounted runs on both; created runs only on server",
+          "es": "mounted se ejecuta en ambos; created solo en servidor"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Both run on server only",
+          "es": "Ambos se ejecutan solo en servidor"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Both run on client only",
+          "es": "Ambos se ejecutan solo en cliente"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-128",
+    "level": "expert",
+    "question": {
+      "en": "How do you access the DOM in Vue SSR?",
+      "es": "¿Cómo accedes al DOM en Vue SSR?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "You cannot access DOM during SSR; use mounted hook for DOM access",
+          "es": "No puedes acceder al DOM durante SSR; usa el hook mounted para acceso al DOM"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using document.getElementById",
+          "es": "Usando document.getElementById"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using $refs",
+          "es": "Usando $refs"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using window object",
+          "es": "Usando el objeto window"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-129",
+    "level": "expert",
+    "question": {
+      "en": "What is the Vue.extend() method?",
+      "es": "¿Qué es el método Vue.extend()?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Creates a subclass of the Vue constructor for component definition",
+          "es": "Crea una subclase del constructor Vue para definición de componentes"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Extends a component with mixins",
+          "es": "Extiende un componente con mixins"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Extends Vue with plugins",
+          "es": "Extiende Vue con plugins"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Extends the Vue instance",
+          "es": "Extiende la instancia Vue"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-130",
+    "level": "expert",
+    "question": {
+      "en": "What is the difference between Vue.extend and ES6 class inheritance?",
+      "es": "¿Cuál es la diferencia entre Vue.extend y la herencia de clases ES6?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Vue.extend creates a Vue component subclass; class extends creates a JS class",
+          "es": "Vue.extend crea una subclase de componente Vue; class extends crea una clase JS"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "They are the same",
+          "es": "Son lo mismo"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Class extends is for Vue only",
+          "es": "Class extends es solo para Vue"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Vue.extend is deprecated",
+          "es": "Vue.extend está deprecado"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-131",
+    "level": "expert",
+    "question": {
+      "en": "What is the mergeData function in Vue?",
+      "es": "¿Qué es la función mergeData en Vue?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A custom merging function for data in mixins and extends",
+          "es": "Una función de mezcla personalizada para data en mixins y extends"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A function that merges API data",
+          "es": "Una función que combina datos de API"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A data transformation function",
+          "es": "Una función de transformación de datos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A state management helper",
+          "es": "Un helper de gestión de estado"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-132",
+    "level": "expert",
+    "question": {
+      "en": "What is the priority of Vue option merging?",
+      "es": "¿Cuál es la prioridad de la mezcla de opciones en Vue?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Component options > mixin options > extends options > Vue.options",
+          "es": "Opciones del componente > opciones del mixin > opciones de extends > Vue.options"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Mixin options > Component options",
+          "es": "Opciones del mixin > Opciones del componente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Extends options > Component options",
+          "es": "Opciones de extends > Opciones del componente"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "All have equal priority",
+          "es": "Todas tienen igual prioridad"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-133",
+    "level": "expert",
+    "question": {
+      "en": "What is Vue.compile()?",
+      "es": "¿Qué es Vue.compile()?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Compiles a template string into a render function",
+          "es": "Compila un string template en una función render"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Compiles the entire Vue application",
+          "es": "Compila toda la aplicación Vue"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A build tool",
+          "es": "Una herramienta de build"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A TypeScript compiler",
+          "es": "Un compilador de TypeScript"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-134",
+    "level": "expert",
+    "question": {
+      "en": "What is the Vue.observable() advanced use case?",
+      "es": "¿Cuál es el caso de uso avanzado de Vue.observable()?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Creating reactive objects outside Vue components for shared state",
+          "es": "Crear objetos reactivos fuera de componentes Vue para estado compartido"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Observing API responses",
+          "es": "Observar respuestas de API"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Creating computed properties externally",
+          "es": "Crear propiedades computadas externamente"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Watching file changes",
+          "es": "Observar cambios de archivos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-135",
+    "level": "expert",
+    "question": {
+      "en": "How does event delegation work in Vue 2?",
+      "es": "¿Cómo funciona la delegación de eventos en Vue 2?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Vue attaches event listeners to the root element and uses delegation for performance",
+          "es": "Vue adjunta event listeners al elemento raíz y usa delegación para rendimiento"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Vue attaches listeners to each element individually",
+          "es": "Vue adjunta listeners a cada elemento individualmente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Vue uses jQuery for events",
+          "es": "Vue usa jQuery para eventos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Vue does not handle events",
+          "es": "Vue no maneja eventos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-136",
+    "level": "expert",
+    "question": {
+      "en": "What is event.nativeEmitter in Vue?",
+      "es": "¿Qué es event.nativeEmitter en Vue?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "An internal system for emitting native DOM events from components",
+          "es": "Un sistema interno para emitir eventos nativos del DOM desde componentes"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A native event emitter class",
+          "es": "Una clase emisora de eventos nativos"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A custom event system",
+          "es": "Un sistema de eventos personalizados"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A browser API wrapper",
+          "es": "Un wrapper de API del navegador"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-137",
+    "level": "expert",
+    "question": {
+      "en": "How do you create a Vue 2 plugin?",
+      "es": "¿Cómo creas un plugin de Vue 2?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "An object with an install method that receives Vue constructor",
+          "es": "Un objeto con un método install que recibe el constructor Vue"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A component library",
+          "es": "Una librería de componentes"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A CSS file",
+          "es": "Un archivo CSS"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A JavaScript module",
+          "es": "Un módulo de JavaScript"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-138",
+    "level": "expert",
+    "question": {
+      "en": "What is the .sync modifier in Vue 2?",
+      "es": "¿Qué es el modificador .sync en Vue 2?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A shorthand for v-bind with a custom update event for two-way binding",
+          "es": "Una abreviatura para v-bind con un evento update personalizado para enlace bidireccional"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A synchronous data modifier",
+          "es": "Un modificador de datos síncrono"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A computed property",
+          "es": "Una propiedad computada"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A watcher shortcut",
+          "es": "Un atajo de watcher"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-139",
+    "level": "expert",
+    "question": {
+      "en": "How do you test Vue 2 components?",
+      "es": "¿Cómo pruebas componentes Vue 2?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using Vue Test Utils with Jest or Mocha",
+          "es": "Usando Vue Test Utils con Jest o Mocha"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using browser console only",
+          "es": "Usando solo la consola del navegador"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using manual testing only",
+          "es": "Usando solo pruebas manuales"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using Vue Devtools",
+          "es": "Usando Vue Devtools"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-140",
+    "level": "expert",
+    "question": {
+      "en": "What is shallowMount in Vue test utils?",
+      "es": "¿Qué es shallowMount en Vue test utils?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Mounts a component without rendering its child components",
+          "es": "Monta un componente sin renderizar sus componentes hijos"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Mounts a component in shallow water",
+          "es": "Monta un componente en agua poco profunda"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A CSS selector utility",
+          "es": "Una utilidad de selector CSS"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A performance optimization",
+          "es": "Una optimización de rendimiento"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-141",
+    "level": "expert",
+    "question": {
+      "en": "What is the wrapper object in Vue test utils?",
+      "es": "¿Qué es el objeto wrapper en Vue test utils?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "An object with methods for asserting component behavior in tests",
+          "es": "Un objeto con métodos para afirmar el comportamiento del componente en pruebas"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A CSS wrapper class",
+          "es": "Una clase wrapper CSS"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A component container",
+          "es": "Un contenedor de componentes"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A test runner",
+          "es": "Un ejecutor de pruebas"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-142",
+    "level": "expert",
+    "question": {
+      "en": "How do you test Vuex in Vue 2?",
+      "es": "¿Cómo pruebas Vuex en Vue 2?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "By testing mutations, actions, and getters separately with Jest",
+          "es": "Probando mutaciones, acciones y getters por separado con Jest"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "By testing components only",
+          "es": "Probando solo componentes"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "By using end-to-end tests",
+          "es": "Usando pruebas end-to-end"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "By manual store inspection",
+          "es": "Por inspección manual del store"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-143",
+    "level": "expert",
+    "question": {
+      "en": "What is the v-model implementation on custom components?",
+      "es": "¿Cómo funciona v-model en componentes personalizados?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "It uses :value and @input by default",
+          "es": "Usa :value y @input por defecto"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "It uses v-bind and v-on",
+          "es": "Usa v-bind y v-on"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "It uses props and events directly",
+          "es": "Usa props y eventos directamente"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "It uses two-way data binding",
+          "es": "Usa enlace de datos bidireccional"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-144",
+    "level": "expert",
+    "question": {
+      "en": "How do you customize v-model on a component?",
+      "es": "¿Cómo personalizas v-model en un componente?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using the model option specifying prop and event names",
+          "es": "Usando la opción model especificando los nombres de prop y evento"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using the v-model attribute",
+          "es": "Usando el atributo v-model"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using the sync modifier",
+          "es": "Usando el modificador sync"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using custom events",
+          "es": "Usando eventos personalizados"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-145",
+    "level": "expert",
+    "question": {
+      "en": "What is the difference between $listeners and $attrs in Vue 2?",
+      "es": "¿Cuál es la diferencia entre $listeners y $attrs en Vue 2?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "$listeners contains parent event listeners; $attrs contains parent attributes",
+          "es": "$listeners contiene event listeners del padre; $attrs contiene atributos del padre"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "They are the same",
+          "es": "Son lo mismo"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "$attrs contains listeners",
+          "es": "$attrs contiene listeners"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "$listeners contains attributes",
+          "es": "$listeners contiene atributos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-146",
+    "level": "expert",
+    "question": {
+      "en": "What is inheritAttrs in Vue 2?",
+      "es": "¿Qué es inheritAttrs en Vue 2?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Controls whether fallthrough attributes are applied to the root element",
+          "es": "Controla si los atributos pasados se aplican al elemento raíz"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Inherits component attributes",
+          "es": "hereda atributos del componente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A CSS inheritance property",
+          "es": "Una propiedad de herencia CSS"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A props validation option",
+          "es": "Una opción de validación de props"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-147",
+    "level": "expert",
+    "question": {
+      "en": "How do you programmatically register a Vue component?",
+      "es": "¿Cómo registras un componente Vue programáticamente?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using Vue.component() globally or components option locally",
+          "es": "Usando Vue.component() globalmente o la opción components localmente"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using document.createElement",
+          "es": "Usando document.createElement"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using webpack require",
+          "es": "Usando webpack require"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using ES6 import",
+          "es": "Usando import de ES6"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-148",
+    "level": "expert",
+    "question": {
+      "en": "What is the event bus pattern in Vue 2?",
+      "es": "¿Qué es el patrón event bus en Vue 2?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using a new Vue instance to communicate between unrelated components",
+          "es": "Usar una nueva instancia Vue para comunicar componentes no relacionados"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A bus for Vue events",
+          "es": "Un bus para eventos Vue"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A state management solution",
+          "es": "Una solución de gestión de estado"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A routing mechanism",
+          "es": "Un mecanismo de enrutamiento"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-149",
+    "level": "expert",
+    "question": {
+      "en": "What are the downsides of the event bus pattern?",
+      "es": "¿Cuáles son las desventajas del patrón event bus?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Hard to debug, no type safety, memory leaks if not destroyed",
+          "es": "Difícil de depurar, sin seguridad de tipos, fugas de memoria si no se destruye"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "It's too fast",
+          "es": "Es demasiado rápido"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "It's too slow",
+          "es": "Es demasiado lento"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "It doesn't work with Vuex",
+          "es": "No funciona con Vuex"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-150",
+    "level": "expert",
+    "question": {
+      "en": "What is the $forceUpdate method?",
+      "es": "¿Qué es el método $forceUpdate?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Forces a component to re-render manually",
+          "es": "Fuerza un re-renderizado manual del componente"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Updates all components in the application",
+          "es": "Actualiza todos los componentes de la aplicación"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Forces a browser refresh",
+          "es": "Fuerza una recarga del navegador"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Updates the Vuex store",
+          "es": "Actualiza el store Vuex"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-171",
+    "level": "expert",
+    "question": {
+      "en": "What is a generator function in JavaScript?",
+      "es": "¿Qué es una función generadora en JavaScript?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A function that can be paused and resumed using the yield keyword, returning an iterator",
+          "es": "Una función que puede ser pausada y reanudada usando la palabra clave yield, devolviendo un iterador"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A function that generates random numbers",
+          "es": "Una función que genera números aleatorios"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A function that creates other functions",
+          "es": "Una función que crea otras funciones"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A constructor function for objects",
+          "es": "Una función constructora para objetos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-172",
+    "level": "expert",
+    "question": {
+      "en": "What is the Proxy object used for?",
+      "es": "¿Para qué se usa el objeto Proxy?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Creating an object that wraps another object to intercept and redefine fundamental operations",
+          "es": "Crear un objeto que envuelve a otro para interceptar y redefinir operaciones fundamentales"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A network proxy for HTTP requests",
+          "es": "Un proxy de red para peticiones HTTP"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A security mechanism for authentication",
+          "es": "Un mecanismo de seguridad para autenticación"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A caching layer for API calls",
+          "es": "Una capa de caché para llamadas API"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-173",
+    "level": "expert",
+    "question": {
+      "en": "What is the Reflect API?",
+      "es": "¿Qué es la API Reflect?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A built-in object that provides methods for interceptable JavaScript operations",
+          "es": "Un objeto integrado que proporciona métodos para operaciones JavaScript interceptables"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "An API for reflecting DOM elements",
+          "es": "Una API para reflejar elementos del DOM"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A debugging tool for examining objects",
+          "es": "Una herramienta de depuración para examinar objetos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A method for creating object mirrors",
+          "es": "Un método para crear espejos de objetos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-174",
+    "level": "expert",
+    "question": {
+      "en": "What are Symbols in JavaScript?",
+      "es": "¿Qué son los Symbols en JavaScript?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Unique and immutable primitive values used as identifiers for object properties",
+          "es": "Valores primitivos únicos e inmutables usados como identificadores para propiedades de objetos"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Mathematical symbols represented as strings",
+          "es": "Símbolos matemáticos representados como strings"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A way to create private class members",
+          "es": "Una forma de crear miembros privados de clases"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Aliases for primitive values",
+          "es": "Alias para valores primitivos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-175",
+    "level": "expert",
+    "question": {
+      "en": "What is the difference between WeakMap and Map?",
+      "es": "¿Cuál es la diferencia entre WeakMap y Map?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "WeakMap holds weak references to keys, allowing garbage collection; Map holds strong references",
+          "es": "WeakMap tiene referencias débiles a las claves, permitiendo recolección de basura; Map tiene referencias fuertes"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "WeakMap is faster than Map",
+          "es": "WeakMap es más rápido que Map"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "WeakMap only works with string keys",
+          "es": "WeakMap solo funciona con claves string"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "WeakMap is a subclass of Map",
+          "es": "WeakMap es una subclase de Map"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-176",
+    "level": "expert",
+    "question": {
+      "en": "What are microtasks and macrotasks in the event loop?",
+      "es": "¿Qué son las microtasks y macrotasks en el event loop?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Microtasks (Promise callbacks) run before macrotasks (setTimeout, I/O) in each event loop iteration",
+          "es": "Las microtasks (callbacks de Promise) se ejecutan antes que las macrotasks (setTimeout, I/O) en cada iteración del event loop"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Microtasks run after macrotasks",
+          "es": "Las microtasks se ejecutan después de las macrotasks"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "They are the same thing",
+          "es": "Son lo mismo"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Macrotasks have higher priority",
+          "es": "Las macrotasks tienen mayor prioridad"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-177",
+    "level": "expert",
+    "question": {
+      "en": "What is the difference between Object.freeze() and Object.seal()?",
+      "es": "¿Cuál es la diferencia entre Object.freeze() y Object.seal()?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "freeze() makes an object immutable; seal() prevents adding/deleting properties but allows modifying existing ones",
+          "es": "freeze() hace un objeto inmutable; seal() previene añadir/eliminar propiedades pero permite modificar las existentes"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "They are identical",
+          "es": "Son idénticos"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "seal() is stricter than freeze()",
+          "es": "seal() es más estricto que freeze()"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "freeze() only works on arrays",
+          "es": "freeze() solo funciona en arrays"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-178",
+    "level": "expert",
+    "question": {
+      "en": "What is a tail call optimization in JavaScript?",
+      "es": "¿Qué es la optimización de llamadas en cola (tail call) en JavaScript?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "An optimization where the engine reuses the current stack frame when a function call is in tail position",
+          "es": "Una optimización donde el motor reutiliza el stack frame actual cuando una llamada está en posición tail"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A way to call functions at the end of a loop",
+          "es": "Una forma de llamar funciones al final de un bucle"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A method for optimizing the last line of a function",
+          "es": "Un método para optimizar la última línea de una función"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A technique for chaining function calls",
+          "es": "Una técnica para encadenar llamadas de funciones"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-179",
+    "level": "expert",
+    "question": {
+      "en": "What is the Temporal API (or Intl.DateTimeFormat)?",
+      "es": "¿Qué es la API Temporal (o Intl.DateTimeFormat)?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "An API for handling dates and times with timezone and locale support",
+          "es": "Una API para manejar fechas y horas con soporte de zonas horarias y locales"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A temporary storage API",
+          "es": "Una API de almacenamiento temporal"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A time-travel debugging tool",
+          "es": "Una herramienta de depuración de viaje en el tiempo"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A timer utility for measuring performance",
+          "es": "Una utilidad de temporizador para medir rendimiento"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vue2-180",
+    "level": "expert",
+    "question": {
+      "en": "What is the module pattern in JavaScript?",
+      "es": "¿Qué es el patrón módulo en JavaScript?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A design pattern using IIFE closures to create encapsulated, private scopes for code organization",
+          "es": "Un patrón de diseño que usa closures IIFE para crear ámbitos privados encapsulados para organización de código"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A pattern for importing ES modules",
+          "es": "Un patrón para importar módulos ES"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A Node.js package structure",
+          "es": "Una estructura de paquetes de Node.js"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A way to modularize CSS",
+          "es": "Una forma de modularizar CSS"
+        }
+      }
+    ]
+  }
+]

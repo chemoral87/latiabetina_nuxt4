@@ -1,0 +1,2943 @@
+[
+  {
+    "id": "react-1",
+    "level": "basic",
+    "question": {
+      "en": "What is React?",
+      "es": "¿Qué es React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A JavaScript library for building user interfaces",
+          "es": "Una biblioteca de JavaScript para construir interfaces de usuario"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A JavaScript framework for backend",
+          "es": "Un framework de JavaScript para el backend"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A programming language",
+          "es": "Un lenguaje de programación"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A code editor",
+          "es": "Un editor de código"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-2",
+    "level": "basic",
+    "question": {
+      "en": "What is JSX in React?",
+      "es": "¿Qué es JSX en React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A syntax extension for JavaScript that allows writing XML/HTML alongside JS logic",
+          "es": "Una extensión de sintaxis para JavaScript que permite escribir XML/HTML junto con la lógica de JS"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A new programming language",
+          "es": "Un nuevo lenguaje de programación"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A React database",
+          "es": "Una base de datos de React"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A type of component",
+          "es": "Un tipo de componente"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-3",
+    "level": "basic",
+    "question": {
+      "en": "How do you create a functional component in React?",
+      "es": "¿Cómo se crea un componente funcional en React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "function MyComponent() { return <div>Hello</div>; }",
+          "es": "function MyComponent() { return <div>Hello</div>; }"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "class MyComponent { render() { return <div>Hello</div>; } }",
+          "es": "class MyComponent { render() { return <div>Hello</div>; } }"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "const MyComponent = createComponent('<div>Hello</div>');",
+          "es": "const MyComponent = createComponent('<div>Hello</div>');"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "React.component('MyComponent', { render: () => <div>Hello</div> })",
+          "es": "React.component('MyComponent', { render: () => <div>Hello</div> })"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-4",
+    "level": "basic",
+    "question": {
+      "en": "How do you pass data from a parent component to a child in React?",
+      "es": "¿Cómo se pasan datos de un componente padre a uno hijo en React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using props",
+          "es": "Usando props"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using global state",
+          "es": "Usando estado global"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using global variables",
+          "es": "Usando variables globales"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using DOM events",
+          "es": "Usando eventos del DOM"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-5",
+    "level": "basic",
+    "question": {
+      "en": "Which lifecycle method runs after the component is mounted for the first time in React 16?",
+      "es": "¿Qué método del ciclo de vida se ejecuta después de que el componente se monta por primera vez en React 16?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "componentDidMount",
+          "es": "componentDidMount"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "componentWillMount",
+          "es": "componentWillMount"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "componentDidUpdate",
+          "es": "componentDidUpdate"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "componentWillUnmount",
+          "es": "componentWillUnmount"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-6",
+    "level": "basic",
+    "question": {
+      "en": "What is the correct way to update state in a class component in React?",
+      "es": "¿Cuál es la forma correcta de actualizar el estado en un componente de clase en React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "this.setState({ counter: this.state.counter + 1 })",
+          "es": "this.setState({ counter: this.state.counter + 1 })"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "this.state.counter++",
+          "es": "this.state.counter++"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "this.state = { counter: this.state.counter + 1 }",
+          "es": "this.state = { counter: this.state.counter + 1 }"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "React.setState({ counter: this.state.counter + 1 })",
+          "es": "React.setState({ counter: this.state.counter + 1 })"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-7",
+    "level": "basic",
+    "question": {
+      "en": "Which hook is used to manage state in a functional component?",
+      "es": "¿Qué hook se utiliza para manejar el estado en un componente funcional?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "useState",
+          "es": "useState"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "useEffect",
+          "es": "useEffect"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "useContext",
+          "es": "useContext"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "useReducer",
+          "es": "useReducer"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-8",
+    "level": "basic",
+    "question": {
+      "en": "What does the useState hook return?",
+      "es": "¿Qué devuelve el hook useState?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "An array with two elements: the current value and a function to update it",
+          "es": "Un arreglo con dos elementos: el valor actual y una función para actualizarlo"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "An object with the current value and a set method",
+          "es": "Un objeto con el valor actual y un método set"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Only the current value",
+          "es": "Solo el valor actual"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A promise with the current value",
+          "es": "Una promesa con el valor actual"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-9",
+    "level": "basic",
+    "question": {
+      "en": "How do you render a list in React?",
+      "es": "¿Cómo se renderiza una lista en React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using .map() and assigning a key to each element",
+          "es": "Usando .map() y asignando una key a cada elemento"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using a for loop inside JSX",
+          "es": "Usando un bucle for dentro de JSX"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using the <List> component",
+          "es": "Usando el componente <List>"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using .forEach() directly in JSX",
+          "es": "Usando .forEach() directamente en JSX"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-10",
+    "level": "basic",
+    "question": {
+      "en": "What is the purpose of the key attribute in a React list?",
+      "es": "¿Cuál es el propósito del atributo key en una lista de React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Helps React identify which items changed, were added, or removed",
+          "es": "Ayuda a React a identificar qué elementos cambiaron, se agregaron o se eliminaron"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Defines the render order",
+          "es": "Define el orden de renderizado"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Needed to apply CSS styles",
+          "es": "Es necesario para aplicar estilos CSS"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Used to encrypt list data",
+          "es": "Se utiliza para cifrar los datos de la lista"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-11",
+    "level": "basic",
+    "question": {
+      "en": "What is a SyntheticEvent in React?",
+      "es": "¿Qué es un SyntheticEvent en React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A cross-browser wrapper around the browser's native event",
+          "es": "Un envoltorio compatible con múltiples navegadores alrededor del evento nativo del navegador"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "An event that only exists in React Native",
+          "es": "Un evento que solo existe en React Native"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "An event that does not propagate",
+          "es": "Un evento que no se propaga"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "An asynchronous event",
+          "es": "Un evento asíncrono"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-12",
+    "level": "basic",
+    "question": {
+      "en": "How do you handle a click event in React?",
+      "es": "¿Cómo se maneja un evento de clic en React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "<button onClick={handleClick}>Click</button>",
+          "es": "<button onClick={handleClick}>Click</button>"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "<button onclick={handleClick}>Click</button>",
+          "es": "<button onclick={handleClick}>Click</button>"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "<button on-click={handleClick}>Click</button>",
+          "es": "<button on-click={handleClick}>Click</button>"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "<button @click={handleClick}>Click</button>",
+          "es": "<button @click={handleClick}>Click</button>"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-13",
+    "level": "basic",
+    "question": {
+      "en": "What is the Virtual DOM in React?",
+      "es": "¿Qué es el Virtual DOM en React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A lightweight in-memory representation of the real DOM that React uses to optimize updates",
+          "es": "Una representación ligera en memoria del DOM real que React utiliza para optimizar las actualizaciones"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "The browser's real DOM",
+          "es": "El DOM real del navegador"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "An alternative DOM for testing",
+          "es": "Un DOM alternativo para pruebas"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A visual component editor",
+          "es": "Un editor de componentes visual"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-14",
+    "level": "basic",
+    "question": {
+      "en": "What is the main difference between props and state?",
+      "es": "¿Cuál es la diferencia principal entre props y state?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Props are immutable and passed from parent, state is mutable and local to the component",
+          "es": "Las props son inmutables y se pasan desde el padre, el state es mutable y local al componente"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Props are mutable and state is immutable",
+          "es": "Las props son mutables y el state es inmutable"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Props only exist in class components",
+          "es": "Las props solo existen en componentes de clase"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "State only exists in functional components",
+          "es": "El state solo existe en componentes funcionales"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-15",
+    "level": "basic",
+    "question": {
+      "en": "How do you render conditionally in React?",
+      "es": "¿Cómo se renderiza condicionalmente en React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using ternary operator: {condition ? <A /> : <B />}",
+          "es": "Usando el operador ternario: {condition ? <A /> : <B />}"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using an if statement inside JSX",
+          "es": "Usando una sentencia if dentro de JSX"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using the <If> component",
+          "es": "Usando el componente <If>"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using the v-if attribute",
+          "es": "Usando el atributo v-if"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-16",
+    "level": "basic",
+    "question": {
+      "en": "What does ReactDOM.render() do?",
+      "es": "¿Qué hace ReactDOM.render()?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Renders a React element into the real DOM inside a container",
+          "es": "Renderiza un elemento de React en el DOM real dentro de un contenedor"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Creates a new React component",
+          "es": "Crea un nuevo componente de React"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Updates the Virtual DOM without touching the real DOM",
+          "es": "Actualiza el Virtual DOM sin tocar el DOM real"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Removes a component from the DOM",
+          "es": "Elimina un componente del DOM"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-17",
+    "level": "basic",
+    "question": {
+      "en": "What are Fragments in React 16?",
+      "es": "¿Qué son los Fragments en React 16?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A way to group multiple elements without adding extra nodes to the DOM",
+          "es": "Una forma de agrupar múltiples elementos sin agregar nodos adicionales al DOM"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Parts of a component that render separately",
+          "es": "Partes de un componente que se renderizan por separado"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Components that have no state",
+          "es": "Componentes que no tienen estado"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Fragmented lifecycle methods",
+          "es": "Métodos de ciclo de vida fragmentados"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-18",
+    "level": "basic",
+    "question": {
+      "en": "How do you import React in a file?",
+      "es": "¿Cómo se importa React en un archivo?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "import React from 'react'",
+          "es": "import React from 'react'"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "import React from 'react-dom'",
+          "es": "import React from 'react-dom'"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "const React = require('react-dom')",
+          "es": "const React = require('react-dom')"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "import { React } from 'react-dom'",
+          "es": "import { React } from 'react-dom'"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-19",
+    "level": "basic",
+    "question": {
+      "en": "What is a controlled component in React?",
+      "es": "¿Qué es un componente controlado en React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A form component whose value is controlled by React state",
+          "es": "Un componente de formulario cuyo valor es controlado por el estado de React"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A component that cannot be modified",
+          "es": "Un componente que no se puede modificar"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A component that only works with Redux",
+          "es": "Un componente que solo funciona con Redux"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A component that controls other components",
+          "es": "Un componente que controla a otros componentes"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-20",
+    "level": "basic",
+    "question": {
+      "en": "How do you define default props in a functional component?",
+      "es": "¿Cómo se definen las props por defecto en un componente funcional?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using defaultProps on the component or assigning default values in parameters",
+          "es": "Usando defaultProps en el componente o asignando valores por defecto en los parámetros"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using the setDefaultProps() function",
+          "es": "Usando la función setDefaultProps()"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Defining a defaults object in the component",
+          "es": "Definiendo un objeto defaults en el componente"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using the useDefaultProps() hook",
+          "es": "Usando el hook useDefaultProps()"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-21",
+    "level": "basic",
+    "question": {
+      "en": "Which lifecycle method is called just before a component is removed from the DOM?",
+      "es": "¿Qué método del ciclo de vida se llama justo antes de que un componente sea eliminado del DOM?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "componentWillUnmount",
+          "es": "componentWillUnmount"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "componentDidMount",
+          "es": "componentDidMount"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "componentWillUpdate",
+          "es": "componentWillUpdate"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "componentDidUnmount",
+          "es": "componentDidUnmount"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-22",
+    "level": "basic",
+    "question": {
+      "en": "What is the correct syntax for an onChange event in React?",
+      "es": "¿Cuál es la sintaxis correcta para un evento onChange en React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "<input onChange={handleChange} />",
+          "es": "<input onChange={handleChange} />"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "<input onchange={handleChange} />",
+          "es": "<input onchange={handleChange} />"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "<input on-change={handleChange} />",
+          "es": "<input on-change={handleChange} />"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "<input @change={handleChange} />",
+          "es": "<input @change={handleChange} />"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-23",
+    "level": "basic",
+    "question": {
+      "en": "What does 'props.children' mean in React?",
+      "es": "¿Qué significa 'props.children' en React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "The content passed between the opening and closing tags of a component",
+          "es": "El contenido pasado entre las etiquetas de apertura y cierre de un componente"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "The direct children of the component in the DOM tree",
+          "es": "Los hijos directos del componente en el árbol DOM"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Props that are of type child",
+          "es": "Props que son de tipo hijo"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Nested components in the Virtual DOM",
+          "es": "Componentes anidados en el Virtual DOM"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-24",
+    "level": "basic",
+    "question": {
+      "en": "Is it mandatory for a React component to have a render method?",
+      "es": "¿Es obligatorio que un componente de React tenga un método render?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Only in class components",
+          "es": "Solo en componentes de clase"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Always, in all components",
+          "es": "Siempre, en todos los componentes"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Never, React generates it automatically",
+          "es": "Nunca, React lo genera automáticamente"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Only in functional components",
+          "es": "Solo en componentes funcionales"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-25",
+    "level": "basic",
+    "question": {
+      "en": "What does a functional React component return?",
+      "es": "¿Qué devuelve un componente funcional de React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A React element (JSX)",
+          "es": "Un elemento de React (JSX)"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Any JavaScript object",
+          "es": "Cualquier objeto JavaScript"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "An HTML string",
+          "es": "Una cadena HTML"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A real DOM node",
+          "es": "Un nodo DOM real"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-26",
+    "level": "basic",
+    "question": {
+      "en": "How do you comment in JSX?",
+      "es": "¿Cómo se comenta en JSX?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "{/* comment */}",
+          "es": "{/* comentario */}"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "<!-- comment -->",
+          "es": "<!-- comentario -->"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "// comment",
+          "es": "// comentario"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "/* comment */",
+          "es": "/* comentario */"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-27",
+    "level": "basic",
+    "question": {
+      "en": "What does React.StrictMode do?",
+      "es": "¿Qué hace React.StrictMode?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A tool for detecting potential problems in the application during development",
+          "es": "Una herramienta para detectar problemas potenciales en la aplicación durante el desarrollo"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Activates JavaScript strict mode in React",
+          "es": "Activa el modo estricto de JavaScript en React"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Prevents rendering of components with errors",
+          "es": "Evita el renderizado de componentes con errores"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Improves performance in production",
+          "es": "Mejora el rendimiento en producción"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-28",
+    "level": "basic",
+    "question": {
+      "en": "What is the correct way to display a variable in JSX?",
+      "es": "¿Cuál es la forma correcta de mostrar una variable en JSX?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "<h1>{myVariable}</h1>",
+          "es": "<h1>{myVariable}</h1>"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "<h1>{{myVariable}}</h1>",
+          "es": "<h1>{{myVariable}}</h1>"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "<h1>$myVariable</h1>",
+          "es": "<h1>$myVariable</h1>"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "<h1>{% myVariable %}</h1>",
+          "es": "<h1>{% myVariable %}</h1>"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-29",
+    "level": "basic",
+    "question": {
+      "en": "What is a PureComponent in React?",
+      "es": "¿Qué es un PureComponent en React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A component that implements shouldComponentUpdate with a shallow comparison of props and state",
+          "es": "Un componente que implementa shouldComponentUpdate con una comparación superficial de props y state"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A component that has no side effects",
+          "es": "Un componente que no tiene efectos secundarios"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A component that only uses props",
+          "es": "Un componente que solo usa props"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A component that cannot have state",
+          "es": "Un componente que no puede tener estado"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-30",
+    "level": "basic",
+    "question": {
+      "en": "How do you define a class component in React 16?",
+      "es": "¿Cómo se define un componente de clase en React 16?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "class MyComponent extends React.Component { render() { ... } }",
+          "es": "class MyComponent extends React.Component { render() { ... } }"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "function MyComponent { render() { ... } }",
+          "es": "function MyComponent { render() { ... } }"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "const MyComponent = React.createClass({ render() { ... } })",
+          "es": "const MyComponent = React.createClass({ render() { ... } })"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "class MyComponent extends Componente { ... }",
+          "es": "class MyComponent extends Componente { ... }"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-31",
+    "level": "basic",
+    "question": {
+      "en": "What is lifting state up in React?",
+      "es": "¿Qué es elevar el estado (lifting state up) en React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Moving state to a common ancestor component to share it between child components",
+          "es": "Mover el estado a un componente ancestro común para compartirlo entre componentes hijos"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Elevating state to an external server",
+          "es": "Elevar el estado a un servidor externo"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using Redux to manage all state",
+          "es": "Usar Redux para manejar todo el estado"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Declaring state in the most nested component",
+          "es": "Declarar el estado en el componente más anidado"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-32",
+    "level": "basic",
+    "question": {
+      "en": "What happens if you call setState with the same value as the current state?",
+      "es": "¿Qué sucede si llamas a setState con el mismo valor que el estado actual?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "React may skip re-rendering if it detects the value didn't change",
+          "es": "React puede evitar el re-renderizado si detecta que el valor no cambió"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "It always forces a re-render",
+          "es": "Siempre fuerza un re-renderizado"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "It throws an error",
+          "es": "Lanza un error"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "React creates a new empty state",
+          "es": "React crea un nuevo estado vacío"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-33",
+    "level": "basic",
+    "question": {
+      "en": "How do you access a prop called 'name' in a functional component?",
+      "es": "¿Cómo se accede a una prop llamada 'name' en un componente funcional?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Through the props parameter: props.name",
+          "es": "A través del parámetro props: props.name"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Through this.props.name",
+          "es": "A través de this.props.name"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Through state.name",
+          "es": "A través de state.name"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Through global variables",
+          "es": "A través de variables globales"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-34",
+    "level": "basic",
+    "question": {
+      "en": "What is the typical file extension for React components?",
+      "es": "¿Cuál es la extensión de archivo típica para los componentes de React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": ".js or .jsx",
+          "es": ".js o .jsx"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": ".react",
+          "es": ".react"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": ".html",
+          "es": ".html"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": ".rct",
+          "es": ".rct"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-35",
+    "level": "basic",
+    "question": {
+      "en": "Which lifecycle method runs after props or state are updated?",
+      "es": "¿Qué método del ciclo de vida se ejecuta después de que se actualizan las props o el state?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "componentDidUpdate",
+          "es": "componentDidUpdate"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "componentDidMount",
+          "es": "componentDidMount"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "componentWillReceiveProps",
+          "es": "componentWillReceiveProps"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "componentWillUpdate",
+          "es": "componentWillUpdate"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-36",
+    "level": "basic",
+    "question": {
+      "en": "How do you prevent a form from reloading on submit in React?",
+      "es": "¿Cómo se evita que un formulario se recargue al enviarse en React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Calling event.preventDefault() in the onSubmit handler",
+          "es": "Llamando a event.preventDefault() en el manejador onSubmit"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using return false in the handler",
+          "es": "Usando return false en el manejador"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Adding type=\"button\" to the submit button",
+          "es": "Agregando type=\"button\" al botón de envío"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using event.stopPropagation()",
+          "es": "Usando event.stopPropagation()"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-37",
+    "level": "basic",
+    "question": {
+      "en": "What is the Children prop in React?",
+      "es": "¿Qué es la prop Children en React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A special property that contains child elements passed to a component",
+          "es": "Una propiedad especial que contiene los elementos hijos pasados a un componente"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A prop called 'children' that is passed explicitly",
+          "es": "Una prop llamada 'children' que se pasa explícitamente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A function to iterate over children",
+          "es": "Una función para iterar sobre los hijos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A hook to manage child components",
+          "es": "Un hook para manejar componentes hijos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-38",
+    "level": "basic",
+    "question": {
+      "en": "How do you define a CSS class on a JSX element?",
+      "es": "¿Cómo se define una clase CSS en un elemento JSX?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "className=\"my-class\"",
+          "es": "className=\"my-class\""
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "class=\"my-class\"",
+          "es": "class=\"my-class\""
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "cssClass=\"my-class\"",
+          "es": "cssClass=\"my-class\""
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "styleClass=\"my-class\"",
+          "es": "styleClass=\"my-class\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-39",
+    "level": "basic",
+    "question": {
+      "en": "Can inline styles be used in React?",
+      "es": "¿Se pueden usar estilos en línea en React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Yes, using the style attribute with a JavaScript object",
+          "es": "Sí, usando el atributo style con un objeto JavaScript"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "No, React does not support inline styles",
+          "es": "No, React no soporta estilos en línea"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Yes, using the style attribute with a CSS string",
+          "es": "Sí, usando el atributo style con una cadena de texto CSS"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Only in functional components",
+          "es": "Solo en componentes funcionales"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-40",
+    "level": "basic",
+    "question": {
+      "en": "What does the useEffect hook return if you pass a cleanup function?",
+      "es": "¿Qué devuelve el hook useEffect si le pasas una función de limpieza?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Nothing (undefined), the cleanup function runs on unmount or before re-executing the effect",
+          "es": "Nada (undefined), la función de limpieza se ejecuta al desmontar o antes de volver a ejecutar el efecto"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A boolean indicating if the effect ran",
+          "es": "Un booleano que indica si el efecto se ejecutó"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A promise that resolves when the effect finishes",
+          "es": "Una promesa que se resuelve cuando el efecto termina"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "The same effect for chaining",
+          "es": "El mismo efecto para encadenamiento"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-41",
+    "level": "basic",
+    "question": {
+      "en": "What is the correct way to import useState?",
+      "es": "¿Cuál es la forma correcta de importar useState?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "import React, { useState } from 'react'",
+          "es": "import React, { useState } from 'react'"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "import { useState } from 'react-dom'",
+          "es": "import { useState } from 'react-dom'"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "import useState from 'react'",
+          "es": "import useState from 'react'"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "import [useState] from 'react'",
+          "es": "import [useState] from 'react'"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-42",
+    "level": "basic",
+    "question": {
+      "en": "What is an uncontrolled component in React?",
+      "es": "¿Qué es un componente no controlado en React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A form component that maintains its own internal state in the DOM",
+          "es": "Un componente de formulario que mantiene su propio estado interno en el DOM"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A component that has no state",
+          "es": "Un componente que no tiene estado"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A broken or buggy component",
+          "es": "Un componente roto o con errores"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A component that renders nothing",
+          "es": "Un componente que no renderiza nada"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-43",
+    "level": "basic",
+    "question": {
+      "en": "Which function is used to create a ref in a functional component?",
+      "es": "¿Qué función se utiliza para crear una referencia (ref) en un componente funcional?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "useRef",
+          "es": "useRef"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "useRefs",
+          "es": "useRefs"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "createRef",
+          "es": "createRef"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "useCallbackRef",
+          "es": "useCallbackRef"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-44",
+    "level": "basic",
+    "question": {
+      "en": "What is a Higher-Order Component (HOC)?",
+      "es": "¿Qué es un Componente de Orden Superior (HOC)?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A function that takes a component and returns a new component with additional functionality",
+          "es": "Una función que toma un componente y devuelve un nuevo componente con funcionalidad adicional"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A component at the top of the tree",
+          "es": "Un componente en la cima del árbol"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A component with many props",
+          "es": "Un componente con muchas props"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A component that only exists in React 16",
+          "es": "Un componente que solo existe en React 16"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-45",
+    "level": "basic",
+    "question": {
+      "en": "How do you update state based on previous state in a functional component?",
+      "es": "¿Cómo se actualiza el estado basándose en el estado anterior en un componente funcional?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "setState(prevState => prevState + 1)",
+          "es": "setState(prevState => prevState + 1)"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "setState(state + 1)",
+          "es": "setState(state + 1)"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "state = state + 1",
+          "es": "state = state + 1"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "this.setState(prevState => prevState + 1)",
+          "es": "this.setState(prevState => prevState + 1)"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-46",
+    "level": "basic",
+    "question": {
+      "en": "What is 'one-way data flow' in React?",
+      "es": "¿Qué es el 'flujo de datos unidireccional' en React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Data flows in one direction: from parents to children via props",
+          "es": "Los datos fluyen en una sola dirección: de padres a hijos a través de las props"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Data flows from children to parents",
+          "es": "Los datos fluyen de hijos a padres"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Data flows in both directions simultaneously",
+          "es": "Los datos fluyen en ambas direcciones simultáneamente"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Data does not flow between components",
+          "es": "Los datos no fluyen entre componentes"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-47",
+    "level": "basic",
+    "question": {
+      "en": "Which method is used to change state in a class component?",
+      "es": "¿Qué método se utiliza para cambiar el estado en un componente de clase?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "this.setState()",
+          "es": "this.setState()"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "this.state = {}",
+          "es": "this.state = {}"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "this.updateState()",
+          "es": "this.updateState()"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "this.changeState()",
+          "es": "this.changeState()"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-48",
+    "level": "basic",
+    "question": {
+      "en": "How is initial state defined in a class component?",
+      "es": "¿Cómo se define el estado inicial en un componente de clase?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "In the constructor: this.state = { ... }",
+          "es": "En el constructor: this.state = { ... }"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "In the render method",
+          "es": "En el método render"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using the initState() function",
+          "es": "Usando la función initState()"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "As a static property of the class",
+          "es": "Como una propiedad estática de la clase"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-49",
+    "level": "basic",
+    "question": {
+      "en": "What does the render() method do in a class component?",
+      "es": "¿Qué hace el método render() en un componente de clase?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Defines what should be rendered in the DOM",
+          "es": "Define lo que se debe renderizar en el DOM"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Updates the component's state",
+          "es": "Actualiza el estado del componente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Handles the component's events",
+          "es": "Maneja los eventos del componente"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Initializes the component's props",
+          "es": "Inicializa las props del componente"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-50",
+    "level": "basic",
+    "question": {
+      "en": "Which of the following is NOT a lifecycle method name in React 16?",
+      "es": "¿Cuál de los siguientes NO es un nombre de método del ciclo de vida en React 16?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "componentWillInitialize",
+          "es": "componentWillInitialize"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "componentDidMount",
+          "es": "componentDidMount"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "componentDidUpdate",
+          "es": "componentDidUpdate"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "componentWillUnmount",
+          "es": "componentWillUnmount"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-122",
+    "level": "basic",
+    "question": {
+      "en": "How do you declare a block-scoped variable in modern JavaScript?",
+      "es": "¿Cómo se declara una variable con alcance de bloque en JavaScript moderno?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using let or const",
+          "es": "Usando let o const"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using var only",
+          "es": "Usando solo var"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using define",
+          "es": "Usando define"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Using scope",
+          "es": "Usando scope"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-123",
+    "level": "basic",
+    "question": {
+      "en": "What is an arrow function in JavaScript?",
+      "es": "¿Qué es una función flecha (arrow function) en JavaScript?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A shorter syntax for writing functions that does not have its own 'this'",
+          "es": "Una sintaxis más corta para escribir funciones que no tiene su propio 'this'"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A function that only returns arrays",
+          "es": "Una función que solo retorna arreglos"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A special React hook",
+          "es": "Un hook especial de React"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A way to declare classes",
+          "es": "Una forma de declarar clases"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-124",
+    "level": "basic",
+    "question": {
+      "en": "What does a template literal use to embed expressions in a string?",
+      "es": "¿Qué utiliza un template literal para incrustar expresiones en un string?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Backticks and ${}",
+          "es": "Comillas invertidas (backticks) y ${}"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Single quotes and %s",
+          "es": "Comillas simples y %s"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Double quotes and #{}",
+          "es": "Comillas dobles y #{}"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Parentheses and {}",
+          "es": "Paréntesis y {}"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-125",
+    "level": "basic",
+    "question": {
+      "en": "What does object destructuring allow you to do in JavaScript?",
+      "es": "¿Qué permite hacer la desestructuración de objetos en JavaScript?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Extract properties from an object into individual variables",
+          "es": "Extraer propiedades de un objeto en variables individuales"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Merge two objects into one",
+          "es": "Fusionar dos objetos en uno"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Delete properties from an object",
+          "es": "Eliminar propiedades de un objeto"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Convert an object into an array",
+          "es": "Convertir un objeto en un arreglo"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-126",
+    "level": "basic",
+    "question": {
+      "en": "What does the spread operator (...) do when used on an array?",
+      "es": "¿Qué hace el operador spread (...) cuando se usa en un arreglo?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Expands the array elements individually",
+          "es": "Expande los elementos del arreglo individualmente"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Removes duplicate elements",
+          "es": "Elimina elementos duplicados"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Sorts the array",
+          "es": "Ordena el arreglo"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Converts the array to a string",
+          "es": "Convierte el arreglo en un string"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-127",
+    "level": "basic",
+    "question": {
+      "en": "Which array method is commonly used in React to transform an array into a list of elements?",
+      "es": "¿Qué método de arreglo se usa comúnmente en React para transformar un arreglo en una lista de elementos?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "map()",
+          "es": "map()"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "forEach()",
+          "es": "forEach()"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "filter()",
+          "es": "filter()"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "push()",
+          "es": "push()"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-128",
+    "level": "basic",
+    "question": {
+      "en": "How do you write a conditional expression directly inside JSX?",
+      "es": "¿Cómo se escribe una expresión condicional directamente dentro de JSX?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using the ternary operator, e.g. {condition ? <A/> : <B/>}",
+          "es": "Usando el operador ternario, ej. {condicion ? <A/> : <B/>}"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using an if/else block directly inside the JSX tags",
+          "es": "Usando un bloque if/else directamente dentro de las etiquetas JSX"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using a switch statement inside the JSX tags",
+          "es": "Usando una sentencia switch dentro de las etiquetas JSX"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "JSX does not support conditionals",
+          "es": "JSX no soporta condicionales"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-129",
+    "level": "basic",
+    "question": {
+      "en": "What is the standard way to export a single component from a file in React?",
+      "es": "¿Cuál es la forma estándar de exportar un solo componente desde un archivo en React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "export default ComponentName",
+          "es": "export default NombreComponente"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "export ComponentName only, never default",
+          "es": "export NombreComponente únicamente, nunca default"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "module.export = ComponentName",
+          "es": "module.export = NombreComponente"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "return ComponentName",
+          "es": "return NombreComponente"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-130",
+    "level": "basic",
+    "question": {
+      "en": "How should you pass an event handler to a button so it runs on click, not on render?",
+      "es": "¿Cómo se debe pasar un manejador de eventos a un botón para que se ejecute al hacer clic y no al renderizar?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "<button onClick={handleClick}>",
+          "es": "<button onClick={handleClick}>"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "<button onClick={handleClick()}>",
+          "es": "<button onClick={handleClick()}>"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "<button onClick='handleClick'>",
+          "es": "<button onClick='handleClick'>"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "<button click={handleClick}>",
+          "es": "<button click={handleClick}>"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-131",
+    "level": "basic",
+    "question": {
+      "en": "Which command is commonly used to scaffold a new React project quickly?",
+      "es": "¿Qué comando se usa comúnmente para crear rápidamente un nuevo proyecto de React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "npx create-react-app my-app",
+          "es": "npx create-react-app my-app"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "npm start react",
+          "es": "npm start react"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "react new my-app",
+          "es": "react new my-app"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "node install react",
+          "es": "node install react"
+        }
+      }
+    ]
+  }
+,
+  {
+    "id": "react-191",
+    "level": "basic",
+    "question": {
+      "en": "What does this code render?\n```jsx\nfunction Greeting({ name }) {\n  return <h1>Hello, {name}!</h1>\n}\n```",
+      "es": "¿Qué renderiza este código?\n```jsx\nfunction Greeting({ name }) {\n  return <h1>Hello, {name}!</h1>\n}\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A functional component that renders an <h1> element with 'Hello, ' followed by the name prop",
+          "es": "Un componente funcional que renderiza un elemento <h1> con 'Hello, ' seguido de la prop name"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A class component that displays a static greeting",
+          "es": "Un componente de clase que muestra un saludo estático"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Throws an error because JSX cannot contain JavaScript expressions",
+          "es": "Lanza un error porque JSX no puede contener expresiones JavaScript"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Renders the literal text '{name}' without substitution",
+          "es": "Renderiza el texto literal '{name}' sin sustitución"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-192",
+    "level": "basic",
+    "question": {
+      "en": "What happens when the button is clicked?\n```jsx\nconst [count, setCount] = useState(0)\n<button onClick={() => setCount(count + 1)}>\n  {count}\n</button>\n```",
+      "es": "¿Qué sucede cuando se hace clic en el botón?\n```jsx\nconst [count, setCount] = useState(0)\n<button onClick={() => setCount(count + 1)}>\n  {count}\n</button>\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "The count state increments by 1 and the component re-renders showing the new value",
+          "es": "El estado count se incrementa en 1 y el componente se vuelve a renderizar mostrando el nuevo valor"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "The button text changes to 'clicked' and count stays at 0",
+          "es": "El texto del botón cambia a 'clicked' y count se mantiene en 0"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Throws an error because useState cannot be used inside JSX",
+          "es": "Lanza un error porque useState no puede usarse dentro de JSX"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "count is mutated directly without triggering a re-render",
+          "es": "count se muta directamente sin disparar un re-render"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-193",
+    "level": "basic",
+    "question": {
+      "en": "What does this JSX conditional render?\n```jsx\n{isLoggedIn ? <Dashboard /> : <Login />}\n```",
+      "es": "¿Qué renderiza este condicional JSX?\n```jsx\n{isLoggedIn ? <Dashboard /> : <Login />}\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Renders Dashboard if isLoggedIn is true, otherwise renders Login",
+          "es": "Renderiza Dashboard si isLoggedIn es verdadero, de lo contrario renderiza Login"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Renders both components simultaneously",
+          "es": "Renderiza ambos componentes simultáneamente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Throws an error because ternary operators are not valid in JSX",
+          "es": "Lanza un error porque los operadores ternarios no son válidos en JSX"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Renders Login regardless of the isLoggedIn value",
+          "es": "Renderiza Login independientemente del valor de isLoggedIn"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-194",
+    "level": "basic",
+    "question": {
+      "en": "What does this list render?\n```jsx\nconst items = ['Apple', 'Banana', 'Cherry']\nreturn (\n  <ul>\n    {items.map((item, i) => (\n      <li key={i}>{item}</li>\n    ))}\n  </ul>\n)\n```",
+      "es": "¿Qué renderiza esta lista?\n```jsx\nconst items = ['Apple', 'Banana', 'Cherry']\nreturn (\n  <ul>\n    {items.map((item, i) => (\n      <li key={i}>{item}</li>\n    ))}\n  </ul>\n)\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "An unordered list with three <li> elements: Apple, Banana, Cherry",
+          "es": "Una lista no ordenada con tres elementos <li>: Apple, Banana, Cherry"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Renders only the first item because map returns a single value",
+          "es": "Renderiza solo el primer elemento porque map devuelve un único valor"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Throws an error because key must be a string, not a number",
+          "es": "Lanza un error porque key debe ser una cadena, no un número"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Renders the items array as a comma-separated string",
+          "es": "Renderiza el array de elementos como una cadena separada por comas"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-195",
+    "level": "basic",
+    "question": {
+      "en": "What does this useEffect do?\n```jsx\nuseEffect(() => {\n  document.title = `Count: ${count}`\n}, [count])\n```",
+      "es": "¿Qué hace este useEffect?\n```jsx\nuseEffect(() => {\n  document.title = `Count: ${count}`\n}, [count])\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Updates the document title to 'Count: N' every time count changes",
+          "es": "Actualiza el título del documento a 'Count: N' cada vez que count cambia"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Runs only once when the component mounts, regardless of count",
+          "es": "Se ejecuta solo una vez cuando el componente se monta, independientemente de count"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Runs on every render because the dependency array is provided",
+          "es": "Se ejecuta en cada renderizado porque se proporciona el array de dependencias"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Throws an error because document.title cannot be set inside useEffect",
+          "es": "Lanza un error porque document.title no puede establecerse dentro de useEffect"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-196",
+    "level": "basic",
+    "question": {
+      "en": "What does this component output when submitted?\n```jsx\nconst [value, setValue] = useState('')\n<input\n  value={value}\n  onChange={e => setValue(e.target.value)}\n/>\n```",
+      "es": "¿Qué produce este componente al escribir?\n```jsx\nconst [value, setValue] = useState('')\n<input\n  value={value}\n  onChange={e => setValue(e.target.value)}\n/>\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A controlled input that keeps value in sync with React state on every keystroke",
+          "es": "Un input controlado que mantiene value sincronizado con el estado de React en cada pulsación de tecla"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "An uncontrolled input that manages its own DOM state",
+          "es": "Un input no controlado que gestiona su propio estado del DOM"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Throws an error because value and onChange cannot be used together",
+          "es": "Lanza un error porque value y onChange no pueden usarse juntos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "The input becomes read-only because value is bound to state",
+          "es": "El input se vuelve de solo lectura porque value está vinculado al estado"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-197",
+    "level": "basic",
+    "question": {
+      "en": "What does this Fragment syntax do?\n```jsx\nreturn (\n  <>\n    <h1>Title</h1>\n    <p>Description</p>\n  </>\n)\n```",
+      "es": "¿Qué hace esta sintaxis Fragment?\n```jsx\nreturn (\n  <>\n    <h1>Title</h1>\n    <p>Description</p>\n  </>\n)\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Returns multiple elements without adding an extra DOM wrapper node",
+          "es": "Devuelve múltiples elementos sin agregar un nodo DOM envolvente extra"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Wraps both elements in an invisible <div> element",
+          "es": "Envuelve ambos elementos en un elemento <div> invisible"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Throws an error because components must return a single root element",
+          "es": "Lanza un error porque los componentes deben devolver un único elemento raíz"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Creates a Shadow DOM boundary around the children",
+          "es": "Crea un límite de Shadow DOM alrededor de los hijos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-198",
+    "level": "basic",
+    "question": {
+      "en": "What does this prop destructuring do?\n```jsx\nfunction Card({ title, children }) {\n  return (\n    <div>\n      <h2>{title}</h2>\n      {children}\n    </div>\n  )\n}\n```",
+      "es": "¿Qué hace esta desestructuración de props?\n```jsx\nfunction Card({ title, children }) {\n  return (\n    <div>\n      <h2>{title}</h2>\n      {children}\n    </div>\n  )\n}\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Renders a card with a title heading and any nested JSX passed between the Card tags as children",
+          "es": "Renderiza una tarjeta con un encabezado de título y cualquier JSX anidado pasado entre las etiquetas Card como children"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Throws an error because 'children' is a reserved word in React",
+          "es": "Lanza un error porque 'children' es una palabra reservada en React"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Renders only the title and ignores children prop",
+          "es": "Renderiza solo el título e ignora la prop children"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Clones the children elements before rendering them",
+          "es": "Clona los elementos children antes de renderizarlos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-199",
+    "level": "basic",
+    "question": {
+      "en": "What does this useEffect cleanup do?\n```jsx\nuseEffect(() => {\n  const id = setInterval(() => setCount(c => c + 1), 1000)\n  return () => clearInterval(id)\n}, [])\n```",
+      "es": "¿Qué hace esta limpieza de useEffect?\n```jsx\nuseEffect(() => {\n  const id = setInterval(() => setCount(c => c + 1), 1000)\n  return () => clearInterval(id)\n}, [])\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Starts an interval that increments count every second on mount, and clears it when the component unmounts",
+          "es": "Inicia un intervalo que incrementa count cada segundo al montarse, y lo limpia cuando el componente se desmonta"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Runs the interval on every render because the cleanup function resets it",
+          "es": "Ejecuta el intervalo en cada renderizado porque la función de limpieza lo reinicia"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "The returned function runs before the effect, not after unmount",
+          "es": "La función devuelta se ejecuta antes del efecto, no después del desmontaje"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Throws an error because useEffect cannot return a function",
+          "es": "Lanza un error porque useEffect no puede devolver una función"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-200",
+    "level": "basic",
+    "question": {
+      "en": "What does defaultProps set here?\n```jsx\nfunction Button({ label, color = 'blue' }) {\n  return <button style={{ color }}>{label}</button>\n}\n```",
+      "es": "¿Qué establece el valor por defecto aquí?\n```jsx\nfunction Button({ label, color = 'blue' }) {\n  return <button style={{ color }}>{label}</button>\n}\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "color defaults to 'blue' when not provided by the parent, using ES6 default parameter syntax",
+          "es": "color tiene valor por defecto 'blue' cuando el padre no lo proporciona, usando la sintaxis de parámetro por defecto de ES6"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Throws an error because default values must use the defaultProps static property",
+          "es": "Lanza un error porque los valores por defecto deben usar la propiedad estática defaultProps"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "color is always 'blue' and cannot be overridden by the parent",
+          "es": "color es siempre 'blue' y no puede ser sobreescrito por el padre"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "The button renders without any color because style accepts only CSS class names",
+          "es": "El botón se renderiza sin ningún color porque style acepta solo nombres de clase CSS"
+        }
+      }
+    ]
+  }
+]

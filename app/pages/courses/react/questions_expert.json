@@ -1,0 +1,2943 @@
+[
+  {
+    "id": "react-101",
+    "level": "expert",
+    "question": {
+      "en": "What is the Fiber Architecture in React 16?",
+      "es": "¿Qué es la Arquitectura Fiber en React 16?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A rewrite of the reconciliation algorithm to enable incremental rendering and prioritization",
+          "es": "Una reescritura del algoritmo de reconciliación para habilitar el renderizado incremental y la priorización"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A new way to create components",
+          "es": "Una nueva forma de crear componentes"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A new state design pattern",
+          "es": "Un nuevo patrón de diseño de estado"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A component library for React",
+          "es": "Una biblioteca de componentes para React"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-102",
+    "level": "expert",
+    "question": {
+      "en": "What problem does React Fiber solve?",
+      "es": "¿Qué problema resuelve React Fiber?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "It allows splitting rendering work into small units that can be paused, interrupted, and resumed",
+          "es": "Permite dividir el trabajo de renderizado en pequeñas unidades que se pueden pausar, interrumpir y reanudar"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "It increases the speed of the Virtual DOM",
+          "es": "Aumenta la velocidad del Virtual DOM"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "It reduces the size of the React bundle",
+          "es": "Reduce el tamaño del paquete de React"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "It eliminates the need for the Virtual DOM",
+          "es": "Elimina la necesidad del Virtual DOM"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-103",
+    "level": "expert",
+    "question": {
+      "en": "What are side effects in the context of React's render cycle?",
+      "es": "¿Qué son los efectos secundarios (side effects) en el contexto del ciclo de renderizado de React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Operations that affect something outside the component's scope, like data fetching, subscriptions, or DOM manipulation",
+          "es": "Operaciones que afectan algo fuera del alcance del componente, como peticiones de datos, suscripciones o manipulación del DOM"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Side effects of props",
+          "es": "Efectos secundarios de las props"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Errors that occur during rendering",
+          "es": "Errores que ocurren durante el renderizado"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Virtual DOM changes that are not reflected in the real DOM",
+          "es": "Cambios en el Virtual DOM que no se reflejan en el DOM real"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-104",
+    "level": "expert",
+    "question": {
+      "en": "What is the render phase vs commit phase in React 16?",
+      "es": "¿Qué es la fase de renderizado (render phase) frente a la fase de confirmación (commit phase) en React 16?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Render phase creates the Virtual DOM (can be interrupted), Commit phase applies changes to the DOM (cannot be interrupted)",
+          "es": "La fase de renderizado crea el Virtual DOM (se puede interrumpir), la fase de confirmación aplica los cambios al DOM (no se puede interrumpir)"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Render phase is for class components, Commit phase is for functional",
+          "es": "La fase de renderizado es para componentes de clase, la fase de confirmación es para funcionales"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "They are two phases of the initial component mount",
+          "es": "Son dos fases del montaje inicial del componente"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Render phase generates the bundle, Commit phase executes it",
+          "es": "La fase de renderizado genera el paquete, la fase de confirmación lo ejecuta"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-105",
+    "level": "expert",
+    "question": {
+      "en": "What is a stable key in the context of dynamic lists?",
+      "es": "¿Qué es una clave estable (stable key) en el contexto de listas dinámicas?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A key that uniquely and consistently identifies an element across re-renders",
+          "es": "Una clave que identifica de forma única y consistente a un elemento a través de los re-renderizados"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A key that never changes value",
+          "es": "Una clave que nunca cambia de valor"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A key defined as a constant",
+          "es": "Una clave definida como una constante"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A key that uses the array index",
+          "es": "Una clave que utiliza el índice del arreglo"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-106",
+    "level": "expert",
+    "question": {
+      "en": "What strategy does React use to decide if it should re-render a component?",
+      "es": "¿Qué estrategia utiliza React para decidir si debe volver a renderizar un componente?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "By default, React re-renders the component if its state changes or its parent's props change",
+          "es": "Por defecto, React vuelve a renderizar el componente si cambia su estado o si cambian las props de su componente padre"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "React re-renders all components on every change",
+          "es": "React vuelve a renderizar todos los componentes con cada cambio"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "React uses a machine learning algorithm",
+          "es": "React utiliza un algoritmo de aprendizaje automático"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "React never re-renders unless forceUpdate is called",
+          "es": "React nunca vuelve a renderizar a menos que se llame a forceUpdate"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-107",
+    "level": "expert",
+    "question": {
+      "en": "What is shallow comparison in React?",
+      "es": "¿Qué es la comparación superficial (shallow comparison) en React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Comparing object/array references to determine if they are the same object, not their content",
+          "es": "Comparar referencias de objetos/arreglos para determinar si son el mismo objeto, no su contenido"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Comparing only top-level properties of an object",
+          "es": "Comparar solo las propiedades del nivel superior de un objeto"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Ignoring nested properties in comparison",
+          "es": "Ignorar las propiedades anidadas en la comparación"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Comparing only the data type, not the value",
+          "es": "Comparar solo el tipo de datos, no el valor"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-108",
+    "level": "expert",
+    "question": {
+      "en": "How does immutability affect React's performance?",
+      "es": "¿Cómo afecta la inmutabilidad al rendimiento de React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "It allows efficient === comparisons to detect changes and decide whether to re-render",
+          "es": "Permite realizar comparaciones === eficientes para detectar cambios y decidir si volver a renderizar"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "It makes React slower because it needs to copy objects",
+          "es": "Hace que React sea más lento porque necesita copiar objetos"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "It has no effect on performance",
+          "es": "No tiene ningún efecto sobre el rendimiento"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "React does not require immutability to work well",
+          "es": "React no requiere inmutabilidad para funcionar bien"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-109",
+    "level": "expert",
+    "question": {
+      "en": "What is the render bail-out in React?",
+      "es": "¿Qué es la omisión del renderizado (render bail-out) en React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "When React decides not to re-render a component because it detects no relevant changes",
+          "es": "Cuando React decide no volver a renderizar un componente porque no detecta cambios relevantes"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "When React cannot render a component and shows an error",
+          "es": "Cuando React no puede renderizar un componente y muestra un error"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "When the developer manually cancels rendering",
+          "es": "Cuando el desarrollador cancela manualmente el renderizado"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "When a component is removed from the tree",
+          "es": "Cuando un componente se elimina del árbol"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-110",
+    "level": "expert",
+    "question": {
+      "en": "What factors can prevent a component from bailing out?",
+      "es": "¿Qué factores pueden impedir la omisión del renderizado (bail-out) de un componente?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using context, refs, or props that change by reference even if the value is the same",
+          "es": "Usar contexto, referencias (refs) o props que cambian por referencia incluso si el valor es el mismo"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Having many child components",
+          "es": "Tener muchos componentes hijos"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using functional components",
+          "es": "Usar componentes funcionales"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Not using React.memo",
+          "es": "No usar React.memo"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-111",
+    "level": "expert",
+    "question": {
+      "en": "What is the Compound Component pattern in React?",
+      "es": "¿Qué es el patrón de Componentes Compuestos (Compound Components) en React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A pattern where multiple components coexist and share state implicitly through a common context",
+          "es": "Un patrón donde múltiples componentes coexisten y comparten estado de forma implícita a través de un contexto común"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Components that combine multiple props",
+          "es": "Componentes que combinan múltiples props"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A component made of several smaller components",
+          "es": "Un componente hecho de varios componentes más pequeños"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A pattern for mixing multiple HOCs",
+          "es": "Un patrón para mezclar múltiples HOCs"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-112",
+    "level": "expert",
+    "question": {
+      "en": "What is render hijacking in the context of HOCs?",
+      "es": "¿Qué es el secuestro de renderizado (render hijacking) en el contexto de los HOCs?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "The ability of a HOC to modify the rendering of the wrapped component",
+          "es": "La capacidad de un HOC para modificar el renderizado del componente envuelto"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Stealing render code from other components",
+          "es": "Robar el código de renderizado de otros componentes"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using parent's props to render",
+          "es": "Usar las props del padre para renderizar"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Rendering a component inside another without permission",
+          "es": "Renderizar un componente dentro de otro sin permiso"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-113",
+    "level": "expert",
+    "question": {
+      "en": "What is the difference between React.createContext and the Provider/Consumer pattern?",
+      "es": "¿Cuál es la diferencia entre React.createContext y el patrón Provider/Consumer?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "createContext returns an object with two components: Provider and Consumer",
+          "es": "createContext devuelve un objeto con dos componentes: Provider y Consumer"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "They are two different ways to create context",
+          "es": "Son dos formas diferentes de crear contexto"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Provider/Consumer predates createContext",
+          "es": "El patrón Provider/Consumer es anterior a createContext"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "createContext does not use Provider/Consumer",
+          "es": "createContext no utiliza Provider/Consumer"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-114",
+    "level": "expert",
+    "question": {
+      "en": "When should you use Context API vs Redux?",
+      "es": "¿Cuándo se debe usar Context API frente a Redux?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Context is ideal for simple global state with low change frequency; Redux for complex state with high change frequency",
+          "es": "Context es ideal para estados globales simples con baja frecuencia de cambio; Redux para estados complejos con alta frecuencia de cambio"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Always use Redux because Context is inefficient",
+          "es": "Usar siempre Redux porque Context es ineficiente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Always use Context because Redux is deprecated",
+          "es": "Usar siempre Context porque Redux está obsoleto"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "They are interchangeable, there's no difference",
+          "es": "Son intercambiables, no hay diferencia"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-115",
+    "level": "expert",
+    "question": {
+      "en": "What is prop drilling and how is it solved?",
+      "es": "¿Qué es el prop drilling (perforación de props) y cómo se resuelve?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Passing props through many component levels, solved with Context or composition",
+          "es": "Pasar props a través de muchos niveles de componentes; se resuelve con Context o composición"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A React bug that causes infinite renders",
+          "es": "Un error de React que causa renders infinitos"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A technique for drilling into the DOM",
+          "es": "Una técnica para perforar en el DOM"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A method for optimizing prop passing",
+          "es": "Un método para optimizar el paso de props"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-116",
+    "level": "expert",
+    "question": {
+      "en": "What is the State Reducer pattern in React?",
+      "es": "¿Qué es el patrón State Reducer en React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A pattern where the consumer of a component can control how the internal state is updated",
+          "es": "Un patrón donde el consumidor de un componente puede controlar cómo se actualiza el estado interno"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A reduce function applied to state",
+          "es": "Una función reductora aplicada al estado"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A method for reducing state to minimum values",
+          "es": "Un método para reducir el estado a valores mínimos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A hook for compressing state",
+          "es": "Un hook para comprimir el estado"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-117",
+    "level": "expert",
+    "question": {
+      "en": "What is tearing in the context of Concurrent Mode?",
+      "es": "¿Qué es el tearing (desgarro) en el contexto del Modo Concurrente?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A problem where different parts of the UI can show inconsistent values from the same state due to interruptible rendering",
+          "es": "Un problema donde diferentes partes de la interfaz de usuario pueden mostrar valores inconsistentes de un mismo estado debido a un renderizado interrumpible"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "When a component breaks visually",
+          "es": "Cuando un componente se rompe visualmente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "An error in list rendering",
+          "es": "Un error en el renderizado de listas"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Splitting the Virtual DOM into fragments",
+          "es": "Dividir el Virtual DOM en fragmentos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-118",
+    "level": "expert",
+    "question": {
+      "en": "How does React solve the tearing problem in Concurrent Mode?",
+      "es": "¿Cómo resuelve React el problema del tearing en el Modo Concurrente?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Using a double-buffer system and ensuring changes are atomic in the commit phase",
+          "es": "Utilizando un sistema de doble búfer y garantizando que los cambios sean atómicos en la fase de confirmación (commit phase)"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Eliminating concurrency",
+          "es": "Eliminando la concurrencia"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Using database transactions",
+          "es": "Usando transacciones de base de datos"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "It doesn't solve it, it's considered acceptable",
+          "es": "No lo resuelve, se considera aceptable"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-119",
+    "level": "expert",
+    "question": {
+      "en": "What is Time Slicing in React?",
+      "es": "¿Qué es Time Slicing (segmentación de tiempo) en React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "The ability of React to split rendering work across multiple frames",
+          "es": "La capacidad de React para dividir el trabajo de renderizado a lo largo de múltiples fotogramas (frames)"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A technique for measuring render time",
+          "es": "Una técnica para medir el tiempo de renderizado"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A method for optimizing state slices",
+          "es": "Un método para optimizar fragmentos de estado"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A profiling tool",
+          "es": "Una herramienta de análisis de rendimiento (profiling)"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-120",
+    "level": "expert",
+    "question": {
+      "en": "What is the difference between sync mode and concurrent mode in React 16?",
+      "es": "¿Cuál es la diferencia entre el modo síncrono (sync mode) y el modo concurrente (concurrent mode) en React 16?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Sync renders everything at once blocking the main thread, Concurrent can interrupt and prioritize tasks",
+          "es": "El síncrono lo renderiza todo de una sola vez bloqueando el hilo principal; el concurrente puede interrumpir y priorizar tareas"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Sync is faster than Concurrent",
+          "es": "El modo síncrono es más rápido que el concurrente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Concurrent uses web workers, Sync does not",
+          "es": "El modo concurrente utiliza web workers; el síncrono no"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Sync works in production, Concurrent only in development",
+          "es": "El modo síncrono funciona en producción; el concurrente solo en desarrollo"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-121",
+    "level": "expert",
+    "question": {
+      "en": "How do you implement a Custom Hook that uses useReducer and useContext for global state?",
+      "es": "¿Cómo se implementa un Custom Hook que utiliza useReducer y useContext para el estado global?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Creating a context that provides the state and dispatch from useReducer to child components",
+          "es": "Creando un contexto que provee el estado y la función dispatch de useReducer a los componentes hijos"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Using Redux instead of useReducer",
+          "es": "Usando Redux en lugar de useReducer"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Importing createStore from React",
+          "es": "Importando createStore de React"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Declaring global variables in the hook",
+          "es": "Declarando variables globales en el hook"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-142",
+    "level": "expert",
+    "question": {
+      "en": "What is a Fiber node in React's internal architecture?",
+      "es": "¿Qué es un nodo Fiber en la arquitectura interna de React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A JavaScript object that represents a unit of work and holds information about a component instance, its type, and its relationship to other fibers",
+          "es": "Un objeto de JavaScript que representa una unidad de trabajo y contiene información sobre una instancia de componente, su tipo y su relación con otras fibras"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A CSS-in-JS styling primitive",
+          "es": "Un primitivo de estilos CSS-in-JS"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A special type of ref object",
+          "es": "Un tipo especial de objeto ref"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A network request wrapper used by Suspense",
+          "es": "Un envoltorio de solicitud de red usado por Suspense"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-143",
+    "level": "expert",
+    "question": {
+      "en": "What is the 'work loop' in React Fiber?",
+      "es": "¿Qué es el 'work loop' en React Fiber?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "The internal process that processes fiber units incrementally, which can be paused and resumed based on priority",
+          "es": "El proceso interno que procesa las unidades de fiber de forma incremental, que puede pausarse y reanudarse según la prioridad"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "The loop that re-renders the entire app on every state change",
+          "es": "El bucle que vuelve a renderizar toda la app en cada cambio de estado"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A loop that only runs during testing",
+          "es": "Un bucle que solo se ejecuta durante las pruebas"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "The event loop provided natively by the browser",
+          "es": "El bucle de eventos provisto nativamente por el navegador"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-144",
+    "level": "expert",
+    "question": {
+      "en": "What is 'double buffering' in React Fiber's reconciliation?",
+      "es": "¿Qué es el 'double buffering' en la reconciliación de React Fiber?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Maintaining two fiber trees (current and work-in-progress) so React can build the next tree without affecting what's on screen",
+          "es": "Mantener dos árboles de fiber (actual y en progreso) para que React pueda construir el siguiente árbol sin afectar lo que está en pantalla"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Rendering the component twice to detect side effects",
+          "es": "Renderizar el componente dos veces para detectar efectos secundarios"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Storing state in both localStorage and memory",
+          "es": "Almacenar el estado tanto en localStorage como en memoria"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A caching strategy for network requests",
+          "es": "Una estrategia de caché para solicitudes de red"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-145",
+    "level": "expert",
+    "question": {
+      "en": "What is the 'alternate' property on a fiber node used for?",
+      "es": "¿Para qué se usa la propiedad 'alternate' en un nodo fiber?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "It points to the corresponding fiber in the other tree (current vs work-in-progress), enabling reuse and comparison",
+          "es": "Apunta al fiber correspondiente en el otro árbol (actual vs en progreso), permitiendo la reutilización y comparación"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "It stores an alternative render output for A/B testing",
+          "es": "Almacena una salida de render alternativa para pruebas A/B"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "It holds the fallback UI for Suspense",
+          "es": "Contiene la UI de respaldo para Suspense"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "It is used only for class component refs",
+          "es": "Se usa únicamente para refs de componentes de clase"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-146",
+    "level": "expert",
+    "question": {
+      "en": "What is the 'effect list' in React Fiber's commit phase?",
+      "es": "¿Qué es la 'lista de efectos' (effect list) en la fase de commit de React Fiber?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A linked list of fibers that have side effects (DOM mutations, lifecycle calls) to apply during commit",
+          "es": "Una lista enlazada de fibers que tienen efectos secundarios (mutaciones del DOM, llamadas de ciclo de vida) para aplicar durante el commit"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "The list of useEffect hooks declared in a component",
+          "es": "La lista de hooks useEffect declarados en un componente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A debug log of console warnings",
+          "es": "Un registro de depuración de advertencias de consola"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "The queue of pending network requests",
+          "es": "La cola de solicitudes de red pendientes"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-147",
+    "level": "expert",
+    "question": {
+      "en": "Why can the render phase in React Fiber be interrupted, while the commit phase cannot?",
+      "es": "¿Por qué la fase de render en React Fiber puede interrumpirse, mientras que la fase de commit no?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Because the render phase only prepares the work-in-progress tree without touching the DOM, so it's safe to pause; the commit phase applies real DOM mutations that must happen synchronously",
+          "es": "Porque la fase de render solo prepara el árbol en progreso sin tocar el DOM, por lo que es seguro pausarla; la fase de commit aplica mutaciones reales del DOM que deben ocurrir de forma síncrona"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Because the commit phase runs on a separate thread",
+          "es": "Porque la fase de commit se ejecuta en un hilo separado"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Because the render phase is always synchronous by design",
+          "es": "Porque la fase de render siempre es síncrona por diseño"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "There is no real difference between the two phases",
+          "es": "No hay una diferencia real entre las dos fases"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-148",
+    "level": "expert",
+    "question": {
+      "en": "What problem does React's Scheduler package address?",
+      "es": "¿Qué problema aborda el paquete Scheduler de React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Prioritizing and scheduling units of work so higher-priority updates (like user input) preempt lower-priority ones",
+          "es": "Priorizar y programar unidades de trabajo para que las actualizaciones de mayor prioridad (como la entrada del usuario) tengan preferencia sobre las de menor prioridad"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Managing HTTP requests for data fetching",
+          "es": "Gestionar solicitudes HTTP para la obtención de datos"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Compiling JSX into JavaScript",
+          "es": "Compilar JSX a JavaScript"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Bundling and minifying application code",
+          "es": "Empaquetar y minificar el código de la aplicación"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-149",
+    "level": "expert",
+    "question": {
+      "en": "How does React (via the Scheduler) yield to the browser during a long render, conceptually?",
+      "es": "¿Cómo cede React (a través del Scheduler) el control al navegador durante un render largo, conceptualmente?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "It breaks work into small chunks and uses browser idle-time scheduling mechanisms so the main thread isn't blocked",
+          "es": "Divide el trabajo en pequeños fragmentos y usa mecanismos de programación en tiempo inactivo del navegador para no bloquear el hilo principal"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "It spawns a Web Worker for every component",
+          "es": "Genera un Web Worker para cada componente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "It forces a full page reload",
+          "es": "Fuerza una recarga completa de la página"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "It disables all event listeners until rendering finishes",
+          "es": "Deshabilita todos los event listeners hasta que termina el render"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-150",
+    "level": "expert",
+    "question": {
+      "en": "In React 16.6+, how can Suspense be combined with React.lazy to handle code-split components?",
+      "es": "En React 16.6+, ¿cómo se puede combinar Suspense con React.lazy para manejar componentes divididos por código (code-split)?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Wrap the lazily-loaded component with <Suspense fallback={...}> so React shows the fallback while the chunk loads",
+          "es": "Envolver el componente cargado de forma diferida con <Suspense fallback={...}> para que React muestre el fallback mientras se carga el fragmento"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Suspense automatically wraps every component, no setup needed",
+          "es": "Suspense envuelve automáticamente todos los componentes, no requiere configuración"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "React.lazy replaces the need for Suspense entirely",
+          "es": "React.lazy reemplaza por completo la necesidad de Suspense"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Suspense only works with class components, not React.lazy",
+          "es": "Suspense solo funciona con componentes de clase, no con React.lazy"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-151",
+    "level": "expert",
+    "question": {
+      "en": "Can an Error Boundary and a Suspense boundary be combined around a lazily-loaded component?",
+      "es": "¿Se pueden combinar un Error Boundary y un límite de Suspense alrededor de un componente cargado de forma diferida?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Yes, wrapping Suspense inside an Error Boundary lets you handle both loading state and loading failures",
+          "es": "Sí, envolver Suspense dentro de un Error Boundary permite manejar tanto el estado de carga como los fallos de carga"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "No, React does not allow nesting Suspense inside Error Boundaries",
+          "es": "No, React no permite anidar Suspense dentro de Error Boundaries"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Only Suspense can catch errors, Error Boundaries are unnecessary",
+          "es": "Solo Suspense puede capturar errores, los Error Boundaries son innecesarios"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "This combination requires Concurrent Mode to work at all",
+          "es": "Esta combinación requiere el modo concurrente para funcionar"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-152",
+    "level": "expert",
+    "question": {
+      "en": "What is the purpose of the useImperativeHandle hook?",
+      "es": "¿Cuál es el propósito del hook useImperativeHandle?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "It customizes the instance value that is exposed to parent components when using ref with forwardRef",
+          "es": "Personaliza el valor de instancia que se expone a los componentes padres cuando se usa ref con forwardRef"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "It replaces useState for imperative state updates",
+          "es": "Reemplaza a useState para actualizaciones de estado imperativas"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "It forces a synchronous re-render on every prop change",
+          "es": "Fuerza un re-render síncrono en cada cambio de prop"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "It is used to imperatively fetch data on mount",
+          "es": "Se usa para obtener datos de forma imperativa al montar"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-153",
+    "level": "expert",
+    "question": {
+      "en": "Why is useImperativeHandle typically used together with forwardRef?",
+      "es": "¿Por qué useImperativeHandle se usa normalmente junto con forwardRef?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Because forwardRef provides the ref that useImperativeHandle then customizes before exposing it to the parent",
+          "es": "Porque forwardRef provee la ref que useImperativeHandle luego personaliza antes de exponerla al padre"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Because they are the same hook with two different names",
+          "es": "Porque son el mismo hook con dos nombres distintos"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Because useImperativeHandle cannot access props without forwardRef",
+          "es": "Porque useImperativeHandle no puede acceder a las props sin forwardRef"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "They are unrelated and rarely used together",
+          "es": "No están relacionados y rara vez se usan juntos"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-154",
+    "level": "expert",
+    "question": {
+      "en": "What is the 'rules of hooks' regarding conditional calls?",
+      "es": "¿Cuáles son las 'reglas de los hooks' respecto a las llamadas condicionales?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Hooks must always be called in the same order on every render, never inside conditionals, loops, or nested functions",
+          "es": "Los hooks siempre deben llamarse en el mismo orden en cada render, nunca dentro de condicionales, bucles o funciones anidadas"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Hooks can be called conditionally as long as they are declared with useState",
+          "es": "Los hooks pueden llamarse condicionalmente siempre que se declaren con useState"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Only useEffect has ordering restrictions",
+          "es": "Solo useEffect tiene restricciones de orden"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Hooks can be called inside loops but not inside conditionals",
+          "es": "Los hooks pueden llamarse dentro de bucles pero no dentro de condicionales"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-155",
+    "level": "expert",
+    "question": {
+      "en": "Why does React rely on call order rather than names to associate hook state between renders?",
+      "es": "¿Por qué React se basa en el orden de las llamadas en lugar de los nombres para asociar el estado de los hooks entre renders?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Because hooks are stored in an internal linked list indexed by call order, so React matches each hook call to its slot from the previous render",
+          "es": "Porque los hooks se almacenan en una lista enlazada interna indexada por orden de llamada, por lo que React asocia cada llamada de hook con su posición del render anterior"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Because JavaScript does not support named function parameters",
+          "es": "Porque JavaScript no soporta parámetros de función con nombre"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Because hook names are minified in production and become unreliable",
+          "es": "Porque los nombres de los hooks se minifican en producción y dejan de ser confiables"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "React actually does use variable names internally, not order",
+          "es": "React en realidad usa los nombres de las variables internamente, no el orden"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-156",
+    "level": "expert",
+    "question": {
+      "en": "What does the 'exhaustive-deps' ESLint rule for hooks warn about?",
+      "es": "¿Sobre qué advierte la regla de ESLint 'exhaustive-deps' para hooks?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "It warns when a useEffect/useMemo/useCallback dependency array is missing a value that the function actually uses",
+          "es": "Advierte cuando el arreglo de dependencias de useEffect/useMemo/useCallback no incluye un valor que la función realmente usa"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "It warns when there are too many hooks in a single component",
+          "es": "Advierte cuando hay demasiados hooks en un solo componente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "It warns about unused CSS class names",
+          "es": "Advierte sobre nombres de clases CSS no utilizados"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "It enforces alphabetical ordering of hook calls",
+          "es": "Obliga a un orden alfabético en las llamadas a los hooks"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-157",
+    "level": "expert",
+    "question": {
+      "en": "In React 16, what does SyntheticEvent 'pooling' mean?",
+      "es": "En React 16, ¿qué significa el 'pooling' de SyntheticEvent?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "React reuses and nullifies event objects after the handler finishes, so accessing event properties asynchronously requires calling event.persist()",
+          "es": "React reutiliza y anula los objetos de evento después de que finaliza el manejador, por lo que acceder a las propiedades del evento de forma asíncrona requiere llamar a event.persist()"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "React caches DOM elements to speed up rendering",
+          "es": "React almacena en caché los elementos del DOM para acelerar el renderizado"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Multiple event handlers are merged into a single function call",
+          "es": "Múltiples manejadores de eventos se fusionan en una sola llamada de función"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Event pooling refers to grouping components into pools for lazy loading",
+          "es": "El pooling de eventos se refiere a agrupar componentes en pools para carga diferida"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-158",
+    "level": "expert",
+    "question": {
+      "en": "Why does React show a duplicate 'key' warning, and why does it matter beyond just silencing the console?",
+      "es": "¿Por qué React muestra una advertencia de 'key' duplicada, y por qué importa más allá de solo silenciar la consola?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Duplicate or unstable keys can cause React's reconciliation to misidentify elements, leading to incorrect DOM updates, lost state, or performance issues",
+          "es": "Las keys duplicadas o inestables pueden hacer que la reconciliación de React identifique mal los elementos, causando actualizaciones incorrectas del DOM, pérdida de estado o problemas de rendimiento"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "It is purely cosmetic and has no effect on behavior",
+          "es": "Es puramente cosmético y no tiene efecto en el comportamiento"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "It only affects server-side rendering, never the client",
+          "es": "Solo afecta al renderizado del lado del servidor, nunca al cliente"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Duplicate keys automatically crash the application",
+          "es": "Las keys duplicadas hacen que la aplicación se bloquee automáticamente"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-159",
+    "level": "expert",
+    "question": {
+      "en": "How can you use a ref alongside a controlled input without breaking the 'single source of truth' principle?",
+      "es": "¿Cómo se puede usar una ref junto con un input controlado sin romper el principio de 'única fuente de verdad'?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Use the ref only for imperative actions like focusing the element, while state (not the ref) remains the source of the input's value",
+          "es": "Usar la ref solo para acciones imperativas como enfocar el elemento, mientras que el estado (no la ref) sigue siendo la fuente del valor del input"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Always read the input's value from the ref instead of state",
+          "es": "Siempre leer el valor del input desde la ref en lugar del estado"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Controlled inputs cannot have refs attached to them",
+          "es": "Los inputs controlados no pueden tener refs asignadas"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Replace onChange entirely with a ref-based mutation",
+          "es": "Reemplazar por completo onChange con una mutación basada en ref"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-160",
+    "level": "expert",
+    "question": {
+      "en": "How do click events fired inside a React Portal propagate through the component tree?",
+      "es": "¿Cómo se propagan los eventos de clic disparados dentro de un Portal de React a través del árbol de componentes?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "They bubble up according to the React component tree (not the actual DOM tree), so a parent React component can still catch events from a portal's content",
+          "es": "Se propagan según el árbol de componentes de React (no el árbol real del DOM), por lo que un componente padre de React aún puede capturar eventos del contenido de un portal"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "They never bubble at all because portals are detached from React",
+          "es": "Nunca se propagan porque los portales están desconectados de React"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "They only bubble through the DOM tree, ignoring the React tree",
+          "es": "Solo se propagan a través del árbol del DOM, ignorando el árbol de React"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Portal events must be manually re-dispatched to be caught by parents",
+          "es": "Los eventos de portal deben ser redisparados manualmente para ser capturados por los padres"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-161",
+    "level": "expert",
+    "question": {
+      "en": "Why can overusing a single global Context cause unnecessary re-renders across an app?",
+      "es": "¿Por qué usar en exceso un único Context global puede causar re-renders innecesarios en toda la app?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Every component consuming that context re-renders whenever the context value changes, even if it only cares about part of that value",
+          "es": "Cada componente que consume ese context vuelve a renderizarse cada vez que el valor del context cambia, incluso si solo le interesa una parte de ese valor"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Context values are always re-created even without changes, by design",
+          "es": "Los valores de context siempre se recrean incluso sin cambios, por diseño"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Context automatically triggers a full page reload on update",
+          "es": "Context dispara automáticamente una recarga completa de la página al actualizarse"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Only class components can consume Context, causing extra renders",
+          "es": "Solo los componentes de clase pueden consumir Context, causando renders extra"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-162",
+    "level": "expert",
+    "question": {
+      "en": "What is one common strategy to reduce re-renders caused by a large Context value?",
+      "es": "¿Cuál es una estrategia común para reducir los re-renders causados por un valor de Context grande?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Split the context into multiple smaller contexts so consumers only subscribe to the slice of state they actually need",
+          "es": "Dividir el context en varios contexts más pequeños para que los consumidores solo se suscriban a la porción de estado que realmente necesitan"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Avoid using useState entirely inside context providers",
+          "es": "Evitar usar useState por completo dentro de los proveedores de context"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Wrap every consumer in React.lazy",
+          "es": "Envolver cada consumidor en React.lazy"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Disable reconciliation for the provider component",
+          "es": "Deshabilitar la reconciliación para el componente proveedor"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-163",
+    "level": "expert",
+    "question": {
+      "en": "Why should the value passed to a Context.Provider often be memoized with useMemo?",
+      "es": "¿Por qué el valor pasado a un Context.Provider a menudo debería memoizarse con useMemo?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Because creating a new object literal on every render gives consumers a new reference each time, causing them to re-render even if the actual data hasn't changed",
+          "es": "Porque crear un nuevo objeto literal en cada render le da a los consumidores una nueva referencia cada vez, causando que vuelvan a renderizar aunque los datos reales no hayan cambiado"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Because Context.Provider does not accept object values without useMemo",
+          "es": "Porque Context.Provider no acepta valores de objeto sin useMemo"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Because useMemo is required syntax for all context values",
+          "es": "Porque useMemo es sintaxis obligatoria para todos los valores de context"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "It has no real effect; it's purely a stylistic convention",
+          "es": "No tiene ningún efecto real; es puramente una convención de estilo"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-164",
+    "level": "expert",
+    "question": {
+      "en": "What is a common pitfall of Higher-Order Components (HOCs) regarding static methods?",
+      "es": "¿Cuál es un problema común de los Higher-Order Components (HOCs) respecto a los métodos estáticos?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Static methods defined on the wrapped component are not automatically copied to the resulting HOC, and must be manually hoisted",
+          "es": "Los métodos estáticos definidos en el componente envuelto no se copian automáticamente al HOC resultante, y deben elevarse (hoist) manualmente"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "HOCs automatically convert all static methods into instance methods",
+          "es": "Los HOCs convierten automáticamente todos los métodos estáticos en métodos de instancia"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Static methods cause HOCs to throw a runtime error",
+          "es": "Los métodos estáticos causan que los HOCs lancen un error en tiempo de ejecución"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "This is not an issue; static methods are always preserved by default",
+          "es": "Esto no es un problema; los métodos estáticos siempre se preservan por defecto"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-165",
+    "level": "expert",
+    "question": {
+      "en": "How do HOCs typically forward refs to the wrapped component, given that refs are not part of props?",
+      "es": "¿Cómo suelen los HOCs reenviar refs al componente envuelto, dado que las refs no forman parte de las props?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "By using React.forwardRef inside the HOC to explicitly pass the ref through to the inner component",
+          "es": "Usando React.forwardRef dentro del HOC para pasar explícitamente la ref al componente interno"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Refs are automatically forwarded through props without any extra work",
+          "es": "Las refs se reenvían automáticamente a través de las props sin trabajo adicional"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "HOCs cannot support refs under any circumstance",
+          "es": "Los HOCs no pueden soportar refs bajo ninguna circunstancia"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "By duplicating the ref inside the component's state",
+          "es": "Duplicando la ref dentro del estado del componente"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-166",
+    "level": "expert",
+    "question": {
+      "en": "When testing components that use hooks with React Testing Library, why is act() important?",
+      "es": "Al probar componentes que usan hooks con React Testing Library, ¿por qué es importante act()?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "It ensures that all state updates and effects triggered during a test are processed before assertions run, avoiding warnings and flaky tests",
+          "es": "Asegura que todas las actualizaciones de estado y efectos disparados durante una prueba se procesen antes de que se ejecuten las aserciones, evitando advertencias y pruebas inestables"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "It mocks all network requests automatically",
+          "es": "Simula automáticamente todas las solicitudes de red"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "It disables React hooks during testing",
+          "es": "Deshabilita los hooks de React durante las pruebas"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "It is only relevant for class component tests",
+          "es": "Solo es relevante para pruebas de componentes de clase"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-167",
+    "level": "expert",
+    "question": {
+      "en": "What does React.StrictMode's intentional double-invocation of certain functions in development help detect?",
+      "es": "¿Qué ayuda a detectar la doble invocación intencional de ciertas funciones en desarrollo por parte de React.StrictMode?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Impure logic in render, state updater functions, or effect setup, since side effects should be idempotent and safe to run twice",
+          "es": "Lógica impura en el render, funciones actualizadoras de estado o configuración de efectos, ya que los efectos secundarios deben ser idempotentes y seguros de ejecutar dos veces"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Network latency issues in prod builds",
+          "es": "Problemas de latencia de red en builds de producción"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "CSS specificity conflicts",
+          "es": "Conflictos de especificidad de CSS"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Memory leaks in the browser's garbage collector directly",
+          "es": "Fugas de memoria directamente en el recolector de basura del navegador"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-168",
+    "level": "expert",
+    "question": {
+      "en": "Why were string refs (e.g. ref=\"myRef\") considered legacy and discouraged in React 16?",
+      "es": "¿Por qué las refs de tipo string (ej. ref=\"miRef\") se consideraban legadas y desaconsejadas en React 16?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "They have performance downsides, don't compose well, and can't be used with functional components; callback refs or createRef/useRef were recommended instead",
+          "es": "Tienen desventajas de rendimiento, no componen bien y no pueden usarse con componentes funcionales; se recomendaban las refs de callback o createRef/useRef en su lugar"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "String refs were completely removed and caused a compile error",
+          "es": "Las refs de string fueron completamente eliminadas y causaban un error de compilación"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "String refs only worked in Internet Explorer",
+          "es": "Las refs de string solo funcionaban en Internet Explorer"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "There was no real downside; it was purely a style preference",
+          "es": "No había ninguna desventaja real; era puramente una preferencia de estilo"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-169",
+    "level": "expert",
+    "question": {
+      "en": "Why was findDOMNode() considered problematic and discouraged in React 16?",
+      "es": "¿Por qué findDOMNode() se consideraba problemático y desaconsejado en React 16?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "It breaks abstraction by reaching into the DOM output of a component, doesn't work with function components, and can behave unexpectedly with Fragments",
+          "es": "Rompe la abstracción al acceder directamente a la salida del DOM de un componente, no funciona con componentes de función y puede comportarse de forma inesperada con Fragments"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "It was removed entirely in React 16 with no replacement",
+          "es": "Fue eliminado por completo en React 16 sin reemplazo"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "It only worked inside Redux reducers",
+          "es": "Solo funcionaba dentro de los reducers de Redux"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "It caused all components to render twice",
+          "es": "Hacía que todos los componentes se renderizaran dos veces"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-170",
+    "level": "expert",
+    "question": {
+      "en": "What is unstable_batchedUpdates used for in React 16?",
+      "es": "¿Para qué se usa unstable_batchedUpdates en React 16?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "To manually force multiple setState calls to be batched into a single re-render, typically outside of React event handlers (e.g. in timeouts or promises)",
+          "es": "Para forzar manualmente que múltiples llamadas a setState se agrupen en un solo re-render, típicamente fuera de los manejadores de eventos de React (por ejemplo, en timeouts o promesas)"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "To permanently disable batching for a component",
+          "es": "Para deshabilitar permanentemente el batching de un componente"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "To batch network requests instead of state updates",
+          "es": "Para agrupar solicitudes de red en lugar de actualizaciones de estado"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "It is a stable, documented, primary API for all state updates",
+          "es": "Es una API estable y documentada, principal para todas las actualizaciones de estado"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-171",
+    "level": "expert",
+    "question": {
+      "en": "What is the correct syntax to render a component into a DOM node outside the parent hierarchy using a Portal?",
+      "es": "¿Cuál es la sintaxis correcta para renderizar un componente en un nodo del DOM fuera de la jerarquía del padre usando un Portal?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "ReactDOM.createPortal(children, domNode)",
+          "es": "ReactDOM.createPortal(children, domNode)"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "ReactDOM.render(children, domNode, true)",
+          "es": "ReactDOM.render(children, domNode, true)"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "React.createPortal(domNode, children)",
+          "es": "React.createPortal(domNode, children)"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "ReactDOM.portal(children).to(domNode)",
+          "es": "ReactDOM.portal(children).to(domNode)"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-172",
+    "level": "expert",
+    "question": {
+      "en": "What is the purpose of the useDebugValue hook?",
+      "es": "¿Cuál es el propósito del hook useDebugValue?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "It lets a custom hook display a formatted label in React DevTools to aid debugging",
+          "es": "Permite que un hook personalizado muestre una etiqueta formateada en React DevTools para facilitar la depuración"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "It logs every render to the browser console automatically",
+          "es": "Registra automáticamente cada render en la consola del navegador"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "It throws an error if a hook is used incorrectly",
+          "es": "Lanza un error si un hook se usa incorrectamente"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "It replaces console.log entirely in production",
+          "es": "Reemplaza por completo a console.log en producción"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-173",
+    "level": "expert",
+    "question": {
+      "en": "How does the React DevTools Profiler help identify performance issues?",
+      "es": "¿Cómo ayuda el Profiler de React DevTools a identificar problemas de rendimiento?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "It records timing information for each render/commit, showing which components rendered, how long they took, and why they re-rendered",
+          "es": "Registra información de tiempo para cada render/commit, mostrando qué componentes se renderizaron, cuánto tardaron y por qué se volvieron a renderizar"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "It automatically rewrites slow components for you",
+          "es": "Reescribe automáticamente los componentes lentos por ti"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "It only measures initial page load time",
+          "es": "Solo mide el tiempo de carga inicial de la página"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "It profiles server response times, not component renders",
+          "es": "Perfila los tiempos de respuesta del servidor, no los renders de componentes"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-174",
+    "level": "expert",
+    "question": {
+      "en": "How can you provide a custom comparison function to React.memo instead of the default shallow comparison?",
+      "es": "¿Cómo se puede proporcionar una función de comparación personalizada a React.memo en lugar de la comparación superficial predeterminada?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Pass a second argument to React.memo: a function (prevProps, nextProps) that returns true if the props are equal",
+          "es": "Pasar un segundo argumento a React.memo: una función (prevProps, nextProps) que retorna true si las props son iguales"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "React.memo does not support custom comparisons",
+          "es": "React.memo no soporta comparaciones personalizadas"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "By overriding shouldComponentUpdate inside a memoized function component",
+          "es": "Sobrescribiendo shouldComponentUpdate dentro de un componente de función memoizado"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "By wrapping the component in useMemo instead",
+          "es": "Envolviendo el componente en useMemo en su lugar"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-175",
+    "level": "expert",
+    "question": {
+      "en": "Why is route-based code splitting with React.lazy commonly recommended for large applications?",
+      "es": "¿Por qué la división de código basada en rutas con React.lazy se recomienda comúnmente para aplicaciones grandes?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "It reduces the initial bundle size by only loading the JavaScript needed for the current route, improving initial load performance",
+          "es": "Reduce el tamaño del bundle inicial al cargar solo el JavaScript necesario para la ruta actual, mejorando el rendimiento de la carga inicial"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "It removes the need for a build step entirely",
+          "es": "Elimina por completo la necesidad de un paso de compilación (build)"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "It automatically improves SEO regardless of rendering strategy",
+          "es": "Mejora automáticamente el SEO sin importar la estrategia de renderizado"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "It is required for React to function at all",
+          "es": "Es requerido para que React funcione"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-176",
+    "level": "expert",
+    "question": {
+      "en": "What JavaScript feature underlies React.lazy's ability to code-split components?",
+      "es": "¿Qué característica de JavaScript sustenta la capacidad de React.lazy para dividir componentes por código?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "The dynamic import() syntax, which returns a Promise that resolves to a module",
+          "es": "La sintaxis de import() dinámico, que retorna una Promise que resuelve a un módulo"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "The eval() function",
+          "es": "La función eval()"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Web Workers",
+          "es": "Web Workers"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Service Workers",
+          "es": "Service Workers"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-177",
+    "level": "expert",
+    "question": {
+      "en": "What is 'tree shaking' and how does it relate to bundling a React application?",
+      "es": "¿Qué es el 'tree shaking' y cómo se relaciona con el empaquetado de una aplicación React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A dead-code elimination technique used by bundlers to remove unused exports from the final bundle, relying on ES module static structure",
+          "es": "Una técnica de eliminación de código muerto usada por los bundlers para remover exportaciones no utilizadas del bundle final, basándose en la estructura estática de los módulos ES"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "A technique for animating tree-like UI components",
+          "es": "Una técnica para animar componentes de UI con forma de árbol"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "A React-specific API for pruning the Virtual DOM tree",
+          "es": "Una API específica de React para podar el árbol del DOM virtual"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "A method to shake out memory leaks at runtime",
+          "es": "Un método para eliminar fugas de memoria en tiempo de ejecución"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-178",
+    "level": "expert",
+    "question": {
+      "en": "Why can normalizing nested state (like using objects keyed by id instead of nested arrays) help performance in a React app?",
+      "es": "¿Por qué normalizar el estado anidado (como usar objetos indexados por id en lugar de arreglos anidados) puede ayudar al rendimiento en una app React?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "It makes updates more localized and avoids deep object recreation, which helps components relying on reference equality avoid unnecessary re-renders",
+          "es": "Hace que las actualizaciones sean más localizadas y evita la recreación profunda de objetos, lo que ayuda a que los componentes que dependen de la igualdad de referencias eviten re-renders innecesarios"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "It automatically reduces the number of components rendered",
+          "es": "Reduce automáticamente la cantidad de componentes renderizados"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "It is required by React and enforced by the framework",
+          "es": "Es requerido por React y forzado por el framework"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Normalized state disables the Virtual DOM diffing entirely",
+          "es": "El estado normalizado deshabilita por completo el diffing del DOM virtual"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-179",
+    "level": "expert",
+    "question": {
+      "en": "What is a common pitfall of passing inline arrow functions as props to a memoized child component?",
+      "es": "¿Cuál es un problema común de pasar funciones flecha en línea como props a un componente hijo memoizado?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "A new function reference is created on every render, defeating React.memo's shallow comparison and causing unnecessary re-renders",
+          "es": "Se crea una nueva referencia de función en cada render, anulando la comparación superficial de React.memo y causando re-renders innecesarios"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Inline arrow functions are not valid as props in JSX",
+          "es": "Las funciones flecha en línea no son válidas como props en JSX"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "It causes a memory leak that crashes the browser tab",
+          "es": "Causa una fuga de memoria que hace fallar la pestaña del navegador"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "React automatically converts them into useCallback internally",
+          "es": "React las convierte automáticamente en useCallback internamente"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-180",
+    "level": "expert",
+    "question": {
+      "en": "Why can PureComponent's shallow comparison fail to detect a meaningful state change when state contains a mutated nested object?",
+      "es": "¿Por qué la comparación superficial de PureComponent puede fallar en detectar un cambio de estado significativo cuando el estado contiene un objeto anidado mutado?"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Shallow comparison only checks top-level reference equality, so mutating a nested object in place keeps the same top-level reference and the change goes undetected",
+          "es": "La comparación superficial solo verifica la igualdad de referencia de nivel superior, por lo que mutar un objeto anidado en el lugar mantiene la misma referencia de nivel superior y el cambio pasa desapercibido"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "PureComponent performs a deep comparison, so this scenario cannot happen",
+          "es": "PureComponent realiza una comparación profunda, por lo que este escenario no puede ocurrir"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "PureComponent always re-renders regardless of comparison results",
+          "es": "PureComponent siempre se vuelve a renderizar sin importar el resultado de la comparación"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "This only affects functional components, not PureComponent",
+          "es": "Esto solo afecta a los componentes funcionales, no a PureComponent"
+        }
+      }
+    ]
+  }
+,
+  {
+    "id": "react-211",
+    "level": "expert",
+    "question": {
+      "en": "What does this useImperativeHandle expose?\n```jsx\nconst FancyInput = forwardRef((props, ref) => {\n  const inputRef = useRef()\n  useImperativeHandle(ref, () => ({\n    focus: () => inputRef.current.focus(),\n    clear: () => { inputRef.current.value = '' }\n  }))\n  return <input ref={inputRef} />\n})\n```",
+      "es": "¿Qué expone este useImperativeHandle?\n```jsx\nconst FancyInput = forwardRef((props, ref) => {\n  const inputRef = useRef()\n  useImperativeHandle(ref, () => ({\n    focus: () => inputRef.current.focus(),\n    clear: () => { inputRef.current.value = '' }\n  }))\n  return <input ref={inputRef} />\n})\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Exposes only focus() and clear() to the parent through the ref, hiding the raw DOM node",
+          "es": "Expone solo focus() y clear() al padre a través del ref, ocultando el nodo DOM sin procesar"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Exposes every DOM property of the input to the parent",
+          "es": "Expone todas las propiedades DOM del input al padre"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Throws an error because useImperativeHandle must be used without forwardRef",
+          "es": "Lanza un error porque useImperativeHandle debe usarse sin forwardRef"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Makes the component rerender whenever focus() or clear() is called",
+          "es": "Hace que el componente se re-renderice cada vez que se llama a focus() o clear()"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-212",
+    "level": "expert",
+    "question": {
+      "en": "What does this concurrent feature do?\n```jsx\nconst [isPending, startTransition] = useTransition()\n\nfunction handleInput(value) {\n  startTransition(() => {\n    setFilteredList(computeHeavyFilter(value))\n  })\n}\n```",
+      "es": "¿Qué hace esta característica concurrente?\n```jsx\nconst [isPending, startTransition] = useTransition()\n\nfunction handleInput(value) {\n  startTransition(() => {\n    setFilteredList(computeHeavyFilter(value))\n  })\n}\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Marks the filter update as non-urgent so React can interrupt it to keep the input responsive; isPending is true while the transition is in progress",
+          "es": "Marca la actualización del filtro como no urgente para que React pueda interrumpirla y mantener el input responsivo; isPending es true mientras la transición está en curso"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Runs computeHeavyFilter in a Web Worker to avoid blocking the main thread",
+          "es": "Ejecuta computeHeavyFilter en un Web Worker para no bloquear el hilo principal"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Debounces the state update by 300ms automatically",
+          "es": "Aplica debounce a la actualización de estado automáticamente durante 300ms"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Batches all state updates within startTransition into a single synchronous update",
+          "es": "Agrupa todas las actualizaciones de estado dentro de startTransition en una única actualización síncrona"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-213",
+    "level": "expert",
+    "question": {
+      "en": "What does this useDeferredValue pattern do?\n```jsx\nconst deferredQuery = useDeferredValue(query)\nconst results = useMemo(\n  () => filterItems(items, deferredQuery),\n  [items, deferredQuery]\n)\n```",
+      "es": "¿Qué hace este patrón useDeferredValue?\n```jsx\nconst deferredQuery = useDeferredValue(query)\nconst results = useMemo(\n  () => filterItems(items, deferredQuery),\n  [items, deferredQuery]\n)\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Defers updates to deferredQuery so the heavy filter re-computation can be interrupted by more urgent updates like typing",
+          "es": "Difiere las actualizaciones de deferredQuery para que el costoso recálculo del filtro pueda ser interrumpido por actualizaciones más urgentes como escribir"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Throttles query updates to fire at most once per second",
+          "es": "Regula las actualizaciones de query para dispararse como máximo una vez por segundo"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Caches results permanently across component remounts",
+          "es": "Almacena en caché los resultados permanentemente entre remontajes del componente"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Throws an error because useDeferredValue cannot be combined with useMemo",
+          "es": "Lanza un error porque useDeferredValue no puede combinarse con useMemo"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-214",
+    "level": "expert",
+    "question": {
+      "en": "What does this server action pattern do in React 19?\n```jsx\nasync function submitForm(formData) {\n  'use server'\n  await db.save(formData.get('name'))\n}\n\n<form action={submitForm}>\n  <input name=\"name\" />\n  <button type=\"submit\">Save</button>\n</form>\n```",
+      "es": "¿Qué hace este patrón de server action en React 19?\n```jsx\nasync function submitForm(formData) {\n  'use server'\n  await db.save(formData.get('name'))\n}\n\n<form action={submitForm}>\n  <input name=\"name\" />\n  <button type=\"submit\">Save</button>\n</form>\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Defines a server-side async function that runs on the server when the form is submitted, without a separate API route",
+          "es": "Define una función asíncrona del lado del servidor que se ejecuta en el servidor cuando se envía el formulario, sin una ruta API separada"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Runs submitForm on the client as a regular async event handler",
+          "es": "Ejecuta submitForm en el cliente como un manejador de eventos asíncrono regular"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Is identical to an onSubmit handler with an API fetch call",
+          "es": "Es idéntico a un manejador onSubmit con una llamada fetch a una API"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Throws an error because 'use server' cannot be inside a function body",
+          "es": "Lanza un error porque 'use server' no puede estar dentro del cuerpo de una función"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-215",
+    "level": "expert",
+    "question": {
+      "en": "What does this fiber reconciliation behavior mean?\n```jsx\n// Both renders produce the same component type at the same position\n{condition ? <Input key=\"a\" /> : <Input key=\"b\" />}\n```",
+      "es": "¿Qué significa este comportamiento de reconciliación de fiber?\n```jsx\n// Ambos renders producen el mismo tipo de componente en la misma posición\n{condition ? <Input key=\"a\" /> : <Input key=\"b\" />}\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Changing the key forces React to unmount the old Input and mount a fresh one, resetting all internal state",
+          "es": "Cambiar la key fuerza a React a desmontar el Input antiguo y montar uno nuevo, reiniciando todo el estado interno"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "The key has no effect because the component type is the same",
+          "es": "La key no tiene efecto porque el tipo de componente es el mismo"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "React reuses the existing DOM node but re-initializes only the props",
+          "es": "React reutiliza el nodo DOM existente pero reinicializa solo las props"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Throws a warning because keys must be numbers, not strings",
+          "es": "Lanza una advertencia porque las keys deben ser números, no cadenas"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-216",
+    "level": "expert",
+    "question": {
+      "en": "What does this selector pattern with useContextSelector avoid?\n```jsx\nconst count = useContextSelector(StoreContext, s => s.count)\n```",
+      "es": "¿Qué evita este patrón de selector con useContextSelector?\n```jsx\nconst count = useContextSelector(StoreContext, s => s.count)\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Prevents re-renders when unrelated parts of the context change by subscribing only to the count slice",
+          "es": "Evita re-renders cuando partes no relacionadas del context cambian, suscribiéndose solo al slice count"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Is identical to useContext with no performance difference",
+          "es": "Es idéntico a useContext sin diferencia de rendimiento"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Throws an error because useContextSelector is not a built-in React hook",
+          "es": "Lanza un error porque useContextSelector no es un hook integrado de React"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Memoizes the entire context value, not just count",
+          "es": "Memoriza todo el valor del context, no solo count"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-217",
+    "level": "expert",
+    "question": {
+      "en": "What does this use() hook do in React 19?\n```jsx\nfunction UserProfile({ userPromise }) {\n  const user = use(userPromise)\n  return <h1>{user.name}</h1>\n}\n```",
+      "es": "¿Qué hace este hook use() en React 19?\n```jsx\nfunction UserProfile({ userPromise }) {\n  const user = use(userPromise)\n  return <h1>{user.name}</h1>\n}\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Suspends the component until userPromise resolves, then renders with the resolved value — must be wrapped in Suspense",
+          "es": "Suspende el componente hasta que userPromise se resuelva, luego renderiza con el valor resuelto — debe estar envuelto en Suspense"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Immediately returns undefined and re-renders when the promise resolves",
+          "es": "Devuelve undefined inmediatamente y se re-renderiza cuando la promesa se resuelve"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Is identical to await inside an async component",
+          "es": "Es idéntico a await dentro de un componente asíncrono"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Throws an error if called conditionally inside the component",
+          "es": "Lanza un error si se llama condicionalmente dentro del componente"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-218",
+    "level": "expert",
+    "question": {
+      "en": "What does this startViewTransition integration do?\n```jsx\nfunction navigate(to) {\n  document.startViewTransition(() => {\n    flushSync(() => setPage(to))\n  })\n}\n```",
+      "es": "¿Qué hace esta integración de startViewTransition?\n```jsx\nfunction navigate(to) {\n  document.startViewTransition(() => {\n    flushSync(() => setPage(to))\n  })\n}\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Wraps a React state update in the View Transitions API so the browser can animate between the old and new page states",
+          "es": "Envuelve una actualización de estado de React en la API View Transitions para que el navegador pueda animar entre los estados de página antiguo y nuevo"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Uses CSS transitions internally and has no relation to the browser View Transitions API",
+          "es": "Usa transiciones CSS internamente y no tiene relación con la API View Transitions del navegador"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Throws an error because flushSync cannot be called inside a transition",
+          "es": "Lanza un error porque flushSync no puede llamarse dentro de una transición"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Defers the navigation until the current render cycle finishes",
+          "es": "Difiere la navegación hasta que el ciclo de renderizado actual finalice"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-219",
+    "level": "expert",
+    "question": {
+      "en": "What does this RSC (React Server Component) constraint mean?\n```jsx\n// server component\nexport default async function Page() {\n  const data = await db.query()\n  return <div>{data.title}</div>\n}\n```",
+      "es": "¿Qué significa esta restricción de RSC (React Server Component)?\n```jsx\n// server component\nexport default async function Page() {\n  const data = await db.query()\n  return <div>{data.title}</div>\n}\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Runs only on the server — can use async/await and access databases directly, but cannot use useState, useEffect, or browser APIs",
+          "es": "Se ejecuta solo en el servidor — puede usar async/await y acceder a bases de datos directamente, pero no puede usar useState, useEffect ni APIs del navegador"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Runs on both server and client like a regular React component",
+          "es": "Se ejecuta tanto en servidor como en cliente como un componente React normal"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "Behaves exactly like a Next.js getServerSideProps function",
+          "es": "Se comporta exactamente como una función getServerSideProps de Next.js"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Throws an error because async components are not supported in React",
+          "es": "Lanza un error porque los componentes asíncronos no están soportados en React"
+        }
+      }
+    ]
+  },
+  {
+    "id": "react-220",
+    "level": "expert",
+    "question": {
+      "en": "What does this batching behavior produce in React 18+?\n```jsx\nsetTimeout(() => {\n  setCount(c => c + 1)\n  setFlag(f => !f)\n  // How many renders occur?\n}, 1000)\n```",
+      "es": "¿Qué produce este comportamiento de batching en React 18+?\n```jsx\nsetTimeout(() => {\n  setCount(c => c + 1)\n  setFlag(f => !f)\n  // ¿Cuántos renders ocurren?\n}, 1000)\n```"
+    },
+    "answers": [
+      {
+        "childId": 0,
+        "isCorrect": true,
+        "text": {
+          "en": "Only one render — React 18 automatically batches state updates in timeouts, promises, and native events via automatic batching",
+          "es": "Solo un render — React 18 agrupa automáticamente las actualizaciones de estado en timeouts, promesas y eventos nativos mediante el batching automático"
+        }
+      },
+      {
+        "childId": 1,
+        "isCorrect": false,
+        "text": {
+          "en": "Two renders — one for each setState call because timeouts are outside React's event system",
+          "es": "Dos renders — uno por cada llamada setState porque los timeouts están fuera del sistema de eventos de React"
+        }
+      },
+      {
+        "childId": 2,
+        "isCorrect": false,
+        "text": {
+          "en": "No renders until flushSync() is called",
+          "es": "Ningún render hasta que se llame a flushSync()"
+        }
+      },
+      {
+        "childId": 3,
+        "isCorrect": false,
+        "text": {
+          "en": "Throws an error because setState cannot be called inside setTimeout",
+          "es": "Lanza un error porque setState no puede llamarse dentro de setTimeout"
+        }
+      }
+    ]
+  }
+]
