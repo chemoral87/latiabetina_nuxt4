@@ -114,7 +114,7 @@ const showLogin = ref(true)
 
 const { isLoading, endNavigation } = useGlobalProgress()
 
-onMounted(() => {
+onNuxtReady(() => {
   endNavigation()
 })
 
