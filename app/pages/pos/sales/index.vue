@@ -187,7 +187,9 @@ function setupRealtimeListeners() {
   const channelConfigs = orgIds.map((orgId) => ({
     name: `pos.sales.${orgId}`,
     events: {
-      ".sale.completed": (data: unknown) => handleSaleCompleted(data as Record<string, unknown>),
+      ".sale.completed": (data: unknown) => handleSaleStatusUpdate(data as Record<string, unknown>),
+      // Fired when a completed sale is reopened from the KDS (item undone)
+      ".sale.status.updated": (data: unknown) => handleSaleStatusUpdate(data as Record<string, unknown>),
     },
   }))
 
@@ -203,7 +205,7 @@ function setupRealtimeListeners() {
   )
 }
 
-function handleSaleCompleted(data: Record<string, unknown>) {
+function handleSaleStatusUpdate(data: Record<string, unknown>) {
   const sale = response.value.data.find((s) => s.id === data.id)
   if (sale && data.status) {
     sale.status = data.status

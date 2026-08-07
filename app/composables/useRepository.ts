@@ -34,6 +34,10 @@ export function useRepository() {
     kds<T = unknown>() {
       return withNotify($api<T>("/sale/kds"))
     },
+    // Mark a sale as completed (delivered) from the KDS: completes all pending items (PATCH /sale/{sale}/complete)
+    complete<T = unknown>(saleId: number | string) {
+      return withNotify($api<T>(`/sale/${saleId}/complete`, { method: "PATCH" }))
+    },
     updateItem<T = unknown>(saleId: number | string, itemId: number | string, status: string) {
       return withNotify($api<T>(`/sale/${saleId}/item/${itemId}`, { method: "PATCH", body: { status } }))
     },

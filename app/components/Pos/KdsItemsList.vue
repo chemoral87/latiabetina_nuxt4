@@ -65,6 +65,8 @@
 </template>
 
 <script setup lang="ts">
+import { isRowDone as isRowDoneShared, getPreparationRows } from "~/utils/kds"
+
 interface KdsItem {
   id: number
   quantity: number
@@ -99,26 +101,10 @@ interface PrepRow {
   rowIndex: number
 }
 
-const preparationRows = computed<PrepRow[]>(() => {
-  const rows: PrepRow[] = []
-  const items = props.order.items?.filter((item) => item.product?.requires_preparation === true) || []
-  items.forEach((item) => {
-    for (let i = 0; i < item.quantity; i++) {
-      rows.push({ item, rowIndex: i })
-    }
-  })
-  return rows
-})
-
-function rowKey(itemId: number, rowIndex: number): string {
-  return `${itemId}-${rowIndex}`
-}
+const preparationRows = computed<PrepRow[]>(() => getPreparationRows(props.order) as PrepRow[])
 
 function isRowDone(row: PrepRow): boolean {
-  const map = props.doneMap?.[props.order.id] || {}
-  const doneEntry = map[rowKey(row.item.id, row.rowIndex)]
-  if (doneEntry !== undefined) return !!doneEntry
-  return (row.item.completed_quantity ?? 0) > row.rowIndex
+  return isRowDoneShared(props.doneMap, props.order, row.item.id, row.rowIndex)
 }
 
 function toggleRow(itemId: number, rowIndex: number) {

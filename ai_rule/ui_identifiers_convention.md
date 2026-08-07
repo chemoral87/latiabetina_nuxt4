@@ -35,6 +35,30 @@ Inputs and form controls do **not** carry a component suffix; use just `{view}-{
 | Card (`VCard`) | `-card` |
 | Table / Data table (`VTable`, `VDataTable`, `VDataTableServer`) | `-dt-*` (existing ids only) |
 | Inputs & controls (`VTextField`, `VSelect`, `VCombobox`, `VAutocomplete`, `VSwitch`, `VCheckbox`, `VSlider`, `VChip`, `VTextarea`, `VRangeSlider`) | *(no suffix)* |
+| Containers & text (`div`, `span`, `VRow`, `VCol`, `VSheet`, `VExpandTransition`, ...) | *(no suffix — id only when needed, see Containers & Text)* |
+
+## Containers & Text (`div`, `span`, `VRow`, `VCol`, `VSheet`, etc.)
+
+Structural containers and inline text follow the same `{view}-{purpose}` pattern
+(**no component suffix**), but only need an `id` when they earn one:
+
+- **Id required** when the element is a component root, interactive (click
+  target, tooltip anchor, keyboard focus), or referenced from JavaScript / tests
+  / e2e. Examples already in the codebase: `pos-cart-panel`, `pos-total-block`,
+  `pos-footer-toggle-bar`, `pos-footer-action-row`, `pos-footer-bottom`.
+- **Id optional** for purely presentational wrappers — layout/spacing divs with
+  no behavior should use a **class**, not an id.
+- **Spans** (`span`): `{view}-{purpose}`, e.g. `crsqi-score` (score label),
+  `crsqi-counter` (question counter), `crsqi-countdown` (timer label),
+  `pos-cart-count` (item-count label).
+- **Divs / VSheets / VRows / VCols**: `{view}-{purpose}`, e.g. `pos-total-block`,
+  `pos-footer-action-row`, `pos-cart-panel`.
+- Always lowercase kebab-case — never camelCase (`subsectionPanel` is wrong; use
+  `aud-stageop-subsection-panel`) and never underscores (`start_date` →
+  `start-date`).
+
+> Rule of thumb: `class` is for styling, `id` is for behavior and tests. When in
+> doubt, omit the id on a plain wrapper.
 
 ## View Prefixes
 
@@ -90,6 +114,9 @@ Every interactive element in a page (`app/pages/**`) must carry an id built as
 - **Chips**: `{view}-{purpose}`
 - **Tables**: `{view}-{purpose}`
 - **Cards**: `{view}-{purpose}-card`
+- **Containers & text** (`div`, `span`, `VRow`, `VCol`, `VSheet`, ...):
+  `{view}-{purpose}` only when interactive or referenced from JS/tests (see
+  Containers & Text section).
 
 Do not rename existing ids that already follow the pattern; only add ids where missing.
 

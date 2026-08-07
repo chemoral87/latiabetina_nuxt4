@@ -12,6 +12,7 @@
       @reload="loadActiveOrders"
       @update:sound-enabled="soundEnabled = $event"
       @dismiss-order="dismissOrder"
+      @complete-order="completeOrder"
       @toggle-row-done="toggleRowDone"
       @undo-row-done="undoRowDone"
     />
@@ -21,6 +22,7 @@
 <script setup lang="ts">
 import { createRealtimeListeners } from "~/utils/realtime"
 import { useUAParser } from "~/utils/userAgent"
+import { isRowDone as isRowDoneShared, rowKey, type KdsOrderLike } from "~/utils/kds"
 
 definePageMeta({
   title: "Pantalla de Cocina",
@@ -154,15 +156,10 @@ async function handleVisibilityChange() {
 
 // ── Item / Order state ────────────────────────────────────────────────
 
-function rowKey(itemId: number, rowIndex: number) {
-  return `${itemId}-${rowIndex}`
-}
-
 function isRowDone(saleId: number, itemId: number, rowIndex: number): boolean {
   const sale = orders.value.find((o) => o.id === saleId)
-  const item = (sale?.items as { id: number; completed_quantity?: number }[] | undefined)?.find((i) => i.id === itemId)
-  if ((item?.completed_quantity ?? 0) > rowIndex) return true
-  return !!doneMap.value[saleId]?.[rowKey(itemId, rowIndex)]
+  if (!sale) return false
+  return isRowDoneShared(doneMap.value, sale as unknown as KdsOrderLike, itemId, rowIndex)
 }
 
 function isItemCompleted(item: { completed_quantity?: number; quantity?: number }): boolean {
@@ -247,6 +244,42 @@ function dismissOrder(orderId: number) {
   // Items were already individually completed via toggleRowDone.
   // Just hide the order from the KDS board.
   dismissedIds.value = { ...dismissedIds.value, [orderId]: true }
+}
+
+/**
+ * Mark an order as delivered from the KDS: completes every preparation row
+ * (locally, so the card flips to the completed state and starts the dismiss
+ * countdown) and calls PATCH /sale/{sale}/complete so the backend marks all
+ * pending items as completed and the sale as COMPLETED.
+ */
+async function completeOrder(orderId: number) {
+  const sale = orders.value.find((o) => o.id === orderId)
+  if (!sale) return
+
+  const items = (sale.items as { id: number; quantity?: number }[] | undefined) ?? []
+  const markedKeys: string[] = []
+  const map = { ...(doneMap.value[orderId] || {}) }
+
+  items.forEach((item) => {
+    for (let i = 0; i < (item.quantity ?? 1); i++) {
+      if (isRowDone(orderId, item.id, i)) continue
+      const key = rowKey(item.id, i)
+      map[key] = true
+      markedKeys.push(key)
+    }
+  })
+  if (markedKeys.length === 0) return
+  doneMap.value = { ...doneMap.value, [orderId]: map }
+
+  try {
+    await Sale.complete(orderId)
+  } catch (err) {
+    console.error(err)
+    // Revert the optimistic marks so the order stays actionable
+    const revert = { ...(doneMap.value[orderId] || {}) }
+    markedKeys.forEach((k) => { delete revert[k] })
+    doneMap.value = { ...doneMap.value, [orderId]: revert }
+  }
 }
 
 // ── Audio ─────────────────────────────────────────────────────────────

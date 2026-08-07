@@ -78,6 +78,7 @@
         @toggle-row-done="(saleId, itemId, rowIndex) => emit('toggle-row-done', saleId, itemId, rowIndex)"
         @undo-row-done="(saleId, itemId, rowIndex) => emit('undo-row-done', saleId, itemId, rowIndex)"
         @dismiss-order="(orderId) => emit('dismiss-order', orderId)"
+        @complete-order="(orderId) => emit('complete-order', orderId)"
       />
     </template>
   </div>
@@ -116,6 +117,7 @@ const emit = defineEmits<{
   (e: 'reload'): void
   (e: 'update:sound-enabled', val: boolean): void
   (e: 'dismiss-order', orderId: number): void
+  (e: 'complete-order', orderId: number): void
   (e: 'toggle-row-done', saleId: number, itemId: number, rowIndex: number): void
   (e: 'undo-row-done', saleId: number, itemId: number, rowIndex: number): void
 }>()

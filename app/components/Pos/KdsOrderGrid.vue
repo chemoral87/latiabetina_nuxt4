@@ -13,7 +13,7 @@
       <VCard
         variant="outlined"
         class="kds-order-card"
-        :class="{ 'kds-order-completed': allDoneForSale(order) }"
+        :class="{ 'kds-order-completed': allDoneForSale(props.doneMap, order) }"
       >
         <div class="kds-order-header">
           <div class="kds-order-number">{{ order.number }}</div>
@@ -41,6 +41,20 @@
           @undo-row-done="(saleId, itemId, rowIndex) => emit('undo-row-done', saleId, itemId, rowIndex)"
         />
 
+        <!-- Mark order as delivered (completes all preparation items) -->
+        <div v-if="!allDoneForSale(props.doneMap, order)" class="kds-order-actions">
+          <VBtn
+            :id="`pos-kds-deliver-btn-${order.id}`"
+            block
+            color="success"
+            class="kds-deliver-btn"
+            @click="emit('complete-order', order.id)"
+          >
+            <VIcon start size="small">mdi-check-all</VIcon>
+            Marcar como Entregado
+          </VBtn>
+        </div>
+
         <!-- Dismiss progress bar (20s countdown) -->
         <VProgressLinear
           v-if="orderTimers[order.id]"
@@ -57,6 +71,8 @@
 </template>
 
 <script setup lang="ts">
+import { allDoneForSale } from "~/utils/kds"
+
 const DISMISS_DELAY_MS = 20_000
 
 interface PrepItem {
@@ -91,6 +107,7 @@ const emit = defineEmits<{
   (e: 'toggle-row-done', saleId: number, itemId: number, rowIndex: number): void
   (e: 'undo-row-done', saleId: number, itemId: number, rowIndex: number): void
   (e: 'dismiss-order', orderId: number): void
+  (e: 'complete-order', orderId: number): void
 }>()
 
 const orderTimers = ref<Record<number, TimerState>>({})
@@ -117,7 +134,7 @@ watch(
   () => props.doneMap,
   () => {
     props.activeOrders.forEach((order) => {
-      if (allDoneForSale(order)) {
+      if (allDoneForSale(props.doneMap, order)) {
         // All items done — start or keep the dismissal timer
         if (!orderTimers.value[order.id]) {
           startDismissTimer(order)
@@ -131,35 +148,7 @@ watch(
   { deep: true },
 )
 
-// ── Item / Order state helpers ────────────────────────────────────────
-
-function rowKey(itemId: number, rowIndex: number): string {
-  return `${itemId}-${rowIndex}`
-}
-
-function isRowDone(sale: KdsOrder, itemId: number, rowIndex: number): boolean {
-  const doneEntry = props.doneMap[sale.id]?.[rowKey(itemId, rowIndex)]
-  if (doneEntry !== undefined) return !!doneEntry
-
-  const item = sale.items?.find((i) => i.id === itemId)
-  return (item?.completed_quantity ?? 0) > rowIndex
-}
-
-function getPreparationRows(sale: KdsOrder): { item: PrepItem; rowIndex: number }[] {
-  const rows: { item: PrepItem; rowIndex: number }[] = []
-  const items = sale.items?.filter((i) => i.product?.requires_preparation === true) || []
-  items.forEach((item) => {
-    for (let i = 0; i < item.quantity; i++) {
-      rows.push({ item, rowIndex: i })
-    }
-  })
-  return rows
-}
-
-function allDoneForSale(sale: KdsOrder): boolean {
-  const rows = getPreparationRows(sale)
-  return rows.length > 0 && rows.every((r) => isRowDone(sale, r.item.id, r.rowIndex))
-}
+// ── Item / Order state helpers (shared with the page and items list) ──
 
 // ── Elapsed time ──────────────────────────────────────────────────────
 
@@ -294,5 +283,16 @@ function _finishDismissTimer(orderId: number) {
   font-weight: 600;
   color: #37474f;
   letter-spacing: 0.2px;
+}
+
+/* ── Mark-as-delivered action block ── */
+.kds-order-actions {
+  padding: 4px 12px 12px;
+}
+
+.kds-deliver-btn {
+  height: 40px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.03em !important;
 }
 </style>
