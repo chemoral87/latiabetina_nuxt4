@@ -87,7 +87,7 @@ const lastFreq = ref<number | null>(null)
 const lastValidFreq = ref<number | null>(null) // Última frecuencia válida detectada
 const noiseCalibrating = ref(false) // UI state
 const selectedProcessor = ref("ap_gemini10") // Default processor
-const processorOptions = ["ap_claude9", "ap_gemini10"]
+const processorOptions = ["ap_claude9", "ap_gemini10", "ap_deepseek"]
 const histogramComponent = ref<{ resetCanvas: () => void } | null>(null)
 
 const currentNoteOptions = computed(() =>
