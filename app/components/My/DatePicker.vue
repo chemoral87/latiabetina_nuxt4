@@ -295,6 +295,10 @@ function onClear() {
   selectedDate.value = null
   emit("update:modelValue", null)
   emit("clear")
+  dateMenu.value = false
+  nextTick(() => {
+    dateMenuRef.value?.$el?.querySelector?.("input")?.focus?.()
+  })
 }
 
 function onToday() {
@@ -304,6 +308,10 @@ function onToday() {
   viewMode.value = 'month'
   emit("update:modelValue", adapter.toISO(t))
   emit("today")
+  dateMenu.value = false
+  nextTick(() => {
+    dateMenuRef.value?.$el?.querySelector?.("input")?.focus?.()
+  })
 }
 </script>
 

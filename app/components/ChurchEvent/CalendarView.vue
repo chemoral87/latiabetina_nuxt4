@@ -1,27 +1,50 @@
 ﻿<template>
-  <VRow id="cmp-church-event-calendar-view" justify="center" class="mb-2" density="comfortable">
+  <VRow
+    id="cmp-church-event-calendar-view"
+    class="mb-2"
+    justify="center"
+    density="comfortable"
+  >
     <VCol cols="12">
       <VCard id="eve-calen-card-1" elevation="1">
-        <div class="d-flex align-center justify-space-between px-4 py-1 calendar-toolbar">
-          <button class="month-nav-btn" aria-label="Mes anterior" @click="emit('prev-month')">
+        <div
+          class="d-flex align-center justify-space-between px-4 py-1 calendar-toolbar"
+        >
+          <button
+            class="month-nav-btn"
+            aria-label="Mes anterior"
+            @click="emit('prev-month')"
+          >
             <VIcon size="22" color="white">mdi-chevron-left</VIcon>
           </button>
-          <span class="text-body-1 font-weight-medium text-capitalize calendar-toolbar-title">
+          <span
+            class="text-body-1 font-weight-medium text-capitalize calendar-toolbar-title"
+          >
             {{ monthNames[calMonth] }} {{ calYear }}
           </span>
-          <button class="month-nav-btn" aria-label="Mes siguiente" @click="emit('next-month')">
+          <button
+            class="month-nav-btn"
+            aria-label="Mes siguiente"
+            @click="emit('next-month')"
+          >
             <VIcon size="22" color="white">mdi-chevron-right</VIcon>
           </button>
         </div>
 
         <div class="big-cal-grid">
-          <div v-for="day in currentWeekdayNames" :key="day" class="big-cal-header text-caption font-weight-bold">
+          <div
+            v-for="day in currentWeekdayNames"
+            :key="day"
+            class="big-cal-header text-caption font-weight-bold"
+          >
             {{ day }}
           </div>
 
           <div
             v-for="cell in allCells"
             :key="cell.iso"
+            tabindex="0"
+            role="button"
             class="big-cal-cell"
             :class="{
               'big-cal-today': cell.isToday,
@@ -29,18 +52,24 @@
               'big-cal-has-events': cell.events.length,
               'big-cal-selected': selectedDayIso === cell.iso,
             }"
-            role="button"
-            tabindex="0"
             @click="selectDay(cell)"
             @keydown.enter="selectDay(cell)"
           >
             <div class="big-cal-day-header">
-              <div class="big-cal-day-number font-weight-bold" :class="{ 'today-badge': cell.isToday }">
+              <div
+                :class="{ 'today-badge': cell.isToday }"
+                class="big-cal-day-number font-weight-bold"
+              >
                 {{ cell.day }}
               </div>
-              <VTooltip text="Nuevo evento" location="bottom">
+              <VTooltip location="bottom" text="Nuevo evento">
                 <template #activator="{ props: tooltipProps }">
-                  <button class="cell-add-btn" aria-label="Nuevo evento" v-bind="tooltipProps" @click.stop="emit('new', cell.iso)">
+                  <button
+                    class="cell-add-btn"
+                    aria-label="Nuevo evento"
+                    v-bind="tooltipProps"
+                    @click.stop="emit('new', cell.iso)"
+                  >
                     <VIcon size="20" color="success">mdi-plus-circle</VIcon>
                   </button>
                 </template>
@@ -50,34 +79,69 @@
             <div
               v-for="event in cell.events"
               :key="event.id"
-              class="event-pill text-caption d-none d-sm-flex"
-              :style="{ borderColor: classificationColor(event.classification) }"
               :title="event.name"
+              class="event-pill text-caption d-none d-sm-flex"
+              :style="{
+                borderColor: classificationColor(event.classification),
+              }"
             >
-              <div v-if="event.url_image_s3 || event.url_image" class="event-pill-thumb" @click.stop="emit('edit', event)">
-                <img :src="event.url_image_s3 || event.url_image" class="event-thumb-img" alt="" />
+              <div
+                v-if="event.url_image_s3 || event.url_image"
+                class="event-pill-thumb"
+                @click.stop="emit('edit', event)"
+              >
+                <img
+                  alt=""
+                  class="event-thumb-img"
+                  :src="event.url_image_s3 || event.url_image"
+                />
               </div>
               <div class="event-pill-main" @click.stop="emit('edit', event)">
                 <span class="event-pill-name">{{ event.name }}</span>
-                <span v-if="event.time_start" class="event-pill-time">{{ formatEventTime(event.time_start) }}</span>
+                <span v-if="event.time_start" class="event-pill-time">{{
+                  formatEventTime(event.time_start)
+                }}</span>
                 <div class="event-actions">
                   <VTooltip text="Editar" location="bottom">
                     <template #activator="{ props: tooltipProps }">
-                      <VBtn v-bind="tooltipProps" id="eve-calendar-edit-btn" icon size="small" color="primary" @click.stop="emit('edit', event)">
+                      <VBtn
+                        v-bind="tooltipProps"
+                        id="eve-calendar-edit-btn"
+                        icon
+                        class="mr-1"
+                        size="x-small"
+                        color="primary"
+                        @click.stop="emit('edit', event)"
+                      >
                         <VIcon size="18">mdi-pencil</VIcon>
                       </VBtn>
                     </template>
                   </VTooltip>
                   <VTooltip text="Copiar" location="bottom">
                     <template #activator="{ props: tooltipProps }">
-                      <VBtn v-bind="tooltipProps" id="eve-calendar-copy-btn" icon size="small" color="orange" @click.stop="emit('copy', event)">
+                      <VBtn
+                        v-bind="tooltipProps"
+                        id="eve-calendar-copy-btn"
+                        icon
+                        class="mr-1"
+                        color="orange"
+                        size="x-small"
+                        @click.stop="emit('copy', event)"
+                      >
                         <VIcon size="18">mdi-content-copy</VIcon>
                       </VBtn>
                     </template>
                   </VTooltip>
                   <VTooltip text="Eliminar" location="bottom">
                     <template #activator="{ props: tooltipProps }">
-                      <VBtn v-bind="tooltipProps" id="eve-calendar-delete-btn" icon size="small" color="error" @click.stop="emit('delete', event)">
+                      <VBtn
+                        v-bind="tooltipProps"
+                        id="eve-calendar-delete-btn"
+                        icon
+                        color="error"
+                        size="x-small"
+                        @click.stop="emit('delete', event)"
+                      >
                         <VIcon size="18">mdi-delete</VIcon>
                       </VBtn>
                     </template>
@@ -91,18 +155,30 @@
                 v-for="event in cell.events"
                 :key="event.id"
                 class="event-dot"
-                :style="{ backgroundColor: classificationColor(event.classification) }"
+                :style="{
+                  backgroundColor: classificationColor(event.classification),
+                }"
               ></span>
             </div>
           </div>
         </div>
 
-        <div v-if="!selectedDayIso" class="d-flex d-sm-none align-center justify-center px-4 py-3 mobile-hint">
-          <VIcon size="16" class="mr-1 calendar-hint-icon">mdi-calendar-cursor</VIcon>
-          <span class="text-caption text-center">Seleccione una fecha con punto para ver los eventos</span>
+        <div
+          v-if="!selectedDayIso"
+          class="d-flex d-sm-none align-center justify-center px-4 py-3 mobile-hint"
+        >
+          <VIcon size="16" class="mr-1 calendar-hint-icon"
+            >mdi-calendar-cursor</VIcon
+          >
+          <span class="text-caption text-center"
+            >Seleccione una fecha con punto para ver los eventos</span
+          >
         </div>
 
-        <div v-if="selectedDayEvents.length" class="d-flex d-sm-none flex-column px-3 pb-3 pt-2 mobile-events">
+        <div
+          v-if="selectedDayEvents.length"
+          class="d-flex d-sm-none flex-column px-3 pb-3 pt-2 mobile-events"
+        >
           <div
             v-for="event in selectedDayEvents"
             :key="event.id"
@@ -111,19 +187,42 @@
           >
             <div class="d-flex align-start justify-space-between">
               <div class="mobile-event-main" @click="emit('edit', event)">
-                <div class="font-weight-bold text-body-2 calendar-primary-text">{{ event.name }}</div>
+                <div class="font-weight-bold text-body-2 calendar-primary-text">
+                  {{ event.name }}
+                </div>
                 <div v-if="event.time_start" class="text-caption text-grey">
                   {{ formatEventTime(event.time_start) }}
                 </div>
               </div>
               <div class="d-flex flex-nowrap ml-2">
-                <VBtn id="eve-calendar-mobile-edit-btn" icon size="small" color="primary" aria-label="Editar" @click.stop="emit('edit', event)">
+                <VBtn
+                  id="eve-calendar-mobile-edit-btn"
+                  icon
+                  size="small"
+                  color="primary"
+                  aria-label="Editar"
+                  @click.stop="emit('edit', event)"
+                >
                   <VIcon size="16">mdi-pencil</VIcon>
                 </VBtn>
-                <VBtn id="eve-calendar-mobile-copy-btn" icon size="small" color="orange" aria-label="Copiar" @click.stop="emit('copy', event)">
+                <VBtn
+                  id="eve-calendar-mobile-copy-btn"
+                  icon
+                  size="small"
+                  color="orange"
+                  aria-label="Copiar"
+                  @click.stop="emit('copy', event)"
+                >
                   <VIcon size="16">mdi-content-copy</VIcon>
                 </VBtn>
-                <VBtn id="eve-calendar-mobile-delete-btn" icon size="small" color="error" aria-label="Eliminar" @click.stop="emit('delete', event)">
+                <VBtn
+                  id="eve-calendar-mobile-delete-btn"
+                  icon
+                  size="small"
+                  color="error"
+                  aria-label="Eliminar"
+                  @click.stop="emit('delete', event)"
+                >
                   <VIcon size="16">mdi-delete</VIcon>
                 </VBtn>
               </div>
@@ -131,10 +230,22 @@
           </div>
         </div>
 
-        <div v-if="activeClassifications.length" class="d-flex align-center flex-wrap px-4 pb-3 pt-2 legend-row">
-          <span v-for="classification in activeClassifications" :key="classification.value" class="d-flex align-center legend-item">
-            <span class="legend-dot" :style="{ borderColor: classification.hex }"></span>
-            <span class="text-caption text-grey-darken-1">{{ classification.label }}</span>
+        <div
+          v-if="activeClassifications.length"
+          class="d-flex align-center flex-wrap px-4 pb-3 pt-2 legend-row"
+        >
+          <span
+            v-for="classification in activeClassifications"
+            :key="classification.value"
+            class="d-flex align-center legend-item"
+          >
+            <span
+              class="legend-dot"
+              :style="{ borderColor: classification.hex }"
+            ></span>
+            <span class="text-caption text-grey-darken-1">{{
+              classification.label
+            }}</span>
           </span>
         </div>
       </VCard>
@@ -143,118 +254,157 @@
 </template>
 
 <script setup lang="ts">
-import { classifications, classificationColor } from "./classifications"
+import { classifications, classificationColor } from "./classifications";
 
 interface CalendarEvent {
-  id: number | string
-  name?: string
-  event_date?: string
-  end_date?: string
-  start_date?: string
-  publish_date?: string
-  time_start?: string
-  classification?: string
-  url_image_s3?: string
-  url_image?: string
+  id: number | string;
+  name?: string;
+  event_date?: string;
+  end_date?: string;
+  start_date?: string;
+  publish_date?: string;
+  time_start?: string;
+  classification?: string;
+  url_image_s3?: string;
+  url_image?: string;
 }
 
 interface CalendarCell {
-  day: number
-  iso: string
-  isToday: boolean
-  otherMonth: boolean
-  events: CalendarEvent[]
+  day: number;
+  iso: string;
+  isToday: boolean;
+  otherMonth: boolean;
+  events: CalendarEvent[];
 }
 
 const props = defineProps<{
-  calYear: number
-  calMonth: number
-  events?: CalendarEvent[]
-  weekStartsOnMonday?: boolean
-}>()
+  calYear: number;
+  calMonth: number;
+  events?: CalendarEvent[];
+  weekStartsOnMonday?: boolean;
+}>();
 
 const emit = defineEmits<{
-  (e: 'prev-month'): void
-  (e: 'next-month'): void
-  (e: 'new', dateIso: string): void
-  (e: 'edit', event: CalendarEvent): void
-  (e: 'copy', event: CalendarEvent): void
-  (e: 'delete', event: CalendarEvent): void
-}>()
+  (e: "prev-month"): void;
+  (e: "next-month"): void;
+  (e: "new", dateIso: string): void;
+  (e: "edit", event: CalendarEvent): void;
+  (e: "copy", event: CalendarEvent): void;
+  (e: "delete", event: CalendarEvent): void;
+}>();
 
 const monthNames = [
-  "enero", "febrero", "marzo", "abril", "mayo", "junio",
-  "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre",
-]
+  "enero",
+  "febrero",
+  "marzo",
+  "abril",
+  "mayo",
+  "junio",
+  "julio",
+  "agosto",
+  "septiembre",
+  "octubre",
+  "noviembre",
+  "diciembre",
+];
 
-const weekdayNamesSundayFirst = ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"]
-const weekdayNamesMondayFirst = ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"]
+const weekdayNamesSundayFirst = [
+  "Dom",
+  "Lun",
+  "Mar",
+  "Mie",
+  "Jue",
+  "Vie",
+  "Sab",
+];
+const weekdayNamesMondayFirst = [
+  "Lun",
+  "Mar",
+  "Mie",
+  "Jue",
+  "Vie",
+  "Sab",
+  "Dom",
+];
 
-const selectedDayIso = ref<string | null>(null)
-const isMobile = ref(false)
-const today = new Date()
+const selectedDayIso = ref<string | null>(null);
+const isMobile = ref(false);
+const today = new Date();
 
 const activeClassifications = computed(() => {
-  const usedValues = new Set((props.events ?? []).map((event) => event.classification).filter(Boolean))
-  return classifications.filter((classification) => usedValues.has(classification.value))
-})
+  const usedValues = new Set(
+    (props.events ?? []).map((event) => event.classification).filter(Boolean),
+  );
+  return classifications.filter((classification) =>
+    usedValues.has(classification.value),
+  );
+});
 
 const currentWeekdayNames = computed(() =>
   props.weekStartsOnMonday ? weekdayNamesMondayFirst : weekdayNamesSundayFirst,
-)
+);
 
 const eventsByDate = computed<Record<string, CalendarEvent[]>>(() => {
-  return (props.events ?? []).reduce<Record<string, CalendarEvent[]>>((map, event) => {
-    const eventDate = event.event_date || event.end_date || event.start_date || event.publish_date
-    if (!eventDate) return map
+  return (props.events ?? []).reduce<Record<string, CalendarEvent[]>>(
+    (map, event) => {
+      const eventDate =
+        event.event_date ||
+        event.end_date ||
+        event.start_date ||
+        event.publish_date;
+      if (!eventDate) return map;
 
-    const key = eventDate.slice(0, 10)
-    if (!map[key]) map[key] = []
-    map[key].push(event)
-    return map
-  }, {})
-})
+      const key = eventDate.slice(0, 10);
+      if (!map[key]) map[key] = [];
+      map[key].push(event);
+      return map;
+    },
+    {},
+  );
+});
 
 const selectedDayEvents = computed(() => {
-  if (!selectedDayIso.value) return []
-  return eventsByDate.value[selectedDayIso.value] || []
-})
+  if (!selectedDayIso.value) return [];
+  return eventsByDate.value[selectedDayIso.value] || [];
+});
 
 function toIso(year: number, month: number, day: number): string {
-  return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`
+  return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 }
 
 function toWeekColumn(jsDay: number): number {
-  return props.weekStartsOnMonday ? (jsDay + 6) % 7 : jsDay
+  return props.weekStartsOnMonday ? (jsDay + 6) % 7 : jsDay;
 }
 
 const leadingCells = computed<CalendarCell[]>(() => {
-  const firstDayOfWeek = toWeekColumn(new Date(props.calYear, props.calMonth, 1).getDay())
-  if (firstDayOfWeek === 0) return []
+  const firstDayOfWeek = toWeekColumn(
+    new Date(props.calYear, props.calMonth, 1).getDay(),
+  );
+  if (firstDayOfWeek === 0) return [];
 
-  const prevMonth = props.calMonth === 0 ? 11 : props.calMonth - 1
-  const prevYear = props.calMonth === 0 ? props.calYear - 1 : props.calYear
-  const daysInPrevMonth = new Date(prevYear, prevMonth + 1, 0).getDate()
+  const prevMonth = props.calMonth === 0 ? 11 : props.calMonth - 1;
+  const prevYear = props.calMonth === 0 ? props.calYear - 1 : props.calYear;
+  const daysInPrevMonth = new Date(prevYear, prevMonth + 1, 0).getDate();
 
   return Array.from({ length: firstDayOfWeek }, (_, index) => {
-    const day = daysInPrevMonth - (firstDayOfWeek - 1 - index)
-    const iso = toIso(prevYear, prevMonth, day)
+    const day = daysInPrevMonth - (firstDayOfWeek - 1 - index);
+    const iso = toIso(prevYear, prevMonth, day);
     return {
       day,
       iso,
       isToday: false,
       otherMonth: true,
       events: eventsByDate.value[iso] || [],
-    }
-  })
-})
+    };
+  });
+});
 
 const monthCells = computed<CalendarCell[]>(() => {
-  const daysInMonth = new Date(props.calYear, props.calMonth + 1, 0).getDate()
-  const result: CalendarCell[] = []
+  const daysInMonth = new Date(props.calYear, props.calMonth + 1, 0).getDate();
+  const result: CalendarCell[] = [];
 
   for (let day = 1; day <= daysInMonth; day += 1) {
-    const iso = toIso(props.calYear, props.calMonth, day)
+    const iso = toIso(props.calYear, props.calMonth, day);
     result.push({
       day,
       iso,
@@ -264,65 +414,70 @@ const monthCells = computed<CalendarCell[]>(() => {
         day === today.getDate(),
       otherMonth: false,
       events: eventsByDate.value[iso] || [],
-    })
+    });
   }
 
-  const lastDayOfWeek = toWeekColumn(new Date(props.calYear, props.calMonth, daysInMonth).getDay())
+  const lastDayOfWeek = toWeekColumn(
+    new Date(props.calYear, props.calMonth, daysInMonth).getDay(),
+  );
   if (lastDayOfWeek < 6) {
-    const nextMonth = props.calMonth === 11 ? 0 : props.calMonth + 1
-    const nextYear = props.calMonth === 11 ? props.calYear + 1 : props.calYear
+    const nextMonth = props.calMonth === 11 ? 0 : props.calMonth + 1;
+    const nextYear = props.calMonth === 11 ? props.calYear + 1 : props.calYear;
 
     for (let day = 1; day <= 6 - lastDayOfWeek; day += 1) {
-      const iso = toIso(nextYear, nextMonth, day)
+      const iso = toIso(nextYear, nextMonth, day);
       result.push({
         day,
         iso,
         isToday: false,
         otherMonth: true,
         events: eventsByDate.value[iso] || [],
-      })
+      });
     }
   }
 
-  return result
-})
+  return result;
+});
 
-const allCells = computed<CalendarCell[]>(() => [...leadingCells.value, ...monthCells.value])
+const allCells = computed<CalendarCell[]>(() => [
+  ...leadingCells.value,
+  ...monthCells.value,
+]);
 
 function updateIsMobile() {
-  isMobile.value = window.innerWidth < 600
+  isMobile.value = window.innerWidth < 600;
 }
 
 onMounted(() => {
-  updateIsMobile()
-  window.addEventListener("resize", updateIsMobile)
-})
+  updateIsMobile();
+  window.addEventListener("resize", updateIsMobile);
+});
 
 onBeforeUnmount(() => {
-  window.removeEventListener("resize", updateIsMobile)
-})
+  window.removeEventListener("resize", updateIsMobile);
+});
 
 function selectDay(cell: CalendarCell) {
-  if (!isMobile.value) return
+  if (!isMobile.value) return;
 
   if (!cell.events.length) {
-    selectedDayIso.value = null
-    return
+    selectedDayIso.value = null;
+    return;
   }
 
-  selectedDayIso.value = selectedDayIso.value === cell.iso ? null : cell.iso
+  selectedDayIso.value = selectedDayIso.value === cell.iso ? null : cell.iso;
 }
 
 function formatEventTime(value?: string): string {
-  if (!value) return ""
-  const [hour = "0", minute = "00"] = String(value).split(":")
-  const date = new Date()
-  date.setHours(Number(hour), Number(minute), 0, 0)
+  if (!value) return "";
+  const [hour = "0", minute = "00"] = String(value).split(":");
+  const date = new Date();
+  date.setHours(Number(hour), Number(minute), 0, 0);
   return date.toLocaleTimeString("es-MX", {
     hour: "numeric",
     minute: "2-digit",
     hour12: true,
-  })
+  });
 }
 </script>
 
@@ -541,7 +696,10 @@ function formatEventTime(value?: string): string {
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
   cursor: pointer;
-  transition: background 0.18s, border-color 0.18s, transform 0.12s;
+  transition:
+    background 0.18s,
+    border-color 0.18s,
+    transform 0.12s;
 }
 
 .month-nav-btn:hover {
