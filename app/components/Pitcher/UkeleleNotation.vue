@@ -2,7 +2,7 @@
   <VCard id="cmp-pitcher-ukelele-notation" class="pa-0">
     <VCardTitle class="text-h6 mb-2">
       Diapasón de Ukelele
-      <VChip v-if="currentNote" class="ml-2" size="small" color="primary" variant="elevated">Nota: {{ currentNote }}</VChip>
+      <VChip v-if="currentNote" id="pit-ukele-note" class="ml-2" size="small" color="primary" variant="elevated">Nota: {{ currentNote }}</VChip>
     </VCardTitle>
 
     <VCardText>
@@ -15,7 +15,7 @@
         </VCol>
       </VRow>
       <!-- Fretboard -->
-      <div class="fretboard-container">
+      <div id="pit-ukele-fretboard" class="fretboard-container">
         <svg class="fretboard" preserveAspectRatio="xMidYMid meet" :viewBox="`0 0 ${fretboardWidth} ${fretboardHeight}`">
           <!-- Fret lines -->
           <line v-for="fret in 13" :key="'fret-' + fret" y1="20" stroke="#8B7355" :x1="getFretX(fret - 1)" :x2="getFretX(fret - 1)" :y2="fretboardHeight - 20" :stroke-width="fret === 1 ? 6 : 2" />

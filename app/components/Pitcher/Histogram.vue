@@ -1,12 +1,13 @@
 <template>
   <div id="cmp-pitcher-histogram" ref="rootEl">
-    <h5 class="text-center font-weight-regular">Histograma de Frecuencia</h5>
-    <canvas ref="histogramEl" :width="canvasWidth" :height="histogramHeight" style="display: block; background-color: black; width: 100%" />
-    <div class="tuning-meter-container mt-2">
+    <h5 id="pit-hist-title" class="text-center font-weight-regular">Histograma de Frecuencia</h5>
+    <canvas id="pit-hist-canvas" ref="histogramEl" :width="canvasWidth" :height="histogramHeight" style="display: block; background-color: black; width: 100%" />
+    <div id="pit-hist-meter" class="tuning-meter-container mt-2">
       <div class="tuning-meter-bar">
         <div class="tuning-meter-center"></div>
         <div
           v-if="centsDeviation !== null"
+          id="pit-hist-needle"
           class="tuning-meter-needle"
           :style="{
             left: `calc(50% + ${Math.min(50, Math.max(-50, centsDeviation))}%)`,

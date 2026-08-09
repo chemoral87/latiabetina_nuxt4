@@ -1,18 +1,18 @@
 <template>
   <VContainer class="pa-4" style="max-width: 1000px">
-    <h4 class="text-left mb-1">
+    <h4 id="pit-header" class="text-left mb-1">
       <PitcherConfigButton />
       Tuner
       <span>
         Frec:
-        <strong class="text-right" style="display: inline-block; width: 50px">{{ freqDisplay }}</strong>
+        <strong id="pit-freq-display" class="text-right" style="display: inline-block; width: 50px">{{ freqDisplay }}</strong>
         Hz
       </span>
       |
-      <span>({{ dBDisplay }} dB)</span>
+      <span id="pit-db-display">({{ dBDisplay }} dB)</span>
     </h4>
 
-    <VRow class="mb-1" density="comfortable">
+    <VRow id="pit-actions-row" class="mb-1" density="comfortable">
       <VCol cols="6">
         <VBtn id="pit-reset-btn" block size="small" color="primary" @click="resetHistory">
           <VIcon start>mdi-restart</VIcon>
@@ -39,7 +39,7 @@
       </VCol>
     </VRow>
 
-    <VRow density="comfortable">
+    <VRow id="pit-display-row" density="comfortable">
       <VCol md="5" cols="8" class="pr-1 mx-0">
         <PitcherHistogram ref="histogramComponent" :history="history" :last-freq="lastFreq" :freq-display="freqDisplay" :cents-deviation="centsDeviation" />
       </VCol>

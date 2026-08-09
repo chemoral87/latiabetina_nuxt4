@@ -1,13 +1,13 @@
 <template>
   <div id="cmp-pitcher-staff-notation" class="staff-notation">
     <h5 class="text-center font-weight-regular">Pentagrama</h5>
-    <canvas ref="staffCanvasEl" :style="canvasStyle" :width="canvasWidth" :height="canvasHeight" />
+    <canvas id="pit-staff-canvas" ref="staffCanvasEl" :style="canvasStyle" :width="canvasWidth" :height="canvasHeight" />
     <div v-if="showCentsDeviation" class="text-right mt-2">
       <div class="text-caption">
-        <strong :class="tuningAccuracyClass" style="display: inline-block; text-align: right">{{ centsDeviation > 0 ? "+" : "" }}{{ centsDeviation !== null ? centsDeviation : "--" }}</strong>
+        <strong id="pit-staff-cents" :class="tuningAccuracyClass" style="display: inline-block; text-align: right">{{ centsDeviation > 0 ? "+" : "" }}{{ centsDeviation !== null ? centsDeviation : "--" }}</strong>
         <strong>cents</strong>
       </div>
-      <VChip size="small" variant="elevated" class="text-caption" :color="tuningAccuracyColor">
+      <VChip id="pit-staff-accuracy" size="small" variant="elevated" class="text-caption" :color="tuningAccuracyColor">
         {{ tuningAccuracyText }}
       </VChip>
     </div>

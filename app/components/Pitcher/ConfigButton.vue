@@ -18,11 +18,11 @@
           <VRow density="comfortable">
             <!-- Microfono Section -->
             <VCol cols="12">
-              <h3 class="text-center py-0 my-0">Micrófono</h3>
+              <h3 id="pit-config-mic-title" class="text-center py-0 my-0">Micrófono</h3>
             </VCol>
             <VCol sm="6" cols="12">
               <VSlider id="pit-config-sensitivity" v-model="sensitivity" :max="0.01" thumb-label hide-details :min="0.0001" :step="0.0001" label="Sensibilidad" />
-              <div class="text-center font-weight-bold">
+              <div id="pit-config-sensitivity-value" class="text-center font-weight-bold">
                 {{ sensitivity.toFixed(4) }}
               </div>
             </VCol>
@@ -31,7 +31,7 @@
           <VRow density="comfortable">
             <!-- Histograma Section -->
             <VCol cols="12">
-              <h3 class="text-center py-0 my-0">Histograma</h3>
+              <h3 id="pit-config-histogram-title" class="text-center py-0 my-0">Histograma</h3>
             </VCol>
             <VCol sm="6" cols="12">
               <VSwitch id="pit-config-latin" v-model="latinNotation" hide-details class="mt-0 pt-0" label="Notación latina" />
@@ -41,26 +41,26 @@
             </VCol>
             <VCol sm="6" cols="12">
               <VSlider id="pit-config-history" v-model="maxHistory" :max="800" :min="300" :step="50" thumb-label hide-details label="Máx Historial" />
-              <div class="text-center font-weight-bold">
+              <div id="pit-config-history-value" class="text-center font-weight-bold">
                 {{ maxHistory }}
               </div>
             </VCol>
             <VCol sm="6" cols="12">
               <VSlider id="pit-config-notes" v-model="totalNotes" :max="25" :min="13" :step="1" thumb-label hide-details label="# Notas" />
-              <div class="text-center font-weight-bold">
+              <div id="pit-config-notes-value" class="text-center font-weight-bold">
                 {{ totalNotes }}
               </div>
             </VCol>
             <VCol sm="6" cols="12">
               <VSlider id="pit-config-height" v-model="histogramHeight" :max="450" :min="250" :step="25" thumb-label hide-details label="Altura Histograma" />
-              <div class="text-center font-weight-bold">{{ histogramHeight }}px</div>
+              <div id="pit-config-height-value" class="text-center font-weight-bold">{{ histogramHeight }}px</div>
             </VCol>
           </VRow>
           <VDivider class="my-4" />
           <VRow density="comfortable">
             <!-- Pentagrama Section -->
             <VCol cols="12">
-              <h3 class="text-center py-0 my-0">Pentagrama</h3>
+              <h3 id="pit-config-staff-title" class="text-center py-0 my-0">Pentagrama</h3>
             </VCol>
             <VCol sm="6" cols="12">
               <VSwitch id="pit-config-ghost" v-model="ghostQuarterNote" hide-details class="mt-0 pt-0" label="Mostrar nota fantasma" />
