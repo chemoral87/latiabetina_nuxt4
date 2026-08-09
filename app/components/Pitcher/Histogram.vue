@@ -1,7 +1,18 @@
 <template>
   <div id="cmp-pitcher-histogram" ref="rootEl">
     <h5 id="pit-hist-title" class="text-center font-weight-regular">Histograma de Frecuencia</h5>
-    <canvas id="pit-hist-canvas" ref="histogramEl" :width="canvasWidth" :height="histogramHeight" style="display: block; background-color: black; width: 100%" />
+    <div class="histogram-row">
+      <div id="pit-db-meter" class="db-meter">
+        <div id="pit-db-track" class="db-meter-track" :style="{ height: histogramHeight + 'px' }">
+          <div class="db-meter-fill" :style="{ height: dbFillPercent, backgroundColor: dbMeterColor }"></div>
+        </div>
+        <div class="db-meter-label">
+          <strong id="pit-db-value">{{ dbDisplay }}</strong>
+          <span>dB</span>
+        </div>
+      </div>
+      <canvas id="pit-hist-canvas" ref="histogramEl" :width="canvasWidth" :height="histogramHeight" style="display: block; background-color: black; flex: 1; min-width: 0" />
+    </div>
     <div id="pit-hist-meter" class="tuning-meter-container mt-2">
       <div class="tuning-meter-bar">
         <div class="tuning-meter-center"></div>
@@ -49,12 +60,14 @@ const props = withDefaults(
   defineProps<{
     history: HistoryPoint[]
     freqDisplay?: string
+    dbDisplay?: string
     lastFreq?: number | null
     centsDeviation?: number | null
   }>(),
   {
     history: () => [],
     freqDisplay: "--",
+    dbDisplay: "--",
     lastFreq: null,
     centsDeviation: null,
   },
@@ -68,6 +81,27 @@ const histogramEl = ref<HTMLCanvasElement | null>(null)
 const canvasWidth = ref(350)
 let ctx: CanvasRenderingContext2D | null = null
 let resizeTimeout: ReturnType<typeof setTimeout> | null = null
+
+// Decibel meter (vertical, left of the histogram): 44px meter + 8px gap
+const DB_METER_WIDTH = 52
+
+// Escala del medidor (estilo Decibel X): 50 dB (mínimo) → 110 dB (máximo)
+const DB_METER_MIN = 50
+const DB_METER_MAX = 110
+
+// ── Decibel meter helpers ──
+const dbValue = computed(() => {
+  const parsed = parseFloat(props.dbDisplay)
+  return Number.isNaN(parsed) ? DB_METER_MIN : Math.min(DB_METER_MAX, Math.max(DB_METER_MIN, parsed))
+})
+const dbFillPercent = computed(() => `${((dbValue.value - DB_METER_MIN) / (DB_METER_MAX - DB_METER_MIN)) * 100}%`)
+const dbMeterColor = computed(() => {
+  if (dbValue.value >= 100) return "#f44336" // rojo: extremo / riesgo
+  if (dbValue.value >= 90) return "#ff9800" // naranja: muy fuerte
+  if (dbValue.value >= 75) return "#ffeb3b" // amarillo: fuerte
+  if (dbValue.value >= 60) return "#8bc34a" // verde claro: cómodo
+  return "#4caf50" // verde: suave
+})
 
 const tuningAccuracyClass = computed(() => {
   if (props.centsDeviation === null) return ""
@@ -118,7 +152,7 @@ function debouncedResize() {
 function updateCanvasSize() {
   const container = rootEl.value?.parentElement
   if (container) {
-    canvasWidth.value = Math.min(container.clientWidth - 32, 1000)
+    canvasWidth.value = Math.max(200, Math.min(container.clientWidth - 32 - DB_METER_WIDTH, 1000))
     nextTick(() => {
       drawHistogram()
     })
@@ -335,6 +369,43 @@ function drawHistoryPoints(i: number, freq: number, midi: number, spacing: numbe
 </script>
 
 <style scoped>
+.histogram-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.db-meter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 44px;
+  flex-shrink: 0;
+}
+
+.db-meter-track {
+  width: 14px;
+  border-radius: 7px;
+  background: #222;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+
+.db-meter-fill {
+  width: 100%;
+  border-radius: 7px;
+  transition: height 0.1s ease-out;
+}
+
+.db-meter-label {
+  margin-top: 4px;
+  font-size: 11px;
+  line-height: 1.2;
+  text-align: center;
+  color: #aaa;
+}
+
 .tuning-meter-container {
   width: 100%;
   height: 67px;

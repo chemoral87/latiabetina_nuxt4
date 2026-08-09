@@ -41,7 +41,7 @@
 
     <VRow id="pit-display-row" density="comfortable">
       <VCol md="5" cols="8" class="pr-1 mx-0">
-        <PitcherHistogram ref="histogramComponent" :history="history" :last-freq="lastFreq" :freq-display="freqDisplay" :cents-deviation="centsDeviation" />
+        <PitcherHistogram ref="histogramComponent" :history="history" :last-freq="lastFreq" :db-display="dBDisplay" :freq-display="freqDisplay" :cents-deviation="centsDeviation" />
       </VCol>
 
       <VCol md="2" cols="4" class="px-0 mx-0">
