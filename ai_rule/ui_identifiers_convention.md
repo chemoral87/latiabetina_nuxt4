@@ -113,6 +113,7 @@ Structural containers and inline text follow the same `{view}-{purpose}` pattern
 | `pos/cash-close.vue` | `posc` |
 | `pos/kds/index.vue` | `pos` |
 | `pos/sales/index.vue` | `poss` |
+| `pitcher/index.vue` | `pit` |
 | `pos/sales/[id]/index.vue` | `psid` |
 | `pos/sales/[id]/edit.vue` | `psed` |
 
