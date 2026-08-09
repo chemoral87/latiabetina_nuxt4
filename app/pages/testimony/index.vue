@@ -37,17 +37,34 @@
       </VCol>
 
       <VCol cols="auto" class="d-flex align-center">
-        <VBtn id="tes-refresh-btn" class="mr-1" color="primary" :loading="loading" @click="refreshTestimonies">
+        <VBtn
+          id="tes-refresh-btn"
+          class="mr-1"
+          color="primary"
+          :loading="loading"
+          @click="refreshTestimonies"
+        >
           <VIcon start>mdi-reload</VIcon>
           Refrescar
         </VBtn>
-        <VBtn id="tes-new-btn" class="mr-1" color="success" @click="newTestimony">
+        <VBtn
+          id="tes-new-btn"
+          class="mr-1"
+          color="success"
+          @click="newTestimony"
+        >
           <VIcon start>mdi-plus</VIcon>
           Nuevo
         </VBtn>
       </VCol>
 
-      <VCol v-if="!orgFilterHidden" cols="auto" class="d-flex align-center">
+      <VCol
+        v-if="!orgFilterHidden"
+        lg="1"
+        md="3"
+        sm="4"
+        cols="6"
+      >
         <OrganizationSelect
           v-model="filterOrgId"
           v-model:hidden="orgFilterHidden"
@@ -75,55 +92,73 @@
       </VCol>
     </VRow>
 
-    <TestimonyDialog v-if="testimonyDialog" :loading="saving" :testimony="testimony" @close="closeDialog" @save="saveTestimony" />
+    <TestimonyDialog
+      v-if="testimonyDialog"
+      :loading="saving"
+      :testimony="testimony"
+      @close="closeDialog"
+      @save="saveTestimony"
+    />
 
-    <DialogDelete v-if="testimonyDialogDelete" :loading="deleting" :dialog="dialogDelete" @ok="deleteTestimony" @close="testimonyDialogDelete = false" />
+    <DialogDelete
+      v-if="testimonyDialogDelete"
+      :loading="deleting"
+      :dialog="dialogDelete"
+      @ok="deleteTestimony"
+      @close="testimonyDialogDelete = false"
+    />
   </VContainer>
 </template>
 
 <script setup lang="ts">
-import { useRowHighlight } from "~/composables/useRowHighlight"
+import { useRowHighlight } from "~/composables/useRowHighlight";
 
 definePageMeta({
   title: "Testimonios",
   icon: "mdi-comment-text-outline",
   middleware: "authenticated",
-})
+});
 
-const { Testimony } = useRepository()
-const notify = useNotifyStore()
-const auth = useAuthStore()
-const { highlightId, prependCreated, updateRow } = useRowHighlight()
+const { Testimony } = useRepository();
+const notify = useNotifyStore();
+const auth = useAuthStore();
+const { highlightId, prependCreated, updateRow } = useRowHighlight();
 
-const filterTestimony = ref("")
-const filterDateRange = ref<(string | null)[]>([])
-const statusFilter = ref("")
-const filterOrgId = ref<string | number | null>(null)
-const orgFilterHidden = ref(false)
-const testimony = ref<Record<string, unknown>>({})
-const response = ref<{ data: unknown[]; total: number }>({ data: [], total: 0 })
-const testimonyDialog = ref(false)
-const testimonyDialogDelete = ref(false)
-const dialogDelete = ref<Record<string, unknown>>({})
-const loading = ref(false)
-const saving = ref(false)
-const deleting = ref(false)
-const skipFilterWatch = ref(false)
+const filterTestimony = ref("");
+const filterDateRange = ref<(string | null)[]>([]);
+const statusFilter = ref("");
+const filterOrgId = ref<string | number | null>(null);
+const orgFilterHidden = ref(false);
+const testimony = ref<Record<string, unknown>>({});
+const response = ref<{ data: unknown[]; total: number }>({
+  data: [],
+  total: 0,
+});
+const testimonyDialog = ref(false);
+const testimonyDialogDelete = ref(false);
+const dialogDelete = ref<Record<string, unknown>>({});
+const loading = ref(false);
+const saving = ref(false);
+const deleting = ref(false);
+const skipFilterWatch = ref(false);
 
 const lastOptions = ref<Record<string, unknown>>({
   page: 1,
   itemsPerPage: 10,
   sortBy: [{ key: "created_at", order: "desc" }],
-})
+});
 
 const effectiveOrgId = computed(() => {
-  const orgPermission = auth.permissionsOrg["testimony-index"] ?? []
-  const orgs = auth.user?.orgs ?? []
-  if (orgs.length === 1 && orgPermission.includes((orgs[0] as { id: unknown }).id)) {
-    return (orgs[0] as { id: unknown }).id
+  const orgPermission = auth.permissionsOrg["testimony-index"] ?? [];
+  const orgs = auth.user?.orgs ?? [];
+  if (
+    orgs.length === 1 &&
+    orgPermission.includes((orgs[0] as { id: unknown }).id)
+  ) {
+    return (orgs[0] as { id: unknown }).id;
   }
-  return null
-})
+  return null;
+});
 
 // Initial load (asyncData equivalent)
 {
@@ -132,187 +167,233 @@ const effectiveOrgId = computed(() => {
     itemsPerPage: 10,
     sortBy: ["created_at"],
     sortDesc: [true],
-  }
-  const initialResponse = await Testimony.index(apiParams).catch(() => ({ data: [], total: 0 }))
-  response.value = initialResponse as { data: unknown[]; total: number }
+  };
+  const initialResponse = await Testimony.index(apiParams).catch(() => ({
+    data: [],
+    total: 0,
+  }));
+  response.value = initialResponse as { data: unknown[]; total: number };
 }
 
-let initialLoaded = false
+let initialLoaded = false;
 
 // Debounced filter — matches project convention (manual setTimeout)
-let debounceTimer: ReturnType<typeof setTimeout> | null = null
+let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
 watch(filterTestimony, (val) => {
   if (skipFilterWatch.value) {
-    skipFilterWatch.value = false
-    return
+    skipFilterWatch.value = false;
+    return;
   }
-  if (debounceTimer) clearTimeout(debounceTimer)
+  if (debounceTimer) clearTimeout(debounceTimer);
   debounceTimer = setTimeout(() => {
-    loadTestimonies({ filter: val || "", page: 1 })
-  }, 500)
-})
+    loadTestimonies({ filter: val || "", page: 1 });
+  }, 500);
+});
 
 watch(filterOrgId, (value) => {
   // When user has only 1 org, never send org_id — backend resolves it.
-  if (effectiveOrgId.value !== null) return
-  const overrides: Record<string, unknown> = { page: 1 }
-  overrides.org_id = value ?? undefined
-  loadTestimonies(overrides)
-})
+  if (effectiveOrgId.value !== null) return;
+  const overrides: Record<string, unknown> = { page: 1 };
+  overrides.org_id = value ?? undefined;
+  loadTestimonies(overrides);
+});
 
 watch(filterDateRange, (value) => {
-  const range = value && value.length > 0 ? ([...value].sort() as string[]) : []
+  const range =
+    value && value.length > 0 ? ([...value].sort() as string[]) : [];
   loadTestimonies({
     page: 1,
     date_from: range[0] || undefined,
     date_to: range[1] || undefined,
-  })
-})
+  });
+});
 
 async function loadTestimonies(overrides: Record<string, unknown> = {}) {
   try {
-    loading.value = true
+    loading.value = true;
 
-    const requestOptions = { ...lastOptions.value, ...overrides }
-    if (filterTestimony.value && !Object.prototype.hasOwnProperty.call(overrides, "filter")) {
-      requestOptions.filter = filterTestimony.value
+    const requestOptions = { ...lastOptions.value, ...overrides };
+    if (
+      filterTestimony.value &&
+      !Object.prototype.hasOwnProperty.call(overrides, "filter")
+    ) {
+      requestOptions.filter = filterTestimony.value;
     }
-    if (statusFilter.value && !Object.prototype.hasOwnProperty.call(overrides, "status")) {
-      requestOptions.status = statusFilter.value
+    if (
+      statusFilter.value &&
+      !Object.prototype.hasOwnProperty.call(overrides, "status")
+    ) {
+      requestOptions.status = statusFilter.value;
     }
-    if (Object.prototype.hasOwnProperty.call(overrides, "date_from") && !overrides.date_from) {
-      delete requestOptions.date_from
+    if (
+      Object.prototype.hasOwnProperty.call(overrides, "date_from") &&
+      !overrides.date_from
+    ) {
+      delete requestOptions.date_from;
     }
-    if (Object.prototype.hasOwnProperty.call(overrides, "date_to") && !overrides.date_to) {
-      delete requestOptions.date_to
+    if (
+      Object.prototype.hasOwnProperty.call(overrides, "date_to") &&
+      !overrides.date_to
+    ) {
+      delete requestOptions.date_to;
     }
 
-    const params = buildApiParams(requestOptions)
-    response.value = await Testimony.index(params)
-    lastOptions.value = requestOptions
+    const params = buildApiParams(requestOptions);
+    response.value = await Testimony.index(params);
+    lastOptions.value = requestOptions;
   } catch (error) {
-    notify.notify({ error: (error as { response?: { data?: { message?: string } } }).response?.data?.message || "Error al cargar testimonios" })
+    notify.notify({
+      error:
+        (error as { response?: { data?: { message?: string } } }).response?.data
+          ?.message || "Error al cargar testimonios",
+    });
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 
-function buildApiParams(opts: Record<string, unknown>): Record<string, unknown> {
+function buildApiParams(
+  opts: Record<string, unknown>,
+): Record<string, unknown> {
   const params: Record<string, unknown> = {
     page: opts.page ?? 1,
     itemsPerPage: opts.itemsPerPage ?? 10,
-  }
-  const sortBy = (opts.sortBy as { key: string; order: string }[]) ?? []
+  };
+  const sortBy = (opts.sortBy as { key: string; order: string }[]) ?? [];
   if (sortBy.length > 0) {
-    params.sortBy = [sortBy[0].key]
-    params.sortDesc = [sortBy[0].order === "desc"]
+    params.sortBy = [sortBy[0].key];
+    params.sortDesc = [sortBy[0].order === "desc"];
   }
-  if (opts.filter) params.filter = opts.filter
-  if (opts.status) params.status = opts.status
-  if (opts.org_id) params.org_id = opts.org_id
-  if (opts.date_from) params.date_from = opts.date_from
-  if (opts.date_to) params.date_to = opts.date_to
-  return params
+  if (opts.filter) params.filter = opts.filter;
+  if (opts.status) params.status = opts.status;
+  if (opts.org_id) params.org_id = opts.org_id;
+  if (opts.date_from) params.date_from = opts.date_from;
+  if (opts.date_to) params.date_to = opts.date_to;
+  return params;
 }
 
 async function onStatusChange(value: unknown) {
-  await loadTestimonies({ page: 1, status: value })
+  await loadTestimonies({ page: 1, status: value });
 }
 
 async function refreshTestimonies() {
-  await loadTestimonies()
+  await loadTestimonies();
 }
 
 function handleSorting(opts: Record<string, unknown>) {
   if (!initialLoaded) {
     // Suppress mount-time @update:options — data was already loaded
-    initialLoaded = true
-    return
+    initialLoaded = true;
+    return;
   }
-  loadTestimonies(opts)
+  loadTestimonies(opts);
 }
 
 function newTestimony() {
-  useValidationErrors().clearErrors()
-  testimony.value = {}
-  testimonyDialog.value = true
+  useValidationErrors().clearErrors();
+  testimony.value = {};
+  testimonyDialog.value = true;
 }
 
 function editTestimony(item: unknown) {
-  useValidationErrors().clearErrors()
-  testimony.value = { ...(item as Record<string, unknown>) }
-  testimonyDialog.value = true
+  useValidationErrors().clearErrors();
+  testimony.value = { ...(item as Record<string, unknown>) };
+  testimonyDialog.value = true;
 }
 
 function showTestimony(item: unknown) {
-  navigateTo(`/testimony/review/${(item as Record<string, unknown>).id}`)
+  navigateTo(`/testimony/review/${(item as Record<string, unknown>).id}`);
 }
 
 function beforeDeleteTestimony(item: unknown) {
-  const t = item as Record<string, unknown>
+  const t = item as Record<string, unknown>;
   dialogDelete.value = {
     text: "¿Desea eliminar el Testimonio ",
     strong: (t.title as string) || String(t.id),
     payload: item,
-  }
-  testimonyDialogDelete.value = true
+  };
+  testimonyDialogDelete.value = true;
 }
 
 async function deleteTestimony(item: unknown) {
-  const t = item as Record<string, unknown>
+  const t = item as Record<string, unknown>;
   try {
-    deleting.value = true
-    await Testimony.delete(t.id as number)
-    skipFilterWatch.value = true
-    filterTestimony.value = ""
-    await loadTestimonies({ page: 1, filter: "" })
-    testimonyDialogDelete.value = false
+    deleting.value = true;
+    await Testimony.delete(t.id as number);
+    skipFilterWatch.value = true;
+    filterTestimony.value = "";
+    await loadTestimonies({ page: 1, filter: "" });
+    testimonyDialogDelete.value = false;
   } catch (error) {
-    notify.notify({ error: (error as { response?: { data?: { message?: string } } }).response?.data?.message || "Error al eliminar testimonio" })
+    notify.notify({
+      error:
+        (error as { response?: { data?: { message?: string } } }).response?.data
+          ?.message || "Error al eliminar testimonio",
+    });
   } finally {
-    deleting.value = false
+    deleting.value = false;
   }
 }
 
 async function saveTestimony(item: Record<string, unknown>) {
   try {
-    saving.value = true
-    const isUpdate = Boolean(item.id)
-    let saved: Record<string, unknown> | null = null
+    saving.value = true;
+    const isUpdate = Boolean(item.id);
+    let saved: Record<string, unknown> | null = null;
     if (isUpdate) {
-      const res = await Testimony.update<Record<string, unknown>>(item.id as number, item)
-      saved = ((res as Record<string, unknown>)?.data as Record<string, unknown> | undefined) ||
-        ((res as Record<string, unknown>)?.testimony as Record<string, unknown> | undefined) ||
-        (res as Record<string, unknown>)
+      const res = await Testimony.update<Record<string, unknown>>(
+        item.id as number,
+        item,
+      );
+      saved =
+        ((res as Record<string, unknown>)?.data as
+          | Record<string, unknown>
+          | undefined) ||
+        ((res as Record<string, unknown>)?.testimony as
+          | Record<string, unknown>
+          | undefined) ||
+        (res as Record<string, unknown>);
 
       if (saved) {
-        updateRow(response, saved)
+        updateRow(response, saved);
       }
     } else {
-      const res = await Testimony.create<Record<string, unknown>>(item)
-      saved = ((res as Record<string, unknown>)?.data as Record<string, unknown> | undefined) ||
-        ((res as Record<string, unknown>)?.testimony as Record<string, unknown> | undefined) ||
-        (res as Record<string, unknown>)
+      const res = await Testimony.create<Record<string, unknown>>(item);
+      saved =
+        ((res as Record<string, unknown>)?.data as
+          | Record<string, unknown>
+          | undefined) ||
+        ((res as Record<string, unknown>)?.testimony as
+          | Record<string, unknown>
+          | undefined) ||
+        (res as Record<string, unknown>);
 
       if (saved) {
-        prependCreated(response, saved)
+        prependCreated(response, saved);
       }
     }
 
-    notify.notify({ success: `Testimonio ${isUpdate ? "actualizado" : "creado"} exitosamente` })
-    testimonyDialog.value = false
+    notify.notify({
+      success: `Testimonio ${isUpdate ? "actualizado" : "creado"} exitosamente`,
+    });
+    testimonyDialog.value = false;
   } catch (error) {
-    notify.notify({ error: (error as { response?: { data?: { message?: string } } }).response?.data?.message || `Error al ${item.id ? "actualizar" : "crear"} testimonio` })
+    notify.notify({
+      error:
+        (error as { response?: { data?: { message?: string } } }).response?.data
+          ?.message ||
+        `Error al ${item.id ? "actualizar" : "crear"} testimonio`,
+    });
   } finally {
-    saving.value = false
+    saving.value = false;
   }
 }
 
 function closeDialog() {
-  testimonyDialog.value = false
-  testimony.value = {}
-  useValidationErrors().clearErrors()
+  testimonyDialog.value = false;
+  testimony.value = {};
+  useValidationErrors().clearErrors();
 }
 </script>
 

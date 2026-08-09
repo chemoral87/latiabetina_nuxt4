@@ -194,6 +194,48 @@ if (window.history.replaceState) {
 
 ---
 
+## 4. `[Vuetify UPGRADE] 'dense' is deprecated` — use `density="comfortable"`
+
+### Symptom (bad)
+
+Browser console (dev), typically on a page with a `VRow`:
+
+```
+[Vue warn]: [Vuetify UPGRADE] 'dense' is deprecated, use 'density="comfortable"' instead. at <VRow>
+  at <VContainer>
+  at <Calendar>
+  ...
+```
+
+### Root Cause
+
+The Vue 2 era `dense` prop is gone in Vuetify 3/4 — components now take a
+`density` prop (`comfortable`, `compact`, `default`). Any bare `dense` on a
+Vuetify component (e.g. `<VRow dense>`) triggers this warning at render.
+
+### Rule
+
+1. **Never use bare `dense` on Vuetify components** (`VRow`, `VCol`, `VContainer`,
+   `VTextField`, `VSelect`, ...). Replace with the explicit density:
+
+   ```vue
+   <VRow density="comfortable">   <!-- was: <VRow dense> -->
+   ```
+
+   - The warning itself recommends `density="comfortable"`; use that for rows
+     that previously used `dense`. For form controls that need the tighter
+     look, use `density="compact"` (see `ui_vuetify2_migration.md`).
+   - `index.vue` pages use `<VRow density="comfortable">` — keep list pages
+     consistent with that.
+2. **Custom wrappers are the exception**: `My/DatePicker.vue`, `My/TimePicker.vue`
+   and `My/DateRange.vue` accept a `dense` **prop** and map it internally to
+   `density="compact"` — passing `dense` to them does **not** warn. Only fix
+   `dense` passed directly to Vuetify components.
+3. **Check new/changed pages** for bare `dense` on Vuetify components before
+   merging — `grep -rn "<VRow dense" app/` should return 0 hits.
+
+---
+
 ## Checklist (run before merging changes)
 
 1. `grep -rn "statusMessage" app/` → **0 hits**.

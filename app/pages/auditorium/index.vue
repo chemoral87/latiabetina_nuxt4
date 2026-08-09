@@ -31,7 +31,7 @@
         </VBtn>
       </VCol>
 
-      <VCol v-if="!orgFilterHidden" cols="2">
+      <VCol v-if="!orgFilterHidden" lg="1" md="3" sm="4" cols="6">
         <OrganizationSelect
           v-model="filterOrgId"
           v-model:hidden="orgFilterHidden"
