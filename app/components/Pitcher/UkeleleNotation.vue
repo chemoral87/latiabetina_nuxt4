@@ -38,7 +38,7 @@
           <!-- Notes on fretboard -->
           <g v-for="(string, stringIndex) in strings" :key="'notes-' + stringIndex">
             <!-- Cuerda al aire (traste 0) -->
-            <circle :r="noteRadius" class="note-circle" :cx="getFretX(0) - 30" :cy="getStringY(stringIndex)" :fill="getNoteColor(string, -1)" :opacity="getNoteOpacity(string, -1)" />
+            <circle :r="noteRadius" :class="['note-circle', { 'scale-circle': isNoteInScale(string, -1) }]" :cx="getFretX(0) - 30" :cy="getStringY(stringIndex)" :fill="getNoteColor(string, -1)" :fill-opacity="getNoteOpacity(string, -1)" :stroke-opacity="scaleRingOpacity" />
             <text font-size="11" class="note-text" font-weight="bold" text-anchor="middle" :x="getFretX(0) - 30" :y="getStringY(stringIndex) + 5" :fill="getNoteTextColor(string, -1)">
               {{ getNoteAtFret(string, -1) }}
             </text>
@@ -48,11 +48,12 @@
               v-for="fret in 12"
               :key="'note-' + stringIndex + '-' + fret"
               :r="noteRadius"
-              class="note-circle"
+              :class="['note-circle', { 'scale-circle': isNoteInScale(string, fret) }]"
               :cy="getStringY(stringIndex)"
               :fill="getNoteColor(string, fret)"
+              :fill-opacity="getNoteOpacity(string, fret)"
+              :stroke-opacity="scaleRingOpacity"
               :cx="getFretX(fret) - fretSpacing / 2"
-              :opacity="getNoteOpacity(string, fret)"
             />
             <text
               v-for="fret in 12"
@@ -77,7 +78,7 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia"
 import { usePitcherStore } from "~/composables/usePitcherStore"
-import { COLOR_NEEDS_WHITE_TEXT, COLORS } from "~/constants/pitcher"
+import { COLOR_NEEDS_WHITE_TEXT, COLORS, MAJOR_STEPS } from "~/constants/pitcher"
 
 interface FretString {
   name: string
@@ -95,7 +96,7 @@ const props = withDefaults(
 )
 
 const store = usePitcherStore()
-const { ghostQuarterNote, latinNotation } = storeToRefs(store)
+const { ghostQuarterNote, latinNotation, selectedRootNote, showScaleOnFretboard, scaleRingOpacity, ghostNoteOpacity } = storeToRefs(store)
 
 const fretboardWidth = 900
 const fretboardHeight = 250
@@ -137,6 +138,23 @@ const strings = computed<FretString[]>(() => {
   ]
 })
 const fretMarkers = [3, 5, 7, 9]
+
+// Pitch classes (0-11) de la escala mayor seleccionada en pit-root-note
+const scaleNoteIndices = computed(() => {
+  const rootIndex = latinNotation.value
+    ? ["Do", "Do♯", "Re", "Re♯", "Mi", "Fa", "Fa♯", "Sol", "Sol♯", "La", "La♯", "Si"].indexOf(selectedRootNote.value)
+    : ["C", "C♯", "D", "D♯", "E", "F", "F♯", "G", "G♯", "A", "A♯", "B"].indexOf(selectedRootNote.value)
+  if (rootIndex === -1) return []
+  return MAJOR_STEPS.map((step) => (rootIndex + step) % 12)
+})
+
+// ¿La nota (cuerda + traste; -1 = cuerda al aire) pertenece a la escala seleccionada?
+function isNoteInScale(string: FretString, fret: number): boolean {
+  if (!showScaleOnFretboard.value) return false
+  const actualFret = fret === -1 ? 0 : fret
+  const noteIndex = (notes.indexOf(string.note) + actualFret) % 12
+  return scaleNoteIndices.value.includes(noteIndex)
+}
 
 const currentNote = computed(() => {
   if (!props.frequency) return null
@@ -226,7 +244,7 @@ function getNoteColor(string: FretString, fret: number): string {
 function getNoteOpacity(string: FretString, fret: number): number {
   const type = getNoteHighlightType(string, fret)
   if (type === "exact") return 1
-  if (type === "adjacent") return 0.5
+  if (type === "adjacent") return ghostNoteOpacity.value
   return 0.3
 }
 
@@ -271,12 +289,18 @@ function getNoteTextColor(string: FretString, fret: number): string {
 }
 
 .note-circle:hover {
-  opacity: 0.8 !important;
+  fill-opacity: 0.8;
   r: 14;
+}
+
+.note-circle.scale-circle {
+  stroke: #ff0000;
+  stroke-width: 1.5;
 }
 
 .note-text {
   pointer-events: none;
   font-family: "Roboto", sans-serif;
 }
+
 </style>

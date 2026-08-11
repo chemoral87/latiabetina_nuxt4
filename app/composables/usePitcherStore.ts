@@ -25,6 +25,12 @@ export const usePitcherStore = defineStore("pitcher", () => {
   // Desplazamiento de calibración del medidor de dB (alinear con Decibel X).
   // Default −20 dB: valor verificado en el dispositivo del usuario.
   const dbCalibrationOffset = ref(-20)
+  // Círculo rojo en las notas del diapasón que pertenecen a la escala seleccionada
+  const showScaleOnFretboard = ref(true)
+  // Opacidad del anillo de escala en el diapasón (0-1)
+  const scaleRingOpacity = ref(0.5)
+  // Opacidad de las notas fantasma (octavas adyacentes) en el diapasón (0-1)
+  const ghostNoteOpacity = ref(0.5)
 
   // ---- mutations → setters (same clamping as aui) ----
   function setRootNote(note: string) {
@@ -63,6 +69,18 @@ export const usePitcherStore = defineStore("pitcher", () => {
     dbCalibrationOffset.value = clamp(value, -60, 60)
   }
 
+  function setShowScaleOnFretboard(value: boolean) {
+    showScaleOnFretboard.value = !!value
+  }
+
+  function setScaleRingOpacity(value: number) {
+    scaleRingOpacity.value = clamp(value, 0, 1)
+  }
+
+  function setGhostNoteOpacity(value: number) {
+    ghostNoteOpacity.value = clamp(value, 0, 1)
+  }
+
   // ---- localStorage persistence (client-only, debounced 300ms like aui) ----
   function loadFromStorage() {
     if (!import.meta.client) return
@@ -79,6 +97,9 @@ export const usePitcherStore = defineStore("pitcher", () => {
       if (typeof data.totalNotes === "number") totalNotes.value = data.totalNotes
       if (typeof data.histogramHeight === "number") histogramHeight.value = data.histogramHeight
       if (typeof data.dbCalibrationOffset === "number") dbCalibrationOffset.value = data.dbCalibrationOffset
+      if (typeof data.showScaleOnFretboard === "boolean") showScaleOnFretboard.value = data.showScaleOnFretboard
+      if (typeof data.scaleRingOpacity === "number") scaleRingOpacity.value = data.scaleRingOpacity
+      if (typeof data.ghostNoteOpacity === "number") ghostNoteOpacity.value = data.ghostNoteOpacity
     } catch {
       // Ignore malformed storage
     }
@@ -86,7 +107,7 @@ export const usePitcherStore = defineStore("pitcher", () => {
 
   let saveTimer: ReturnType<typeof setTimeout> | null = null
   watch(
-    [sensitivity, selectedRootNote, latinNotation, showMicrotones, ghostQuarterNote, maxHistory, totalNotes, histogramHeight, dbCalibrationOffset],
+    [sensitivity, selectedRootNote, latinNotation, showMicrotones, ghostQuarterNote, maxHistory, totalNotes, histogramHeight, dbCalibrationOffset, showScaleOnFretboard, scaleRingOpacity, ghostNoteOpacity],
     () => {
       if (!import.meta.client) return
       if (saveTimer) clearTimeout(saveTimer)
@@ -104,6 +125,9 @@ export const usePitcherStore = defineStore("pitcher", () => {
               totalNotes: totalNotes.value,
               histogramHeight: histogramHeight.value,
               dbCalibrationOffset: dbCalibrationOffset.value,
+              showScaleOnFretboard: showScaleOnFretboard.value,
+              scaleRingOpacity: scaleRingOpacity.value,
+              ghostNoteOpacity: ghostNoteOpacity.value,
             }),
           )
         } catch {
@@ -125,6 +149,9 @@ export const usePitcherStore = defineStore("pitcher", () => {
     totalNotes,
     histogramHeight,
     dbCalibrationOffset,
+    showScaleOnFretboard,
+    scaleRingOpacity,
+    ghostNoteOpacity,
     setRootNote,
     setSensitivity,
     setLatinNotation,
@@ -134,6 +161,9 @@ export const usePitcherStore = defineStore("pitcher", () => {
     setTotalNotes,
     setHistogramHeight,
     setDbCalibrationOffset,
+    setShowScaleOnFretboard,
+    setScaleRingOpacity,
+    setGhostNoteOpacity,
   }
 })
 
