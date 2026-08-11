@@ -158,7 +158,8 @@ function loadByDay(day: number, folderOrder: string[]) {
 
   for (const folder of folderOrder) {
     const modules = folderModules[folder as keyof typeof folderModules]
-    const key = `./${fileName}`
+    // Vite's import.meta.glob keys keep the folder prefix (./practical/day1.vue)
+    const key = `./${folder}/${fileName}`
     if (!(key in modules)) {
       continue
     }
@@ -177,7 +178,7 @@ function loadFromFolder(folder: string, day: number | null) {
   let keys = Object.keys(modules).sort()
 
   if (day) {
-    const target = `./day${day}.vue`
+    const target = `./${folder}/day${day}.vue`
     keys = keys.filter((key) => key === target)
     if (!keys.length) {
       throw new Error(`No existe day${day}.vue en «${getFolderLabel(folder)}».`)
@@ -190,7 +191,7 @@ function loadFromFolder(folder: string, day: number | null) {
 function makeBlock(folder: string, key: string, module: unknown) {
   const mod = module as { default?: unknown }
   const component = mod.default || module
-  const fileName = key.replace(/^\.\//, "").replace(/\.vue$/, "")
+  const fileName = key.replace(/^\.\//, "").replace(/\.vue$/, "").split("/").pop() || ""
 
   return {
     key: `${folder}-${fileName}`,
