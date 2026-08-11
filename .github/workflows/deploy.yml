@@ -1,0 +1,118 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+    inputs:
+      rollback_release:
+        description: 'Rollback to release (leave empty for normal deploy)'
+        required: false
+        default: ''
+
+# Queue deployments for a branch. A second run must not overwrite the tarball
+# while the previous run is extracting it on the VPS.
+concurrency:
+  group: deploy-latiabetina-nuxt4-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Fetch .env.production from VPS
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          PORT=${{ secrets.VPS_PORT }}
+          PORT=${PORT:-22}
+          ssh-keyscan -p $PORT -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+          scp -P $PORT -i ~/.ssh/id_rsa ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/admin_nuxt4/.env.production .env
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production bundle
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Package release tarball
+        run: |
+          test -f .output/server/index.mjs
+          tar -czf release.tar.gz \
+            .output \
+            ecosystem.config.cjs \
+            package.json
+          tar -tzf release.tar.gz > /dev/null
+
+      - name: Upload tarball to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          source: "release.tar.gz"
+          target: "/var/www/admin_nuxt4/"
+
+      - name: Copy scripts to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          source: "scripts/"
+          target: "/var/www/admin_nuxt4/"
+          strip_components: 0
+
+      - name: Make scripts executable
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          script: |
+            chmod +x /var/www/admin_nuxt4/scripts/*.sh
+
+      - name: Deploy or Rollback via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          command_timeout: 30m
+          script: |
+            if [ "${{ github.event.inputs.rollback_release }}" != "" ]; then
+              bash /var/www/admin_nuxt4/scripts/rollback_release.sh "${{ github.event.inputs.rollback_release }}"
+            else
+              bash /var/www/admin_nuxt4/scripts/deploy_release.sh ${{ github.sha }}
+            fi
+
+      - name: List available releases (for manual rollback)
+        if: github.event_name == 'workflow_dispatch'
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          script: |
+            echo "=== Available releases ==="
+            ls -1t /var/www/admin_nuxt4/releases
+            echo "=== Current release ==="
+            readlink /var/www/admin_nuxt4/current
