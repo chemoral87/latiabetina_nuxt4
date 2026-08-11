@@ -117,11 +117,6 @@ watch(() => props.modelValue, (newVal) => {
       org_id: null,
       config: "",
     }
-    if (!isEditing.value) {
-      nextTick(() => {
-        localEvent.value.org_id = null
-      })
-    }
     initializeForm()
     nextTick(() => {
       eventForm.value?.resetValidation()

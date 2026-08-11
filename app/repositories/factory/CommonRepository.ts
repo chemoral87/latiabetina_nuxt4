@@ -2,6 +2,9 @@ export default ($api) => (resource) => ({
   index(params) {
     return $api(resource, { params })
   },
+  filter(params) {
+    return $api(resource + "/filter", { params })
+  },
   show(id) {
     return $api(resource + "/" + id)
   },

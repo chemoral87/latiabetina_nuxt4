@@ -29,6 +29,17 @@
           </VRow>
           <VDivider class="my-4" />
           <VRow density="comfortable">
+            <!-- Medidor Section -->
+            <VCol cols="12">
+              <h3 id="pit-config-meter-title" class="text-center py-0 my-0">Medidor de dB</h3>
+            </VCol>
+            <VCol sm="6" cols="12">
+              <VSlider id="pit-config-db-offset" v-model="dbCalibrationOffset" :max="30" :step="1" :min="-30" thumb-label hide-details label="Calibración (offset)" />
+              <div id="pit-config-db-offset-value" class="text-center font-weight-bold">{{ dbCalibrationOffset > 0 ? "+" : "" }}{{ dbCalibrationOffset }} dB</div>
+            </VCol>
+          </VRow>
+          <VDivider class="my-4" />
+          <VRow density="comfortable">
             <!-- Histograma Section -->
             <VCol cols="12">
               <h3 id="pit-config-histogram-title" class="text-center py-0 my-0">Histograma</h3>
@@ -113,6 +124,10 @@ const totalNotes = computed({
 const histogramHeight = computed({
   get: () => store.histogramHeight,
   set: (v: number) => store.setHistogramHeight(v),
+})
+const dbCalibrationOffset = computed({
+  get: () => store.dbCalibrationOffset,
+  set: (v: number) => store.setDbCalibrationOffset(v),
 })
 </script>
 

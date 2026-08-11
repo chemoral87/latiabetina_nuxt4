@@ -1,29 +1,60 @@
 <template>
   <VContainer fluid class="pa-0">
     <div v-if="eventAuditorium && eventAuditorium.id">
-      <div ref="headerBar" class="pa-2 bg-grey-lighten-4 d-flex align-center"
-        :style="{ position: 'fixed', top: headerTop, left: 0, right: 0, width: '100%', zIndex: 20 }">
-        <span class="text-subtitle-2">{{ eventAuditorium.auditorium_name }}</span>
-        |<span class="text-subtitle-2">{{ formatShortDate(eventAuditorium.event_date) }}</span>
+      <div
+        ref="headerBar"
+        class="pa-2 bg-grey-lighten-4 d-flex align-center"
+        :style="{
+          position: 'fixed',
+          top: headerTop,
+          left: 0,
+          right: 0,
+          width: '100%',
+          zIndex: 20,
+        }"
+      >
+        <span class="text-subtitle-2">{{
+          eventAuditorium.auditorium_name
+        }}</span>
+        |<span class="text-subtitle-2">{{
+          formatShortDate(eventAuditorium.event_date)
+        }}</span>
 
         <VSpacer />
-        <span class="text-subtitle-2">{{ totalSeatsWithStatus }}/{{ totalSeats }}</span>
-        <span class="text-subtitle-2 ml-1" :style="{ color: percentageColor }">{{ percentajeTotalSeats }}%</span>
+        <span class="text-subtitle-2"
+          >{{ totalSeatsWithStatus }}/{{ totalSeats }}</span
+        >
+        <span class="text-subtitle-2 ml-1" :style="{ color: percentageColor }"
+          >{{ percentajeTotalSeats }}%</span
+        >
 
-        <VBtn id="auevent-stats-btn" size="x-small" icon color="success" class="ml-1"
-          title="Ver desglose por estatus" @click="statsPanel = !statsPanel">
+        <VBtn
+          id="auevent-stats-btn"
+          icon
+          class="ml-1"
+          size="x-small"
+          color="success"
+          title="Ver desglose por estatus"
+          @click="statsPanel = !statsPanel"
+        >
           <VIcon size="small" color="yellow">mdi-chart-bar</VIcon>
         </VBtn>
 
         <MyDragPanel v-model="statsPanel" title="Desglose de asientos">
           <div class="stats-panel-body">
-            <div v-for="(cfg, key) in activeStatusCfg" :key="key" class="stats-row">
+            <div
+              v-for="(cfg, key) in activeStatusCfg"
+              :key="key"
+              class="stats-row"
+            >
               <span class="stats-dot" :style="{ background: cfg.color }"></span>
               <span class="stats-label">{{ cfg.label }}</span>
               <span class="stats-count">
                 {{ statusBreakdown[key] || 0 }}
                 <span class="grey-text mx-1 font-weight-thin">|</span>
-                <span class="stats-percent">{{ getStatusPercentage(key) }}%</span>
+                <span class="stats-percent"
+                  >{{ getStatusPercentage(key) }}%</span
+                >
               </span>
             </div>
             <div class="stats-row stats-total">
@@ -46,105 +77,121 @@
       <div :style="{ height: `${headerHeight}px` }"></div>
 
       <div>
-        <AuditoriumSeatsStageOp :sections="sections" :stage-config="stageConfig"
-          :auditorium-event-id="eventAuditorium.id" :categories="stageCategories" :loading-seats="loadingSeats"
+        <AuditoriumSeatsStageOp
+          :sections="sections"
           :top-offset="headerHeight"
-          @setEventSeat="handleSetEventSeat" />
+          :stage-config="stageConfig"
+          :categories="stageCategories"
+          :loading-seats="loadingSeats"
+          :auditorium-event-id="eventAuditorium.id"
+          @setEventSeat="handleSetEventSeat"
+        />
       </div>
     </div>
   </VContainer>
 </template>
 
 <script setup lang="ts">
-import { DEFAULT_SETTINGS, STAGE_CATEGORIES, STATUS_CONFIG } from "~/constants/auditorium"
-import { createRealtimeListeners } from "~/utils/realtime"
-import { formatShortDate } from "~/utils/date"
-import { useUAParser } from "~/utils/userAgent"
-import { useLayout } from "vuetify"
+import {
+  DEFAULT_SETTINGS,
+  STAGE_CATEGORIES,
+  STATUS_CONFIG,
+} from "~/constants/auditorium";
+import { createRealtimeListeners } from "~/utils/realtime";
+import { formatShortDate } from "~/utils/date";
+import { useUAParser } from "~/utils/userAgent";
+import { useLayout } from "vuetify";
 
 definePageMeta({
   title: "Evento Auditorio",
   icon: "mdi-theater",
-  middleware: "authenticated",
-})
+  middleware: ["authenticated", "permission"],
+  permission: "auditorium-event-index",
+});
 
 interface Seat {
-  id?: number | string
-  i?: number | string
-  row?: number | string
-  col?: number | string
-  category?: string | null
-  status?: string | null
+  id?: number | string;
+  i?: number | string;
+  row?: number | string;
+  col?: number | string;
+  category?: string | null;
+  status?: string | null;
 }
 
 interface Subsection {
-  id?: number | string
-  i?: number | string
-  name?: string
-  n?: string
-  isLabel?: boolean
-  l?: boolean
-  w?: number
-  width?: number
-  seats?: (Seat | null)[][]
-  s?: (Seat | null)[][]
-  [key: string]: unknown
+  id?: number | string;
+  i?: number | string;
+  name?: string;
+  n?: string;
+  isLabel?: boolean;
+  l?: boolean;
+  w?: number;
+  width?: number;
+  seats?: (Seat | null)[][];
+  s?: (Seat | null)[][];
+  [key: string]: unknown;
 }
 
 interface Section {
-  id?: number | string
-  i?: number | string
-  name?: string
-  n?: string
-  isLabel?: boolean
-  l?: boolean
-  subsections?: Subsection[]
-  ss?: Subsection[]
-  [key: string]: unknown
+  id?: number | string;
+  i?: number | string;
+  name?: string;
+  n?: string;
+  isLabel?: boolean;
+  l?: boolean;
+  subsections?: Subsection[];
+  ss?: Subsection[];
+  [key: string]: unknown;
 }
 
 interface AuditoriumEvent {
-  id?: number | string
-  auditorium_name?: string
-  event_date?: string | null
-  config?: string | Record<string, unknown>
-  seats?: Record<string, string[]> | string[]
-  [key: string]: unknown
+  id?: number | string;
+  auditorium_name?: string;
+  event_date?: string | null;
+  config?: string | Record<string, unknown>;
+  seats?: Record<string, string[]> | string[];
+  [key: string]: unknown;
 }
 
-const route = useRoute()
-const { AuditoriumEvent, AuditoriumEventSeat } = useRepository()
-const { $echo } = useNuxtApp()
-const uaParser = useUAParser()
-const { mainRect } = useLayout()
+const route = useRoute();
+const { AuditoriumEvent, AuditoriumEventSeat } = useRepository();
+const { $echo } = useNuxtApp();
+const uaParser = useUAParser();
+const { mainRect } = useLayout();
+
+route.meta.showDrawer = false;
+route.meta.back = `/auditorium-event`;
 
 // Pin the custom info bar just below the real VAppBar (whose height Vuetify
 // reports via useLayout().mainRect.top), instead of a hardcoded top: 0 which
 // would overlap the app bar.
-const headerTop = computed(() => `${mainRect.value?.top ?? 0}px`)
+const headerTop = computed(() => `${mainRect.value?.top ?? 0}px`);
 
-let _realtimeCleanup: (() => void) | null = null
+let _realtimeCleanup: (() => void) | null = null;
 
-const eventAuditorium = ref<AuditoriumEvent>({})
-const last_timestamp = ref<string | number | null>(null)
-const sections = ref<Section[]>([])
-const settings = ref<Record<string, unknown>>({ ...DEFAULT_SETTINGS })
-const stageCategories = STAGE_CATEGORIES
-const loading = ref(false)
-const loadingSeats = ref<(number | string)[]>([])
-const statsPanel = ref(false)
+const eventAuditorium = ref<AuditoriumEvent>({});
+const last_timestamp = ref<string | number | null>(null);
+const sections = ref<Section[]>([]);
+const settings = ref<Record<string, unknown>>({ ...DEFAULT_SETTINGS });
+const stageCategories = STAGE_CATEGORIES;
+const loading = ref(false);
+const loadingSeats = ref<(number | string)[]>([]);
+const statsPanel = ref(false);
 
 // Measure the header's real rendered height (instead of guessing a constant)
 // so the spacer div below it is never too short and never clips the
 // SeatsStageOp control row that follows.
-const headerBar = ref<HTMLElement | null>(null)
-const headerHeight = ref(44)
+const headerBar = ref<HTMLElement | null>(null);
+const headerHeight = ref(44);
 function measureHeaderHeight() {
   if (headerBar.value?.offsetHeight) {
-    headerHeight.value = headerBar.value.offsetHeight
+    headerHeight.value = headerBar.value.offsetHeight;
   }
 }
-watch(() => eventAuditorium.value?.auditorium_name, () => nextTick(measureHeaderHeight))
+watch(
+  () => eventAuditorium.value?.auditorium_name,
+  () => nextTick(measureHeaderHeight),
+);
 
 {
   // The event is fetched only on the client (onMounted). The API base URL is
@@ -157,455 +204,550 @@ watch(() => eventAuditorium.value?.auditorium_name, () => nextTick(measureHeader
 const activeStatusCfg = computed(() => {
   return Object.keys(STATUS_CONFIG)
     .filter((k) => STATUS_CONFIG[k].active !== false)
-    .reduce((acc, k) => {
-      acc[k] = STATUS_CONFIG[k]
-      return acc
-    }, {} as Record<string, (typeof STATUS_CONFIG)[keyof typeof STATUS_CONFIG]>)
-})
+    .reduce(
+      (acc, k) => {
+        acc[k] = STATUS_CONFIG[k];
+        return acc;
+      },
+      {} as Record<string, (typeof STATUS_CONFIG)[keyof typeof STATUS_CONFIG]>,
+    );
+});
 
 const statusBreakdown = computed(() => {
-  const counts: Record<string, number> = {}
-  const validKeys = Object.keys(STATUS_CONFIG)
+  const counts: Record<string, number> = {};
+  const validKeys = Object.keys(STATUS_CONFIG);
   validKeys.forEach((k) => {
-    counts[k] = 0
-  })
+    counts[k] = 0;
+  });
 
   sections.value.forEach((section) => {
-    const rawSubs = section.ss || section.subsections
-    if (!rawSubs) return
+    const rawSubs = section.ss || section.subsections;
+    if (!rawSubs) return;
     rawSubs.forEach((sub) => {
-      const seatsSource = sub.s || sub.seats
-      if (!seatsSource) return
+      const seatsSource = sub.s || sub.seats;
+      if (!seatsSource) return;
       seatsSource.forEach((row) => {
         row.forEach((seat) => {
-          if (!seat) return
-          const s = seat.status
-          const key = s && validKeys.includes(s) ? s : 'e'
-          counts[key]++
-        })
-      })
-    })
-  })
-  return counts
-})
+          if (!seat) return;
+          const s = seat.status;
+          const key = s && validKeys.includes(s) ? s : "e";
+          counts[key]++;
+        });
+      });
+    });
+  });
+  return counts;
+});
 
 const stageConfig = computed(() => {
   if (!sections.value || sections.value.length === 0) {
-    return { width: 900, height: 700 }
+    return { width: 900, height: 700 };
   }
 
-  const maxSectionWidth = Math.max(...sections.value.map((section) => getSectionWidth(section)))
+  const maxSectionWidth = Math.max(
+    ...sections.value.map((section) => getSectionWidth(section)),
+  );
 
   const totalHeight =
     sections.value.reduce((acc, section, idx) => {
-      return acc + getSectionHeight(section) + (idx > 0 ? DEFAULT_SETTINGS.SECTION_TOP_MARGIN : 0)
-    }, DEFAULT_SETTINGS.SECTION_TOP_PADDING) + 100
+      return (
+        acc +
+        getSectionHeight(section) +
+        (idx > 0 ? DEFAULT_SETTINGS.SECTION_TOP_MARGIN : 0)
+      );
+    }, DEFAULT_SETTINGS.SECTION_TOP_PADDING) + 100;
 
-  const width = maxSectionWidth + 10
-  const height = Math.max(700, totalHeight)
+  const width = maxSectionWidth + 10;
+  const height = Math.max(700, totalHeight);
 
-  return { width, height }
-})
+  return { width, height };
+});
 
 const totalSeats = computed(() => {
-  let count = 0
+  let count = 0;
   sections.value.forEach((section) => {
-    const rawSubs = section.ss || section.subsections
+    const rawSubs = section.ss || section.subsections;
     if (rawSubs) {
       rawSubs.forEach((subsection) => {
-        const seatsSource = subsection.s || subsection.seats
+        const seatsSource = subsection.s || subsection.seats;
         if (seatsSource) {
           seatsSource.forEach((row) => {
             row.forEach((seat) => {
-              if (seat) count++
-            })
-          })
+              if (seat) count++;
+            });
+          });
         }
-      })
+      });
     }
-  })
-  return count
-})
+  });
+  return count;
+});
 
 const totalSeatsWithStatus = computed(() => {
-  let count = 0
+  let count = 0;
   sections.value.forEach((section) => {
-    const rawSubs = section.ss || section.subsections
+    const rawSubs = section.ss || section.subsections;
     if (rawSubs) {
       rawSubs.forEach((subsection) => {
-        const seatsSource = subsection.s || subsection.seats
+        const seatsSource = subsection.s || subsection.seats;
         if (seatsSource) {
           seatsSource.forEach((row) => {
             row.forEach((seat) => {
               if (seat && seat.status) {
-                count++
+                count++;
               }
-            })
-          })
+            });
+          });
         }
-      })
+      });
     }
-  })
-  return count
-})
+  });
+  return count;
+});
 
 const percentajeTotalSeats = computed(() => {
-  if (totalSeats.value === 0) return 0
-  return ((totalSeatsWithStatus.value / totalSeats.value) * 100).toFixed(1)
-})
+  if (totalSeats.value === 0) return 0;
+  return ((totalSeatsWithStatus.value / totalSeats.value) * 100).toFixed(1);
+});
 
 const percentageColor = computed(() => {
-  const percentage = parseFloat(String(percentajeTotalSeats.value))
+  const percentage = parseFloat(String(percentajeTotalSeats.value));
   if (percentage >= 0 && percentage <= 60) {
-    return "#4CAF50"
+    return "#4CAF50";
   } else if (percentage >= 61 && percentage <= 90) {
-    return "#FF9800"
+    return "#FF9800";
   } else if (percentage >= 91) {
-    return "#F44336"
+    return "#F44336";
   }
-  return "#000000"
-})
+  return "#000000";
+});
 
 onMounted(() => {
-  initEvent()
+  initEvent();
 
-  document.addEventListener("visibilitychange", handleVisibilityChange)
+  document.addEventListener("visibilitychange", handleVisibilityChange);
 
-  nextTick(measureHeaderHeight)
-  window.addEventListener('resize', measureHeaderHeight)
-})
+  nextTick(measureHeaderHeight);
+  window.addEventListener("resize", measureHeaderHeight);
+});
 
 async function initEvent() {
-  const res = await AuditoriumEvent.show<AuditoriumEvent>(String(route.params.id)).catch(() => null)
-  eventAuditorium.value = res || {}
-  last_timestamp.value = (res as any)?.timestamp ?? null
+  const res = await AuditoriumEvent.show<AuditoriumEvent>(
+    String(route.params.id),
+  ).catch(() => null);
+  eventAuditorium.value = res || {};
+  last_timestamp.value = (res as any)?.timestamp ?? null;
 
-  loadConfiguration()
-  setupRealtimeListeners()
-  nextTick(measureHeaderHeight)
+  loadConfiguration();
+  setupRealtimeListeners();
+  nextTick(measureHeaderHeight);
 }
 
 onBeforeUnmount(() => {
-  if (_realtimeCleanup) _realtimeCleanup()
+  if (_realtimeCleanup) _realtimeCleanup();
 
-  document.removeEventListener("visibilitychange", handleVisibilityChange)
-  window.removeEventListener('resize', measureHeaderHeight)
-})
+  document.removeEventListener("visibilitychange", handleVisibilityChange);
+  window.removeEventListener("resize", measureHeaderHeight);
+});
 
 function getStatusPercentage(key: string) {
-  if (!totalSeats.value) return 0
-  const count = statusBreakdown.value[key] || 0
-  return ((count / totalSeats.value) * 100).toFixed(1)
+  if (!totalSeats.value) return 0;
+  const count = statusBreakdown.value[key] || 0;
+  return ((count / totalSeats.value) * 100).toFixed(1);
 }
 
 function _isCsvConfig(raw: unknown): boolean {
-  if (typeof raw !== 'string') return false
-  const trimmed = raw.trimStart()
-  return trimmed.startsWith('csv_format') || trimmed.startsWith('type,id,name,')
+  if (typeof raw !== "string") return false;
+  const trimmed = raw.trimStart();
+  return (
+    trimmed.startsWith("csv_format") || trimmed.startsWith("type,id,name,")
+  );
 }
 
 function _parseCsvConfig(csvString: string): Section[] {
   const lines = csvString
-    .split('|')
+    .split("|")
     .map((l) => l.trim())
-    .filter(Boolean)
-  if (lines.length < 2) return []
+    .filter(Boolean);
+  if (lines.length < 2) return [];
 
   const parseCsvLine = (line: string): string[] => {
-    const fields: string[] = []
-    let current = ''
-    let inQuotes = false
+    const fields: string[] = [];
+    let current = "";
+    let inQuotes = false;
     for (let i = 0; i < line.length; i++) {
-      const ch = line[i]
+      const ch = line[i];
       if (ch === '"') {
         if (inQuotes && line[i + 1] === '"') {
-          current += '"'
-          i++
+          current += '"';
+          i++;
         } else {
-          inQuotes = !inQuotes
+          inQuotes = !inQuotes;
         }
-      } else if (ch === ',' && !inQuotes) {
-        fields.push(current)
-        current = ''
+      } else if (ch === "," && !inQuotes) {
+        fields.push(current);
+        current = "";
       } else {
-        current += ch
+        current += ch;
       }
     }
-    fields.push(current)
-    return fields
-  }
+    fields.push(current);
+    return fields;
+  };
 
-  const isNewFormat = lines[0].trim() === 'csv_format'
+  const isNewFormat = lines[0].trim() === "csv_format";
 
   if (!isNewFormat) {
-    const header = lines[0].split(',')
-    const idx: Record<string, number> = {}
-    header.forEach((h, i) => { idx[h.trim()] = i })
+    const header = lines[0].split(",");
+    const idx: Record<string, number> = {};
+    header.forEach((h, i) => {
+      idx[h.trim()] = i;
+    });
 
-    const sectionsOut: Section[] = []
-    let currentSection: Section | null = null
-    let currentSub: Subsection | null = null
+    const sectionsOut: Section[] = [];
+    let currentSection: Section | null = null;
+    let currentSub: Subsection | null = null;
 
     for (let li = 1; li < lines.length; li++) {
-      const f = parseCsvLine(lines[li])
-      const type = f[idx.type] || ''
-      const id = f[idx.id] || ''
-      const name = f[idx.name] || ''
-      const level = parseInt(f[idx.level] || '0', 10)
-      const tr = f[idx.tr] !== '' && f[idx.tr] !== undefined ? parseInt(f[idx.tr], 10) : undefined
-      const tc = f[idx.tc] !== '' && f[idx.tc] !== undefined ? parseInt(f[idx.tc], 10) : undefined
-      const r = f[idx.r] !== '' && f[idx.r] !== undefined ? parseInt(f[idx.r], 10) : undefined
-      const c = f[idx.c] !== '' && f[idx.c] !== undefined ? parseInt(f[idx.c], 10) : undefined
-      const k = (f[idx.k] || '').trim()
+      const f = parseCsvLine(lines[li]);
+      const type = f[idx.type] || "";
+      const id = f[idx.id] || "";
+      const name = f[idx.name] || "";
+      const level = parseInt(f[idx.level] || "0", 10);
+      const tr =
+        f[idx.tr] !== "" && f[idx.tr] !== undefined
+          ? parseInt(f[idx.tr], 10)
+          : undefined;
+      const tc =
+        f[idx.tc] !== "" && f[idx.tc] !== undefined
+          ? parseInt(f[idx.tc], 10)
+          : undefined;
+      const r =
+        f[idx.r] !== "" && f[idx.r] !== undefined
+          ? parseInt(f[idx.r], 10)
+          : undefined;
+      const c =
+        f[idx.c] !== "" && f[idx.c] !== undefined
+          ? parseInt(f[idx.c], 10)
+          : undefined;
+      const k = (f[idx.k] || "").trim();
 
-      if (type === 's') {
-        currentSection = { id, name, isLabel: level === 1, subsections: [] }
-        currentSub = null
-        sectionsOut.push(currentSection)
-      } else if (type === 'ss' && currentSection) {
-        currentSub = { id, name, isLabel: level === 1 }
-        if (currentSub.isLabel) { currentSub.width = 100 } else { currentSub.seats = [] }
-        currentSection.subsections!.push(currentSub)
-      } else if (type === 'seat' && currentSub && !currentSub.isLabel) {
-        const seats = currentSub.seats || []
-        while (seats.length <= r!) { seats.push([]) }
-        const seat: Seat = { id, row: r, col: c }
-        if (k) seat.category = k
-        seats[r!].push(seat)
-        currentSub.seats = seats
+      if (type === "s") {
+        currentSection = { id, name, isLabel: level === 1, subsections: [] };
+        currentSub = null;
+        sectionsOut.push(currentSection);
+      } else if (type === "ss" && currentSection) {
+        currentSub = { id, name, isLabel: level === 1 };
+        if (currentSub.isLabel) {
+          currentSub.width = 100;
+        } else {
+          currentSub.seats = [];
+        }
+        currentSection.subsections!.push(currentSub);
+      } else if (type === "seat" && currentSub && !currentSub.isLabel) {
+        const seats = currentSub.seats || [];
+        while (seats.length <= r!) {
+          seats.push([]);
+        }
+        const seat: Seat = { id, row: r, col: c };
+        if (k) seat.category = k;
+        seats[r!].push(seat);
+        currentSub.seats = seats;
       }
     }
-    return sectionsOut
+    return sectionsOut;
   }
 
-  const sectionsOut: Section[] = []
-  let currentSection: Section | null = null
-  let currentSub: Subsection | null = null
-  let sectionCounter = 0
-  let subCounter = 0
+  const sectionsOut: Section[] = [];
+  let currentSection: Section | null = null;
+  let currentSub: Subsection | null = null;
+  let sectionCounter = 0;
+  let subCounter = 0;
 
   for (let li = 1; li < lines.length; li++) {
-    const f = parseCsvLine(lines[li])
-    const type = f[0] || ''
+    const f = parseCsvLine(lines[li]);
+    const type = f[0] || "";
 
-    if (type === 's') {
-      sectionCounter++
-      subCounter = 0
-      const name = f[1] || ''
-      const isLabel = f[2] === '1'
-      currentSection = { id: String(sectionCounter), name, isLabel, subsections: [] }
-      currentSub = null
-      sectionsOut.push(currentSection)
-    } else if (type === 'ss' && currentSection) {
-      subCounter++
-      const name = f[1] || ''
-      const isLabel = f[4] === '1'
-      const subId = `${currentSection.id}-${subCounter}`
-      currentSub = { id: subId, name, isLabel }
+    if (type === "s") {
+      sectionCounter++;
+      subCounter = 0;
+      const name = f[1] || "";
+      const isLabel = f[2] === "1";
+      currentSection = {
+        id: String(sectionCounter),
+        name,
+        isLabel,
+        subsections: [],
+      };
+      currentSub = null;
+      sectionsOut.push(currentSection);
+    } else if (type === "ss" && currentSection) {
+      subCounter++;
+      const name = f[1] || "";
+      const isLabel = f[4] === "1";
+      const subId = `${currentSection.id}-${subCounter}`;
+      currentSub = { id: subId, name, isLabel };
       if (isLabel) {
-        currentSub.width = 100
+        currentSub.width = 100;
       } else {
-        currentSub.seats = []
+        currentSub.seats = [];
       }
-      currentSection.subsections!.push(currentSub)
-    } else if (type === 'z' && currentSub && !currentSub.isLabel) {
-      const id = f[1] || ''
-      const r = f[2] !== '' && f[2] !== undefined ? parseInt(f[2], 10) : 0
-      const c = f[3] !== '' && f[3] !== undefined ? parseInt(f[3], 10) : 0
-      const k = (f[4] || '').trim()
-      const seats = currentSub.seats || []
-      while (seats.length <= r) { seats.push([]) }
-      const seat: Seat = { id, row: r, col: c }
-      if (k) seat.category = k
-      seats[r].push(seat)
-      currentSub.seats = seats
+      currentSection.subsections!.push(currentSub);
+    } else if (type === "z" && currentSub && !currentSub.isLabel) {
+      const id = f[1] || "";
+      const r = f[2] !== "" && f[2] !== undefined ? parseInt(f[2], 10) : 0;
+      const c = f[3] !== "" && f[3] !== undefined ? parseInt(f[3], 10) : 0;
+      const k = (f[4] || "").trim();
+      const seats = currentSub.seats || [];
+      while (seats.length <= r) {
+        seats.push([]);
+      }
+      const seat: Seat = { id, row: r, col: c };
+      if (k) seat.category = k;
+      seats[r].push(seat);
+      currentSub.seats = seats;
     }
   }
 
-  return sectionsOut
+  return sectionsOut;
 }
 
 function loadConfiguration() {
   if (!eventAuditorium.value?.config) {
-    return
+    return;
   }
 
-  const raw = eventAuditorium.value.config
+  const raw = eventAuditorium.value.config;
 
   if (_isCsvConfig(raw)) {
-    sections.value = _parseCsvConfig(raw as string)
-    _applyInitialSeatStatuses()
-    return
+    sections.value = _parseCsvConfig(raw as string);
+    _applyInitialSeatStatuses();
+    return;
   }
 
-  let config = raw
+  let config = raw;
   if (typeof config === "string") {
     try {
-      config = JSON.parse(config)
+      config = JSON.parse(config);
     } catch (e) {
-      return
+      return;
     }
   }
 
-  const cfg = config as { s?: unknown; sections?: unknown; settings?: Record<string, unknown> }
+  const cfg = config as {
+    s?: unknown;
+    sections?: unknown;
+    settings?: Record<string, unknown>;
+  };
   if (cfg.s || cfg.sections) {
     if (cfg.settings) {
-      Object.assign(settings.value, DEFAULT_SETTINGS, cfg.settings)
+      Object.assign(settings.value, DEFAULT_SETTINGS, cfg.settings);
     }
 
-    const rawSections = (cfg.s || cfg.sections) as Record<string, unknown>[]
+    const rawSections = (cfg.s || cfg.sections) as Record<string, unknown>[];
     const cleanSections: Section[] = rawSections.map((section, sIdx) => {
       const s: Section = {
-        id: (section.i as number | string) || (section.id as number | string) || `${sIdx + 1}`,
+        id:
+          (section.i as number | string) ||
+          (section.id as number | string) ||
+          `${sIdx + 1}`,
         name: (section.n as string) || (section.name as string),
         isLabel: !!(section.l || section.isLabel),
         subsections: [],
-      }
+      };
 
       if (section.ss || section.subsections) {
-        const rawSubs = (section.ss || section.subsections) as Record<string, unknown>[]
+        const rawSubs = (section.ss || section.subsections) as Record<
+          string,
+          unknown
+        >[];
         s.subsections = rawSubs.map((sub, subIdx) => {
           const ss: Subsection = {
-            id: (sub.i as number | string) || (sub.id as number | string) || `${s.id}-${subIdx + 1}`,
+            id:
+              (sub.i as number | string) ||
+              (sub.id as number | string) ||
+              `${s.id}-${subIdx + 1}`,
             name: (sub.n as string) || (sub.name as string),
             isLabel: !!(sub.l || sub.isLabel),
-          }
+          };
           if (ss.isLabel) {
-            ss.width = (sub.w as number) || (sub.width as number)
+            ss.width = (sub.w as number) || (sub.width as number);
           } else {
-            const rawSeats = (sub.s || sub.seats) as (Record<string, unknown> | null)[][]
+            const rawSeats = (sub.s || sub.seats) as (Record<
+              string,
+              unknown
+            > | null)[][];
             if (rawSeats) {
               ss.seats = rawSeats.map((row, rowIdx) => {
                 return row.map((seat, colIdx) => {
-                  if (!seat) return null
+                  if (!seat) return null;
                   return {
-                    id: (seat.i as number | string) || (seat.id as number | string) || `${ss.id}-${rowIdx + 1}-${colIdx + 1}`,
-                    row: seat.r !== undefined ? (seat.r as number | string) : (seat.row as number | string),
-                    col: seat.c !== undefined ? (seat.c as number | string) : (seat.col as number | string),
+                    id:
+                      (seat.i as number | string) ||
+                      (seat.id as number | string) ||
+                      `${ss.id}-${rowIdx + 1}-${colIdx + 1}`,
+                    row:
+                      seat.r !== undefined
+                        ? (seat.r as number | string)
+                        : (seat.row as number | string),
+                    col:
+                      seat.c !== undefined
+                        ? (seat.c as number | string)
+                        : (seat.col as number | string),
                     category: (seat.k as string) || (seat.category as string),
-                  } as Seat
-                })
-              })
+                  } as Seat;
+                });
+              });
             }
           }
-          return ss
-        })
+          return ss;
+        });
       }
-      return s
-    })
+      return s;
+    });
 
-    sections.value = cleanSections
-    _applyInitialSeatStatuses()
+    sections.value = cleanSections;
+    _applyInitialSeatStatuses();
   }
 }
 
 function _applyInitialSeatStatuses() {
-  const seatsData = eventAuditorium.value.seats
+  const seatsData = eventAuditorium.value.seats;
   if (seatsData && !Array.isArray(seatsData)) {
     Object.entries(seatsData).forEach(([status, seatIds]) => {
       if (Array.isArray(seatIds)) {
         seatIds.forEach((seatId) => {
-          const seat = findSeatById(seatId)
+          const seat = findSeatById(seatId);
           if (seat) {
-            seat.status = status
+            seat.status = status;
           }
-        })
+        });
       }
-    })
+    });
   }
 }
 
 function getSectionWidth(section: Section) {
-  const isLabel = section.l || section.isLabel
-  if (isLabel) return 0
-  const rawSubs = section.ss || section.subsections
-  if (!rawSubs || rawSubs.length === 0) return 0
+  const isLabel = section.l || section.isLabel;
+  if (isLabel) return 0;
+  const rawSubs = section.ss || section.subsections;
+  if (!rawSubs || rawSubs.length === 0) return 0;
   return (
     rawSubs.reduce((acc, s) => {
-      const isSubLabel = s.l || s.isLabel
-      return acc + (isSubLabel ? s.w || s.width || 100 : getSubsectionWidth(s))
+      const isSubLabel = s.l || s.isLabel;
+      return acc + (isSubLabel ? s.w || s.width || 100 : getSubsectionWidth(s));
     }, 0) +
     (rawSubs.length - 1) * DEFAULT_SETTINGS.SUBSECTION_SPACING +
     DEFAULT_SETTINGS.SECTION_SIDE_PADDING * 2
-  )
+  );
 }
 
 function getSectionHeight(section: Section) {
-  const isLabel = section.l || section.isLabel
-  if (isLabel) return 30
-  const rawSubs = section.ss || section.subsections
-  if (!rawSubs || rawSubs.length === 0) return DEFAULT_SETTINGS.SECTION_TOP_PADDING + DEFAULT_SETTINGS.SECTION_BOTTOM_PADDING
-  const maxRows = Math.max(...rawSubs.map((sub) => {
-    const isSubLabel = sub.l || sub.isLabel
-    const seatsSource = sub.s || sub.seats
-    return (isSubLabel ? 0 : seatsSource?.length || 0)
-  }))
-  if (maxRows === 0) return DEFAULT_SETTINGS.SECTION_TOP_PADDING + DEFAULT_SETTINGS.SECTION_BOTTOM_PADDING + 40
-  const seatSpacing = DEFAULT_SETTINGS.SEAT_SIZE + DEFAULT_SETTINGS.SEATS_DISTANCE
-  return maxRows * seatSpacing - DEFAULT_SETTINGS.SEATS_DISTANCE + DEFAULT_SETTINGS.SECTION_TOP_PADDING + DEFAULT_SETTINGS.SECTION_BOTTOM_PADDING
+  const isLabel = section.l || section.isLabel;
+  if (isLabel) return 30;
+  const rawSubs = section.ss || section.subsections;
+  if (!rawSubs || rawSubs.length === 0)
+    return (
+      DEFAULT_SETTINGS.SECTION_TOP_PADDING +
+      DEFAULT_SETTINGS.SECTION_BOTTOM_PADDING
+    );
+  const maxRows = Math.max(
+    ...rawSubs.map((sub) => {
+      const isSubLabel = sub.l || sub.isLabel;
+      const seatsSource = sub.s || sub.seats;
+      return isSubLabel ? 0 : seatsSource?.length || 0;
+    }),
+  );
+  if (maxRows === 0)
+    return (
+      DEFAULT_SETTINGS.SECTION_TOP_PADDING +
+      DEFAULT_SETTINGS.SECTION_BOTTOM_PADDING +
+      40
+    );
+  const seatSpacing =
+    DEFAULT_SETTINGS.SEAT_SIZE + DEFAULT_SETTINGS.SEATS_DISTANCE;
+  return (
+    maxRows * seatSpacing -
+    DEFAULT_SETTINGS.SEATS_DISTANCE +
+    DEFAULT_SETTINGS.SECTION_TOP_PADDING +
+    DEFAULT_SETTINGS.SECTION_BOTTOM_PADDING
+  );
 }
 
 function getSubsectionWidth(sub: Subsection) {
-  const isLabel = sub.l || sub.isLabel
-  if (isLabel) return sub.w || sub.width || 100
-  const seatsSource = sub.s || sub.seats
-  if (!seatsSource || seatsSource.length === 0) return 0
-  const maxCols = Math.max(...seatsSource.map((row) => row.length))
-  const seatSpacing = DEFAULT_SETTINGS.SEAT_SIZE + DEFAULT_SETTINGS.SEATS_DISTANCE
-  return maxCols * seatSpacing - DEFAULT_SETTINGS.SEATS_DISTANCE
+  const isLabel = sub.l || sub.isLabel;
+  if (isLabel) return sub.w || sub.width || 100;
+  const seatsSource = sub.s || sub.seats;
+  if (!seatsSource || seatsSource.length === 0) return 0;
+  const maxCols = Math.max(...seatsSource.map((row) => row.length));
+  const seatSpacing =
+    DEFAULT_SETTINGS.SEAT_SIZE + DEFAULT_SETTINGS.SEATS_DISTANCE;
+  return maxCols * seatSpacing - DEFAULT_SETTINGS.SEATS_DISTANCE;
 }
 
-async function handleSetEventSeat(payload: { seatIds: (number | string)[]; status: string | null }) {
-  const { seatIds, status } = payload
+async function handleSetEventSeat(payload: {
+  seatIds: (number | string)[];
+  status: string | null;
+}) {
+  const { seatIds, status } = payload;
 
   if (!seatIds || seatIds.length === 0) {
-    return
+    return;
   }
 
-  loading.value = true
-  loadingSeats.value = [...loadingSeats.value, ...seatIds]
+  loading.value = true;
+  loadingSeats.value = [...loadingSeats.value, ...seatIds];
 
   try {
     const updatePayload = {
       i: eventAuditorium.value.id,
       z: seatIds,
       s: status,
-    }
-    const result = await AuditoriumEventSeat.create<{ z?: (number | string)[]; t?: string | number; s?: string | null }>(updatePayload)
+    };
+    const result = await AuditoriumEventSeat.create<{
+      z?: (number | string)[];
+      t?: string | number;
+      s?: string | null;
+    }>(updatePayload);
 
-    const timestamp = result?.t
-    if (timestamp && (!last_timestamp.value || timestamp > last_timestamp.value)) {
-      last_timestamp.value = timestamp
+    const timestamp = result?.t;
+    if (
+      timestamp &&
+      (!last_timestamp.value || timestamp > last_timestamp.value)
+    ) {
+      last_timestamp.value = timestamp;
     }
 
     if (Array.isArray(result?.z)) {
       result.z.forEach((seatId) => {
-        const seat = findSeatById(seatId)
+        const seat = findSeatById(seatId);
         if (seat) {
-          seat.status = result.s ?? status
+          seat.status = result.s ?? status;
         }
-      })
+      });
     }
   } catch (error) {
     /* ignore */
   } finally {
-    loading.value = false
-    loadingSeats.value = loadingSeats.value.filter((id) => !seatIds.includes(id))
+    loading.value = false;
+    loadingSeats.value = loadingSeats.value.filter(
+      (id) => !seatIds.includes(id),
+    );
   }
 }
 
 function findSeatById(seatId: number | string): Seat | null {
   for (const section of sections.value) {
-    const rawSubs = section.ss || section.subsections
+    const rawSubs = section.ss || section.subsections;
     if (rawSubs) {
       for (const subsection of rawSubs) {
-        const seatsSource = subsection.s || subsection.seats
+        const seatsSource = subsection.s || subsection.seats;
         if (seatsSource) {
           for (const row of seatsSource) {
             for (const seat of row) {
-              const id = seat?.i || seat?.id
+              const id = seat?.i || seat?.id;
               if (id === seatId) {
-                return seat
+                return seat;
               }
             }
           }
@@ -613,22 +755,31 @@ function findSeatById(seatId: number | string): Seat | null {
       }
     }
   }
-  return null
+  return null;
 }
 
 async function handleVisibilityChange() {
-  if (!uaParser.isMobile()) return
+  if (!uaParser.isMobile()) return;
 
   if (!document.hidden && eventAuditorium.value?.id) {
     try {
-      const response = await AuditoriumEventSeat.index<{ timestamp?: string | number; seats_log?: { seat_ids?: (number | string)[]; status?: string | null }[] }>({
+      const response = await AuditoriumEventSeat.index<{
+        timestamp?: string | number;
+        seats_log?: {
+          seat_ids?: (number | string)[];
+          status?: string | null;
+        }[];
+      }>({
         auditorium_event_id: eventAuditorium.value.id,
         last_timestamp: last_timestamp.value,
-      })
+      });
 
       if (response?.timestamp) {
-        if (!last_timestamp.value || response.timestamp > last_timestamp.value) {
-          last_timestamp.value = response.timestamp
+        if (
+          !last_timestamp.value ||
+          response.timestamp > last_timestamp.value
+        ) {
+          last_timestamp.value = response.timestamp;
         }
       }
 
@@ -636,13 +787,13 @@ async function handleVisibilityChange() {
         response.seats_log.forEach((logEntry) => {
           if (logEntry.seat_ids && Array.isArray(logEntry.seat_ids)) {
             logEntry.seat_ids.forEach((seatId) => {
-              const seat = findSeatById(seatId)
+              const seat = findSeatById(seatId);
               if (seat) {
-                seat.status = logEntry.status
+                seat.status = logEntry.status;
               }
-            })
+            });
           }
-        })
+        });
       }
     } catch (error) {
       /* ignore */
@@ -651,36 +802,49 @@ async function handleVisibilityChange() {
 }
 
 function setupRealtimeListeners() {
-  if (!eventAuditorium.value?.id) return
+  if (!eventAuditorium.value?.id) return;
 
   const handleSeatUpdate = (data: any) => {
-    const timestamp = data.t || data.timestamp
-    const seatIds = data.z || data.seats || data.seat_ids
-    const status = data.s || data.status
+    const timestamp = data.t || data.timestamp;
+    const seatIds = data.z || data.seats || data.seat_ids;
+    const status = data.s || data.status;
 
-    if (timestamp && (!last_timestamp.value || timestamp > last_timestamp.value)) {
-      last_timestamp.value = timestamp
+    if (
+      timestamp &&
+      (!last_timestamp.value || timestamp > last_timestamp.value)
+    ) {
+      last_timestamp.value = timestamp;
     }
 
     if (seatIds && Array.isArray(seatIds)) {
       seatIds.forEach((item: any) => {
-        const id = typeof item === "string" ? item : item.z || item.seat_id
-        const seatStatus = typeof item === "object" && item !== null ? (item.s || item.status || status) : status
+        const id = typeof item === "string" ? item : item.z || item.seat_id;
+        const seatStatus =
+          typeof item === "object" && item !== null
+            ? item.s || item.status || status
+            : status;
 
-        const seat = findSeatById(id)
+        const seat = findSeatById(id);
         if (seat) {
-          seat.status = seatStatus
+          seat.status = seatStatus;
         }
-      })
+      });
     }
-  }
+  };
 
-  _realtimeCleanup = createRealtimeListeners($echo, [{
-    name: `auditorium-event.${eventAuditorium.value.id}`,
-    events: {
-      '.seat.updated': handleSeatUpdate,
-    },
-  }], {}, _realtimeCleanup)
+  _realtimeCleanup = createRealtimeListeners(
+    $echo,
+    [
+      {
+        name: `auditorium-event.${eventAuditorium.value.id}`,
+        events: {
+          ".seat.updated": handleSeatUpdate,
+        },
+      },
+    ],
+    {},
+    _realtimeCleanup,
+  );
 }
 </script>
 

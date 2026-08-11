@@ -1,6 +1,6 @@
 <template>
   <VDialog id="eve-copyd-dlg-1" :model-value="true" persistent max-width="560px">
-    <VCard>
+    <VCard rounded="lg">
       <VCardTitle class="d-flex align-center">
         <VIcon class="mr-2">mdi-content-copy</VIcon>
         <span class="text-h5">Copiar Evento</span>
@@ -15,9 +15,15 @@
           Elige cómo deseas copiar <strong>{{ churchEvent.name }}</strong>:
         </p>
 
-        <VBtnToggle v-model="mode" mandatory density="compact" class="mb-4">
-          <VBtn id="eve-copydialog-mode-dates-btn" value="dates" size="small">Por calendario</VBtn>
-          <VBtn id="eve-copydialog-mode-recurrence-btn" value="recurrence" size="small">Por rango y días</VBtn>
+        <VBtnToggle
+          v-model="mode"
+          mandatory
+          density="comfortable"
+          rounded="pill"
+          class="mode-toggle mb-4"
+        >
+          <VBtn id="eve-copydialog-mode-dates-btn" value="dates" size="small" rounded="pill">POR CALENDARIO</VBtn>
+          <VBtn id="eve-copydialog-mode-recurrence-btn" value="recurrence" size="small" rounded="pill">POR RANGO Y DÍAS</VBtn>
         </VBtnToggle>
 
         <template v-if="mode === 'dates'">
@@ -26,11 +32,16 @@
             v-model:month="pickerMonth"
             v-model:year="pickerYear"
             multiple
-            full-width
+            color="primary"
+            class="copy-date-picker"
+            control-variant="modal"
+            weeks-in-month="dynamic"
             :disabled="loading"
             :events="eventDateArray"
             event-color="#fb8c00"
             :allowed-dates="isAllowedDate"
+            :first-day-of-week="1"
+            :show-adjacent-months="false"
           />
 
           <div v-if="selectedDates.length" class="mt-2">
@@ -196,4 +207,43 @@ function copy() {
   border: 2px solid #fb8c00 !important;
   background-color: transparent !important;
 }
+
+/* Segmented pill toggle to match mockup */
+.mode-toggle {
+  background-color: rgba(0, 0, 0, 0.06);
+  padding: 4px;
+}
+
+.mode-toggle :deep(.v-btn) {
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  box-shadow: none;
+  background: transparent;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.mode-toggle :deep(.v-btn--active) {
+  background: rgb(var(--v-theme-surface));
+  color: rgba(0, 0, 0, 0.87);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Custom two-letter weekday labels (Lu, Ma, Mi, Ju, Vi, Sa, Do), Monday first */
+.copy-date-picker :deep(.v-date-picker-month__weekday) {
+  font-size: 0;
+}
+
+.copy-date-picker :deep(.v-date-picker-month__weekday)::before {
+  font-size: 0.75rem;
+}
+
+.copy-date-picker :deep(.v-date-picker-month__weekday:nth-child(1))::before { content: "Lu"; }
+.copy-date-picker :deep(.v-date-picker-month__weekday:nth-child(2))::before { content: "Ma"; }
+.copy-date-picker :deep(.v-date-picker-month__weekday:nth-child(3))::before { content: "Mi"; }
+.copy-date-picker :deep(.v-date-picker-month__weekday:nth-child(4))::before { content: "Ju"; }
+.copy-date-picker :deep(.v-date-picker-month__weekday:nth-child(5))::before { content: "Vi"; }
+.copy-date-picker :deep(.v-date-picker-month__weekday:nth-child(6))::before { content: "Sa"; }
+.copy-date-picker :deep(.v-date-picker-month__weekday:nth-child(7))::before { content: "Do"; }
 </style>

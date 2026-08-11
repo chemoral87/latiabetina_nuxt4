@@ -191,7 +191,8 @@ function update() {
   if (!isMicActive.value || !audioProcessor.value) return
 
   const result = audioProcessor.value.analyzeFrequency()
-  dBDisplay.value = Math.max(0, result.dB).toFixed(1)
+  // El medidor arranca en 0 dB: nunca muestra valores negativos
+  dBDisplay.value = Math.max(0, result.dB + store.dbCalibrationOffset).toFixed(1)
 
   if (result.freq !== -1) {
     // Intentar estabilizar el ataque

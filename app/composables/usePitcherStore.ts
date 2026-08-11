@@ -22,6 +22,9 @@ export const usePitcherStore = defineStore("pitcher", () => {
   const maxHistory = ref(400)
   const totalNotes = ref(14)
   const histogramHeight = ref(350)
+  // Desplazamiento de calibración del medidor de dB (alinear con Decibel X).
+  // Default −20 dB: valor verificado en el dispositivo del usuario.
+  const dbCalibrationOffset = ref(-20)
 
   // ---- mutations → setters (same clamping as aui) ----
   function setRootNote(note: string) {
@@ -56,6 +59,10 @@ export const usePitcherStore = defineStore("pitcher", () => {
     histogramHeight.value = clamp(value, 300, 600)
   }
 
+  function setDbCalibrationOffset(value: number) {
+    dbCalibrationOffset.value = clamp(value, -60, 60)
+  }
+
   // ---- localStorage persistence (client-only, debounced 300ms like aui) ----
   function loadFromStorage() {
     if (!import.meta.client) return
@@ -71,6 +78,7 @@ export const usePitcherStore = defineStore("pitcher", () => {
       if (typeof data.maxHistory === "number") maxHistory.value = data.maxHistory
       if (typeof data.totalNotes === "number") totalNotes.value = data.totalNotes
       if (typeof data.histogramHeight === "number") histogramHeight.value = data.histogramHeight
+      if (typeof data.dbCalibrationOffset === "number") dbCalibrationOffset.value = data.dbCalibrationOffset
     } catch {
       // Ignore malformed storage
     }
@@ -78,7 +86,7 @@ export const usePitcherStore = defineStore("pitcher", () => {
 
   let saveTimer: ReturnType<typeof setTimeout> | null = null
   watch(
-    [sensitivity, selectedRootNote, latinNotation, showMicrotones, ghostQuarterNote, maxHistory, totalNotes, histogramHeight],
+    [sensitivity, selectedRootNote, latinNotation, showMicrotones, ghostQuarterNote, maxHistory, totalNotes, histogramHeight, dbCalibrationOffset],
     () => {
       if (!import.meta.client) return
       if (saveTimer) clearTimeout(saveTimer)
@@ -95,6 +103,7 @@ export const usePitcherStore = defineStore("pitcher", () => {
               maxHistory: maxHistory.value,
               totalNotes: totalNotes.value,
               histogramHeight: histogramHeight.value,
+              dbCalibrationOffset: dbCalibrationOffset.value,
             }),
           )
         } catch {
@@ -115,6 +124,7 @@ export const usePitcherStore = defineStore("pitcher", () => {
     maxHistory,
     totalNotes,
     histogramHeight,
+    dbCalibrationOffset,
     setRootNote,
     setSensitivity,
     setLatinNotation,
@@ -123,6 +133,7 @@ export const usePitcherStore = defineStore("pitcher", () => {
     setMaxHistory,
     setTotalNotes,
     setHistogramHeight,
+    setDbCalibrationOffset,
   }
 })
 
