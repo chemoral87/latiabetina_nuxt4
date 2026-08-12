@@ -261,6 +261,7 @@ const adjustedStageConfig = computed(() => {
     height: containerHeightPx.value,
     x: 0,
     draggable: !isTwoFingerGesture.value,
+    dragDistance: uaParser.isMobile() ? 12 : 5,
     dragBoundFunc: selectedSubsection.value && dragMode.value ? getDragBoundFunc() : undefined,
   }
 })

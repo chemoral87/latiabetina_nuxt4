@@ -1,11 +1,11 @@
 <template>
   <VContainer :fluid="true">
-    <VCard id="dashboard-card" flat class="pa-4" border>
+    <VCard id="dashboard-card" flat border class="pa-4">
       <span class="text-h6">Bienvenidos</span>
       <VRow>
         <ClientOnly>
-          <VCol v-if="canViewAuditorium" cols="12" md="6" lg="4">
-          <!--  <DashboardConsolidacion /> -->
+          <VCol v-if="canViewAuditorium" lg="4" md="6" cols="12">
+            <DashboardConsolidacion />
           </VCol>
         </ClientOnly>
       </VRow>
