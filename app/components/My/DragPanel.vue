@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div
     v-if="modelValue"
     id="cmp-my-drag-panel"
@@ -88,6 +88,15 @@ const enterAnimClass = computed(() => {
   }
 })
 
+watch(
+  () => [props.modelValue, props.top, props.bottom, props.left, props.right],
+  ([val]) => {
+    if (val) {
+      hasMoved.value = false
+    }
+  }
+)
+
 const panelStyle = computed(() => {
   const style: Record<string, string> = {
     position: props.mode,
@@ -96,20 +105,24 @@ const panelStyle = computed(() => {
   }
 
   if (!hasMoved.value) {
-    if (props.top) style.top = props.top
-    if (props.left) style.left = props.left
-    if (props.right) style.right = props.right
-    if (props.bottom) style.bottom = props.bottom
+    style.top = props.top ?? 'auto'
+    style.left = props.left ?? 'auto'
+    style.right = props.right ?? 'auto'
+    style.bottom = props.bottom ?? 'auto'
 
     if (!props.top && !props.bottom) {
       style.top = '100%'
       style.marginTop = '4px'
+    } else {
+      style.marginTop = '0px'
     }
     if (!props.left && !props.right) {
       if (props.anchor === 'right') {
         style.right = '0px'
+        style.left = 'auto'
       } else {
         style.left = '0px'
+        style.right = 'auto'
       }
     }
   } else {
@@ -154,10 +167,11 @@ onBeforeUnmount(() => {
 })
 
 /**
- * Smart viewport-aware positioning. Detects if the panel overflows the
- * viewport edges and shifts it back into view.
+ * Smart viewport-aware positioning for dragged panel.
  */
 function adjustPosition() {
+  if (!hasMoved.value) return
+
   const panelEl = panel.value
   if (!panelEl) return
 
@@ -174,21 +188,8 @@ function adjustPosition() {
 
   if (rect.top < 0) dy = -rect.top + margin
   if (rect.bottom > vh) dy = vh - rect.bottom - margin
-  if (rect.top < 0 && rect.bottom > vh) dy = -rect.top + margin
 
   if (dx !== 0 || dy !== 0) {
-    if (!hasMoved.value) {
-      let parentLeft = 0
-      let parentTop = 0
-      if (props.mode !== 'fixed' && panelEl.offsetParent) {
-        const pRect = (panelEl.offsetParent as HTMLElement).getBoundingClientRect()
-        parentLeft = pRect.left
-        parentTop = pRect.top
-      }
-      pos.value.x = rect.left - parentLeft
-      pos.value.y = rect.top - parentTop
-      hasMoved.value = true
-    }
     pos.value.x += dx
     pos.value.y += dy
   }

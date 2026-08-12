@@ -30,10 +30,14 @@ const response = ref<{ data: Array<Record<string, unknown>> }>({ data: [] })
 const events = computed(() => response.value?.data || [])
 
 onMounted(async () => {
+  const now = new Date()
+  const pad = (n: number) => String(n).padStart(2, "0")
+  const date = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`
   const options: Record<string, unknown> = {
     sortBy: ["event_date"],
     sortDesc: [true],
     itemsPerPage: 10,
+    date,
   }
   response.value = await AuditoriumEvent.index<{ data: Array<Record<string, unknown>> }>(options).catch(
     () => ({ data: [] }),

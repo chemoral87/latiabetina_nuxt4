@@ -43,7 +43,9 @@
     }" />
 
     <!-- Seats -->
-    <v-group v-for="seat in seats" :key="seat.id" :config="{ x: seat.x, y: seat.y }">
+    <v-group v-for="seat in seats" :key="seat.id"
+      :config="{ x: seat.x, y: seat.y, listening: true }"
+      @click="handleSeatClick(seat, $event)" @tap="handleSeatClick(seat, $event)">
       <v-circle :config="Object.assign({}, seat.config, { x: 0, y: 0, listening: true })"
         @click="handleSeatClick(seat, $event)" @tap="handleSeatClick(seat, $event)" />
       <v-path v-if="seat.iconPath" :config="seat.iconPathConfig" />

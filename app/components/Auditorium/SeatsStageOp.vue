@@ -70,7 +70,7 @@
                     <template v-else>
                       <AuditoriumSeatsStageSubsection :subsection="sub" :categories="categories"
                         :selected-seats-array="selectedSeatsArray" :blink-state="blinkState"
-                        :loading-seats="loadingSeats" />
+                        :loading-seats="loadingSeats" @seat-click="handleSeatClick" />
                     </template>
                   </VGroup>
                 </template>
@@ -760,7 +760,11 @@ function handleSeatClick(payload: { seat: Seat; event?: any }) {
   eventArrays.value.push(`handleSeatClick ${isIOS}/${isAndroid} ${String(seat.id)}`)
 
   if (!selectedSubsection.value) {
-    return
+    const targetSeatId = seat.i || seat.id
+    const foundSub = findSubsectionBySeatId(targetSeatId)
+    if (foundSub) {
+      selectedSubsection.value = foundSub
+    }
   }
 
   const stage = konvaStage.value?.getStage()
@@ -778,12 +782,31 @@ function handleSeatClick(payload: { seat: Seat; event?: any }) {
     return
   }
 
-  const seatId = seat.id
+  const seatId = seat.i || seat.id
   const index = selectedSeatsArray.value.indexOf(seatId)
 
   selectedSeatsArray.value = index > -1
     ? selectedSeatsArray.value.filter((id) => id !== seatId)
     : [...selectedSeatsArray.value, seatId]
+}
+
+function findSubsectionBySeatId(seatId: number | string) {
+  for (const section of props.sections) {
+    const rawSubs = section.ss || section.subsections
+    if (!rawSubs) continue
+    for (const sub of rawSubs) {
+      const seatsSource = sub.s || sub.seats
+      if (!seatsSource) continue
+      for (const row of seatsSource) {
+        for (const seatItem of row) {
+          if (seatItem && (seatItem.i || seatItem.id) === seatId) {
+            return sub
+          }
+        }
+      }
+    }
+  }
+  return null
 }
 
 function setEventSeat(status: string | null) {
