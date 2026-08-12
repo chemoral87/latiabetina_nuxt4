@@ -90,6 +90,34 @@ export class MenuService {
           ],
         })
       }
+
+      if (this.hasPermission("sing-course")) {
+        menu.push({
+          icon: "mdi-microphone",
+          title: "Canto",
+          to: "/courses/sing",
+          children: [
+            { title: "Día 1", to: "/courses/sing?day=1&order=TR,P" },
+            { title: "Día 2", to: "/courses/sing?day=2&order=TR,P" },
+            { title: "Día 3", to: "/courses/sing?day=3&order=TR,P" },
+            { title: "Día 4", to: "/courses/sing?day=4&order=TR,P" },
+            { title: "Día 5", to: "/courses/sing?day=5&order=TR,P" },
+            { title: "Día 6", to: "/courses/sing?day=6&order=TR,P" },
+            { title: "Día 7", to: "/courses/sing?day=7&order=TR,P" },
+            { title: "Día 8", to: "/courses/sing?day=8&order=TR,P" },
+            { title: "Día 9", to: "/courses/sing?day=9&order=TR,P" },
+            { title: "Día 10", to: "/courses/sing?day=10&order=TR,P" },
+            { title: "Día 11", to: "/courses/sing?day=11&order=TR,P" },
+            { title: "Día 12", to: "/courses/sing?day=12&order=TR,P" },
+            { title: "Día 13", to: "/courses/sing?day=13&order=TR,P" },
+            { title: "Día 14", to: "/courses/sing?day=14&order=TR,P" },
+            { title: "Día 15", to: "/courses/sing?day=15&order=TR,P" },
+            { title: "Día 16", to: "/courses/sing?day=16&order=TR,P" },
+            { title: "Día 17", to: "/courses/sing?day=17&order=TR,P" },
+            { title: "Día 18", to: "/courses/sing?day=18&order=TR,P" },
+          ],
+        })
+      }
     } else {
       menu.push({
         icon: "mdi-lock",

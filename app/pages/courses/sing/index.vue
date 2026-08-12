@@ -2,7 +2,7 @@
   <VContainer class="pa-4" style="max-width: 900px">
     <h2 class="text-h5 mb-4">Curso de Canto</h2>
 
-    <VAlert v-if="error" type="error" density="compact" variant="outlined" class="mb-4">
+    <VAlert v-if="error" class="mb-4" type="error" density="compact" variant="outlined">
       {{ error }}
     </VAlert>
 
@@ -31,6 +31,8 @@
 definePageMeta({
   title: "Curso de Canto",
   icon: "mdi-microphone",
+  permission: "sing-course",
+  middleware: ["authenticated", "permission"],
 })
 
 const FOLDERS = ["practical", "theological", "theoretical"]
