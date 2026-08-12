@@ -45,7 +45,7 @@
     <!-- Seats -->
     <v-group v-for="seat in seats" :key="seat.id" :config="{ x: seat.x, y: seat.y }">
       <v-circle :config="Object.assign({}, seat.config, { x: 0, y: 0, listening: true })"
-        @click="handleSeatClick(seat, $event)" />
+        @click="handleSeatClick(seat, $event)" @tap="handleSeatClick(seat, $event)" />
       <v-path v-if="seat.iconPath" :config="seat.iconPathConfig" />
       <!-- Loading spinner – comet tail arcs -->
       <template v-if="seat.isLoading">

@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div id="cmp-auditorium-seats-stage-op">
     <div ref="controlRow">
       <div class="d-flex flex-wrap align-center py-1" style="gap: 6px">
@@ -731,6 +731,12 @@ function handleSeatClick(payload: { seat: Seat; event?: any }) {
     if (event.evt && typeof event.evt.clientY === 'number') {
       clickY = event.evt.clientY
     }
+    if (clickY === null && event.evt) {
+      const touches = event.evt.changedTouches || event.evt.touches
+      if (touches && touches[0] && typeof touches[0].clientY === 'number') {
+        clickY = touches[0].clientY
+      }
+    }
     if (clickY === null && event.target) {
       try {
         const stage = event.target.getStage()
@@ -757,10 +763,6 @@ function handleSeatClick(payload: { seat: Seat; event?: any }) {
     return
   }
 
-  if (isDraggingStage.value) {
-    return
-  }
-
   const stage = konvaStage.value?.getStage()
   if (stage && dragStartPos.value) {
     const currentPos = stage.position()
@@ -772,6 +774,8 @@ function handleSeatClick(payload: { seat: Seat; event?: any }) {
     if (dragDistance > DEFAULT_SETTINGS.DRAG_THRESHOLD) {
       return
     }
+  } else if (isDraggingStage.value) {
+    return
   }
 
   const seatId = seat.id
