@@ -14,12 +14,16 @@
 }
 
 .v-table th {
-  color: #00000099;
+  color: rgba(var(--v-theme-on-surface), 0.6);
   font-weight: bold;
 }
 
 .v-table--striped-odd > .v-table__wrapper > table > tbody > tr:nth-child(odd) {
   background-image: none !important;
+  background-color: rgba(var(--v-theme-on-surface), 0.03) !important;
+}
+
+.v-theme--light .v-table--striped-odd > .v-table__wrapper > table > tbody > tr:nth-child(odd) {
   background-color: #f5fbff !important;
 }
 

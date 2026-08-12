@@ -28,6 +28,9 @@ export default defineNuxtConfig({
       importComposables: ['useDate', 'useLocale', 'useDefaults', 'useDisplay', 'useRtl', 'useTheme'],
     },
     vuetifyOptions: {
+      theme: {
+        defaultTheme: 'light',
+      },
       locale: {
         locale: 'es',
         fallback: 'en',
