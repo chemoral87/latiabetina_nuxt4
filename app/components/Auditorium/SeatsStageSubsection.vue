@@ -44,10 +44,15 @@
 
     <!-- Seats -->
     <v-group v-for="seat in seats" :key="seat.id"
-      :config="{ x: seat.x, y: seat.y, listening: true }"
-      @click="handleSeatClick(seat, $event)" @tap="handleSeatClick(seat, $event)">
-      <v-circle :config="Object.assign({}, seat.config, { x: 0, y: 0, listening: true })"
-        @click="handleSeatClick(seat, $event)" @tap="handleSeatClick(seat, $event)" />
+      :config="{ x: seat.x, y: seat.y, listening: true }">
+      <v-circle :config="Object.assign({}, seat.config, {
+        x: 0,
+        y: 0,
+        listening: true,
+        onClick: (evt) => handleSeatClick(seat, evt),
+        onTap: (evt) => handleSeatClick(seat, evt),
+        onPointerClick: (evt) => handleSeatClick(seat, evt),
+      })" />
       <v-path v-if="seat.iconPath" :config="seat.iconPathConfig" />
       <!-- Loading spinner – comet tail arcs -->
       <template v-if="seat.isLoading">
@@ -341,7 +346,18 @@ function getIconPathConfig(seat: SeatItem) {
   }
 }
 
+let _lastSeatTap: { seatId: string; time: number } | null = null
+
 function handleSeatClick(seat: SeatItem, event: unknown) {
+  // Konva 10 enables pointer events by default, so a single physical tap can
+  // deliver 'pointerclick' (pointer events) plus 'click'/'tap' (compat/touch
+  // events). Collapse near-simultaneous duplicates so a seat toggles once.
+  const seatId = String(seat.i ?? seat.id ?? "")
+  const now = Date.now()
+  if (_lastSeatTap && _lastSeatTap.seatId === seatId && now - _lastSeatTap.time < 300) {
+    return
+  }
+  _lastSeatTap = { seatId, time: now }
   emit("seat-click", { seat, event })
 }
 </script>
