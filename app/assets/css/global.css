@@ -66,10 +66,6 @@
   animation: row-highlight-flash var(--row-highlight-animation-ms) ease-out;
 }
 
-/* Momentary flash for a newly created permission chip — see Permission/Combobox.vue */
-.chip-highlight {
-  animation: row-highlight-flash var(--row-highlight-animation-ms) ease-out;
-}
 
 @keyframes row-highlight-flash {
   0% {
@@ -102,7 +98,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .row-highlight td,
-  .chip-highlight,
   .row-removing {
     animation: none;
   }

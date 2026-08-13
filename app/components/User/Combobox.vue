@@ -23,7 +23,7 @@
       <template #selection="{ item }">
         <VChip
           color="primary"
-          size="large"
+          size="small"
           variant="elevated"
           closable
           @click:close="removeUser(item as UserItem)"
@@ -151,12 +151,29 @@ watch(model, (val, prev) => {
 // do NOT keep this reactive: the parent re-assigns its users ref on every
 // `modelChange` emit, which would otherwise loop back here and overwrite the
 // model/items mid-interaction, wiping out the active search results (see the
-// Permission/Combobox fix). If a parent needs to push NEW users in after
-// mount, force a remount with a `:key` (same pattern as role/[id]/children).
+// Permission/Combobox fix). Parents that push NEW users in after mount use
+// the additive watch below — no remount needed.
 if (props.users && props.users.length > 0) {
   model.value = [...props.users]
   items.value = [...props.users]
 }
+
+// Additively merge users pushed in by the parent after mount (e.g. a
+// "create and add" flow). Only items missing from the current model are
+// appended, so a chip the user removed is never re-added and there is no
+// emit loop: the merged append emits one `modelChange`, the parent
+// re-assigns the same array, and the next pass finds nothing new.
+watch(
+  () => props.users,
+  (val) => {
+    if (!val || val.length === 0) return
+    const known = new Set(model.value.map((u) => u.id))
+    const fresh = val.filter((u) => !known.has(u.id))
+    if (fresh.length === 0) return
+    model.value = [...model.value, ...fresh]
+    items.value = [...items.value, ...fresh]
+  },
+)
 
 function customFilter(value: unknown, query: string, item: { title: string; raw: Record<string, unknown> }) {
   const text = (item.title ?? '').toString().toLowerCase()

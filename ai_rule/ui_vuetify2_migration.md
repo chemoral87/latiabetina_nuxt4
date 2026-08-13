@@ -1402,7 +1402,7 @@ Vuetify 3/4's slot proxy system can break simple `typeof` checks and interpolati
 -  </VChip>
 -</template>
 +<template #selection="{ item }">
-+  <VChip color="primary" closable @click:close="removeRole(item.raw as RoleItem)">
++  <VChip size="small" color="primary" variant="elevated" closable @click:close="removeRole(item.raw as RoleItem)">
 +    {{ item.raw.name }}
 +  </VChip>
 +</template>
@@ -1411,7 +1411,8 @@ Vuetify 3/4's slot proxy system can break simple `typeof` checks and interpolati
 Key changes:
 - **Remove `v-if="typeof item.raw === 'object'"`**: Returns `false` for slot proxy objects even though `item.raw` IS an object. The proxy intercept breaks `typeof`.
 - **Remove `:model-value="selected"`**: `selected` is `undefined` when VCombobox can't match model values to items (see items requirement below).
-- **Remove `variant="flat"`**: Causes invisible text in some Vuetify 4 themes. Let the chip use its default variant.
+- **Use `size="small"`**: Selection chips must stay compact, mirroring Vuetify 2's `<v-chip small>` (see `Permission/Combobox.vue`).
+- **Use `variant="elevated"`**: Do NOT use `variant="flat"` — it causes invisible text in some Vuetify 4 themes. `variant="elevated"` preserves the Vuetify 2 shadow look.
 - **Remove `<span>` wrapper**: Not needed, use `{{ item.raw.name }}` directly.
 - **Use `item.raw.name`** instead of `item.raw?.name` or `item.title` — the raw object always has the property.
 
@@ -1454,11 +1455,48 @@ When the user types to search, the API results exclude already-selected items (v
 
 Without this merge, searching the combobox overwrites `items` with API results that exclude selected roles, and VCombobox loses the match → chips disappear.
 
+### Appending items from the parent — additive sync, no `:key` remount
+
+These multi-select comboboxes (`Permission/Combobox.vue`, `Role/Combobox.vue`,
+`User/Combobox.vue`) intentionally sync their `permissionsx`/`roles`/`users` prop
+**only once at mount** — a fully reactive sync would loop: every `modelChange`
+emit re-assigns the prop, which would re-sync and emit again. When the parent
+needs to push a NEW item in after mount (e.g. the "Crear y agregar" flow on
+`role/[id]/children`), do NOT force a full remount with a `:key` bump — that
+rebuilds the whole combobox, re-animates every chip, and clears the search
+text. Instead, add an **additive watch** that merges only the items missing
+from the current model/items (by id):
+
+```js
+// Additively merge items pushed in by the parent after mount. Only items
+// missing from the current model are appended, so a chip the user removed is
+// never re-added, and there is no emit loop: the merged append emits one
+// `modelChange`, the parent re-assigns the same array, and the next pass
+// finds nothing new to merge.
+watch(
+  () => props.roles,
+  (val) => {
+    if (!val || val.length === 0) return
+    const known = new Set(model.value.map((r) => r.id))
+    const fresh = val.filter((r) => !known.has(r.id))
+    if (fresh.length === 0) return
+    model.value = [...model.value, ...fresh]
+    items.value = [...items.value, ...fresh]
+  },
+)
+```
+
+Notes:
+- Merge into `items` too — VCombobox/VAutocomplete need model values present in `:items` to render chips.
+- The identity is `id`; the parent must **re-assign** the prop with a new array (never mutate in place) for the reference watch to fire.
+- The one `modelChange` emitted by the merged append is harmless: the parent handler only re-assigns the ref.
+
 ### Summary
 
 | Issue | Root Cause | Fix |
 |-------|-----------|-----|
 | Chips not rendering | `v-if="typeof item.raw === 'object'"` returns false for slot proxies | Remove the `v-if` |
-| Chips render without text | `variant="flat"` hides text in some themes | Use default variant (omit `variant`) |
+| Chips render without text | `variant="flat"` hides text in some themes | Use `variant="elevated"` |
 | `selected` always `undefined` | VCombobox can't match model values to empty `items` | Populate `items` from props |
 | Chips disappear after search | API result overwrites `items`, removing selected items | Merge selected items back into search results |
+| Parent-added chips don't appear / combobox flickers | `:key` remount rebuilds the whole combobox | Additive watch on the items prop (merge by id, no remount) |
