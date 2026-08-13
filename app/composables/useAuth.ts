@@ -51,8 +51,16 @@ const strategies: Record<string, AuthStrategy> = {
 
 export const useAuthStore = defineStore("auth", () => {
   const user = ref<AuthUser | null>(null)
+  // Authoritative in-memory token. Kept in sync with the `auth.token` cookie
+  // so the token survives SSR hydration even when the client cookie ref is
+  // momentarily unavailable. It is part of Pinia state, so it is serialized
+  // into the Nuxt payload on the server and restored on the client.
+  const token = ref<string | null>(null)
   const loggedIn = computed(() => !!user.value)
   const strategy = ref<string>("laravelJWT")
+  // Guards the one-time hard redirect to /login after a session expires so a
+  // burst of concurrent API failures doesn't navigate the browser repeatedly.
+  const sessionExpiryRedirected = ref(false)
   const redirects = {
     login: "/login",
     logout: "/login",
@@ -65,6 +73,14 @@ export const useAuthStore = defineStore("auth", () => {
   // Flags compartidos (secure/sameSite) definidos en useAuthCookies().
   const { tokenCookie, strategyCookie, refreshTokenCookie } = useAuthCookies()
 
+  // Seed the in-memory token from the cookie and keep both in sync. The store
+  // token is the primary source for API calls (useApi reads it first); the
+  // cookie remains the cross-reload persistence layer.
+  token.value = tokenCookie.value ?? null
+  watch(tokenCookie, (val) => {
+    token.value = val ?? null
+  })
+
   function getBaseUrl() {
     const config = useRuntimeConfig()
     if (config.public.baseUrl) {
@@ -72,6 +88,40 @@ export const useAuthStore = defineStore("auth", () => {
     }
     const reqUrl = useRequestURL()
     return `${reqUrl.protocol}//${reqUrl.hostname}${config.public.suffixUrl}`
+  }
+
+  function setAccessToken(value: string | null) {
+    token.value = value
+    tokenCookie.value = value
+    // A successful login/refresh resets the one-shot redirect guard.
+    sessionExpiryRedirected.value = false
+  }
+
+  function clearSession() {
+    user.value = null
+    token.value = null
+    tokenCookie.value = null
+    refreshTokenCookie.value = null
+    strategyCookie.value = null
+    strategy.value = "laravelJWT"
+  }
+
+  async function refreshAccessToken(): Promise<boolean> {
+    const s = strategies[strategy.value]
+    if (!s) return false
+    const current = token.value ?? tokenCookie.value
+    if (!current) return false
+    const baseUrl = getBaseUrl()
+    try {
+      const res = await $fetch<{ access_token: string }>(`${baseUrl}/${s.endpoints.refresh.url}`, {
+        method: s.endpoints.refresh.method.toUpperCase(),
+        headers: { Authorization: `Bearer ${current}` },
+      })
+      setAccessToken(res.access_token)
+      return true
+    } catch {
+      return false
+    }
   }
 
   async function loginWith(name: string, { data }: { data: Record<string, string> }) {
@@ -84,10 +134,10 @@ export const useAuthStore = defineStore("auth", () => {
       body: data,
     })
 
-    const token = (res as Record<string, string>)[s.token.property]
-    if (!token) throw new Error("No access token returned")
+    const accessToken = (res as Record<string, string>)[s.token.property]
+    if (!accessToken) throw new Error("No access token returned")
 
-    tokenCookie.value = token
+    setAccessToken(accessToken)
     strategyCookie.value = name
     strategy.value = name
 
@@ -102,14 +152,14 @@ export const useAuthStore = defineStore("auth", () => {
     const s = strategies[strategy.value]
     if (!s) return null
 
-    const token = tokenCookie.value
-    if (!token) return null
+    const authToken = token.value ?? tokenCookie.value
+    if (!authToken) return null
 
     const baseUrl = getBaseUrl()
     try {
       const res = await $fetch(`${baseUrl}/${s.endpoints.user.url}`, {
         method: s.endpoints.user.method.toUpperCase(),
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${authToken}` },
       })
       const userData = s.user?.property
         ? (res as Record<string, unknown>)[s.user.property as string]
@@ -125,22 +175,34 @@ export const useAuthStore = defineStore("auth", () => {
   async function logout() {
     const s = strategies[strategy.value]
     if (s) {
-      const token = tokenCookie.value
+      const authToken = token.value ?? tokenCookie.value
       const baseUrl = getBaseUrl()
       try {
         await $fetch(`${baseUrl}/${s.endpoints.logout.url}`, {
           method: s.endpoints.logout.method.toUpperCase(),
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${authToken}` },
         })
       } catch {
         // ignore logout errors
       }
     }
 
-    tokenCookie.value = null
-    refreshTokenCookie.value = null
-    strategyCookie.value = null
-    user.value = null
+    clearSession()
+  }
+
+  // Session is over (token missing/expired and refresh failed): wipe local
+  // state and, on the client, hard-redirect to /login preserving the current
+  // path so the user returns after re-login. Server-side it just clears state.
+  function expireSession() {
+    const wasLoggedIn = !!user.value
+    clearSession()
+    if (!import.meta.client) return
+    if (!wasLoggedIn) return
+    if (sessionExpiryRedirected.value) return
+    sessionExpiryRedirected.value = true
+    if (window.location.pathname === "/login") return
+    const current = window.location.pathname + window.location.search
+    window.location.href = `/login?redirect=${encodeURIComponent(current)}`
   }
 
   function setStrategy(name: string) {
@@ -152,15 +214,15 @@ export const useAuthStore = defineStore("auth", () => {
     user.value = userData
   }
 
-  function setToken(token: string, name = "laravelJWT") {
-    tokenCookie.value = token
+  function setToken(accessToken: string, name = "laravelJWT") {
+    setAccessToken(accessToken)
     strategyCookie.value = name
     strategy.value = name
   }
 
-  function getJwtExp(token: string): number | null {
+  function getJwtExp(tokenValue: string): number | null {
     try {
-      const payload = token.split(".")[1]
+      const payload = tokenValue.split(".")[1]
       if (!payload) return null
       const decoded = JSON.parse(atob(payload))
       return decoded.exp ?? null
@@ -175,21 +237,27 @@ export const useAuthStore = defineStore("auth", () => {
       strategy.value = savedStrategy
     }
 
-    const token = tokenCookie.value
-    if (!token) return
+    token.value = tokenCookie.value ?? null
+    const current = token.value
+    if (!current) return
 
-    const exp = getJwtExp(token)
+    const exp = getJwtExp(current)
     if (!exp || Date.now() > exp * 1000) {
-      tokenCookie.value = null
-      strategyCookie.value = null
+      // Expired access token: try to refresh it instead of dropping the
+      // session. If the refresh fails, the session is really over.
+      const refreshed = await refreshAccessToken()
+      if (refreshed) {
+        await fetchUser()
+      } else {
+        clearSession()
+      }
       return
     }
 
     await fetchUser()
   }
 
-  const token = computed(() => tokenCookie.value)
-  const hasToken = computed(() => !!tokenCookie.value)
+  const hasToken = computed(() => !!token.value)
 
   const permissions = computed(() => {
     if (!user.value) return []
@@ -208,7 +276,11 @@ export const useAuthStore = defineStore("auth", () => {
     return permissions.value.includes(permission)
   }
 
-  return { user, loggedIn, token, hasToken, strategy, redirects, permissions, permissionsOrg, hasPermission, loginWith, fetchUser, logout, setToken, setStrategy, setUser, init }
+  return {
+    user, loggedIn, token, hasToken, strategy, redirects, permissions, permissionsOrg, hasPermission,
+    loginWith, fetchUser, logout, setToken, setStrategy, setUser, init,
+    setAccessToken, clearSession, expireSession,
+  }
 })
 
 export function useAuth() {

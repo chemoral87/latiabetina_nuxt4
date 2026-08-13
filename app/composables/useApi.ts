@@ -11,6 +11,12 @@ function getJwtExp(token: string): number | null {
   }
 }
 
+// Typed auth failure so callers (pages, withNotify) can react to it instead of
+// treating it as a generic error.
+function unauthenticatedError(): Error & { code: string } {
+  return Object.assign(new Error("Token no disponible"), { code: "UNAUTHENTICATED" })
+}
+
 export function useApi() {
   const config = useRuntimeConfig()
 
@@ -50,15 +56,15 @@ export function useApi() {
           method: "POST",
           headers: { Authorization: `Bearer ${token}` },
         })
-        tokenCookie.value = res.access_token
+        // Persist the new token in both the cookie and the auth store so the
+        // next request reads the refreshed value from either source.
+        try {
+          useAuthStore().setAccessToken(res.access_token)
+        } catch {
+          // store not available; the cookie is enough for the caller
+        }
         return res.access_token
       } catch {
-        tokenCookie.value = null
-        refreshTokenCookie.value = null
-        strategyCookie.value = null
-        if (import.meta.client) {
-          window.location.href = "/login"
-        }
         return null
       } finally {
         refreshPromise = null
@@ -68,31 +74,27 @@ export function useApi() {
     return refreshPromise
   }
 
-  function isTokenExpired(): boolean {
-    const token = tokenCookie.value
-    if (!token) return true
+  function isTokenExpired(token: string): boolean {
     const exp = getJwtExp(token)
     if (!exp) return true
     return Date.now() >= exp * 1000 - 30000
   }
 
   async function ensureValidToken(): Promise<string | null> {
-    let token = tokenCookie.value
-    // Fallback: read from auth store (handles SSR hydration where Pinia state
-    // is restored from payload but the client cookie ref may not be available yet)
-    if (!token) {
-      try {
-        const auth = useAuthStore()
-        token = auth.token ?? null
-      } catch {
-        // auth store may not be ready
+    let token: string | null = null
+    try {
+      const auth = useAuthStore()
+      // The store holds the payload-restored token (reliable during client
+      // hydration); the cookie is the fallback when the store isn't ready.
+      token = auth.token ?? tokenCookie.value ?? null
+      if (token && !auth.token) {
+        auth.setAccessToken(token)
       }
-      // Auth store validated this token during SSR init() — return it directly
-      // to avoid isTokenExpired()/tryRefreshToken() reading the stale cookie ref
-      if (token) return token
+    } catch {
+      token = tokenCookie.value ?? null
     }
     if (!token) return null
-    if (isTokenExpired()) {
+    if (isTokenExpired(token)) {
       return tryRefreshToken()
     }
     return token
@@ -102,7 +104,14 @@ export function useApi() {
     const baseUrl = getBaseUrl()
     const token = await ensureValidToken()
     if (!token) {
-      throw new Error("Token no disponible")
+      if (import.meta.client) {
+        try {
+          useAuthStore().expireSession()
+        } catch {
+          // store not ready
+        }
+      }
+      throw unauthenticatedError()
     }
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
@@ -124,7 +133,7 @@ export function useApi() {
     try {
       return await $fetch<T>(url, { ...rest, headers })
     } catch (err: unknown) {
-      if (err && typeof err === 'object' && 'response' in err) {
+      if (err && typeof err === "object" && "response" in err) {
         const status = (err as { response: { status: number } }).response?.status
         if (status === 401) {
           const newToken = await tryRefreshToken()
@@ -132,6 +141,14 @@ export function useApi() {
             headers.Authorization = `Bearer ${newToken}`
             return await $fetch<T>(url, { ...rest, headers })
           }
+          if (import.meta.client) {
+            try {
+              useAuthStore().expireSession()
+            } catch {
+              // store not ready
+            }
+          }
+          throw unauthenticatedError()
         }
       }
       throw err

@@ -80,18 +80,28 @@ const { highlightId, prependCreated, updateRow, removingId, removeWithAnimation 
 
 const lastOptions = ref<Record<string, unknown> | null>(null)
 
-// Top-level await — loads initial data before render (asyncData equivalent)
-// Use backend-compatible format for the API call, but store Vuetify 4 format
-// in lastOptions so loadRoles() conversion logic works correctly.
+// Initial list data is loaded during SSR via useAsyncData so the payload is
+// reused on the client (no double fetch, no hydration mismatch). See
+// ai_rule/nuxt4_ssr_hydration.md.
+// Store the Vuetify 4 format in lastOptions so loadRoles() conversion logic
+// works correctly.
 {
-  const apiParams: Record<string, unknown> = {
-    page: 1,
-    itemsPerPage: 10,
-    sortBy: ["name"],
-    sortDesc: [false],
-  }
-  const initialResponse = await Role.index(apiParams).catch(() => ({ data: [], total: 0 }))
-  response.value = initialResponse as { data: unknown[]; total: number }
+  const { data: initialData } = await useAsyncData(
+    "role-index",
+    async () => {
+      const apiParams: Record<string, unknown> = {
+        page: 1,
+        itemsPerPage: 10,
+        sortBy: ["name"],
+        sortDesc: [false],
+      }
+      return await Role.index<{ data: unknown[]; total: number }>(apiParams)
+        .catch(() => ({ data: [] as unknown[], total: 0 }))
+    },
+    { default: () => ({ data: [] as unknown[], total: 0 }) },
+  )
+
+  response.value = initialData.value
   lastOptions.value = {
     page: 1,
     itemsPerPage: 10,
@@ -132,6 +142,10 @@ async function loadRoles(opts: Record<string, unknown>) {
     response.value = await Role.index(params)
   } catch (e) {
     console.error("Error al cargar roles", e)
+    if ((e as { code?: string })?.code === "UNAUTHENTICATED") {
+      // useApi already cleared the session and is redirecting to /login
+      return
+    }
   } finally {
     loading.value = false
   }

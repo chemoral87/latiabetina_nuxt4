@@ -21,6 +21,15 @@ function notifySuccess(res: unknown) {
 function notifyError(err: unknown) {
   if (!import.meta.client) return
 
+  if (err && typeof err === "object" && "code" in err) {
+    const codeErr = err as { code?: string }
+    if (codeErr.code === "UNAUTHENTICATED") {
+      // Session expired / token unavailable: useApi already cleared the
+      // session and is redirecting to /login. Don't stack a toast on top.
+      return
+    }
+  }
+
   if (err && typeof err === "object" && "status" in err) {
     const fetchErr = err as { status?: number; data?: { message?: string } }
     const status = fetchErr.status
