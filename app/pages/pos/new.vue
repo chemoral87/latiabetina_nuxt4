@@ -3,7 +3,9 @@
     <VRow justify="center">
       <VCol md="8" cols="12">
         <VCard id="posn-main-card" class="pa-4" variant="outlined">
-          <div class="text-subtitle-1 font-weight-bold mb-4">Nuevo artículo</div>
+          <div class="text-subtitle-1 font-weight-bold mb-4">
+            Nuevo artículo
+          </div>
           <VForm id="posn-main-form" ref="formRef">
             <VRow density="comfortable">
               <VCol v-if="showOrgSelect" md="6" cols="12">
@@ -12,7 +14,7 @@
                   hide-one
                   density="compact"
                   variant="outlined"
-                  permission="product-insert"
+                  permission="product-create"
                 />
               </VCol>
               <VCol md="6" cols="12">
@@ -27,7 +29,13 @@
                 />
               </VCol>
               <VCol md="4" cols="12">
-                <VTextField id="posn-sku-tf" v-model="product.sku" label="SKU" density="compact" variant="outlined" />
+                <VTextField
+                  id="posn-sku-tf"
+                  v-model="product.sku"
+                  label="SKU"
+                  density="compact"
+                  variant="outlined"
+                />
               </VCol>
               <VCol md="4" cols="12">
                 <VTextField
@@ -67,8 +75,20 @@
           </VForm>
 
           <div class="d-flex justify-end">
-            <VBtn id="posn-cancel-btn" class="mr-4" variant="text" @click="goBack">Cancelar</VBtn>
-            <VBtn id="posn-save-btn" color="primary" :loading="saving" @click="saveProduct">Guardar</VBtn>
+            <VBtn
+              id="posn-cancel-btn"
+              class="mr-4"
+              variant="text"
+              @click="goBack"
+              >Cancelar</VBtn
+            >
+            <VBtn
+              id="posn-save-btn"
+              color="primary"
+              :loading="saving"
+              @click="saveProduct"
+              >Guardar</VBtn
+            >
           </div>
         </VCard>
       </VCol>
@@ -77,22 +97,22 @@
 </template>
 
 <script setup lang="ts">
-import { useVrules } from "~/composables/useVrules"
+import { useVrules } from "~/composables/useVrules";
 
 definePageMeta({
   title: "Nuevo artículo",
   icon: "mdi-point-of-sale",
-  permission: "product-insert",
+  permission: "product-create",
   middleware: ["authenticated", "permission"],
-})
+});
 
-const route = useRoute()
-const { Product } = useRepository()
-const auth = useAuthStore()
-const { vrules } = useVrules()
+const route = useRoute();
+const { Product } = useRepository();
+const auth = useAuthStore();
+const { vrules } = useVrules();
 
-const formRef = ref()
-const saving = ref(false)
+const formRef = ref();
+const saving = ref(false);
 const product = ref<Record<string, unknown>>({
   org_id: null,
   name: "",
@@ -100,44 +120,46 @@ const product = ref<Record<string, unknown>>({
   description: "",
   price: 0,
   stock: 0,
-})
+});
 
-const orgIdsForPermission = computed(() => auth.permissionsOrg["product-insert"] ?? [])
-const showOrgSelect = computed(() => orgIdsForPermission.value.length > 1)
+const orgIdsForPermission = computed(
+  () => auth.permissionsOrg["product-create"] ?? [],
+);
+const showOrgSelect = computed(() => orgIdsForPermission.value.length > 1);
 
 onMounted(() => {
-  route.meta.back = "/pos"
-  initializeForm()
-})
+  route.meta.back = "/pos";
+  initializeForm();
+});
 
 function initializeForm() {
   if (!product.value.org_id && !showOrgSelect.value) {
     if (orgIdsForPermission.value.length === 1) {
-      product.value.org_id = orgIdsForPermission.value[0]
+      product.value.org_id = orgIdsForPermission.value[0];
     }
   }
 }
 
 function goBack() {
-  navigateTo("/pos")
+  navigateTo("/pos");
 }
 
 async function saveProduct() {
-  const { valid } = await formRef.value?.validate() ?? { valid: false }
-  if (!valid) return
+  const { valid } = (await formRef.value?.validate()) ?? { valid: false };
+  if (!valid) return;
 
   try {
-    saving.value = true
+    saving.value = true;
     await Product.create({
       ...product.value,
       price: Number(product.value.price || 0),
       stock: Number(product.value.stock || 0),
-    })
-    navigateTo("/pos")
+    });
+    navigateTo("/pos");
   } catch (error) {
-    console.error("Error al guardar el producto", error)
+    console.error("Error al guardar el producto", error);
   } finally {
-    saving.value = false
+    saving.value = false;
   }
 }
 </script>

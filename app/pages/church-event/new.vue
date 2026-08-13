@@ -7,7 +7,7 @@
           :initial-event-date="
             (route.query.event_date as string | undefined) || null
           "
-          permission="church-event-insert"
+          permission="church-event-create"
           @close="close"
           @save="saveChurchEvent"
         />

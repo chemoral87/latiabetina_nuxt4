@@ -4,13 +4,23 @@
       <!-- Section 1: Información básica -->
       <VCard id="prd-form-card-1" variant="outlined">
         <VCardTitle class="text-subtitle-1 font-weight-medium pb-2">
-          <VIcon start size="small" color="primary">mdi-information-outline</VIcon>
+          <VIcon start size="small" color="primary"
+            >mdi-information-outline</VIcon
+          >
           Información del producto
         </VCardTitle>
         <VCardText>
           <VRow dense>
             <VCol v-if="showOrgSelect" cols="12">
-              <OrganizationSelect v-model="item.org_id" required density="compact" variant="outlined" :disabled="loading" :permission="permission" :rules="[vrules.required]" />
+              <OrganizationSelect
+                v-model="item.org_id"
+                required
+                density="compact"
+                variant="outlined"
+                :disabled="loading"
+                :permission="permission"
+                :rules="[vrules.required]"
+              />
             </VCol>
 
             <VCol cols="12">
@@ -118,15 +128,29 @@
 
                 <VCol sm="6" cols="12">
                   <div class="d-flex align-center">
-                    <VIcon class="mr-2" size="small" color="grey-darken-1">mdi-eye</VIcon>
-                    <VSwitch v-model="item.hidden" hide-details density="compact" label="Ocultar producto" />
+                    <VIcon class="mr-2" size="small" color="grey-darken-1"
+                      >mdi-eye</VIcon
+                    >
+                    <VSwitch
+                      v-model="item.hidden"
+                      hide-details
+                      density="compact"
+                      label="Ocultar producto"
+                    />
                   </div>
                 </VCol>
 
                 <VCol sm="6" cols="12">
                   <div class="d-flex align-center">
-                    <VIcon class="mr-2" size="small" color="grey-darken-1">mdi-chef-hat</VIcon>
-                    <VSwitch v-model="item.requires_preparation" hide-details density="compact" label="Requiere preparar" />
+                    <VIcon class="mr-2" size="small" color="grey-darken-1"
+                      >mdi-chef-hat</VIcon
+                    >
+                    <VSwitch
+                      v-model="item.requires_preparation"
+                      hide-details
+                      density="compact"
+                      label="Requiere preparar"
+                    />
                   </div>
                 </VCol>
               </VRow>
@@ -134,7 +158,9 @@
 
             <!-- Right column: image -->
             <VCol md="6" cols="12">
-              <div class="text-caption font-weight-medium mb-1 text-grey-darken-1">
+              <div
+                class="text-caption font-weight-medium mb-1 text-grey-darken-1"
+              >
                 <VIcon class="mr-1" size="small">mdi-image-outline</VIcon>
                 Imagen del producto
               </div>
@@ -148,7 +174,12 @@
               />
 
               <div v-if="previewImage || imageLoading" class="mt-2">
-                <MyPreviewImage max-height="180" :src="previewImage" :loading="imageLoading" loading-text="Procesando imagen..." />
+                <MyPreviewImage
+                  max-height="180"
+                  :src="previewImage"
+                  :loading="imageLoading"
+                  loading-text="Procesando imagen..."
+                />
               </div>
             </VCol>
           </VRow>
@@ -158,11 +189,24 @@
       <!-- Section 3: Acciones -->
       <VCard id="prd-form-card-3" class="mt-4" variant="outlined">
         <VCardText class="d-flex justify-end pa-4 flex-wrap">
-          <VBtn id="prd-form-cancel-btn" color="primary" variant="outlined" class="mr-2 mb-2 mb-sm-0" :disabled="loading || imageLoading" @click="close">
+          <VBtn
+            id="prd-form-cancel-btn"
+            color="primary"
+            variant="outlined"
+            class="mr-2 mb-2 mb-sm-0"
+            :disabled="loading || imageLoading"
+            @click="close"
+          >
             <VIcon start>mdi-close</VIcon>
             Cancelar
           </VBtn>
-          <VBtn id="prd-form-save-btn" color="primary" :loading="loading" :disabled="!isValid" @click="save">
+          <VBtn
+            id="prd-form-save-btn"
+            color="primary"
+            :loading="loading"
+            :disabled="!isValid"
+            @click="save"
+          >
             <VIcon start>mdi-content-save</VIcon>
             Guardar
           </VBtn>
@@ -173,51 +217,54 @@
 </template>
 
 <script setup lang="ts">
-import { useValidationErrors } from "~/composables/useValidationErrors"
-import { useVrules } from "~/composables/useVrules"
-import { useAuthStore } from "~/composables/useAuth"
+import { useValidationErrors } from "~/composables/useValidationErrors";
+import { useVrules } from "~/composables/useVrules";
+import { useAuthStore } from "~/composables/useAuth";
 
 interface ProductItem {
-  id?: number | null
-  org_id?: number | string | null
-  name: string
-  sku: string
-  description: string
-  hidden: boolean
-  requires_preparation: boolean
-  price: number | string
-  stock: number | string
-  order: number | string
-  image: string
-  image_s3?: string
-  image_file?: unknown
+  id?: number | null;
+  org_id?: number | string | null;
+  name: string;
+  sku: string;
+  description: string;
+  hidden: boolean;
+  requires_preparation: boolean;
+  price: number | string;
+  stock: number | string;
+  order: number | string;
+  image: string;
+  image_s3?: string;
+  image_file?: unknown;
 }
 
-const props = withDefaults(defineProps<{
-  product?: Record<string, unknown>
-  loading?: boolean
-  permission?: string
-  title?: string
-  icon?: string
-}>(), {
-  product: () => ({}),
-  loading: false,
-  permission: "product-insert",
-  title: "",
-  icon: "mdi-package-variant",
-})
+const props = withDefaults(
+  defineProps<{
+    product?: Record<string, unknown>;
+    loading?: boolean;
+    permission?: string;
+    title?: string;
+    icon?: string;
+  }>(),
+  {
+    product: () => ({}),
+    loading: false,
+    permission: "product-create",
+    title: "",
+    icon: "mdi-package-variant",
+  },
+);
 
 const emit = defineEmits<{
-  (e: 'close'): void
-  (e: 'save', val: Record<string, unknown>): void
-}>()
+  (e: "close"): void;
+  (e: "save", val: Record<string, unknown>): void;
+}>();
 
-const { vrules } = useVrules()
-const { errors: validationErrors, clearErrors } = useValidationErrors()
-const auth = useAuthStore()
+const { vrules } = useVrules();
+const { errors: validationErrors, clearErrors } = useValidationErrors();
+const auth = useAuthStore();
 
-const formRef = ref()
-const imageLoading = ref(false)
+const formRef = ref();
+const imageLoading = ref(false);
 
 const item = ref<ProductItem>({
   id: null,
@@ -233,71 +280,82 @@ const item = ref<ProductItem>({
   image: "",
   image_s3: "",
   image_file: null,
-})
+});
 
-const errors = computed(() => (validationErrors.value ? { ...validationErrors.value } : {}))
+const errors = computed(() =>
+  validationErrors.value ? { ...validationErrors.value } : {},
+);
 
 const showOrgSelect = computed(() => {
-  const orgIds = auth.permissionsOrg[props.permission] ?? []
-  return Array.isArray(orgIds) && orgIds.length > 1
-})
+  const orgIds = auth.permissionsOrg[props.permission] ?? [];
+  return Array.isArray(orgIds) && orgIds.length > 1;
+});
 
 const previewImage = computed(() => {
-  if (item.value.image && typeof item.value.image === "string" && item.value.image.startsWith("data:")) {
-    return item.value.image
+  if (
+    item.value.image &&
+    typeof item.value.image === "string" &&
+    item.value.image.startsWith("data:")
+  ) {
+    return item.value.image;
   }
-  return item.value.image_s3 || item.value.image || ""
-})
+  return item.value.image_s3 || item.value.image || "";
+});
 
 const isValid = computed(
-  () => !!item.value.org_id && !!item.value.name && item.value.name.trim().length > 0 && !props.loading && !imageLoading.value,
-)
+  () =>
+    !!item.value.org_id &&
+    !!item.value.name &&
+    item.value.name.trim().length > 0 &&
+    !props.loading &&
+    !imageLoading.value,
+);
 
 watch(
   () => props.product,
   (val) => {
     if (val && Object.keys(val).length > 0) {
-      item.value = { ...item.value, ...val } as ProductItem
+      item.value = { ...item.value, ...val } as ProductItem;
     }
   },
   { immediate: true, deep: true },
-)
+);
 
 onMounted(() => {
-  initializeForm()
-})
+  initializeForm();
+});
 
 function initializeForm() {
   if (props.product && Object.keys(props.product).length > 0) {
-    item.value = { ...item.value, ...props.product } as ProductItem
+    item.value = { ...item.value, ...props.product } as ProductItem;
   }
   // Auto-set org_id when the user only has access to one org
   if (!item.value.org_id && !showOrgSelect.value) {
-    const orgIds = auth.permissionsOrg[props.permission] ?? []
+    const orgIds = auth.permissionsOrg[props.permission] ?? [];
     if (Array.isArray(orgIds) && orgIds.length === 1) {
-      item.value.org_id = orgIds[0]
+      item.value.org_id = orgIds[0];
     }
   }
-  clearErrors()
+  clearErrors();
 }
 
 function close() {
-  emit("close")
+  emit("close");
 }
 
 async function save() {
-  if (!isValid.value) return
-  const form = formRef.value
-  const { valid } = form ? await form.validate() : { valid: true }
-  if (!valid) return
+  if (!isValid.value) return;
+  const form = formRef.value;
+  const { valid } = form ? await form.validate() : { valid: true };
+  if (!valid) return;
 
   const payload: Record<string, unknown> = {
     ...item.value,
     price: Number(item.value.price || 0),
     stock: Number(item.value.stock || 0),
     order: Number(item.value.order || 0),
-  }
-  emit("save", payload)
+  };
+  emit("save", payload);
 }
 </script>
 
