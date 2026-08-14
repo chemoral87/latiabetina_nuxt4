@@ -165,6 +165,7 @@ const emit = defineEmits<{
 
 const { mainRect } = useLayout()
 const uaParser = useUAParser()
+const { AuditoriumEventSeatLog } = useRepository()
 
 const konvaStage = ref<any>(null)
 const controlRow = ref<HTMLElement | null>(null)
@@ -994,7 +995,6 @@ async function openHistory() {
   historyLog.value = []
   const prefix = props.sectionPrefix || (selectedSubsection.value ? (selectedSubsection.value.i || selectedSubsection.value.id) : null)
   try {
-    const { AuditoriumEventSeatLog } = useRepository()
     const response = await AuditoriumEventSeatLog.index(
       { auditorium_event_id: props.auditoriumEventId, section_prefix: prefix + "-" }
     )

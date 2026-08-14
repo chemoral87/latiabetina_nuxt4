@@ -118,6 +118,14 @@ export class MenuService {
           ],
         })
       }
+
+      if (this.hasPermission("breath-train")) {
+        menu.push({ icon: "mdi-meditation", title: "Relax", to: "/relax" })
+      }
+
+      if (this.hasPermission("pitch-train")) {
+        menu.push({ icon: "mdi-tune", title: "Tuner", to: "/pitcher" })
+      }
     } else {
       menu.push({
         icon: "mdi-lock",

@@ -13,6 +13,7 @@ export interface PosProduct {
 }
 
 export const useProductsStore = defineStore("products", () => {
+  const { Product } = useRepository()
   const products = ref<PosProduct[]>([])
   const loading = ref(false)
 
@@ -25,7 +26,6 @@ export const useProductsStore = defineStore("products", () => {
     if (products.value.length > 0 && !opts.force) return products.value
     if (!opts.skipLoading) loading.value = true
     try {
-      const { Product } = useRepository()
       const res = await Product.pos<{ data?: PosProduct[] }>(null)
       products.value = res?.data ?? []
       return products.value

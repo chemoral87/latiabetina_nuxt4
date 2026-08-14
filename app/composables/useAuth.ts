@@ -68,6 +68,8 @@ export const useAuthStore = defineStore("auth", () => {
     callback: false,
   }
 
+  const config = useRuntimeConfig()
+
   // Cookies (en vez de localStorage) para que el token esté disponible
   // tanto en servidor (SSR) como en cliente, y consistente con useApi().
   // Flags compartidos (secure/sameSite) definidos en useAuthCookies().
@@ -82,12 +84,18 @@ export const useAuthStore = defineStore("auth", () => {
   })
 
   function getBaseUrl() {
-    const config = useRuntimeConfig()
     if (config.public.baseUrl) {
       return config.public.baseUrl
     }
-    const reqUrl = useRequestURL()
-    return `${reqUrl.protocol}//${reqUrl.hostname}${config.public.suffixUrl}`
+    if (import.meta.client) {
+      return `${window.location.protocol}//${window.location.hostname}${config.public.suffixUrl}`
+    }
+    try {
+      const reqUrl = useRequestURL()
+      return `${reqUrl.protocol}//${reqUrl.hostname}${config.public.suffixUrl}`
+    } catch {
+      return ""
+    }
   }
 
   function setAccessToken(value: string | null) {

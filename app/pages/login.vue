@@ -100,6 +100,7 @@
 <script setup lang="ts">
 const route = useRoute();
 const auth = useAuthStore();
+const config = useRuntimeConfig();
 
 definePageMeta({
   title: "Inicio Sesión",
@@ -120,7 +121,6 @@ function loginWithGoogle() {
     route.query.redirect || sessionStorage.getItem("loginRedirect");
   const redirect = safeInternalRedirect(rawRedirect);
 
-  const config = useRuntimeConfig();
   const baseUrl =
     config.public.baseUrl ||
     `${window.location.protocol}//${window.location.hostname}${config.public.suffixUrl}`;
