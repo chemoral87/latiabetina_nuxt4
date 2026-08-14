@@ -328,6 +328,12 @@ options (avoids the reactive loop).
 
 Icons inside icon buttons always `size="x-large"`; buttons `rounded="circle"`.
 
+Every action `VBtn` in a table's `item.actions` (or `item.marks`) slot gets
+`class="ma-1"` — a uniform 4px margin on all sides. Do **not** use
+`mr-1`/`my-1`/`mr-2` combos or omit the class: `AuditoriumEvent/Table.vue`
+and `Consolidation/MemberTable.vue` previously used those and were aligned to
+`ma-1`; keep every table button consistent.
+
 ### Row highlight
 
 ```ts

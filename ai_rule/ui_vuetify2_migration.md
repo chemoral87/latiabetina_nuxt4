@@ -316,6 +316,11 @@ Add `class="mr-4"` to each button except the last in a group to maintain consist
 +</VBtn>
 ```
 
+> **Exception — table action columns:** buttons inside a table's
+> `item.actions` slot use `class="ma-1"` on **every** button (uniform 4px
+> margin on all sides), not `mr-4`. See `index_page_table_pattern.md` →
+> Action column.
+
 ## VBtn icon (circular vs square)
 
 Vuetify 2 `v-btn--fab` creates a **circular** icon button. Vuetify 3/4's `icon` prop creates a **square** button by default:

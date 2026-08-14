@@ -46,6 +46,19 @@
               <template #[`item.lastLogin`]="{ item }">
                 {{ formatLastLogin(((item as Record<string, unknown>).user as Record<string, unknown>)?.last_login_at) }}
               </template>
+              <template #[`item.actions`]="{ item }">
+                <VBtn
+                  :id="'rdi-profile-btn-' + (item as Profile).id"
+                  icon
+                  size="small"
+                  variant="text"
+                  color="primary"
+                  title="Editar perfil"
+                  @click="goToProfile(item as Profile)"
+                >
+                  <VIcon size="small">mdi-account-edit</VIcon>
+                </VBtn>
+              </template>
             </VDataTable>
           </VCardText>
         </VCard>
@@ -73,10 +86,12 @@ definePageMeta({
 })
 
 interface Profile {
+  id: number | string
   org_id: number | string
   organization_name: string
   organization_short_code: string
   user?: {
+    id?: number | string
     name?: string
     last_name?: string
     second_last_name?: string
@@ -106,6 +121,7 @@ const headers = [
   { title: "Correo", value: "user.email" },
   { title: "Organización", value: "organization" },
   { title: "Último acceso", value: "lastLogin" },
+  { title: "Acciones", value: "actions", sortable: false },
 ]
 
 const organizationOptions = computed<OrgOption[]>(() => {
@@ -139,6 +155,10 @@ if (role.value.name) {
   route.meta.icon = "mdi-share-variant"
   route.meta.back = "/role"
   route.meta.showDrawer = false
+}
+
+function goToProfile(profile: Profile) {
+  navigateTo(`/user/${profile.user?.id}/profile/${profile.id}`)
 }
 
 function userName(user: Record<string, unknown> | null | undefined): string {

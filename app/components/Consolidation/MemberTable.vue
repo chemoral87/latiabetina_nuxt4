@@ -20,7 +20,7 @@
           icon
           rounded="circle"
           size="small"
-          class="mr-2"
+          class="ma-1"
           @click="emit('edit', item)"
         >
           <VIcon>mdi-pencil</VIcon>
@@ -34,6 +34,7 @@
           icon
           rounded="circle"
           size="small"
+          class="ma-1"
           @click="emit('delete', item)"
         >
           <VIcon>mdi-delete</VIcon>

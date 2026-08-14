@@ -32,7 +32,7 @@
         size="small"
         title="Marcar"
         color="primary"
-        class="mr-1 my-1"
+        class="ma-1"
         variant="outlined"
         @click="emit('mark', item)"
       >
@@ -46,7 +46,7 @@
         icon
         size="small"
         color="success"
-        class="mr-1 my-1"
+        class="ma-1"
         variant="outlined"
         title="Descargar Excel"
         @click="emit('download', item)"
@@ -59,7 +59,7 @@
         size="small"
         title="Editar"
         color="primary"
-        class="mr-1 my-1"
+        class="ma-1"
         variant="outlined"
         @click="emit('edit', item)"
       >
@@ -68,7 +68,7 @@
       <VBtn
         id="auev-table-delete-btn"
         icon
-        class="my-1"
+        class="ma-1"
         size="small"
         color="error"
         title="Eliminar"
