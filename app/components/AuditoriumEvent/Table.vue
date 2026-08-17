@@ -29,10 +29,10 @@
       <VBtn
         id="auev-table-mark-btn"
         icon
+        class="ma-1"
         size="small"
         title="Marcar"
         color="primary"
-        class="ma-1"
         variant="outlined"
         @click="emit('mark', item)"
       >
@@ -44,9 +44,9 @@
       <VBtn
         id="auev-table-download-btn"
         icon
+        class="ma-1"
         size="small"
         color="success"
-        class="ma-1"
         variant="outlined"
         title="Descargar Excel"
         @click="emit('download', item)"
@@ -54,18 +54,20 @@
         <VIcon size="x-large">mdi-file-excel</VIcon>
       </VBtn>
       <VBtn
+        v-if="auth.hasPermission('auditorium-event-update')"
         id="auev-table-edit-btn"
         icon
+        class="ma-1"
         size="small"
         title="Editar"
         color="primary"
-        class="ma-1"
         variant="outlined"
         @click="emit('edit', item)"
       >
         <VIcon size="x-large">mdi-pencil</VIcon>
       </VBtn>
       <VBtn
+        v-if="auth.hasPermission('auditorium-event-delete')"
         id="auev-table-delete-btn"
         icon
         class="ma-1"
@@ -127,12 +129,13 @@ const effectiveOrgId = computed(() => {
 });
 
 const headers = computed<Header[]>(() => {
-  const list: Header[] = [
-    { title: "", value: "marks", sortable: false },
-    { title: "Fecha del Evento", value: "event_date", sortable: true },
-    { title: "Hora", value: "time", sortable: false },
-    { title: "Auditorio", value: "auditorium_name", sortable: false },
-  ];
+  const list: Header[] = [];
+  if (auth.hasPermission("auditorium-event-mark")) {
+    list.push({ title: "", value: "marks", sortable: false });
+  }
+  list.push({ title: "Fecha del Evento", value: "event_date", sortable: true });
+  list.push({ title: "Hora", value: "time", sortable: false });
+  list.push({ title: "Auditorio", value: "auditorium_name", sortable: false });
   if (effectiveOrgId.value === null) {
     list.push({ title: "Organización", value: "org_name", sortable: false });
   }

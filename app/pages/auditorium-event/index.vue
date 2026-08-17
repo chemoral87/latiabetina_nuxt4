@@ -16,6 +16,7 @@
           Refrescar
         </VBtn>
         <VBtn
+          v-if="auth.hasPermission('auditorium-event-create')"
           id="auev-new-btn"
           class="mr-1"
           color="success"

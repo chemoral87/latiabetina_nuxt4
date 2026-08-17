@@ -106,7 +106,7 @@ definePageMeta({
   title: "Evento Auditorio",
   icon: "mdi-theater",
   middleware: ["authenticated", "permission"],
-  permission: "auditorium-event-index",
+  permission: "auditorium-event-mark",
 });
 
 interface Seat {
