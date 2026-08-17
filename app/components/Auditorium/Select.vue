@@ -14,15 +14,15 @@
     <template #prepend-item>
       <VTextField
         v-model="search"
+        clearable
+        hide-details
         class="px-3 pt-2"
         density="compact"
         variant="outlined"
         placeholder="Buscar auditorio..."
-        hide-details
-        clearable
         @click.stop
-        @mousedown.stop
         @keydown.stop
+        @mousedown.stop
       />
       <VDivider class="mt-2 mb-1" />
     </template>
@@ -55,12 +55,15 @@ const emit = defineEmits<{
 }>()
 
 const { Auditorium } = useRepository()
+const auth = useAuthStore()
 
 const items = ref<AuditoriumItem[]>([])
 const selected = ref<string | number | null>(null)
 const disabled = ref(false)
 const loading = ref(false)
 const search = ref('')
+
+const canFilter = computed(() => auth.hasPermission("auditorium-filter"))
 
 // Name of the last auditorium the user actually picked from the list. When the
 // selection leaves the current items (search cleared back to a short org list),
@@ -123,6 +126,7 @@ watch(search, (val) => {
     loadAuditoriums()
     return
   }
+  if (!canFilter.value) return
   searchDebounceTimer = setTimeout(() => searchAuditoriums(q), 300)
 })
 
@@ -134,6 +138,7 @@ function onMenuChange(open: boolean) {
 }
 
 async function searchAuditoriums(queryText: string) {
+  if (!canFilter.value) return
   const currentRequestId = ++searchRequestId
   loading.value = true
   try {
@@ -167,13 +172,11 @@ async function loadAuditoriums() {
 
   loading.value = true
   try {
-    const response = await Auditorium.index<{ data?: AuditoriumItem[] }>({
+    const response = await Auditorium.filter<AuditoriumItem[]>({
+      queryText: "",
       org_id: props.orgId,
-      sortBy: ["name"],
-      sortDesc: [false],
-      itemsPerPage: 15,
     })
-    items.value = response?.data || []
+    items.value = Array.isArray(response) ? response : []
     cache.set(key, items.value)
 
     if (items.value.length === 1 && !selected.value) {

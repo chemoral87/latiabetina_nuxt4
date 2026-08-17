@@ -22,10 +22,10 @@
                         <VTextField
                           :id="'tf-orgcfg-' + (config.key as string).replace(/\\./g, '-')"
                           v-model="config.value"
-                          variant="outlined"
-                          density="compact"
-                          :label="getLastSegment(config.key as string)"
                           hide-details
+                          density="compact"
+                          variant="outlined"
+                          :label="getLastSegment(config.key as string)"
                         />
                       </VCol>
                     </VRow>
@@ -34,7 +34,7 @@
               </VCol>
 
               <VCol class="d-flex justify-end pt-4">
-                <VBtn id="orgcfg-cancel-btn" color="primary" variant="outlined" class="mr-4" @click="goBack()">
+                <VBtn id="orgcfg-cancel-btn" class="mr-4" color="primary" variant="outlined" @click="goBack()">
                   <VIcon start>mdi-close</VIcon>
                   Cancelar
                 </VBtn>
@@ -65,7 +65,8 @@ const { Organization, OrganizationConfig } = useRepository()
 const items = ref<Record<string, unknown>[]>([])
 const organization = ref<Record<string, unknown>>({})
 
-onMounted(async () => {
+// Top-level await — loads initial data before render (asyncData equivalent)
+{
   const [orgRes, configRes] = await Promise.all([
     Organization.show(orgId).catch(() => null),
     OrganizationConfig.index(orgId).catch(() => ({ organization_configs: [], configs: [] })),
@@ -94,7 +95,7 @@ onMounted(async () => {
     route.meta.back = "/organization"
     route.meta.showDrawer = false
   }
-})
+}
 
 const groupedItems = computed(() => {
   const grouped: Record<string, Record<string, unknown>[]> = {}
