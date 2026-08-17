@@ -106,14 +106,20 @@
           :cents-deviation="centsDeviation"
         />
       </VCol>
-      <VCol cols="12">
+      <VCol v-if="showUkeleleNotation" cols="12">
         <PitcherUkeleleNotation
           v-if="lastValidFreq"
           :frequency="lastValidFreq"
         />
       </VCol>
-      <VCol cols="12">
+      <VCol v-if="showGuitarNotation" cols="12">
         <PitcherGuitarNotation
+          v-if="lastValidFreq"
+          :frequency="lastValidFreq"
+        />
+      </VCol>
+      <VCol v-if="showTrumpetNotation" cols="12">
+        <PitcherTrumpetNotation
           v-if="lastValidFreq"
           :frequency="lastValidFreq"
         />
@@ -146,8 +152,15 @@ interface HistoryPoint {
 }
 
 const store = usePitcherStore();
-const { selectedRootNote, sensitivity, latinNotation, maxHistory } =
-  storeToRefs(store);
+const {
+  selectedRootNote,
+  sensitivity,
+  latinNotation,
+  maxHistory,
+  showGuitarNotation,
+  showUkeleleNotation,
+  showTrumpetNotation,
+} = storeToRefs(store);
 
 const isMicActive = ref(false);
 const audioProcessor = ref<PitcherAudioProcessor | null>(null);

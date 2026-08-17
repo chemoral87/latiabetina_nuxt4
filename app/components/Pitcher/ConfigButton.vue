@@ -169,6 +169,33 @@
                 Pentagrama
               </h3>
             </VCol>
+            <VCol sm="6" cols="12">
+              <VSwitch
+                id="pit-config-guitar-notation"
+                v-model="showGuitarNotation"
+                hide-details
+                class="mt-0 pt-0"
+                label="Notación guitarra"
+              />
+            </VCol>
+            <VCol sm="6" cols="12">
+              <VSwitch
+                id="pit-config-ukelele-notation"
+                v-model="showUkeleleNotation"
+                hide-details
+                class="mt-0 pt-0"
+                label="Notación ukelele"
+              />
+            </VCol>
+            <VCol sm="6" cols="12">
+              <VSwitch
+                id="pit-config-trumpet-notation"
+                v-model="showTrumpetNotation"
+                hide-details
+                class="mt-0 pt-0"
+                label="Notación trompeta"
+              />
+            </VCol>
             <VCol cols="12">
               <VSwitch
                 id="pit-config-ghost"
@@ -295,6 +322,18 @@ const scaleRingOpacity = computed({
 const ghostNoteOpacity = computed({
   get: () => store.ghostNoteOpacity,
   set: (v: number) => store.setGhostNoteOpacity(v),
+});
+const showGuitarNotation = computed({
+  get: () => store.showGuitarNotation,
+  set: (v: boolean) => store.setShowGuitarNotation(v),
+});
+const showUkeleleNotation = computed({
+  get: () => store.showUkeleleNotation,
+  set: (v: boolean) => store.setShowUkeleleNotation(v),
+});
+const showTrumpetNotation = computed({
+  get: () => store.showTrumpetNotation,
+  set: (v: boolean) => store.setShowTrumpetNotation(v),
 });
 </script>
 

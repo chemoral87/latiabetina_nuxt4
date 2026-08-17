@@ -31,6 +31,10 @@ export const usePitcherStore = defineStore("pitcher", () => {
   const scaleRingOpacity = ref(0.5)
   // Opacidad de las notas fantasma (octavas adyacentes) en el diapasón (0-1)
   const ghostNoteOpacity = ref(0.5)
+  // Mostrar las notaciones (pentagrama de instrumento)
+  const showGuitarNotation = ref(true)
+  const showUkeleleNotation = ref(true)
+  const showTrumpetNotation = ref(true)
 
   // ---- mutations → setters (same clamping as aui) ----
   function setRootNote(note: string) {
@@ -81,6 +85,18 @@ export const usePitcherStore = defineStore("pitcher", () => {
     ghostNoteOpacity.value = clamp(value, 0, 1)
   }
 
+  function setShowGuitarNotation(value: boolean) {
+    showGuitarNotation.value = !!value
+  }
+
+  function setShowUkeleleNotation(value: boolean) {
+    showUkeleleNotation.value = !!value
+  }
+
+  function setShowTrumpetNotation(value: boolean) {
+    showTrumpetNotation.value = !!value
+  }
+
   // ---- localStorage persistence (client-only, debounced 300ms like aui) ----
   function loadFromStorage() {
     if (!import.meta.client) return
@@ -100,6 +116,9 @@ export const usePitcherStore = defineStore("pitcher", () => {
       if (typeof data.showScaleOnFretboard === "boolean") showScaleOnFretboard.value = data.showScaleOnFretboard
       if (typeof data.scaleRingOpacity === "number") scaleRingOpacity.value = data.scaleRingOpacity
       if (typeof data.ghostNoteOpacity === "number") ghostNoteOpacity.value = data.ghostNoteOpacity
+      if (typeof data.showGuitarNotation === "boolean") showGuitarNotation.value = data.showGuitarNotation
+      if (typeof data.showUkeleleNotation === "boolean") showUkeleleNotation.value = data.showUkeleleNotation
+      if (typeof data.showTrumpetNotation === "boolean") showTrumpetNotation.value = data.showTrumpetNotation
     } catch {
       // Ignore malformed storage
     }
@@ -107,7 +126,7 @@ export const usePitcherStore = defineStore("pitcher", () => {
 
   let saveTimer: ReturnType<typeof setTimeout> | null = null
   watch(
-    [sensitivity, selectedRootNote, latinNotation, showMicrotones, ghostQuarterNote, maxHistory, totalNotes, histogramHeight, dbCalibrationOffset, showScaleOnFretboard, scaleRingOpacity, ghostNoteOpacity],
+    [sensitivity, selectedRootNote, latinNotation, showMicrotones, ghostQuarterNote, maxHistory, totalNotes, histogramHeight, dbCalibrationOffset, showScaleOnFretboard, scaleRingOpacity, ghostNoteOpacity, showGuitarNotation, showUkeleleNotation, showTrumpetNotation],
     () => {
       if (!import.meta.client) return
       if (saveTimer) clearTimeout(saveTimer)
@@ -128,6 +147,9 @@ export const usePitcherStore = defineStore("pitcher", () => {
               showScaleOnFretboard: showScaleOnFretboard.value,
               scaleRingOpacity: scaleRingOpacity.value,
               ghostNoteOpacity: ghostNoteOpacity.value,
+              showGuitarNotation: showGuitarNotation.value,
+              showUkeleleNotation: showUkeleleNotation.value,
+              showTrumpetNotation: showTrumpetNotation.value,
             }),
           )
         } catch {
@@ -152,6 +174,9 @@ export const usePitcherStore = defineStore("pitcher", () => {
     showScaleOnFretboard,
     scaleRingOpacity,
     ghostNoteOpacity,
+    showGuitarNotation,
+    showUkeleleNotation,
+    showTrumpetNotation,
     setRootNote,
     setSensitivity,
     setLatinNotation,
@@ -164,6 +189,9 @@ export const usePitcherStore = defineStore("pitcher", () => {
     setShowScaleOnFretboard,
     setScaleRingOpacity,
     setGhostNoteOpacity,
+    setShowGuitarNotation,
+    setShowUkeleleNotation,
+    setShowTrumpetNotation,
   }
 })
 

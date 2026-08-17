@@ -4,7 +4,7 @@
       <VCol cols="12">
         <VBtn
           id="usr-profile-new-btn"
-          color="primary"
+          color="success"
           variant="elevated"
           class="font-weight-bold"
           @click="newProfile()"
