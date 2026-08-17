@@ -50,16 +50,32 @@
                     style="max-width: 220px; font-size: 11px"
                   >
                     <template #selection="{ item }">
-                      <VIcon x-small class="mr-2" :color="item.raw.color">{{
-                        item.raw.mdi
-                      }}</VIcon>
-                      <span style="font-size: 11px">{{ item.raw.text }}</span>
+                      <VIcon
+                        x-small
+                        class="mr-2"
+                        :color="(item as { color?: string })?.color"
+                        >{{ (item as { mdi?: string })?.mdi }}</VIcon
+                      >
+                      <span style="font-size: 11px">{{
+                        (item as { text?: string })?.text
+                      }}</span>
                     </template>
-                    <template #item="{ item }">
-                      <VIcon x-small class="mr-2" :color="item.raw.color">{{
-                        item.raw.mdi
-                      }}</VIcon>
-                      <span style="font-size: 11px">{{ item.raw.text }}</span>
+                    <template #item="{ item: optionItem, props: itemProps }">
+                      <VListItem v-bind="itemProps" :title="undefined">
+                        <VIcon
+                          x-small
+                          class="mr-2"
+                          :color="
+                            (optionItem as { color?: string })?.color
+                          "
+                          >{{
+                            (optionItem as { mdi?: string })?.mdi
+                          }}</VIcon
+                        >
+                        <span style="font-size: 11px">{{
+                          (optionItem as { text?: string })?.text
+                        }}</span>
+                      </VListItem>
                     </template>
                   </VSelect>
                 </div>
