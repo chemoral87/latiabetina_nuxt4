@@ -3,17 +3,6 @@
     <VCardTitle class="text-h6 mb-2 d-flex align-center">
       Trompeta
       <VChip v-if="noteInfo" id="pit-trumpet-note" class="ml-2" size="small" color="primary" variant="elevated">Nota escrita: {{ noteInfo.written }}</VChip>
-      <VSpacer />
-      <VBtn
-        id="pit-trumpet-glossary-btn"
-        size="small"
-        color="primary"
-        variant="tonal"
-        @click="glossaryDialog = true"
-      >
-        <VIcon start>mdi-book-open-variant</VIcon>
-        Glosario
-      </VBtn>
     </VCardTitle>
 
     <VCardText>
@@ -32,118 +21,104 @@
         </VCol>
       </VRow>
 
-      <div v-if="noteInfo" id="pit-trumpet-info" class="d-flex align-center flex-wrap ga-4 mb-2">
-        <span>Escrita: <strong>{{ noteInfo.written }}</strong></span>
-        <span>Sonido: <strong>{{ noteInfo.sounding }}</strong></span>
-        <VChip id="pit-trumpet-fingering" size="small" variant="tonal" :color="fingeringColor">
-          {{ fingeringLabel }}
-        </VChip>
-      </div>
+      <VRow no-gutters>
+        <VCol md="4" cols="12">
+          <div v-if="noteInfo" id="pit-trumpet-info" class="d-flex align-center flex-wrap ga-4 mb-2">
+            <span>Escrita: <strong>{{ noteInfo.written }}</strong></span>
+            <span>Sonido: <strong>{{ noteInfo.sounding }}</strong></span>
+            <VChip id="pit-trumpet-fingering" size="small" variant="tonal" :color="fingeringColor">
+              {{ fingeringLabel }}
+            </VChip>
+          </div>
 
-      <!-- Valve diagram -->
-      <div v-if="noteInfo" id="pit-trumpet-valves" class="valve-container">
-        <svg class="trumpet" viewBox="0 0 460 260" preserveAspectRatio="xMidYMid meet">
-          <!-- Main tube -->
-          <line x1="60" x2="300" y1="185" y2="185" stroke="#C8A24B" stroke-width="14" stroke-linecap="round" />
+          <!-- Valve diagram -->
+          <div v-if="noteInfo" id="pit-trumpet-valves" class="valve-container">
+            <svg class="trumpet" viewBox="0 0 460 260" preserveAspectRatio="xMidYMid meet">
+              <!-- Main tube -->
+              <line x1="60" x2="300" y1="185" y2="185" stroke="#C8A24B" stroke-width="14" stroke-linecap="round" />
 
-          <!-- Mouthpiece -->
-          <g>
-            <rect x="8" rx="5" y="176" width="30" height="18" fill="#C0C0C0" stroke="#7A7A7A" stroke-width="2" />
-            <line x1="38" x2="60" y1="185" y2="185" stroke="#C0C0C0" stroke-width="12" stroke-linecap="round" />
-          </g>
+              <!-- Mouthpiece -->
+              <g>
+                <rect x="8" rx="5" y="176" width="30" height="18" fill="#C0C0C0" stroke="#7A7A7A" stroke-width="2" />
+                <line x1="38" x2="60" y1="185" y2="185" stroke="#C0C0C0" stroke-width="12" stroke-linecap="round" />
+              </g>
 
-          <!-- Bell -->
-          <path
-            fill="#C8A24B"
-            stroke="#8B6914"
-            stroke-width="2"
-            stroke-linejoin="round"
-            d="M300 185 C 345 185, 375 168, 395 140 L 448 118 L 448 252 L 395 230 C 375 202, 345 185, 300 185 Z"
-          />
+              <!-- Bell -->
+              <path
+                fill="#C8A24B"
+                stroke="#8B6914"
+                stroke-width="2"
+                stroke-linejoin="round"
+                d="M300 185 C 345 185, 375 168, 395 140 L 448 118 L 448 252 L 395 230 C 375 202, 345 185, 300 185 Z"
+              />
 
-          <!-- Valves (1 = closer to the mouthpiece) -->
-          <g v-for="valve in 3" :key="valve">
-            <rect rx="8" y="100" width="40" height="85" fill="#B8860B" stroke="#8B6914" stroke-width="2" :x="getValveX(valve) - 20" />
-            <circle
-              r="22"
-              stroke-width="3"
-              :cx="getValveX(valve)"
-              :cy="isValvePressed(valve) ? 112 : 88"
-              :fill="isValvePressed(valve) ? '#1E88E5' : '#D4AF37'"
-              :stroke="isValvePressed(valve) ? '#0D47A1' : '#8B6914'"
-            />
-            <text
-              font-size="20"
-              font-weight="bold"
-              text-anchor="middle"
-              :x="getValveX(valve)"
-              :y="isValvePressed(valve) ? 119 : 95"
-              :fill="isValvePressed(valve) ? '#FFFFFF' : '#5D4037'"
-            >
-              {{ valve }}
-            </text>
-          </g>
-        </svg>
-      </div>
+              <!-- Valves (1 = closer to the mouthpiece) -->
+              <g v-for="valve in 3" :key="valve">
+                <rect rx="8" y="100" width="40" height="85" fill="#B8860B" stroke="#8B6914" stroke-width="2" :x="getValveX(valve) - 20" />
+                <circle
+                  r="22"
+                  stroke-width="3"
+                  :cx="getValveX(valve)"
+                  :cy="isValvePressed(valve) ? 112 : 88"
+                  :fill="isValvePressed(valve) ? '#1E88E5' : '#D4AF37'"
+                  :stroke="isValvePressed(valve) ? '#0D47A1' : '#8B6914'"
+                />
+                <text
+                  font-size="20"
+                  font-weight="bold"
+                  text-anchor="middle"
+                  :x="getValveX(valve)"
+                  :y="isValvePressed(valve) ? 119 : 95"
+                  :fill="isValvePressed(valve) ? '#FFFFFF' : '#5D4037'"
+                >
+                  {{ valve }}
+                </text>
+              </g>
+            </svg>
+          </div>
 
-      <p v-else class="text-caption text-medium-emphasis mb-0">
-        Toca una nota con la trompeta para ver la digitación.
-      </p>
-    </VCardText>
-
-    <VDialog
-      id="pit-trumpet-glossary-dlg"
-      v-model="glossaryDialog"
-      max-width="600px"
-    >
-      <VCard>
-        <VCardTitle class="text-h6">
-          Glosario de posiciones - Trompeta
-          <VSpacer />
-          <VBtn
-            id="pit-trumpet-glossary-close-btn"
-            icon
-            rounded="circle"
-            @click="glossaryDialog = false"
-          >
-            <VIcon>mdi-close</VIcon>
-          </VBtn>
-        </VCardTitle>
-        <VCardText>
-          <p id="pit-trumpet-glossary-summary" class="text-caption mb-3">
-            Tono: <strong>{{ tuningLabel }}</strong> · Nota más grave (sonido):
-            <strong>{{ lowestSounding }}</strong>
+          <p v-else class="text-caption text-medium-emphasis mb-0">
+            Toca una nota con la trompeta para ver la digitación.
           </p>
-          <VTable id="pit-trumpet-glossary-table" density="compact">
-            <thead>
-              <tr>
-                <th class="text-left">Nota escrita</th>
-                <th class="text-left">Sonido</th>
-                <th class="text-left">Posición</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="row in glossaryRows"
-                :key="row.written + row.sounding"
-              >
-                <td>{{ row.written }}</td>
-                <td>{{ row.sounding }}</td>
-                <td>
-                  <VChip
-                    size="x-small"
-                    variant="tonal"
-                    :color="row.fingering.length === 0 ? 'success' : 'primary'"
-                  >
-                    {{ row.label }}
-                  </VChip>
-                </td>
-              </tr>
-            </tbody>
-          </VTable>
-        </VCardText>
-      </VCard>
-    </VDialog>
+        </VCol>
+
+        <VCol md="8" cols="12">
+          <div id="pit-trumpet-glossary" class="glossary-wrap">
+            <VTable
+              v-for="(list, index) in glossaryColumns"
+              :key="index"
+              density="compact"
+              class="glossary-table"
+            >
+              <thead>
+                <tr>
+                  <th class="text-left">Sonido</th>
+                  <th class="text-left">Pos</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="row in list"
+                  :key="row.sounding"
+                  :class="{ 'glossary-row-active': row.sounding === activeSounding }"
+                >
+                  <td>{{ row.sounding }}</td>
+                  <td>
+                    <VChip
+                      size="x-small"
+                      variant="tonal"
+                      :color="row.fingering.length === 0 ? 'success' : 'primary'"
+                    >
+                      {{ row.label }}
+                    </VChip>
+                  </td>
+                </tr>
+              </tbody>
+            </VTable>
+          </div>
+        </VCol>
+      </VRow>
+    </VCardText>
   </VCard>
 </template>
 
@@ -183,12 +158,6 @@ const tuningOptions = [
 ]
 const transposition = computed(() => (tuning.value === "Bb" ? 2 : 0))
 
-const glossaryDialog = ref(false)
-
-const tuningLabel = computed(
-  () => tuningOptions.find((o) => o.value === tuning.value)?.title ?? tuning.value,
-)
-
 interface GlossaryRow {
   written: string
   sounding: string
@@ -227,7 +196,15 @@ const glossaryRows = computed<GlossaryRow[]>(() => {
   return rows
 })
 
-const lowestSounding = computed(() => glossaryRows.value[0]?.sounding ?? "--")
+// El glosario se muestra en tres listas para no ocupar demasiado espacio vertical
+const glossaryColumns = computed<GlossaryRow[][]>(() => {
+  const rows = glossaryRows.value
+  const perList = Math.ceil(rows.length / 3)
+  return [rows.slice(0, perList), rows.slice(perList, perList * 2), rows.slice(perList * 2)]
+})
+
+// Sonido detectado actualmente para resaltar la fila correspondiente
+const activeSounding = computed(() => noteInfo.value?.sounding ?? null)
 
 // Digitación estándar de la trompeta por nota escrita (clase de tono dentro de cada octava)
 const FINGERINGS: Record<number, Record<number, number[]>> = {
@@ -293,5 +270,26 @@ function isValvePressed(valve: number): boolean {
   width: 100%;
   height: auto;
   max-width: 320px;
+}
+
+.glossary-wrap {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.glossary-table {
+  flex: 1 1 0;
+  min-width: 120px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.glossary-row-active {
+  background-color: rgba(33, 150, 243, 0.25) !important;
+}
+
+.glossary-row-active td {
+  font-weight: 700;
 }
 </style>
