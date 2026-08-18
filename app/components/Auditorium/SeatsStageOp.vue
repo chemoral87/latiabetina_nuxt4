@@ -1,195 +1,42 @@
 <template>
   <div id="cmp-auditorium-seats-stage-op">
-    <div ref="controlRow">
-      <div style="gap: 6px" class="d-flex flex-wrap align-center py-1">
-        <template v-if="selectedSubsection">
-          <VBtn
-            id="aud-stageop-main-btn"
-            size="small"
-            color="primary"
-            prepend-icon="mdi-arrow-left"
-            @click="goBackToFullView"
-            >Main</VBtn
-          >
-          <VBtn
-            id="aud-stageop-prev-sub-btn"
-            icon
-            class="ml-1"
-            size="x-small"
-            color="primary"
-            @click="previousSubsection"
-          >
-            <VIcon>mdi-arrow-left</VIcon>
-          </VBtn>
-          <VBtn
-            id="aud-stageop-next-sub-btn"
-            icon
-            class="ml-1"
-            size="x-small"
-            color="primary"
-            @click="nextSubsection"
-          >
-            <VIcon>mdi-arrow-right</VIcon>
-          </VBtn>
-        </template>
-
-        <VBtn
-          id="aud-stageop-fit-width-btn"
-          size="small"
-          color="secondary"
-          title="Fit Width"
-          @click="fitToWidth"
-        >
-          <VIcon>mdi-arrow-expand-horizontal</VIcon>
-          Fit
-        </VBtn>
-        <VBtn
-          id="aud-stageop-fit-height-btn"
-          size="small"
-          color="secondary"
-          title="Fit Height"
-          @click="fitToHeight"
-        >
-          <VIcon>mdi-arrow-expand-vertical</VIcon>
-          Fit
-        </VBtn>
-        <VBtn
-          v-if="selectedSubsection"
-          id="aud-stageop-history-btn"
-          size="small"
-          color="success"
-          title="Historial de asientos"
-          @click="openHistory"
-        >
-          <VIcon start>mdi-history</VIcon>
-          Hist
-        </VBtn>
-      </div>
-    </div>
+    <AuditoriumSeatsStageOpControls
+      ref="controlsRef"
+      :selected-subsection="selectedSubsection"
+      @history="openHistory"
+      @next="nextSubsection"
+      @fit-width="fitToWidth"
+      @main="goBackToFullView"
+      @fit-height="fitToHeight"
+      @prev="previousSubsection"
+    />
 
     <div style="display: flex; gap: 2px">
-      <div
-        id="subsectionPanel"
-        :style="{
-          backgroundColor: 'blueviolet',
-          flex: 1,
-          height: containerOuterHeight,
-          overflow: 'hidden',
-        }"
-      >
-        <VStage
-          ref="konvaStage"
-          :config="adjustedStageConfig"
-          :style="{
-            backgroundColor: selectedSubsection ? 'lightgray' : 'pink',
-          }"
-          @wheel="handleWheel"
-          @dragend="handleDragEnd"
-          @touchend="handleTouchEnd"
-          @dragstart="handleDragStart"
-          @touchmove="handleTouchMove"
-          @touchstart="handleTouchStart"
-        >
-          <VLayer
-            :config="{
-              x: contentOffsetX,
-              scaleX: zoomLevel,
-              scaleY: zoomLevel,
-            }"
-          >
-            <template v-if="selectedSubsection">
-              <AuditoriumSeatsStageSubsection
-                :categories="categories"
-                :blink-state="blinkState"
-                :loading-seats="loadingSeats"
-                :subsection="selectedSubsection"
-                :selected-seats-array="selectedSeatsArray"
-                @seat-click="handleSeatClick"
-              />
-            </template>
-
-            <template v-else>
-              <VGroup
-                v-for="(section, sIdx) in sections"
-                :key="`section-${sIdx}`"
-                :config="getSectionConfig(sIdx)"
-              >
-                <VRect :config="getSectionBgConfig(section)" />
-                <VText :config="getSectionTitleConfig(section)" />
-
-                <template v-if="!(section.l || section.isLabel)">
-                  <VGroup
-                    v-for="(sub, subIdx) in section.ss || section.subsections"
-                    :key="`sub-${sIdx}-${subIdx}`"
-                    :config="{
-                      ...getSubsectionPosition(section, subIdx),
-                      onClick: () => handleSubsectionClick(sub),
-                      onTap: () => handleSubsectionClick(sub),
-
-                      onMouseenter: handleSeatHover,
-                      onMouseleave: handleSeatLeave,
-                    }"
-                  >
-                    <template v-if="sub.l || sub.isLabel">
-                      <AuditoriumSeatsStageSubsectionLabel
-                        :subsection="sub"
-                        :section-height="getSectionHeight(section)"
-                      />
-                    </template>
-
-                    <template v-else>
-                      <AuditoriumSeatsStageSubsection
-                        :subsection="sub"
-                        :categories="categories"
-                        :blink-state="blinkState"
-                        :loading-seats="loadingSeats"
-                        :selected-seats-array="selectedSeatsArray"
-                        @seat-click="handleSeatClick"
-                      />
-                    </template>
-                  </VGroup>
-                </template>
-              </VGroup>
-            </template>
-          </VLayer>
-        </VStage>
-      </div>
+      <AuditoriumSeatsStageCanvas
+        ref="canvasRef"
+        :sections="sections"
+        :categories="categories"
+        :blink-state="blinkState"
+        :stage-config="stageConfig"
+        :loading-seats="loadingSeats"
+        :container-width="containerWidth"
+        :container-height-px="containerHeightPx"
+        :selected-subsection="selectedSubsection"
+        :selected-seats-array="selectedSeatsArray"
+        :container-outer-height="containerOuterHeight"
+        @seat-click="handleSeatClick"
+        @subsection-click="handleSubsectionClick"
+      />
     </div>
 
-    <MyDragPanel
-      id="cmp-my-drag-panel-mark"
+    <AuditoriumSeatsStageMarkPanel
       v-model="showMarkPanel"
-      mode="fixed"
-      left="calc(50% - 95px)"
-      :top="panelVerticalPos.top"
-      :bottom="panelVerticalPos.bottom"
-      :title="'Asientos: ' + selectedSeatsArray.length"
-    >
-      <div class="mark-grid">
-        <template v-for="(config, key) in activeStatusConfig" :key="key">
-          <div v-if="key === '_'" class="mark-item mark-spacer"></div>
-          <div v-else class="mark-item">
-            <VBtn
-              icon
-              class="mb-1"
-              :title="config.label"
-              :style="`background-color: ${config.color} !important; color: white`"
-              @click="setEventSeat(key == 'e' ? null : key)"
-            >
-              <svg
-                v-if="config?.icon"
-                viewBox="0 0 24 24"
-                style="width: 32px; height: 32px; fill: currentColor"
-              >
-                <path :d="config.icon" />
-              </svg>
-              <VIcon v-else>{{ getIconName(key) }}</VIcon>
-            </VBtn>
-            <span class="mark-label">{{ config.label }}</span>
-          </div>
-        </template>
-      </div>
-    </MyDragPanel>
+      :panel-top="panelVerticalPos.top"
+      :count="selectedSeatsArray.length"
+      :status-config="activeStatusConfig"
+      :panel-bottom="panelVerticalPos.bottom"
+      @set-status="setEventSeat"
+    />
 
     <AuditoriumSeatsHistory
       id="cmp-auditorium-seats-history"
@@ -202,46 +49,9 @@
 </template>
 
 <script setup lang="ts">
-import {
-  DEFAULT_SETTINGS,
-  STATUS_CONFIG,
-  getPercentageColor,
-} from "~/constants/auditorium";
-import { useUAParser } from "~/utils/userAgent";
+import { STATUS_CONFIG } from "~/constants/auditorium";
 import { useLayout } from "vuetify";
-
-interface Seat {
-  id?: number | string;
-  i?: number | string;
-  status?: string | null;
-  [key: string]: unknown;
-}
-
-interface Subsection {
-  id?: number | string;
-  i?: number | string;
-  name?: string;
-  n?: string;
-  isLabel?: boolean;
-  l?: boolean;
-  w?: number;
-  width?: number;
-  s?: (Seat | null)[][];
-  seats?: (Seat | null)[][];
-  [key: string]: unknown;
-}
-
-interface Section {
-  id?: number | string;
-  i?: number | string;
-  name?: string;
-  n?: string;
-  isLabel?: boolean;
-  l?: boolean;
-  ss?: Subsection[];
-  subsections?: Subsection[];
-  [key: string]: unknown;
-}
+import type { Seat, Section, Subsection } from "~/types/auditorium";
 
 const props = defineProps<{
   sections: Section[];
@@ -265,29 +75,21 @@ const emit = defineEmits<{
 }>();
 
 const { mainRect } = useLayout();
-const uaParser = useUAParser();
 const { AuditoriumEventSeatLog } = useRepository();
 
-const konvaStage = ref<any>(null);
-const controlRow = ref<HTMLElement | null>(null);
+const canvasRef = ref<InstanceType<typeof AuditoriumSeatsStageCanvas> | null>(
+  null,
+);
+const controlsRef = ref<InstanceType<typeof AuditoriumSeatsStageOpControls> | null>(
+  null,
+);
 
 const selectedSubsection = ref<Subsection | null>(null);
-const zoomLevel = ref(1);
-const minZoom = 0.3;
-const maxZoom = 8.0;
-const zoomStep = 0.1;
-const dragMode = ref<string | null>(null);
 const cachedControlHeight = ref(50);
 const selectedSeatsArray = ref<(number | string)[]>([]);
 const lastClickClientY = ref<number | null>(null);
 const blinkState = ref(false);
 const blinkInterval = ref<ReturnType<typeof setInterval> | null>(null);
-const fitstate = ref<string | null>(null);
-const lastDist = ref(0);
-const lastCenter = ref<{ x: number; y: number } | null>(null);
-const isTwoFingerGesture = ref(false);
-const isDraggingStage = ref(false);
-const dragStartPos = ref<{ x: number; y: number } | null>(null);
 const markPanelVisible = ref(false);
 const historyDialog = ref(false);
 const historyLog = ref<Record<string, unknown>[]>([]);
@@ -321,8 +123,6 @@ const showMarkPanel = computed({
       markPanelVisible.value = false;
       selectedSeatsArray.value = [];
       lastClickClientY.value = null;
-      isDraggingStage.value = false;
-      dragStartPos.value = null;
     }
   },
 });
@@ -336,10 +136,6 @@ const panelVerticalPos = computed(() => {
     return { bottom: "20px", top: null as string | null };
   }
   return { top: "60px", bottom: null as string | null };
-});
-
-const seatSpacing = computed(() => {
-  return DEFAULT_SETTINGS.SEAT_SIZE + DEFAULT_SETTINGS.SEATS_DISTANCE;
 });
 
 const allSubsections = computed(() => {
@@ -366,32 +162,6 @@ const currentSubsectionIndex = computed(() => {
   return allSubsections.value.findIndex(
     (sub) => (sub.i || sub.id) === selectedId,
   );
-});
-
-const adjustedStageConfig = computed(() => {
-  return {
-    ...props.stageConfig,
-    width: containerWidth.value,
-    height: containerHeightPx.value,
-    x: 0,
-    draggable: !isTwoFingerGesture.value,
-    dragDistance: uaParser.isMobile() ? 12 : 5,
-    dragBoundFunc:
-      selectedSubsection.value && dragMode.value
-        ? getDragBoundFunc()
-        : undefined,
-  };
-});
-
-const contentOffsetX = computed(() => {
-  if (selectedSubsection.value) return 0;
-  if (!props.sections || props.sections.length === 0) return 0;
-  const maxSectionWidth = Math.max(
-    ...props.sections.map((section) => getSectionWidth(section)),
-  );
-  const scaledWidth = maxSectionWidth * zoomLevel.value;
-  const containerWidthVal = adjustedStageConfig.value.width as number;
-  return Math.max(0, (containerWidthVal - scaledWidth) / 2);
 });
 
 const controlHeight = computed(() => cachedControlHeight.value);
@@ -470,184 +240,23 @@ onBeforeUnmount(() => {
   }
 });
 
-function getIconName(key: string) {
-  return STATUS_CONFIG[key]?.mdi || "";
-}
-
 function getControlRowHeight() {
-  if (controlRow.value) {
-    const element = controlRow.value as HTMLElement;
-    if (element && element.offsetHeight) {
-      const height = element.offsetHeight;
-      return height > 0 ? height : 50;
-    }
+  const element = controlsRef.value?.rootEl;
+  if (element && element.offsetHeight) {
+    const height = element.offsetHeight;
+    return height > 0 ? height : 50;
   }
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
   const fallback = isMobile ? 52 : 48;
   return fallback;
 }
 
-function getSectionConfig(sIdx: number) {
-  const section = props.sections[sIdx];
-  let y = 0;
-  for (let i = 0; i < sIdx; i++) {
-    y += getSectionHeight(props.sections[i]);
-  }
-  if (sIdx > 0) {
-    y += sIdx * 20;
-  }
-  const maxSectionWidth = Math.max(
-    ...props.sections.map((s) => getSectionWidth(s)),
-  );
-  return { x: (maxSectionWidth - getSectionWidth(section)) / 2, y };
-}
-
-function getSectionBgConfig(section: Section) {
-  return {
-    width: getSectionWidth(section),
-    height: getSectionHeight(section),
-    fill: "black",
-    strokeWidth: 0,
-    stroke: "transparent",
-    cornerRadius: 5,
-  };
-}
-
-function getSectionTitleConfig(section: Section) {
-  const name = section.n || section.name;
-  const isLabel = section.l || section.isLabel;
-  return {
-    x: 0,
-    y: 4,
-    text: name,
-    fontSize: 22,
-    fill: isLabel ? "#1976d2" : "#fff",
-    fontStyle: "bold",
-    fontFamily: "Arial",
-    align: "center",
-    width: getSectionWidth(section),
-  };
-}
-
-function getSubsectionPosition(section: Section, subIdx: number) {
-  let x = DEFAULT_SETTINGS.SECTION_SIDE_PADDING;
-  const rawSubs = section.ss || section.subsections;
-
-  for (let i = 0; i < subIdx; i++) {
-    const s = rawSubs![i];
-    const isLabel = s.l || s.isLabel;
-    const width = isLabel ? (s.w || s.width || 40) - 20 : getSubsectionWidth(s);
-    x += width;
-    x += DEFAULT_SETTINGS.SUBSECTION_SPACING;
-  }
-
-  return { x, y: DEFAULT_SETTINGS.SECTION_TOP_PADDING };
-}
-
-function getSubsectionWidth(sub: Subsection) {
-  const isLabel = sub.l || sub.isLabel;
-  if (isLabel) return sub.w || sub.width || 40;
-  const seatsSource = sub.s || sub.seats;
-  if (!seatsSource?.length) return 0;
-  const maxCols = Math.max(...seatsSource.map((row) => row.length));
-  return maxCols * seatSpacing.value - DEFAULT_SETTINGS.SEATS_DISTANCE;
-}
-
-function getSubsectionHeight(sub: Subsection) {
-  const isLabel = sub.l || sub.isLabel;
-  if (isLabel) return 0;
-  const seatsSource = sub.s || sub.seats;
-  if (!seatsSource?.length) return 40;
-  return (
-    seatsSource.length * seatSpacing.value - DEFAULT_SETTINGS.SEATS_DISTANCE
-  );
-}
-
-function getSectionWidth(section: Section) {
-  const isLabel = section.l || section.isLabel;
-  if (isLabel) {
-    const maxSectionWidth = Math.max(
-      ...props.sections
-        .filter((s) => !(s.l || s.isLabel))
-        .map((s) => {
-          const rawSubs = s.ss || s.subsections;
-          if (!rawSubs || !rawSubs.length) return 0;
-          return (
-            rawSubs.reduce((acc, sub) => {
-              const isSubLabel = sub.l || sub.isLabel;
-              return (
-                acc +
-                (isSubLabel
-                  ? (sub.w || sub.width || 40) - 20
-                  : getSubsectionWidth(sub))
-              );
-            }, 0) +
-            (rawSubs.length - 1) * DEFAULT_SETTINGS.SUBSECTION_SPACING +
-            DEFAULT_SETTINGS.SECTION_SIDE_PADDING * 2 +
-            20
-          );
-        }),
-    );
-    return maxSectionWidth || 800;
-  }
-  const rawSubs = section.ss || section.subsections;
-  if (!rawSubs || !rawSubs.length) return 0;
-  const extraWidthPadding = 20;
-  return (
-    rawSubs.reduce((acc, s) => {
-      const isSubLabel = s.l || s.isLabel;
-      return (
-        acc + (isSubLabel ? (s.w || s.width || 40) - 20 : getSubsectionWidth(s))
-      );
-    }, 0) +
-    (rawSubs.length - 1) * DEFAULT_SETTINGS.SUBSECTION_SPACING +
-    DEFAULT_SETTINGS.SECTION_SIDE_PADDING * 2 +
-    extraWidthPadding
-  );
-}
-
-function getSectionHeight(section: Section) {
-  const isLabel = section.l || section.isLabel;
-  if (isLabel) return 30;
-  const rawSubs = section.ss || section.subsections;
-  if (!rawSubs || !rawSubs.length)
-    return (
-      DEFAULT_SETTINGS.SECTION_TOP_PADDING +
-      DEFAULT_SETTINGS.SECTION_BOTTOM_PADDING
-    );
-  const maxRows = Math.max(
-    ...rawSubs.map((sub) => {
-      const isSubLabel = sub.l || sub.isLabel;
-      const seatsSource = sub.s || sub.seats;
-      return isSubLabel ? 0 : seatsSource?.length || 0;
-    }),
-  );
-  if (maxRows === 0)
-    return (
-      DEFAULT_SETTINGS.SECTION_TOP_PADDING +
-      DEFAULT_SETTINGS.SECTION_BOTTOM_PADDING +
-      40
-    );
-  const extraHeightPadding = 40;
-  return (
-    maxRows * seatSpacing.value -
-    DEFAULT_SETTINGS.SEATS_DISTANCE +
-    DEFAULT_SETTINGS.SECTION_TOP_PADDING +
-    DEFAULT_SETTINGS.SECTION_BOTTOM_PADDING +
-    extraHeightPadding
-  );
-}
-
 function handleSubsectionClick(subSection: Subsection) {
   selectedSubsection.value = subSection;
-
-  if (fitstate.value === null) {
-    fitstate.value = "width";
-  }
   nextTick(() => {
     setTimeout(() => {
       cachedControlHeight.value = getControlRowHeight();
-      applyCurrentFit();
+      canvasRef.value?.enterSubsection();
     }, 100);
   });
 }
@@ -688,144 +297,35 @@ function previousSubsection() {
 }
 
 function applyCurrentFit() {
-  if (fitstate.value === "height") {
-    fitToHeight();
-  } else {
-    fitToWidth();
-  }
+  canvasRef.value?.applyCurrentFit();
 }
 
 function fitToWidth() {
-  fitstate.value = "width";
-  if (!props.sections || props.sections.length === 0) {
-    zoomLevel.value = 0.7;
-    return;
-  }
-
-  setTimeout(() => {
-    try {
-      const actualWidth = containerWidth.value;
-
-      let maxContentWidth;
-      if (selectedSubsection.value) {
-        const subsectionContentWidth = getSubsectionWidth(
-          selectedSubsection.value,
-        );
-        maxContentWidth = subsectionContentWidth + 20;
-      } else {
-        maxContentWidth =
-          Math.max(
-            ...props.sections.map((section) => getSectionWidth(section)),
-          ) + 25;
-      }
-
-      if (maxContentWidth > 0 && actualWidth > 0) {
-        const optimalZoom = actualWidth / maxContentWidth;
-        zoomLevel.value = Math.max(
-          minZoom,
-          Math.min(maxZoom, Math.round(optimalZoom * 10) / 10),
-        );
-      } else {
-        zoomLevel.value = 0.7;
-      }
-
-      dragMode.value = null;
-
-      nextTick(() => {
-        const stage = konvaStage.value?.getStage();
-        if (stage) {
-          stage.position({ x: 0, y: 0 });
-          stage.batchDraw();
-        }
-      });
-    } catch (error) {
-      zoomLevel.value = 0.7;
-    }
-  }, 50);
+  canvasRef.value?.fitToWidth();
 }
 
 function fitToHeight() {
-  fitstate.value = "height";
-  if (!props.sections || props.sections.length === 0) {
-    zoomLevel.value = 0.7;
-    return;
-  }
-
-  setTimeout(() => {
-    try {
-      const availableHeight = containerHeightPx.value;
-
-      let totalContentHeight;
-      if (selectedSubsection.value) {
-        const subsectionContentHeight = getSubsectionHeight(
-          selectedSubsection.value,
-        );
-        totalContentHeight = subsectionContentHeight + 35;
-      } else {
-        totalContentHeight =
-          props.sections.reduce((acc, section, idx) => {
-            return (
-              acc +
-              getSectionHeight(section) +
-              (idx > 0 ? DEFAULT_SETTINGS.SECTION_TOP_MARGIN : 0)
-            );
-          }, 0) + 40;
-      }
-
-      if (totalContentHeight > 0 && availableHeight > 0) {
-        const optimalZoom = availableHeight / totalContentHeight;
-        zoomLevel.value = Math.max(
-          minZoom,
-          Math.min(maxZoom, Math.round(optimalZoom * 10) / 10),
-        );
-      } else {
-        zoomLevel.value = 0.7;
-      }
-
-      dragMode.value = null;
-
-      nextTick(() => {
-        const stage = konvaStage.value?.getStage();
-        if (stage) {
-          stage.position({ x: 0, y: 0 });
-          stage.batchDraw();
-        }
-      });
-    } catch (error) {
-      zoomLevel.value = 0.7;
-    }
-  }, 50);
+  canvasRef.value?.fitToHeight();
 }
 
-function getDragBoundFunc() {
-  const mode = dragMode.value;
-  return function (pos: { x: number; y: number }) {
-    if (mode === "y") {
-      return { x: pos.x, y: 0 };
-    } else if (mode === "x") {
-      return { x: 0, y: pos.y };
-    }
-    return pos;
-  };
-}
-
-function handleSeatClick(payload: { seat: Seat; event?: any }) {
+function handleSeatClick(payload: { seat: Seat; event?: unknown }) {
   const { seat, event } = payload;
 
   let clickY: number | null = null;
   if (event) {
-    if (event.evt && typeof event.evt.clientY === "number") {
-      clickY = event.evt.clientY;
+    const evt = (event as any).evt;
+    if (evt && typeof evt.clientY === "number") {
+      clickY = evt.clientY;
     }
-    if (clickY === null && event.evt) {
-      const touches = event.evt.changedTouches || event.evt.touches;
+    if (clickY === null && evt) {
+      const touches = evt.changedTouches || evt.touches;
       if (touches && touches[0] && typeof touches[0].clientY === "number") {
         clickY = touches[0].clientY;
       }
     }
-    if (clickY === null && event.target) {
+    if (clickY === null && (event as any).target) {
       try {
-        const stage = event.target.getStage();
+        const stage = (event as any).target.getStage();
         if (stage) {
           const pointer = stage.getPointerPosition();
           if (pointer) {
@@ -847,21 +347,6 @@ function handleSeatClick(payload: { seat: Seat; event?: any }) {
     // a seat does nothing here (the event bubbles up and zooms the subsection
     // via handleSubsectionClick). Selected seats keep blinking in the full view
     // through selectedSeatsArray/blinkState.
-    return;
-  }
-
-  const stage = konvaStage.value?.getStage();
-  if (stage && dragStartPos.value) {
-    const currentPos = stage.position();
-    const dragDistance = Math.sqrt(
-      Math.pow(currentPos.x - dragStartPos.value.x, 2) +
-        Math.pow(currentPos.y - dragStartPos.value.y, 2),
-    );
-
-    if (dragDistance > DEFAULT_SETTINGS.DRAG_THRESHOLD) {
-      return;
-    }
-  } else if (isDraggingStage.value) {
     return;
   }
 
@@ -920,146 +405,6 @@ function findSeatById(seatId: number | string) {
   return null;
 }
 
-function handleSeatHover(e: any) {
-  const container = e.target.getStage().container();
-  container.style.cursor =
-    e.target.attrs.opacity < 1 ? "not-allowed" : "pointer";
-}
-
-function handleSeatLeave(e: any) {
-  e.target.getStage().container().style.cursor = "default";
-}
-
-function handleWheel(e: any) {
-  e.evt.preventDefault();
-
-  const stage = konvaStage.value?.getStage();
-  if (!stage) return;
-
-  const oldScale = zoomLevel.value;
-  const pointer = stage.getPointerPosition();
-
-  const scaleBy = 1.05;
-  const direction = e.evt.deltaY > 0 ? -1 : 1;
-
-  let newScale = direction > 0 ? oldScale * scaleBy : oldScale / scaleBy;
-  newScale = Math.max(minZoom, Math.min(maxZoom, newScale));
-  newScale = Math.round(newScale * 100) / 100;
-
-  if (newScale === oldScale) return;
-
-  const mousePointTo = {
-    x: (pointer.x - stage.x()) / oldScale,
-    y: (pointer.y - stage.y()) / oldScale,
-  };
-
-  const newPos = {
-    x: pointer.x - mousePointTo.x * newScale,
-    y: pointer.y - mousePointTo.y * newScale,
-  };
-
-  zoomLevel.value = newScale;
-
-  nextTick(() => {
-    stage.position(newPos);
-    stage.batchDraw();
-  });
-
-  fitstate.value = null;
-}
-
-function handleTouchStart(e: any) {
-  const touch1 = e.evt.touches[0];
-  const touch2 = e.evt.touches[1];
-
-  if (touch1 && touch2) {
-    isTwoFingerGesture.value = true;
-    lastDist.value = getDistance(touch1, touch2);
-    lastCenter.value = getCenter(touch1, touch2);
-  } else {
-    isTwoFingerGesture.value = false;
-  }
-}
-
-function handleTouchMove(e: any) {
-  const touch1 = e.evt.touches[0];
-  const touch2 = e.evt.touches[1];
-
-  if (touch1 && touch2) {
-    e.evt.preventDefault();
-
-    const stage = konvaStage.value?.getStage();
-    if (!stage) return;
-
-    const dist = getDistance(touch1, touch2);
-    const center = getCenter(touch1, touch2);
-
-    if (!lastDist.value) {
-      lastDist.value = dist;
-    }
-
-    const oldScale = zoomLevel.value;
-    const pointTo = {
-      x: (center.x - stage.x()) / oldScale,
-      y: (center.y - stage.y()) / oldScale,
-    };
-
-    const scale = dist / lastDist.value;
-    let newScale = oldScale * scale;
-    newScale = Math.max(minZoom, Math.min(maxZoom, newScale));
-    newScale = Math.round(newScale * 100) / 100;
-
-    zoomLevel.value = newScale;
-
-    const newPos = {
-      x: center.x - pointTo.x * newScale,
-      y: center.y - pointTo.y * newScale,
-    };
-
-    stage.position(newPos);
-    stage.batchDraw();
-
-    lastDist.value = dist;
-    lastCenter.value = center;
-
-    fitstate.value = null;
-  }
-}
-
-function handleTouchEnd() {
-  lastDist.value = 0;
-  lastCenter.value = null;
-  isTwoFingerGesture.value = false;
-}
-
-function getDistance(touch1: Touch, touch2: Touch) {
-  const dx = touch1.clientX - touch2.clientX;
-  const dy = touch1.clientY - touch2.clientY;
-  return Math.sqrt(dx * dx + dy * dy);
-}
-
-function getCenter(touch1: Touch, touch2: Touch) {
-  return {
-    x: (touch1.clientX + touch2.clientX) / 2,
-    y: (touch1.clientY + touch2.clientY) / 2,
-  };
-}
-
-function handleDragStart() {
-  const stage = konvaStage.value?.getStage();
-  if (stage) {
-    dragStartPos.value = { ...stage.position() };
-    isDraggingStage.value = true;
-  }
-}
-
-function handleDragEnd() {
-  isDraggingStage.value = false;
-  setTimeout(() => {
-    dragStartPos.value = null;
-  }, 100);
-}
-
 async function openHistory() {
   historyDialog.value = true;
   historyLoading.value = true;
@@ -1085,34 +430,4 @@ async function openHistory() {
 </script>
 
 <style scoped>
-.stage-container {
-  position: relative;
-}
-
-@media (max-width: 600px) {
-  .stage-container {
-    -webkit-overflow-scrolling: touch;
-  }
-}
-
-.mark-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 4px 8px;
-  padding: 8px 6px 6px;
-  justify-items: center;
-}
-
-.mark-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.mark-label {
-  font-size: 9px;
-  text-align: center;
-  line-height: 1.1;
-  color: #333;
-}
 </style>
