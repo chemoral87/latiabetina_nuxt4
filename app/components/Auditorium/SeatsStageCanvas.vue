@@ -35,6 +35,7 @@
             :loading-seats="loadingSeats"
             :subsection="selectedSubsection"
             :selected-seats-array="selectedSeatsArray"
+            :border-color="getSubsectionBorderColorForSub(selectedSubsection)"
             @seat-click="handleSeatClick"
           />
         </template>
@@ -74,6 +75,7 @@
                     :blink-state="blinkState"
                     :loading-seats="loadingSeats"
                     :selected-seats-array="selectedSeatsArray"
+                    :border-color="getSubsectionBorderColor(sIdx, subIdx)"
                     @seat-click="handleSeatClick"
                   />
                 </template>
@@ -89,6 +91,7 @@
 <script setup lang="ts">
 import {
   DEFAULT_SETTINGS,
+  SUBSECTION_BORDER_COLORS,
 } from "~/constants/auditorium"
 import { useUAParser } from "~/utils/userAgent"
 import type { Seat, Section, Subsection } from "~/types/auditorium"
@@ -155,6 +158,44 @@ const contentOffsetX = computed(() => {
   const containerWidthVal = adjustedStageConfig.value.width as number
   return Math.max(0, (containerWidthVal - scaledWidth) / 2)
 })
+
+/**
+ * Cycle through the border palette so each subsection gets a distinct border
+ * color. The index is global across all sections (counting every subsection,
+ * labels included, to keep positions stable), so colors repeat only after the
+ * palette is exhausted, then wrap back to index 0.
+ */
+function getSubsectionGlobalIndex(sIdx: number, subIdx: number) {
+  let global = subIdx
+  for (let i = 0; i < sIdx; i++) {
+    const rawSubs = props.sections[i]?.ss || props.sections[i]?.subsections
+    if (!props.sections[i]?.l && !props.sections[i]?.isLabel && rawSubs) {
+      global += rawSubs.length
+    }
+  }
+  return global
+}
+
+function getSubsectionBorderColor(sIdx: number, subIdx: number) {
+  const global = getSubsectionGlobalIndex(sIdx, subIdx)
+  return SUBSECTION_BORDER_COLORS[global % SUBSECTION_BORDER_COLORS.length]
+}
+
+function getSubsectionBorderColorForSub(target: Subsection) {
+  for (let sIdx = 0; sIdx < props.sections.length; sIdx++) {
+    const section = props.sections[sIdx]
+    if (section.l || section.isLabel) continue
+    const rawSubs = section.ss || section.subsections
+    if (!rawSubs) continue
+    for (let subIdx = 0; subIdx < rawSubs.length; subIdx++) {
+      const sub = rawSubs[subIdx]
+      if (sub === target || (sub.i || sub.id) === (target.i || target.id)) {
+        return getSubsectionBorderColor(sIdx, subIdx)
+      }
+    }
+  }
+  return SUBSECTION_BORDER_COLORS[0]
+}
 
 function getSectionConfig(sIdx: number) {
   const section = props.sections[sIdx]

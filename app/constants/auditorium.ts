@@ -144,6 +144,18 @@ export const DEFAULT_SETTINGS = {
   DRAG_THRESHOLD: 18, // px to differentiate drag from click/tap
 }
 
+// ── Subsection border palette ────────────────────────────────────────────────
+// Distinct border colors used to tell subsections apart on the stage. When
+// there are more subsections than colors, the palette cycles back from index 0.
+export const SUBSECTION_BORDER_COLORS = [
+  "#f44336", // red
+  "#2196f3", // blue
+  "#4caf50", // green
+  "#ff9800", // orange
+]
+
+export const SUBSECTION_BORDER_WIDTH = 2.5
+
 // ── Default export for auto-import compatibility ──────────────────────────────
 export default {
   STAGE_CATEGORIES,

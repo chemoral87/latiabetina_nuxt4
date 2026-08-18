@@ -9,8 +9,8 @@
         width: subsectionWidth + 18,
         height: subsectionHeight + 31,
         fill: 'black',
-        stroke: 'red',
-        strokeWidth: 1,
+        stroke: borderColor,
+        strokeWidth: borderWidth,
       }"
     />
 
@@ -117,13 +117,21 @@ interface Subsection {
   [key: string]: unknown;
 }
 
-const props = defineProps<{
-  subsection: Subsection;
-  categories?: { label: string; value: string | null; fill: string }[];
-  selectedSeatsArray?: string[];
-  blinkState?: boolean;
-  loadingSeats?: string[];
-}>();
+const props = withDefaults(
+  defineProps<{
+    subsection: Subsection;
+    categories?: { label: string; value: string | null; fill: string }[];
+    selectedSeatsArray?: string[];
+    blinkState?: boolean;
+    loadingSeats?: string[];
+    borderColor?: string;
+    borderWidth?: number;
+  }>(),
+  {
+    borderColor: "#f44336",
+    borderWidth: 1,
+  },
+);
 
 const emit = defineEmits<{
   (e: "seat-click", payload: { seat: SeatItem; event: unknown }): void;
