@@ -29,7 +29,7 @@
                         onMouseleave: handleSeatLeave,
                         onClick: (e) => handleSeatClick(seat, e),
                         onTap: (e) => handleSeatClick(seat, e),
-                        onPointerClick: (e) => handleSeatClick(seat, e),
+         
                       })"
                     />
                   </v-group>
