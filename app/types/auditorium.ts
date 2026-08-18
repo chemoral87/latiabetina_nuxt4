@@ -1,6 +1,9 @@
 export interface Seat {
   id?: number | string
   i?: number | string
+  row?: number | string
+  col?: number | string
+  category?: string | null
   status?: string | null
   [key: string]: unknown
 }

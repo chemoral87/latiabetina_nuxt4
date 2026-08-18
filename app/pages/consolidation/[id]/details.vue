@@ -1,82 +1,78 @@
 <template>
   <VContainer fluid>
-    <VRow dense>
+    <VRow density="comfortable">
       <VCol v-if="sheet.id" cols="12">
-        <VCard id="con-detai-card-1" variant="outlined" class="mb-3">
+        <VCard id="con-detai-card-1" class="mb-3" variant="outlined">
           <VCardTitle class="text-subtitle-1 font-weight-bold d-flex align-center">
             <VIcon start>mdi-clipboard-list</VIcon>
             Consolidado #{{ sheet.folio_number }}
-            <VSpacer />
-            <VBtn id="cnsld-save-sheet-btn" color="primary" size="small" :loading="savingSheet" :disabled="!isDirty || savingSheet" @click="saveSheet">
-              <VIcon start size="small">mdi-content-save</VIcon>
-              Guardar
-            </VBtn>
           </VCardTitle>
           <VCardText>
-            <VRow dense align="center">
-              <VCol cols="12" md="2">
+            <VRow align="center" density="comfortable">
+              <VCol md="2" cols="12">
                 <div class="d-flex align-center">
-                  <VIcon size="small" class="mr-1">mdi-calendar</VIcon>
+                  <VIcon class="mr-1" size="small">mdi-calendar</VIcon>
                   <span class="text-caption font-weight-bold text-grey-darken-2 text-truncate">
                     Fecha: {{ (formatShortDateDash(sheet.date as string | null)).toUpperCase() }}
                   </span>
                 </div>
               </VCol>
-              <VCol cols="12" md="2">
+              <VCol md="2" cols="12">
                 <div class="d-flex align-center">
-                  <VIcon size="small" class="mr-1">mdi-office-building</VIcon>
+                  <VIcon class="mr-1" size="small">mdi-office-building</VIcon>
                   <span class="text-caption font-weight-bold text-grey-darken-2 text-truncate">
                     Org: {{ (sheet.organization as Record<string, unknown> | undefined)?.name || 'N/A' }}
                   </span>
                 </div>
               </VCol>
-              <VCol cols="12" md="2">
+              <VCol md="2" cols="12">
                 <div class="d-flex align-center">
-                  <VIcon size="small" class="mr-1">mdi-account-plus</VIcon>
+                  <VIcon class="mr-1" size="small">mdi-account-plus</VIcon>
                   <span class="text-caption font-weight-bold text-grey-darken-2 text-truncate">
                     Creador: {{ (sheet.creator as Record<string, unknown> | undefined)?.name || 'N/A' }}
                   </span>
                 </div>
               </VCol>
-              <VCol cols="12" md="2">
+              <VCol md="2" cols="12">
                 <VTextField
                   id="tf-conso-detai-sheet-how_did_you_hear-1"
                   v-model="sheet.how_did_you_hear"
-                  label="¿Cómo se enteró?"
-                  density="compact"
                   hide-details
+                  density="compact"
                   variant="outlined"
-                  prepend-inner-icon="mdi-bullhorn"
                   :disabled="savingSheet"
+                  label="¿Cómo se enteró?"
+                  prepend-inner-icon="mdi-bullhorn"
                 />
               </VCol>
-              <VCol cols="12" md="2">
+              <VCol v-if="auth.hasPermission('conso-sheet-consolidator-select')" md="2" cols="12">
                 <VAutocomplete
+                  
                   id="det-consolidator-ac"
                   v-model="sheet.consolidator_id"
+                  clearable
+                  hide-details
                   :items="users"
-                  item-title="name"
                   item-value="id"
+                  density="compact"
+                  item-title="name"
                   variant="outlined"
                   label="Consolidador"
-                  clearable
-                  density="compact"
-                  hide-details
-                  prepend-inner-icon="mdi-account-tie"
                   :disabled="savingSheet"
+                  prepend-inner-icon="mdi-account-tie"
                 />
               </VCol>
-              <VCol cols="12" md="2">
+              <VCol md="2" cols="12">
                 <VSelect
                   id="det-first-church-sel"
                   v-model="sheet.first_time_christian_church"
-                  :items="[{ title: 'SI', value: true }, { title: 'NO', value: false }]"
-                  label="¿Primera vez en iglesia cristiana?"
-                  variant="outlined"
-                  density="compact"
                   hide-details
-                  prepend-inner-icon="mdi-help-circle-outline"
+                  density="compact"
+                  variant="outlined"
                   :disabled="savingSheet"
+                  label="¿Primera vez en iglesia cristiana?"
+                  prepend-inner-icon="mdi-help-circle-outline"
+                  :items="[{ title: 'SI', value: true }, { title: 'NO', value: false }]"
                 />
               </VCol>
 
@@ -84,51 +80,66 @@
                 <VDivider />
               </VCol>
 
-              <VCol cols="12" md="6" class="mt-1">
+              <VCol md="6" cols="12" class="mt-1">
                 <VTextarea
                   id="det-comments-ta"
                   v-model="sheet.comments"
-                  label="Comentarios"
-                  variant="outlined"
                   rows="2"
                   auto-grow
-                  density="compact"
                   hide-details
-                  prepend-inner-icon="mdi-comment-text-outline"
+                  density="compact"
+                  variant="outlined"
+                  label="Comentarios"
                   :disabled="savingSheet"
+                  prepend-inner-icon="mdi-comment-text-outline"
                 />
               </VCol>
-              <VCol cols="12" md="6" class="mt-1">
+              <VCol md="6" cols="12" class="mt-1">
                 <VTextarea
                   id="det-special-request-ta"
                   v-model="sheet.special_request"
-                  label="Petición especial"
                   rows="2"
                   auto-grow
-                  variant="outlined"
                   hide-details
-                  prepend-inner-icon="mdi-heart-outline"
+                  variant="outlined"
                   :disabled="savingSheet"
+                  label="Petición especial"
+                  prepend-inner-icon="mdi-heart-outline"
                 />
+              </VCol>
+
+              <VCol cols="12" class="d-flex justify-end mt-2">
+                <VBtn
+                  id="cnsld-save-sheet-btn"
+                  size="small"
+                  color="primary"
+                  variant="elevated"
+                  :loading="savingSheet"
+                  :disabled="!isDirty || savingSheet"
+                  @click="saveSheet"
+                >
+                  <VIcon start size="small">mdi-content-save</VIcon>
+                  Guardar
+                </VBtn>
               </VCol>
             </VRow>
           </VCardText>
         </VCard>
       </VCol>
 
-      <VCol cols="12" md="4">
+      <VCol md="4" cols="12">
         <VTextField
           id="con-detai-filterterm-tf-2"
           v-model="filterTerm"
-          append-inner-icon="mdi-magnify"
           clearable
           hide-details
-          placeholder="Filtro"
           density="compact"
+          placeholder="Filtro"
+          append-inner-icon="mdi-magnify"
         />
       </VCol>
-      <VCol cols="12" md="4">
-        <VBtn id="cnsld-new-member-btn" color="primary" class="mr-1" @click="newMember">
+      <VCol md="4" cols="12">
+        <VBtn id="cnsld-new-member-btn" class="mr-1" color="success" @click="newMember">
           <VIcon start>mdi-plus</VIcon>
           Nuevo Miembro
         </VBtn>
@@ -139,13 +150,13 @@
       </VCol>
 
       <VCol cols="12">
-        <ConsolidationMemberTable :members="filteredMembers" :loading="loading" @edit="editMember" @delete="deleteMemberPrompt" />
+        <ConsolidationMemberTable :loading="loading" :members="filteredMembers" @edit="editMember" @delete="deleteMemberPrompt" />
       </VCol>
     </VRow>
 
-    <ConsolidationMemberDialog v-if="dialog" :member="member" :loading="saving" @close="closeDialog" @save="saveMember" />
+    <ConsolidationMemberDialog v-if="dialog" :member="member" :loading="saving" @save="saveMember" @close="closeDialog" />
 
-    <DialogDelete v-if="dialogDelete" :dialog="deleteData" :loading="deleting" @ok="confirmDelete" @close="dialogDelete = false" />
+    <DialogDelete v-if="dialogDelete" :loading="deleting" :dialog="deleteData" @ok="confirmDelete" @close="dialogDelete = false" />
 
     <DialogConfirm
       v-if="showConfirmDialog"
@@ -171,6 +182,7 @@ definePageMeta({
 const route = useRoute()
 const { ConsoSheet, ChurchMember } = useRepository()
 const notify = useNotifyStore()
+const auth = useAuthStore()
 
 const sheetId = computed(() => route.params.id as string)
 

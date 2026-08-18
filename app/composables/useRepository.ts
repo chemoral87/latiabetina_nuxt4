@@ -73,6 +73,10 @@ export function useRepository() {
     },
   }
 
+  const Song = {
+    ...createCommonRepository($api, "/song"),
+  }
+
   return {
     Organization: createCommonRepository($api, "/organization"),
     OrganizationConfig,
@@ -91,9 +95,16 @@ export function useRepository() {
     Profile,
     Testimony,
     ChurchEvent,
+    Song,
     Sale,
     Product,
-    ConsoSheet: createCommonRepository($api, "/conso-sheet"),
+    ConsoSheet: {
+      ...createCommonRepository($api, "/conso-sheet"),
+      // Users who have conso-sheet-index permission in the sheet's org: GET /conso-sheet/consolidators
+      consolidators<T = unknown>(params: Record<string, unknown>) {
+        return withNotify($api<T>("/conso-sheet/consolidators", { params }))
+      },
+    },
     ChurchMember: createCommonRepository($api, "/church-member"),
   }
 }

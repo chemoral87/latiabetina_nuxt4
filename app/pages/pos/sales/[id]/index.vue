@@ -1,6 +1,6 @@
 <template>
   <VContainer :fluid="true">
-    <VRow dense>
+    <VRow density="comfortable">
       <VCol cols="12" md="8" class="mx-auto">
         <VCard id="psid-main-card" variant="outlined" class="pa-4">
           <!-- Header -->
@@ -19,7 +19,7 @@
           <VDivider class="mb-4" />
 
           <!-- Sale info -->
-          <VRow dense>
+          <VRow density="comfortable">
             <VCol cols="6" sm="3">
               <div class="text-caption text-grey">Cliente</div>
               <div class="text-body-2 font-weight-medium">{{ sale.customer_name || '—' }}</div>

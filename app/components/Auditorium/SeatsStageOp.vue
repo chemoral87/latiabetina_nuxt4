@@ -17,7 +17,6 @@
         :sections="sections"
         :categories="categories"
         :blink-state="blinkState"
-        :stage-config="stageConfig"
         :loading-seats="loadingSeats"
         :container-width="containerWidth"
         :container-height-px="containerHeightPx"
@@ -55,7 +54,6 @@ import type { Seat, Section, Subsection } from "~/types/auditorium";
 
 const props = defineProps<{
   sections: Section[];
-  stageConfig: Record<string, unknown>;
   auditoriumEventId?: number | string | null;
   sectionPrefix?: string | null;
   categories?: unknown[];

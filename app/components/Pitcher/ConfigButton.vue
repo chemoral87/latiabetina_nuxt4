@@ -10,20 +10,21 @@
     </VBtn>
     <VDialog id="pit-config-dlg" v-model="settingsDialog" max-width="500px">
       <VCard>
-        <VCardTitle>
-          Configuración v2.023
+        <VCardTitle class="d-flex align-center flex-nowrap pe-2">
+          <span class="text-truncate">Configuración v2.023</span>
           <VSpacer />
           <VBtn
             id="pit-config-close-icon-btn"
             icon
             rounded="circle"
+            class="flex-shrink-0"
             @click="settingsDialog = false"
           >
             <VIcon>mdi-close</VIcon>
           </VBtn>
         </VCardTitle>
 
-        <VCardText>
+        <VCardText class="config-body">
           <VRow density="comfortable">
             <!-- Microfono Section -->
             <VCol cols="12">
@@ -143,21 +144,39 @@
               </div>
             </VCol>
             <VCol sm="6" cols="12">
+              <div class="text-caption text-medium-emphasis">Altura Histograma</div>
               <VSlider
                 id="pit-config-height"
                 v-model="histogramHeight"
-                :max="450"
-                :min="250"
+                :max="600"
+                :min="300"
                 :step="25"
                 thumb-label
                 hide-details
-                label="Altura Histograma"
               />
               <div
                 id="pit-config-height-value"
                 class="text-center font-weight-bold"
               >
                 {{ histogramHeight }}px
+              </div>
+            </VCol>
+            <VCol sm="6" cols="12">
+              <div class="text-caption text-medium-emphasis">Ancho mínimo Histograma</div>
+              <VSlider
+                id="pit-config-min-width"
+                v-model="histogramMinWidth"
+                :max="800"
+                :min="200"
+                :step="25"
+                thumb-label
+                hide-details
+              />
+              <div
+                id="pit-config-min-width-value"
+                class="text-center font-weight-bold"
+              >
+                {{ histogramMinWidth }}px
               </div>
             </VCol>
           </VRow>
@@ -174,8 +193,18 @@
                 id="pit-config-guitar-notation"
                 v-model="showGuitarNotation"
                 hide-details
+                color="success"
                 class="mt-0 pt-0"
                 label="Notación guitarra"
+              />
+              <VSelect
+                id="pit-config-guitar-cols"
+                v-model="guitarCols"
+                hide-details
+                label="Columnas"
+                density="compact"
+                variant="outlined"
+                :items="notationColsOptions"
               />
             </VCol>
             <VCol sm="6" cols="12">
@@ -183,8 +212,18 @@
                 id="pit-config-ukelele-notation"
                 v-model="showUkeleleNotation"
                 hide-details
+                color="success"
                 class="mt-0 pt-0"
                 label="Notación ukelele"
+              />
+              <VSelect
+                id="pit-config-ukelele-cols"
+                v-model="ukeleleCols"
+                hide-details
+                label="Columnas"
+                density="compact"
+                variant="outlined"
+                :items="notationColsOptions"
               />
             </VCol>
             <VCol sm="6" cols="12">
@@ -192,8 +231,18 @@
                 id="pit-config-trumpet-notation"
                 v-model="showTrumpetNotation"
                 hide-details
+                color="success"
                 class="mt-0 pt-0"
                 label="Notación trompeta"
+              />
+              <VSelect
+                id="pit-config-trumpet-cols"
+                v-model="trumpetCols"
+                hide-details
+                label="Columnas"
+                density="compact"
+                variant="outlined"
+                :items="notationColsOptions"
               />
             </VCol>
             <VCol cols="12">
@@ -262,7 +311,7 @@
           </VRow>
         </VCardText>
 
-        <div class="d-flex justify-end px-4 pb-4">          <VBtn id="pit-config-close-btn" variant="outlined" size="x-large" color="primary" @click="settingsDialog = false">Cerrar</VBtn>
+        <div class="d-flex justify-end px-4 pb-4">          <VBtn id="pit-config-close-btn" size="x-large" color="primary" variant="outlined" @click="settingsDialog = false">Cerrar</VBtn>
         </div>
       </VCard>
     </VDialog>
@@ -271,12 +320,17 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { usePitcherStore } from "~/composables/usePitcherStore";
+import {
+  NOTATION_COLS_OPTIONS,
+  usePitcherStore,
+} from "~/composables/usePitcherStore";
 
 const settingsDialog = ref(false);
 
 const store = usePitcherStore();
 const { sensitivity: sensitivityRef } = storeToRefs(store);
+
+const notationColsOptions = NOTATION_COLS_OPTIONS;
 
 // Writable computeds → store setters (clamping preserved from the Vuex module)
 const latinNotation = computed({
@@ -307,6 +361,10 @@ const histogramHeight = computed({
   get: () => store.histogramHeight,
   set: (v: number) => store.setHistogramHeight(v),
 });
+const histogramMinWidth = computed({
+  get: () => store.histogramMinWidth,
+  set: (v: number) => store.setHistogramMinWidth(v),
+});
 const dbCalibrationOffset = computed({
   get: () => store.dbCalibrationOffset,
   set: (v: number) => store.setDbCalibrationOffset(v),
@@ -335,6 +393,18 @@ const showTrumpetNotation = computed({
   get: () => store.showTrumpetNotation,
   set: (v: boolean) => store.setShowTrumpetNotation(v),
 });
+const ukeleleCols = computed({
+  get: () => store.ukeleleCols,
+  set: (v: string | number) => store.setUkeleleCols(v),
+});
+const guitarCols = computed({
+  get: () => store.guitarCols,
+  set: (v: string | number) => store.setGuitarCols(v),
+});
+const trumpetCols = computed({
+  get: () => store.trumpetCols,
+  set: (v: string | number) => store.setTrumpetCols(v),
+});
 </script>
 
 <style scoped>
@@ -351,5 +421,12 @@ const showTrumpetNotation = computed({
       0 0 20px rgba(33, 150, 243, 0.8),
       0 0 30px rgba(33, 150, 243, 0.6);
   }
+}
+
+/* El cuerpo del diálogo es el que hace scroll, así la fila del título
+   (texto + botón cerrar) nunca se ve afectada por la barra de scroll. */
+.config-body {
+  max-height: 70vh;
+  overflow-y: auto;
 }
 </style>

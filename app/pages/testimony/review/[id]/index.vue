@@ -1,6 +1,6 @@
 <template>
   <VContainer>
-    <VRow dense>
+    <VRow density="comfortable">
       <VCol cols="12" md="8" class="mx-auto">
         <VCard id="rev-main-card">
           <VCardTitle class="d-flex flex-column align-start">

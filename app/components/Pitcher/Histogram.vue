@@ -2,16 +2,24 @@
   <div id="cmp-pitcher-histogram" ref="rootEl">
     <h5 id="pit-hist-title" class="text-center font-weight-regular">Histograma de Frecuencia</h5>
     <div class="histogram-row">
-      <div id="pit-db-meter" class="db-meter">
-        <div id="pit-db-track" class="db-meter-track" :style="{ height: histogramHeight + 'px' }">
-          <div class="db-meter-fill" :style="{ height: dbFillPercent, backgroundColor: dbMeterColor }"></div>
+      <div id="pit-db-meter" class="db-meter" :style="{ width: dbMeterWidth + 'px' }">
+        <div
+          id="pit-db-track"
+          class="db-meter-track"
+          :style="{
+            height: histogramEffectiveHeight + 'px',
+            width: dbMeterTrackWidth + 'px',
+            borderRadius: dbMeterBorderRadius + 'px',
+          }"
+        >
+          <div class="db-meter-fill" :style="{ height: dbFillPercent, backgroundColor: dbMeterColor, borderRadius: dbMeterBorderRadius + 'px' }"></div>
         </div>
-        <div class="db-meter-label">
+        <div class="db-meter-label" :style="{ fontSize: dbMeterFontSize + 'px' }">
           <strong id="pit-db-value">{{ dbDisplay }}</strong>
           <span>dB</span>
         </div>
       </div>
-      <canvas id="pit-hist-canvas" ref="histogramEl" :width="canvasWidth" :height="histogramHeight" style="display: block; background-color: black; flex: 1; min-width: 0" />
+      <canvas id="pit-hist-canvas" ref="histogramEl" :width="canvasWidth" :height="histogramEffectiveHeight" style="display: block; background-color: black; flex: 1; min-width: 0" />
     </div>
     <div id="pit-hist-meter" class="tuning-meter-container mt-2">
       <div class="tuning-meter-bar">
@@ -74,7 +82,7 @@ const props = withDefaults(
 )
 
 const store = usePitcherStore()
-const { selectedRootNote, latinNotation, showMicrotones, maxHistory, totalNotes, histogramHeight } = storeToRefs(store)
+const { selectedRootNote, latinNotation, showMicrotones, maxHistory, totalNotes, histogramEffectiveHeight } = storeToRefs(store)
 
 const rootEl = ref<HTMLElement | null>(null)
 const histogramEl = ref<HTMLCanvasElement | null>(null)
@@ -82,8 +90,13 @@ const canvasWidth = ref(350)
 let ctx: CanvasRenderingContext2D | null = null
 let resizeTimeout: ReturnType<typeof setTimeout> | null = null
 
-// Decibel meter (vertical, left of the histogram): 44px meter + 8px gap
-const DB_METER_WIDTH = 52
+// Tamaños fijos del medidor de dB (ya no dependen de un porcentaje de ancho)
+const dbMeterWidth = 44
+const dbMeterTrackWidth = 14
+const dbMeterBorderRadius = 7
+const dbMeterFontSize = 11
+// Ancho reservado para el medidor de dB (medidor + separación)
+const dbMeterReservedWidth = 52
 
 // Escala del medidor (estilo Decibel X): 50 dB (mínimo) → 110 dB (máximo)
 const DB_METER_MIN = 50
@@ -112,7 +125,7 @@ const tuningAccuracyClass = computed(() => {
   return "tuning-poor"
 })
 
-watch([selectedRootNote, latinNotation, showMicrotones, maxHistory, totalNotes, histogramHeight], () => {
+watch([selectedRootNote, latinNotation, showMicrotones, maxHistory, totalNotes, histogramEffectiveHeight], () => {
   drawHistogram()
 })
 
@@ -152,7 +165,7 @@ function debouncedResize() {
 function updateCanvasSize() {
   const container = rootEl.value?.parentElement
   if (container) {
-    canvasWidth.value = Math.max(200, Math.min(container.clientWidth - 32 - DB_METER_WIDTH, 1000))
+    canvasWidth.value = Math.max(200, Math.min(container.clientWidth - 32 - dbMeterReservedWidth, 1000))
     nextTick(() => {
       drawHistogram()
     })
@@ -379,12 +392,10 @@ function drawHistoryPoints(i: number, freq: number, midi: number, spacing: numbe
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 44px;
   flex-shrink: 0;
 }
 
 .db-meter-track {
-  width: 14px;
   border-radius: 7px;
   background: #222;
   overflow: hidden;
@@ -400,7 +411,6 @@ function drawHistoryPoints(i: number, freq: number, midi: number, spacing: numbe
 
 .db-meter-label {
   margin-top: 4px;
-  font-size: 11px;
   line-height: 1.2;
   text-align: center;
   color: #aaa;

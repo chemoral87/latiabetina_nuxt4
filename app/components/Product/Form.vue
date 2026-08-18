@@ -10,7 +10,7 @@
           Información del producto
         </VCardTitle>
         <VCardText>
-          <VRow dense>
+          <VRow density="comfortable">
             <VCol v-if="showOrgSelect" cols="12">
               <OrganizationSelect
                 v-model="item.org_id"
@@ -73,10 +73,10 @@
           Precio y existencias
         </VCardTitle>
         <VCardText>
-          <VRow dense>
+          <VRow density="comfortable">
             <!-- Left column: numeric fields -->
             <VCol md="6" cols="12">
-              <VRow dense>
+              <VRow density="comfortable">
                 <VCol sm="6" cols="12">
                   <VTextField
                     id="prd-form-item-price-tf-3"

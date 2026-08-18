@@ -109,6 +109,14 @@ export class MenuService {
         });
       }
 
+      if (this.hasPermission("song-index")) {
+        menu.push({
+          icon: "mdi-music-note-eighth",
+          title: "Cancionero",
+          to: "/song",
+        });
+      }
+
       if (this.hasPermission("church-event-index")) {
         menu.push({
           icon: "mdi-calendar",

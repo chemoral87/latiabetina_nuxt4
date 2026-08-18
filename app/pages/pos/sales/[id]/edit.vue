@@ -1,6 +1,6 @@
 <template>
   <VContainer :fluid="true">
-    <VRow dense>
+    <VRow density="comfortable">
       <VCol cols="12" md="8" class="mx-auto">
         <VCard id="psed-main-card" variant="outlined" class="pa-4">
           <!-- Header -->
@@ -15,7 +15,7 @@
           <VDivider class="mb-4" />
 
           <!-- Customer info -->
-          <VRow dense>
+          <VRow density="comfortable">
             <VCol cols="12" sm="6">
               <VTextField
                 id="psed-customer-name-tf"
@@ -116,7 +116,7 @@
             <VProgressCircular indeterminate color="primary" size="36" />
           </div>
 
-          <VRow v-else dense>
+          <VRow v-else density="comfortable">
             <VCol
               v-for="product in availableProducts"
               :key="product.id"

@@ -1,7 +1,6 @@
 <template>
-  <VContainer class="pa-4" style="max-width: 1000px">
-    <h4 id="pit-header" class="text-left mb-1">
-      <PitcherConfigButton />
+  <VContainer fluid class="pa-2">
+    <h4 id="pit-header" class="text-left my-0">
       Tuner
       <span>
         Frec:
@@ -17,48 +16,42 @@
       <span id="pit-db-display">({{ dBDisplay }} dB)</span>
     </h4>
 
-    <VRow id="pit-actions-row" class="mb-1" density="comfortable">
-      <VCol cols="6">
+    <VRow id="pit-actions-row" class="mb-1" align="center" density="compact">
+      <VCol sm="7" cols="12" class="d-flex flex-wrap ga-1 py-1">
+        <PitcherConfigButton />
         <VBtn
           id="pit-reset-btn"
-          block
-          size="small"
           color="primary"
+          density="comfortable"
           @click="resetHistory"
         >
-          <VIcon start>mdi-restart</VIcon>
+          <VIcon start size="small">mdi-restart</VIcon>
           <span>Reiniciar</span>
         </VBtn>
-      </VCol>
-      <VCol cols="6">
         <VBtn
           id="pit-calibrate-btn"
-          block
-          size="small"
           color="warning"
+          density="comfortable"
           :loading="noiseCalibrating"
           :disabled="!isMicActive || noiseCalibrating"
           @click="calibrateNoise"
         >
-          <VIcon start>mdi-tune</VIcon>
+          <VIcon start size="small">mdi-tune</VIcon>
           <span>Calibrar Ruido</span>
         </VBtn>
-      </VCol>
-      <VCol cols="6">
         <VBtn
           id="pit-mic-btn"
-          block
-          size="small"
+          density="comfortable"
           :color="isMicActive ? 'error' : 'success'"
           @click="toggleMic"
         >
-          <VIcon start>{{
+          <VIcon start size="small">{{
             isMicActive ? "mdi-microphone-off" : "mdi-microphone"
           }}</VIcon>
           <span>{{ isMicActive ? "Silenciar" : "Activar mic" }}</span>
         </VBtn>
       </VCol>
-      <VCol cols="6">
+      <VCol md="2" sm="3" cols="6" class="py-1">
         <VSelect
           id="pit-root-note"
           v-model="selectedRootNote"
@@ -69,7 +62,7 @@
           :label="latinNotation ? 'Escala Mayor' : 'Mayor Scale'"
         />
       </VCol>
-      <VCol cols="6">
+      <VCol sm="2" cols="6" class="py-1">
         <VSelect
           id="pit-processor"
           v-model="selectedProcessor"
@@ -84,53 +77,132 @@
     </VRow>
 
     <VRow id="pit-display-row" density="comfortable">
-      <VCol md="5" cols="8" class="pr-1 mx-0">
-        <PitcherHistogram
-          ref="histogramComponent"
-          :history="history"
-          :last-freq="lastFreq"
-          :db-display="dBDisplay"
-          :freq-display="freqDisplay"
+      <VCol cols="auto" class="px-0 mx-0">
+        <PitcherStaffNotation
+          v-if="lastValidFreq"
+          :zoom="staffZoom"
+          :frequency="lastValidFreq"
+          :show-cents-deviation="true"
+          :canvas-width="staffCanvasWidth"
           :cents-deviation="centsDeviation"
+          :canvas-height="staffCanvasHeight"
         />
       </VCol>
 
-      <VCol md="2" cols="4" class="px-0 mx-0">
-        <PitcherStaffNotation
-          v-if="lastValidFreq"
-          :zoom="2"
-          :canvas-width="300"
-          :canvas-height="600"
-          :frequency="lastValidFreq"
-          :show-cents-deviation="true"
-          :cents-deviation="centsDeviation"
-        />
+      <VCol cols="auto" class="pl-1 mx-0">
+        <div :style="{ 'min-width': histogramMinWidth + 'px' }">
+          <PitcherHistogram
+            ref="histogramComponent"
+            :history="history"
+            :last-freq="lastFreq"
+            :db-display="dBDisplay"
+            :freq-display="freqDisplay"
+            :cents-deviation="centsDeviation"
+          />
+        </div>
       </VCol>
-      <VCol v-if="showUkeleleNotation" cols="12">
+      <VCol v-if="showUkeleleNotation" :cols="ukeleleCols">
         <PitcherUkeleleNotation
           v-if="lastValidFreq"
           :frequency="lastValidFreq"
         />
       </VCol>
-      <VCol v-if="showGuitarNotation" cols="12">
+      <VCol v-if="showGuitarNotation" :cols="guitarCols">
         <PitcherGuitarNotation
           v-if="lastValidFreq"
           :frequency="lastValidFreq"
         />
       </VCol>
-      <VCol v-if="showTrumpetNotation" cols="12">
+      <VCol v-if="showTrumpetNotation" :cols="trumpetCols">
         <PitcherTrumpetNotation
           v-if="lastValidFreq"
           :frequency="lastValidFreq"
         />
       </VCol>
     </VRow>
+
+    <div class="notation-cols-fabs">
+      <VMenu v-if="showUkeleleNotation" location="top end">
+        <template #activator="{ props }">
+          <VBtn
+            id="pit-ukelele-cols-btn"
+            v-bind="props"
+            color="primary"
+            icon="mdi-ukulele"
+            density="comfortable"
+            class="notation-cols-fab"
+          />
+        </template>
+        <VList id="pit-ukelele-cols-menu" density="compact">
+          <VListItem
+            v-for="opt in notationColsOptions"
+            :key="opt"
+            :disabled="!isColsOptionEnabled(opt)"
+            @click="ukeleleCols = opt"
+          >
+            <VListItemTitle>{{ opt }}</VListItemTitle>
+            <VIcon v-if="ukeleleCols === opt" end>mdi-check</VIcon>
+          </VListItem>
+        </VList>
+      </VMenu>
+
+      <VMenu v-if="showGuitarNotation" location="top end">
+        <template #activator="{ props }">
+          <VBtn
+            id="pit-guitar-cols-btn"
+            v-bind="props"
+            color="primary"
+            density="comfortable"
+            class="notation-cols-fab"
+            icon="mdi-guitar-acoustic"
+          />
+        </template>
+        <VList id="pit-guitar-cols-menu" density="compact">
+          <VListItem
+            v-for="opt in notationColsOptions"
+            :key="opt"
+            :disabled="!isColsOptionEnabled(opt)"
+            @click="guitarCols = opt"
+          >
+            <VListItemTitle>{{ opt }}</VListItemTitle>
+            <VIcon v-if="guitarCols === opt" end>mdi-check</VIcon>
+          </VListItem>
+        </VList>
+      </VMenu>
+
+      <VMenu v-if="showTrumpetNotation" location="top end">
+        <template #activator="{ props }">
+          <VBtn
+            id="pit-trumpet-cols-btn"
+            v-bind="props"
+            color="primary"
+            icon="mdi-trumpet"
+            density="comfortable"
+            class="notation-cols-fab"
+          />
+        </template>
+        <VList id="pit-trumpet-cols-menu" density="compact">
+          <VListItem
+            v-for="opt in notationColsOptions"
+            :key="opt"
+            :disabled="!isColsOptionEnabled(opt)"
+            @click="trumpetCols = opt"
+          >
+            <VListItemTitle>{{ opt }}</VListItemTitle>
+            <VIcon v-if="trumpetCols === opt" end>mdi-check</VIcon>
+          </VListItem>
+        </VList>
+      </VMenu>
+    </div>
   </VContainer>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { usePitcherStore } from "~/composables/usePitcherStore";
+import {
+  NOTATION_COLS_OPTIONS,
+  usePitcherStore,
+} from "~/composables/usePitcherStore";
 import {
   A4_FREQ,
   A4_MIDI,
@@ -160,7 +232,31 @@ const {
   showGuitarNotation,
   showUkeleleNotation,
   showTrumpetNotation,
+  histogramMinWidth,
+  histogramEffectiveHeight,
+  ukeleleCols,
+  guitarCols,
+  trumpetCols,
 } = storeToRefs(store);
+
+// El pentagrama comparte la misma altura que pit-hist-canvas / pit-db-meter
+// (histogramEffectiveHeight = histogramHeight). Cambiar el ancho (histogramMinWidth)
+// solo modifica el ancho del histograma: la altura queda intacta.
+// El ancho y el zoom del pentagrama se derivan de su altura para mantener la
+// proporción original (300x600, zoom 2) con la que fue diseñado.
+const STAFF_BASE_HEIGHT = 600;
+const STAFF_BASE_WIDTH = 300;
+const STAFF_BASE_ZOOM = 2;
+const staffCanvasHeight = computed(() => histogramEffectiveHeight.value);
+const staffCanvasWidth = computed(() =>
+  Math.round((staffCanvasHeight.value / STAFF_BASE_HEIGHT) * STAFF_BASE_WIDTH),
+);
+const staffZoom = computed(
+  () =>
+    Math.round(
+      (staffCanvasHeight.value / STAFF_BASE_HEIGHT) * STAFF_BASE_ZOOM * 1000,
+    ) / 1000,
+);
 
 const isMicActive = ref(false);
 const audioProcessor = ref<PitcherAudioProcessor | null>(null);
@@ -174,6 +270,11 @@ const noiseCalibrating = ref(false); // UI state
 const selectedProcessor = ref("ap_deepseek"); // Default processor
 const processorOptions = ["ap_claude9", "ap_gemini10", "ap_deepseek"];
 const histogramComponent = ref<{ resetCanvas: () => void } | null>(null);
+const notationColsOptions = NOTATION_COLS_OPTIONS;
+const { mobile } = useDisplay();
+// En móvil solo se permiten las columnas auto / 6 / 12
+const isColsOptionEnabled = (opt: string | number) =>
+  !mobile.value || ["auto", 6, 12].includes(opt);
 
 const currentNoteOptions = computed(() =>
   latinNotation.value
@@ -195,6 +296,8 @@ const currentNoteOptions = computed(() =>
 );
 
 onMounted(() => {
+  // Restaurar ajustes guardados después de la hidratación SSR de Pinia
+  store.loadFromStorage();
   loadProcessor(selectedProcessor.value);
 });
 
@@ -359,5 +462,15 @@ function getNoteNameNum(midiNote: number): string {
 <style scoped>
 h4 {
   font-weight: 600;
+}
+
+.notation-cols-fabs {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 </style>

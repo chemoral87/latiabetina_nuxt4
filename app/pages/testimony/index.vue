@@ -1,6 +1,6 @@
 <template>
   <VContainer fluid>
-    <VRow dense align="center">
+    <VRow density="comfortable" align="center">
       <VCol md="4" sm="6" cols="12">
         <VTextField
           id="tes-index-filtertestimony-tf-1"

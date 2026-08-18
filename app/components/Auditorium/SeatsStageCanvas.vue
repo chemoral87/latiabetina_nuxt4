@@ -2,7 +2,7 @@
   <div
     id="subsectionPanel"
     :style="{
-      backgroundColor: 'blueviolet',
+      backgroundColor: '#f5f5f5',
       flex: 1,
       height: containerOuterHeight,
       overflow: 'hidden',
@@ -12,7 +12,7 @@
       ref="konvaStage"
       :config="adjustedStageConfig"
       :style="{
-        backgroundColor: selectedSubsection ? 'lightgray' : 'pink',
+        backgroundColor: selectedSubsection ? '#f0f0f0' : '#ffffff',
       }"
       @wheel="handleWheel"
       @dragend="handleDragEnd"
@@ -98,7 +98,6 @@ import type { Seat, Section, Subsection } from "~/types/auditorium"
 
 const props = defineProps<{
   sections: Section[]
-  stageConfig: Record<string, unknown>
   selectedSubsection: Subsection | null
   categories?: unknown[]
   selectedSeatsArray?: (number | string)[]
@@ -135,7 +134,6 @@ const seatSpacing = computed(() => {
 
 const adjustedStageConfig = computed(() => {
   return {
-    ...props.stageConfig,
     width: props.containerWidth,
     height: props.containerHeightPx,
     x: 0,

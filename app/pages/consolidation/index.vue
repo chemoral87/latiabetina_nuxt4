@@ -1,6 +1,6 @@
 <template>
   <VContainer fluid>
-    <VRow dense>
+    <VRow density="comfortable">
       <VCol cols="12" md="3">
         <VTextField
           id="con-index-filterterm-tf-1"
