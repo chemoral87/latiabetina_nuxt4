@@ -391,7 +391,7 @@ and manually selects a different one.
    users from the auth token context.
 2. **`prevent-auto-select`** on the `OrganizationSelect` — prevents the
    mount-time auto-select emit entirely (no duplicate request).
-3. **Suppress all `filterOrgId` emits when `effectiveOrgId` is set** (1-org
+3. **Suppress all `filterOrgId` emits when `singleOrg` is true** (1-org
    case) — never send `org_id` for single-org users.
 4. **`v-if` instead of `v-show`** on the `VSelect` inside `OrganizationSelect`.
 
@@ -403,15 +403,10 @@ must still happen even when `preventAutoSelect` is set (see `Select.vue`
 ```ts
 const auth = useAuthStore()
 
-// Computed: null when user has 2+ orgs; the org id when user has 1 org.
-const effectiveOrgId = computed(() => {
-  const orgPermission = auth.permissionsOrg["auditorium-index"] ?? []
-  const orgs = auth.user?.orgs ?? []
-  if (orgs.length === 1 && orgPermission.includes((orgs[0] as { id: unknown }).id)) {
-    return (orgs[0] as { id: unknown }).id
-  }
-  return null
-})
+// Computed: true when the user can access exactly one org for the permission.
+// Use the shared helper (see ai_rule/single_org_permission.md) — never
+// re-implement this inline.
+const singleOrg = computed(() => auth.hasSingleOrgFor("auditorium-index"))
 
 // Initial SSR fetch — no org_id
 const { data: initialData } = await useAsyncData("auditorium-index", async () => {
@@ -422,7 +417,7 @@ const { data: initialData } = await useAsyncData("auditorium-index", async () =>
 // For 1-org users: never send org_id (backend resolves it from auth token)
 // For 2+ orgs: only send org_id from explicit user selection
 watch(filterOrgId, (val) => {
-  if (effectiveOrgId.value !== null) return
+  if (singleOrg.value) return
   const overrides: Record<string, unknown> = { page: 1 }
   overrides.org_id = val ?? undefined
   indexAuditoriums(overrides)
@@ -498,5 +493,5 @@ function buildItems() {
 - Do not omit `:search="props.search"` on `VDataTableServer` when the page
   passes a search prop — filter changes silently never reach `useOptions`.
 - Do not let `OrganizationSelect` auto-select trigger a duplicate request —
-  use `prevent-auto-select`, suppress `filterOrgId` when 1-org (`effectiveOrgId !== null`),
+  use `prevent-auto-select`, suppress `filterOrgId` when 1-org (`singleOrg.value`),
   and only include `org_id` from overrides in the loader (see above).

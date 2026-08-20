@@ -105,6 +105,24 @@ export function useRepository() {
         return withNotify($api<T>("/conso-sheet/consolidators", { params }))
       },
     },
-    ChurchMember: createCommonRepository($api, "/church-member"),
+    ChurchMember: {
+      ...createCommonRepository($api, "/church-member"),
+      // Bitácora de seguimiento: GET /church-member/{memberId}/tracking-logs
+      trackingLogs<T = unknown>(memberId: number | string) {
+        return withNotify($api<T>(`/church-member/${memberId}/tracking-logs`))
+      },
+      // POST /church-member/{memberId}/tracking-logs
+      createTrackingLog<T = unknown>(memberId: number | string, payload: Record<string, unknown>) {
+        return withNotify($api<T>(`/church-member/${memberId}/tracking-logs`, { method: "POST", body: payload }))
+      },
+      // Clasificación (estado): PUT /church-member/{memberId}/status
+      updateStatus<T = unknown>(memberId: number | string, status: string) {
+        return withNotify($api<T>(`/church-member/${memberId}/status`, { method: "PUT", body: { status } }))
+      },
+      // Historial de cambios de estado: GET /church-member/{memberId}/status-logs
+      statusLogs<T = unknown>(memberId: number | string) {
+        return withNotify($api<T>(`/church-member/${memberId}/status-logs`))
+      },
+    },
   }
 }

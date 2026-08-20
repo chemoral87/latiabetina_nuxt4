@@ -12,15 +12,15 @@
               <VCol md="2" cols="12">
                 <div class="d-flex align-center">
                   <VIcon class="mr-1" size="small">mdi-calendar</VIcon>
-                  <span class="text-caption font-weight-bold text-grey-darken-2 text-truncate">
+                  <span id="det-fecha" class="text-caption font-weight-bold text-grey-darken-2 text-truncate">
                     Fecha: {{ (formatShortDateDash(sheet.date as string | null)).toUpperCase() }}
                   </span>
                 </div>
               </VCol>
-              <VCol md="2" cols="12">
+              <VCol v-if="!singleOrg" md="2" cols="12">
                 <div class="d-flex align-center">
                   <VIcon class="mr-1" size="small">mdi-office-building</VIcon>
-                  <span class="text-caption font-weight-bold text-grey-darken-2 text-truncate">
+                  <span id="det-org" class="text-caption font-weight-bold text-grey-darken-2 text-truncate">
                     Org: {{ (sheet.organization as Record<string, unknown> | undefined)?.name || 'N/A' }}
                   </span>
                 </div>
@@ -28,7 +28,7 @@
               <VCol md="2" cols="12">
                 <div class="d-flex align-center">
                   <VIcon class="mr-1" size="small">mdi-account-plus</VIcon>
-                  <span class="text-caption font-weight-bold text-grey-darken-2 text-truncate">
+                  <span id="det-creador" class="text-caption font-weight-bold text-grey-darken-2 text-truncate">
                     Creador: {{ (sheet.creator as Record<string, unknown> | undefined)?.name || 'N/A' }}
                   </span>
                 </div>
@@ -134,6 +134,7 @@
           clearable
           hide-details
           density="compact"
+          variant="outlined"
           placeholder="Filtro"
           append-inner-icon="mdi-magnify"
         />
@@ -150,16 +151,28 @@
       </VCol>
 
       <VCol cols="12">
-        <ConsolidationMemberTable :loading="loading" :members="filteredMembers" @edit="editMember" @delete="deleteMemberPrompt" />
+        <ConsolidationMemberTable id="det-members-dt" :loading="loading" :members="filteredMembers" @edit="editMember" @status="openStatus" @track="openTracking" @delete="deleteMemberPrompt" />
+      </VCol>
+
+      <VCol cols="12" class="d-flex justify-end">
+        <VBtn id="cnsld-back-btn" color="primary" variant="outlined" @click="navigateTo('/consolidation')">
+          <VIcon start>mdi-arrow-left</VIcon>
+          Volver
+        </VBtn>
       </VCol>
     </VRow>
 
-    <ConsolidationMemberDialog v-if="dialog" :member="member" :loading="saving" @save="saveMember" @close="closeDialog" />
+    <ConsolidationMemberDialog v-if="dialog" id="det-member-dlg" :member="member" :loading="saving" @save="saveMember" @close="closeDialog" />
 
-    <DialogDelete v-if="dialogDelete" :loading="deleting" :dialog="deleteData" @ok="confirmDelete" @close="dialogDelete = false" />
+    <DialogDelete v-if="dialogDelete" id="det-member-delete-dlg" :loading="deleting" :dialog="deleteData" @ok="confirmDelete" @close="dialogDelete = false" />
+
+    <ConsolidationTrackingLogDialog v-if="trackDialog" id="det-track-dlg" :member="trackMember" @close="trackDialog = false" />
+
+    <ConsolidationStatusLogDialog v-if="statusDialog" id="det-status-dlg" :member="statusMember" @close="statusDialog = false" @status-changed="onStatusChanged" />
 
     <DialogConfirm
       v-if="showConfirmDialog"
+      id="det-sheet-dirty-dlg"
       title="Cambios sin guardar"
       message="Hay cambios sin guardar. ¿Desea guardarlos antes de salir?"
       @yes="confirmSave"
@@ -176,7 +189,10 @@ import { formatShortDateDash } from "~/utils/date"
 definePageMeta({
   title: "Detalles de Consolidado",
   icon: "mdi-clipboard-list",
-  middleware: "authenticated",
+  middleware: ["authenticated","permission"],
+  permissions: ["conso-sheet-index"],
+  back: "/consolidation",
+  showDrawer: false,
 })
 
 const route = useRoute()
@@ -193,9 +209,13 @@ const savingSheet = ref(false)
 const deleting = ref(false)
 const dialog = ref(false)
 const dialogDelete = ref(false)
+const trackDialog = ref(false)
+const statusDialog = ref(false)
 const sheet = ref<Record<string, unknown>>({})
 const originalSheet = ref<Record<string, unknown>>({})
 const member = ref<Record<string, unknown>>({})
+const trackMember = ref<Record<string, unknown>>({})
+const statusMember = ref<Record<string, unknown>>({})
 const deleteData = ref<Record<string, unknown>>({})
 const members = ref<unknown[]>([])
 const users = ref<{ id: number | string; name: string }[]>([])
@@ -213,11 +233,6 @@ let resolveNext: ((val?: unknown) => void) | null = null
   members.value = Array.isArray(dataMembers) ? dataMembers : (dataMembers as { data?: unknown[] })?.data || []
 }
 
-onMounted(() => {
-  route.meta.back = "/consolidation"
-  route.meta.showDrawer = false
-})
-
 onBeforeRouteLeave((_to, _from, next) => {
   if (isDirty.value) {
     showConfirmDialog.value = true
@@ -228,6 +243,8 @@ onBeforeRouteLeave((_to, _from, next) => {
 })
 
 const isDirty = computed(() => JSON.stringify(sheet.value) !== JSON.stringify(originalSheet.value))
+
+const singleOrg = computed(() => auth.hasSingleOrgFor("conso-sheet-index"))
 
 const filteredMembers = computed(() => {
   if (!filterTerm.value) return members.value
@@ -280,13 +297,39 @@ async function fetchMembers() {
 }
 
 function newMember() {
-  member.value = { conso_sheet_id: sheetId.value }
+  const last = members.value.at(-1) as Record<string, unknown> | undefined
+  member.value = {
+    conso_sheet_id: sheetId.value,
+    address: (last?.address as string) || "",
+  }
   dialog.value = true
 }
 
 function editMember(item: unknown) {
   member.value = { ...(item as Record<string, unknown>) }
   dialog.value = true
+}
+
+function openTracking(item: unknown) {
+  trackMember.value = item as Record<string, unknown>
+  trackDialog.value = true
+}
+
+function openStatus(item: unknown) {
+  statusMember.value = item as Record<string, unknown>
+  statusDialog.value = true
+}
+
+function onStatusChanged(updated: Record<string, unknown>) {
+  const idx = members.value.findIndex(
+    (m) => (m as Record<string, unknown>).id === updated.id,
+  )
+  if (idx !== -1) {
+    members.value[idx] = {
+      ...(members.value[idx] as Record<string, unknown>),
+      status: updated.status,
+    }
+  }
 }
 
 function deleteMemberPrompt(item: unknown) {
@@ -317,11 +360,14 @@ async function confirmDelete(item: unknown) {
 async function saveMember(item: Record<string, unknown>) {
   try {
     saving.value = true
+    const sheetOrgId =
+      (sheet.value.org_id as Record<string, unknown>)?.id ?? sheet.value.org_id
+    const payload = { ...item, org_id: sheetOrgId }
     const isUpdate = Boolean(item.id)
     if (isUpdate) {
-      await ChurchMember.update(item.id as number, item)
+      await ChurchMember.update(item.id as number, payload)
     } else {
-      await ChurchMember.create(item)
+      await ChurchMember.create(payload)
     }
     notify.notify({ success: `Miembro ${isUpdate ? "actualizado" : "creado"} exitosamente` })
     await fetchMembers()

@@ -214,7 +214,7 @@ import type { PitcherAudioProcessor } from "~/services/pitcher/audioProcessor";
 definePageMeta({
   title: "Tuner",
   icon: "mdi-tune",
-  permission: "pitch-train",
+  // permission: "pitch-train",
   middleware: ["authenticated", "permission"],
 });
 

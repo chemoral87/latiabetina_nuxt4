@@ -31,10 +31,9 @@
         </VBtn>
       </VCol>
 
-      <VCol v-if="!orgFilterHidden" lg="1" md="3" sm="4" cols="6">
+      <VCol v-if="!singleOrg" lg="1" md="3" sm="4" cols="6">
         <OrganizationSelect
           v-model="filterOrgId"
-          v-model:hidden="orgFilterHidden"
           hide-one
           clearable
           hide-details
@@ -89,7 +88,6 @@ const response = ref<{ data: unknown[]; total: number }>({
 const filterInput = ref("");
 const filterAuditorium = ref("");
 const filterOrgId = ref<string | number | null>(null);
-const orgFilterHidden = ref(false);
 const loading = ref(false);
 const saving = ref(false);
 const auditorium = ref<Record<string, unknown> | null>(null);
@@ -98,17 +96,7 @@ const { highlightId, flash, prependCreated } = useRowHighlight();
 const auth = useAuthStore();
 const { Auditorium } = useRepository();
 
-const effectiveOrgId = computed(() => {
-  const orgPermission = auth.permissionsOrg["auditorium-index"] ?? [];
-  const orgs = auth.user?.orgs ?? [];
-  if (
-    orgs.length === 1 &&
-    orgPermission.includes((orgs[0] as { id: unknown }).id)
-  ) {
-    return (orgs[0] as { id: unknown }).id;
-  }
-  return null;
-});
+const singleOrg = computed(() => auth.hasSingleOrgFor("auditorium-index"));
 
 const { data: initialData } = await useAsyncData(
   "auditorium-index",
@@ -154,7 +142,7 @@ watch(filterInput, (val) => {
 
 watch(filterOrgId, (val) => {
   // When user has only 1 org, never send org_id — backend resolves it
-  if (effectiveOrgId.value !== null) return;
+  if (singleOrg.value) return;
   const overrides: Record<string, unknown> = { page: 1 };
   overrides.org_id = val ?? undefined;
   indexAuditoriums(overrides);

@@ -284,8 +284,19 @@ export const useAuthStore = defineStore("auth", () => {
     return permissions.value.includes(permission)
   }
 
+  function orgIdsFor(permission: string): (number | string)[] {
+    return permissionsOrg.value[permission] ?? []
+  }
+
+  function hasSingleOrgFor(permission: string): boolean {
+    const orgs = (user.value?.orgs as { id: number | string }[] | undefined) ?? []
+    const ids = orgIdsFor(permission)
+    return orgs.length === 1 && ids.includes(orgs[0].id)
+  }
+
   return {
     user, loggedIn, token, hasToken, strategy, redirects, permissions, permissionsOrg, hasPermission,
+    orgIdsFor, hasSingleOrgFor,
     loginWith, fetchUser, logout, setToken, setStrategy, setUser, init,
     setAccessToken, clearSession, expireSession,
   }

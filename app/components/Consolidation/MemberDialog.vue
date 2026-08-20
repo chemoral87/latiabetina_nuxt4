@@ -1,11 +1,24 @@
 <template>
-  <VDialog id="con-membe-dlg-1" persistent max-width="600px" :model-value="true">
+  <VDialog
+    :id="id"
+    persistent
+    max-width="600px"
+    :model-value="true"
+  >
     <VCard>
-      <VCardTitle class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center">
+      <VCardTitle
+        class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center"
+      >
         <VIcon start size="small" color="primary">{{ iconTitle }}</VIcon>
         {{ formTitle }}
         <VSpacer />
-        <VBtn id="con-memberdialog-close-btn" icon size="x-small" :disabled="loading" @click="close">
+        <VBtn
+          id="con-memberdialog-close-btn"
+          icon
+          size="x-small"
+          :disabled="loading"
+          @click="close"
+        >
           <VIcon>mdi-close</VIcon>
         </VBtn>
       </VCardTitle>
@@ -20,6 +33,8 @@
                 required
                 autofocus
                 label="Nombre"
+                density="compact"
+                variant="outlined"
                 :disabled="loading"
                 @keyup.enter="save"
               />
@@ -29,6 +44,8 @@
                 id="tf-conso-membe-item-last_name-2"
                 v-model="item.last_name"
                 required
+                density="compact"
+                variant="outlined"
                 :disabled="loading"
                 label="Apellido Paterno"
                 @keyup.enter="save"
@@ -38,6 +55,8 @@
               <VTextField
                 id="tf-conso-membe-item-second_last_name-3"
                 v-model="item.second_last_name"
+                density="compact"
+                variant="outlined"
                 :disabled="loading"
                 label="Apellido Materno"
               />
@@ -49,6 +68,8 @@
                 min="0"
                 label="Edad"
                 type="number"
+                density="compact"
+                variant="outlined"
                 :disabled="loading"
               />
             </VCol>
@@ -58,7 +79,9 @@
                 v-model="item.number_of_children"
                 min="0"
                 type="number"
+                density="compact"
                 label="Núm. Hijos"
+                variant="outlined"
                 :disabled="loading"
               />
             </VCol>
@@ -67,6 +90,8 @@
                 id="con-membe-item-cellphone-tf-6"
                 v-model="item.cellphone"
                 label="Celular"
+                density="compact"
+                variant="outlined"
                 :disabled="loading"
               />
             </VCol>
@@ -81,47 +106,68 @@
               />
             </VCol>
             <VCol cols="12">
-              <VAutocomplete
-                id="con-membe-item-address-tf-7"
-                v-model="addressModel"
-                clearable
-                return-object
-                label="Dirección"
-                :disabled="loading"
-                item-title="displayName"
-                item-value="displayName"
-                :items="addressSuggestions"
-                :loading="addressSearching"
-                :hide-no-data="!addressModel"
-                :no-data-text="!addressModel ? '' : 'Intente con otra búsqueda...'"
-                @update:search="onAddressSearch"
-                @update:model-value="onAddressSelect"
+              <VMenu
+                v-model="addressMenu"
+                max-height="310"
+                location="bottom start"
+                :disabled="!addressSuggestions.length"
               >
-                <template #item="{ item: suggestion, props: itemProps }">
-                  <VListItem v-bind="itemProps">
-                    <template #title>{{ suggestion.title }}</template>
-                    <template #subtitle>
-                      <span v-if="(suggestion.raw as AddressSuggestion).residential">
-                        {{ (suggestion.raw as AddressSuggestion).residential }}
-                      </span>
-                      <span v-if="(suggestion.raw as AddressSuggestion).state">
-                        , {{ (suggestion.raw as AddressSuggestion).state }}
-                      </span>
-                    </template>
-                  </VListItem>
+                <template #activator="{ props: activatorProps }">
+                  <VTextField
+                    id="con-membe-item-address-tf-7"
+                    v-model="addressText"
+                    v-bind="activatorProps"
+                    clearable
+                    density="compact"
+                    label="Dirección"
+                    variant="outlined"
+                    :disabled="loading"
+                    :loading="addressSearching"
+                    @click:clear="onAddressClear"
+                    @update:model-value="onAddressText"
+                  />
                 </template>
-              </VAutocomplete>
+                <VList density="compact">
+                  <VListItem
+                    v-for="(suggestion, i) in addressSuggestions"
+                    :key="i"
+                    :active="false"
+                    @click="onAddressPick(suggestion)"
+                  >
+                    <span class="text-body-2 font-weight-medium">{{
+                      suggestion.displayName
+                    }}</span>
+                    <!-- <div class="text-caption text-grey-darken-2">
+                      {{ addressPartsRaw(suggestion) }}
+                    </div> -->
+                  </VListItem>
+                </VList>
+              </VMenu>
             </VCol>
           </VRow>
         </VForm>
       </VCardText>
 
       <div class="d-flex justify-end px-4 pb-4">
-        <VBtn id="con-memberdialog-cancel-btn" class="mr-4" color="primary" variant="outlined" :disabled="loading" @click="close">
+        <VBtn
+          id="con-memberdialog-cancel-btn"
+          class="mr-4"
+          color="primary"
+          variant="outlined"
+          :disabled="loading"
+          @click="close"
+        >
           <VIcon start>mdi-close</VIcon>
           Cancelar
         </VBtn>
-        <VBtn id="con-memberdialog-save-btn" color="primary" :loading="loading" variant="elevated" :disabled="!isValid || loading" @click="save">
+        <VBtn
+          id="con-memberdialog-save-btn"
+          color="primary"
+          :loading="loading"
+          variant="elevated"
+          :disabled="!isValid || loading"
+          @click="save"
+        >
           <VIcon start>mdi-content-save</VIcon>
           Guardar
         </VBtn>
@@ -131,32 +177,42 @@
 </template>
 
 <script setup lang="ts">
-import { searchAddresses, type AddressSuggestion } from "~/services/address-service"
+import {
+  searchAddresses,
+  type AddressSuggestion,
+} from "~/services/address-service";
 
 interface MemberItem {
-  id?: number | null
-  conso_sheet_id?: number | string | null
-  name: string
-  last_name: string
-  second_last_name?: string
-  years_old?: number | null
-  number_of_children?: number | null
-  cellphone?: string
-  address?: string
-  marriage_status?: string
+  id?: number | null;
+  conso_sheet_id?: number | string | null;
+  name: string;
+  last_name: string;
+  second_last_name?: string;
+  years_old?: number | null;
+  number_of_children?: number | null;
+  cellphone?: string;
+  address?: string;
+  marriage_status?: string;
 }
 
-const props = defineProps<{
-  member?: Record<string, unknown>
-  loading?: boolean
-}>()
+const props = withDefaults(
+  defineProps<{
+    id?: string;
+    member?: Record<string, unknown>;
+    loading?: boolean;
+  }>(),
+  {
+    id: "con-membe-dlg-1",
+    loading: false,
+  },
+);
 
 const emit = defineEmits<{
-  (e: 'close'): void
-  (e: 'save', val: Record<string, unknown>): void
-}>()
+  (e: "close"): void;
+  (e: "save", val: Record<string, unknown>): void;
+}>();
 
-const formRef = ref()
+const formRef = ref();
 const item = ref<MemberItem>({
   id: null,
   conso_sheet_id: null,
@@ -168,69 +224,104 @@ const item = ref<MemberItem>({
   cellphone: "",
   address: "",
   marriage_status: "",
-})
+});
 
-const marriageStatuses = ["Soltero/a", "Casado/a", "Divorciado/a", "Viudo/a", "Unión Libre"]
+const marriageStatuses = [
+  "Soltero/a",
+  "Casado/a",
+  "Divorciado/a",
+  "Viudo/a",
+  "Unión Libre",
+];
 
-const addressSuggestions = ref<AddressSuggestion[]>([])
-const addressModel = ref<AddressSuggestion | string | null>("")
-const addressSearching = ref(false)
-let addressDebounce: ReturnType<typeof setTimeout> | null = null
+const addressSuggestions = ref<AddressSuggestion[]>([]);
+const addressText = ref("");
+const addressMenu = ref(false);
+const addressSearching = ref(false);
+let addressDebounce: ReturnType<typeof setTimeout> | null = null;
 
-async function onAddressSearch(query: string) {
-  if (addressDebounce) clearTimeout(addressDebounce)
+function onAddressText(query: string) {
+  if (addressDebounce) clearTimeout(addressDebounce);
   if (!query || query.trim().length < 3) {
-    addressSuggestions.value = []
-    return
+    addressSuggestions.value = [];
+    addressMenu.value = false;
+    return;
   }
   addressDebounce = setTimeout(async () => {
     try {
-      addressSearching.value = true
-      addressSuggestions.value = await searchAddresses(query)
+      addressSearching.value = true;
+      addressSuggestions.value = await searchAddresses(query);
+      addressMenu.value = true;
     } catch {
-      addressSuggestions.value = []
+      addressSuggestions.value = [];
+      addressMenu.value = false;
     } finally {
-      addressSearching.value = false
+      addressSearching.value = false;
     }
-  }, 500)
+  }, 500);
 }
 
-function onAddressSelect(value: unknown) {
-  if (!value) return
-  const suggestion = value as AddressSuggestion
-  if (suggestion && typeof suggestion === "object" && "address" in suggestion) {
-    item.value.address = suggestion.address
-  }
+function onAddressPick(suggestion: AddressSuggestion) {
+  item.value.address = suggestion.address;
+  addressMenu.value = false;
+}
+
+function onAddressClear() {
+  item.value.address = "";
+  addressSuggestions.value = [];
+  addressMenu.value = false;
+}
+
+function addressPartsRaw(suggestion: AddressSuggestion | null): string {
+  if (!suggestion) return "";
+  return [
+    suggestion.road,
+    suggestion.residential,
+    suggestion.city,
+    suggestion.county,
+    suggestion.state,
+    suggestion.postcode,
+    suggestion.country,
+  ]
+    .filter((p) => !!p)
+    .join(", ");
 }
 
 watch(
   () => item.value.address,
   (val) => {
-    if (typeof val === "string") addressModel.value = val || ""
+    if (typeof val === "string") addressText.value = val || "";
   },
-)
+);
 
-const isEditMode = computed(() => !!item.value.id)
-const iconTitle = computed(() => (isEditMode.value ? "mdi-pencil" : "mdi-plus"))
-const formTitle = computed(() => (isEditMode.value ? "Editar Miembro" : "Nuevo Miembro"))
-const isValid = computed(() => !!(item.value.name && item.value.last_name))
+const isEditMode = computed(() => !!item.value.id);
+const iconTitle = computed(() =>
+  isEditMode.value ? "mdi-pencil" : "mdi-plus",
+);
+const formTitle = computed(() =>
+  isEditMode.value ? "Editar Miembro" : "Nuevo Miembro",
+);
+const isValid = computed(() => !!(item.value.name && item.value.last_name));
 
 watch(
   () => props.member,
   (val) => {
     if (val && Object.keys(val).length > 0) {
-      item.value = { ...item.value, ...val } as MemberItem
+      item.value = { ...item.value, ...val } as MemberItem;
     }
   },
   { immediate: true, deep: true },
-)
+);
 
 function close() {
-  emit("close")
+  emit("close");
 }
 
 function save() {
-  if (!isValid.value || props.loading) return
-  emit("save", { ...item.value })
+  if (!isValid.value || props.loading) return;
+  if (item.value.address !== addressText.value) {
+    item.value.address = addressText.value;
+  }
+  emit("save", { ...item.value });
 }
 </script>

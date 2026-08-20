@@ -66,7 +66,8 @@ Structural containers and inline text follow the same `{view}-{purpose}` pattern
   no behavior should use a **class**, not an id.
 - **Spans** (`span`): `{view}-{purpose}`, e.g. `crsqi-score` (score label),
   `crsqi-counter` (question counter), `crsqi-countdown` (timer label),
-  `pos-cart-count` (item-count label).
+  `pos-cart-count` (item-count label), `det-fecha` (date label),
+  `det-org` (organization label), `det-creador` (creator label).
 - **Divs / VSheets / VRows / VCols**: `{view}-{purpose}`, e.g. `pos-total-block`,
   `pos-footer-action-row`, `pos-cart-panel`.
 - Always lowercase kebab-case — never camelCase (`subsectionPanel` is wrong; use
@@ -137,6 +138,22 @@ Every interactive element in a page (`app/pages/**`) must carry an id built as
 
 Do not rename existing ids that already follow the pattern; only add ids where missing.
 
+## Input Styling
+
+All form controls and inputs (`VTextField`, `VSelect`, `VCombobox`,
+`VAutocomplete`, `VTextarea`, `VSlider`, `VSwitch`, `VCheckbox`, `VDateInput`,
+...) render **`variant="outlined"`** and **`density="compact"`** by default:
+
+```vue
+<VTextField id="aud-index-filter" v-model="filterInput" clearable hide-details
+  density="compact" variant="outlined" placeholder="Filtro" append-inner-icon="mdi-magnify" />
+```
+
+- Applies to filter inputs, dialog fields, and any free-standing control.
+- Omit `variant`/`density` only when a deliberate visual exception is required
+  (e.g. `VCheckbox`/`VSwitch` labels, which have no outlined variant).
+- Dialog fields keep `:disabled`, `:error-messages`, and `:rules` as needed.
+
 ## Component Rule
 
 Components in `app/components/**` use one of two id styles:
@@ -182,6 +199,33 @@ Currently adopted by `Auditorium/Select.vue` (`cmp-auditorium-select`),
 > current value immediately when its items have not loaded yet (see
 > `Auditorium/Select.vue`). e.g. `AuditoriumEvent/Dialog.vue` passes
 > `:selected-name="localEvent.auditorium_name ?? null"`.
+
+The same overridable `id` prop is used by dialog and table components so each
+usage site can give the root a page-contextual id. Defaults keep the existing
+ids intact for the many pages that use them:
+
+| Component | Default id | Contextual id used in `consolidation/[id]/details.vue` |
+|-----------|-----------|--------------------------------------------------------|
+| `Consolidation/MemberTable.vue` | `con-membe-members-dt-1` | `det-members-dt` |
+| `Consolidation/MemberDialog.vue` | `con-membe-dlg-1` | `det-member-dlg` |
+| `DialogDelete.vue` | `dialo-delet-dlg-1` | `det-member-delete-dlg` |
+| `DialogConfirm.vue` | `dialo-confi-dlg-1` | `det-sheet-dirty-dlg` |
+| `Consolidation/Dialog.vue` | `con-dialo-dlg-1` | `cnsld-sheet-dlg-1` (used in `consolidation/index.vue`) |
+| `Consolidation/TrackingLogDialog.vue` | `con-track-dlg-1` | `det-track-dlg` (used in `consolidation/[id]/details.vue`) |
+| `Consolidation/StatusLogDialog.vue` | `con-status-dlg-1` | `det-status-dlg` (used in `consolidation/[id]/details.vue`) |
+
+Example usage in the details page:
+
+```vue
+<ConsolidationMemberTable id="det-members-dt" :loading="loading" :members="filteredMembers" @edit="editMember" @delete="deleteMemberPrompt" />
+<ConsolidationMemberDialog v-if="dialog" id="det-member-dlg" :member="member" :loading="saving" @save="saveMember" @close="closeDialog" />
+<DialogDelete v-if="dialogDelete" id="det-member-delete-dlg" :loading="deleting" :dialog="deleteData" @ok="confirmDelete" @close="dialogDelete = false" />
+<DialogConfirm id="det-sheet-dirty-dlg" ... />
+```
+
+Inner elements of these components keep their own ids (e.g.
+`con-memberdialog-save-btn`, `dialog-delete-yes-btn`) and are not overridden by
+the caller.
 
 ## Examples
 

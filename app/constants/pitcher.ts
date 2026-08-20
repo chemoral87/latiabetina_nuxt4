@@ -2,75 +2,76 @@
 // All constants for the pitcher (tuner) pages, ported from aui pages/pitcher/constants.js
 
 export const COLORS: string[] = [
-  // C (Do) and intermediates
-  "#FF0000", // C (bright red)
-  "#FF4000", // C+
-  "#FF8000", // C♯ (orange)
-  "#FFB000", // C♯+
-  // D (Re)
-  "#FFD700", // D (gold)
-  "#FFE880", // D+
-  "#FFFF00", // D♯ (yellow)
-  "#FFFF60", // D♯+
-  // E (Mi)
-  "#E0FF80", // E
-  "#A0FF00", // E+
-  // F (Fa)
-  "#80FF00", // F (lime)
-  "#40FF00", // F+
-  "#00FF00", // F♯ (green)
-  "#00FF80", // F♯+
-  // G (Sol)
-  "#00FFC0", // G (aqua)
-  "#00FFFF", // G+ (cyan)
-  "#00BFFF", // G♯ (sky blue)
-  "#0080FF", // G♯+
-  // A (La) - Now much brighter!
-  "#0060FF", // A (bright blue)
-  "#0040FF", // A+
-  "#7F5AFF", // A♯ (lighter violet-blue)
-  "#A066FF", // A♯+
-  // B (Si)
-  "#CC00FF", // B (electric purple)
-  "#FF00FF", // B+ (magenta)
-  "#FF20FF", // Cycle back to red (optional)
+  // C (Do) - Rojo #FF0000
+  "#FF0000", // C
+  "#FF2300", // C+
+  "#FF4600", // C♯
+  "#FF6900", // C♯+
+  // D (Re) - Naranja #FF8C00
+  "#FF8C00", // D
+  "#FFA900", // D+
+  "#FFC600", // D♯
+  "#FFE300", // D♯+
+  // E (Mi) - Amarillo #FFFF00
+  "#FFFF00", // E
+  "#98E619", // E+
+  // F (Fa) - Verde claro #32CD32
+  "#32CD32", // F
+  "#25BA46", // F+
+  "#19A759", // F♯
+  "#0C936D", // F♯+
+  // G (Sol) - Aguamarina #008080
+  "#008080", // G
+  "#136080", // G+
+  "#264081", // G♯
+  "#392082", // G♯+
+  // A (La) - Índigo #4B0082
+  "#4B0082", // A
+  "#7800A1", // A+
+  "#A500C0", // A♯
+  "#D200DF", // A♯+
+  // B (Si) - Magenta #FF00FF
+  "#FF00FF", // B
+  "#FF00AA", // B+
+  "#FF0055", // Cycle back toward red
 ]
 
 // Define qué colores necesitan texto blanco para mejor legibilidad
 // true = texto blanco, false = texto gris (#666)
 export const COLOR_NEEDS_WHITE_TEXT: boolean[] = [
-  // C (Do) - rojos/naranjas oscuros necesitan blanco
-  true, // C (bright red)
-  true, // C+
-  true, // C♯ (orange)
-  false, // C♯+
-  // D (Re) - amarillos/dorados pueden usar gris
-  false, // D (gold)
-  false, // D+
-  false, // D♯ (yellow)
-  false, // D♯+
-  // E (Mi) - verdes claros pueden usar gris
-  false, // E
-  false, // E+
-  // F (Fa) - verdes pueden usar gris
-  false, // F (lime)
-  false, // F+
-  false, // F♯ (green)
-  false, // F♯+
-  // G (Sol) - aguamarinas/cianos pueden usar gris
-  false, // G (aqua)
-  false, // G+ (cyan)
-  true, // G♯ (sky blue)
-  true, // G♯+ (azul más oscuro)
-  // A (La) - azules oscuros necesitan blanco
-  true, // A (bright blue)
-  true, // A+
-  true, // A♯ (lighter violet-blue)
-  true, // A♯+
-  // B (Si) - púrpuras/magentas oscuros necesitan blanco
-  true, // B (electric purple)
-  true, // B+ (magenta)
-  true, // Cycle back to red
+  // C (Do) - rojos oscuros → blanco
+  true,  // C  (#FF0000, lum=76)
+  true,  // C+ (#FF2300, lum=97)
+  true,  // C♯ (#FF4600, lum=117)
+  false, // C♯+ (#FF6900, lum=138)
+  // D (Re) - naranjas/amarillos → gris
+  false, // D  (#FF8C00, lum=158)
+  false, // D+ (#FFA900, lum=175)
+  false, // D♯ (#FFC600, lum=192)
+  false, // D♯+ (#FFE300, lum=209)
+  // E (Mi) - amarillo/verde claro → gris
+  false, // E  (#FFFF00, lum=226)
+  false, // E+ (#98E619, lum=183)
+  // F (Fa) - verdes → gris
+  false, // F  (#32CD32, lum=141)
+  false, // F+ (#25BA46, lum=128)
+  // F♯ - verdes oscuros → blanco
+  true,  // F♯ (#19A759, lum=116)
+  true,  // F♯+ (#0C936D, lum=103)
+  // G (Sol) - aguamarina/azul oscuro → blanco
+  true,  // G  (#008080, lum=90)
+  true,  // G+ (#136080, lum=77)
+  true,  // G♯ (#264081, lum=64)
+  true,  // G♯+ (#392082, lum=51)
+  // A (La) - índigo/紫色 muy oscuro → blanco
+  true,  // A  (#4B0082, lum=37)
+  true,  // A+ (#7800A1, lum=54)
+  true,  // A♯ (#A500C0, lum=71)
+  true,  // A♯+ (#D200DF, lum=88)
+  // B (Si) - magenta/rosa → blanco
+  true,  // B  (#FF00FF, lum=105)
+  true,  // B+ (#FF00AA, lum=96)
+  true,  // Cycle (#FF0055, lum=86)
 ]
 
 export const NOTE_SHORT_STRINGS: string[] = ["C", "C+", "C♯", "C♯+", "D", "D+", "D♯", "D♯+", "E", "E+", "F", "F+", "F♯", "F♯+", "G", "G+", "G♯", "G♯+", "A", "A+", "A♯", "A♯+", "B", "B+"]

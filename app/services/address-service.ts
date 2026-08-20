@@ -7,7 +7,12 @@ export interface AddressSuggestion {
   address: string
   road: string
   residential: string
+  city: string
+  county: string
   state: string
+  postcode: string
+  country: string
+  country_code: string
   displayName: string
   lat: string
   lon: string
@@ -50,7 +55,12 @@ export async function searchAddresses(query: string, limit = 5): Promise<Address
     .map((d) => {
       const road = extractPart(d, ["road", "pedestrian", "footway", "path", "neighbourhood", "suburb", "residential"])
       const residential = extractPart(d, ["residential", "suburb", "neighbourhood"])
+      const city = extractPart(d, ["city", "town", "village", "municipality"])
+      const county = extractPart(d, ["county"])
       const state = extractPart(d, ["state", "region"])
+      const postcode = extractPart(d, ["postcode"])
+      const country = extractPart(d, ["country"])
+      const country_code = extractPart(d, ["country_code"])
       const displayName = String(d.display_name)
       const parts = [road, residential, state].filter((p) => p !== "")
       const address = parts.join(", ")
@@ -59,7 +69,12 @@ export async function searchAddresses(query: string, limit = 5): Promise<Address
         address,
         road,
         residential,
+        city,
+        county,
         state,
+        postcode,
+        country,
+        country_code,
         displayName,
         lat: String(d.lat),
         lon: String(d.lon),

@@ -1,5 +1,5 @@
 <template>
-  <VDialog id="dialo-delet-dlg-1" v-model="dialogVisible" persistent max-width="400px">
+  <VDialog :id="id" v-model="dialogVisible" persistent max-width="400px">
     <VCard>
       <VCardTitle class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center">
         <VIcon start size="small" color="error">mdi-alert</VIcon>
@@ -20,11 +20,11 @@
       </VCardText>
 
       <div class="d-flex justify-end px-4 pb-4">
-        <VBtn id="dialog-delete-no-btn" color="error" variant="outlined" class="mr-4" :disabled="loading" @click="close">
+        <VBtn id="dialog-delete-no-btn" class="mr-4" color="error" variant="outlined" :disabled="loading" @click="close">
           <VIcon start>mdi-close</VIcon>
           NO
         </VBtn>
-        <VBtn id="dialog-delete-yes-btn" color="primary" variant="elevated" :loading="loading" @click="ok">
+        <VBtn id="dialog-delete-yes-btn" color="primary" :loading="loading" variant="elevated" @click="ok">
           <VIcon start>mdi-check</VIcon>
           SI
         </VBtn>
@@ -41,10 +41,14 @@ interface DialogData {
   payload?: unknown
 }
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
+  id?: string
   dialog: DialogData
   loading?: boolean
-}>()
+}>(), {
+  id: "dialo-delet-dlg-1",
+  loading: false,
+})
 
 const emit = defineEmits<{
   (e: 'close'): void

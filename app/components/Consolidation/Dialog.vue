@@ -1,11 +1,11 @@
 <template>
-  <VDialog id="con-dialo-dlg-1" persistent max-width="500px" :model-value="true">
+  <VDialog :id="id" persistent max-width="500px" :model-value="true">
     <VCard>
       <VCardTitle class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center">
         <VIcon start size="small" color="primary">{{ iconTitle }}</VIcon>
         {{ formTitle }}
         <VSpacer />
-        <VBtn id="con-dialog-close-btn" icon size="x-small" :disabled="loading" @click="close">
+        <VBtn id="con-dialog-close-btn" icon size="x-small" :disabled="saving || loading" @click="close">
           <VIcon>mdi-close</VIcon>
         </VBtn>
       </VCardTitle>
@@ -19,19 +19,23 @@
             class="mb-2"
             density="compact"
             variant="outlined"
-            :disabled="loading"
             label="Organización"
+            :disabled="saving || loading"
             permission="conso-sheet-index"
             :error-messages="errors?.org_id"
+            :rules="[vrules.requiredField('Organización')]"
           />
           <VTextField
-            id="tf-conso-dialo-item-folio_number-1"
+            id="con-dialog-folio-number"
             v-model="item.folio_number"
             required
             autofocus
-            :disabled="loading"
+            density="compact"
+            variant="outlined"
             label="Número de Folio"
+            :disabled="saving || loading"
             :error-messages="errors?.folio_number"
+            :rules="[vrules.requiredField('Número de Folio')]"
             @keyup.enter="save"
           />
           <MyDatePicker
@@ -39,18 +43,21 @@
             required
             class="mt-2"
             label="Fecha"
-            :disabled="loading"
+            density="compact"
+            variant="outlined"
+            :disabled="saving || loading"
             :error-messages="errors?.date"
+            :rules="[vrules.requiredField('Fecha')]"
           />
         </VForm>
       </VCardText>
 
       <div class="d-flex justify-end px-4 pb-4">
-        <VBtn id="con-dialog-cancel-btn" class="mr-4" color="primary" variant="outlined" :disabled="loading" @click="close">
+        <VBtn id="con-dialog-cancel-btn" class="mr-4" color="primary" variant="outlined" :disabled="saving || loading" @click="close">
           <VIcon start>mdi-close</VIcon>
           Cancelar
         </VBtn>
-        <VBtn id="con-dialog-save-btn" color="primary" :loading="loading" variant="elevated" :disabled="!isValid || loading" @click="save">
+        <VBtn id="con-dialog-save-btn" color="primary" variant="elevated" :loading="saving || loading" :disabled="saving || loading" @click="save">
           <VIcon start>mdi-content-save</VIcon>
           Guardar
         </VBtn>
@@ -61,6 +68,7 @@
 
 <script setup lang="ts">
 import { useValidationErrors } from "~/composables/useValidationErrors"
+import { useVrules } from "~/composables/useVrules"
 
 interface SheetItem {
   id?: number | null
@@ -69,10 +77,13 @@ interface SheetItem {
   date?: string | null
 }
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
+  id?: string
   sheet?: Record<string, unknown>
   loading?: boolean
-}>()
+}>(), {
+  id: "con-dialo-dlg-1",
+})
 
 const emit = defineEmits<{
   (e: 'close'): void
@@ -80,6 +91,7 @@ const emit = defineEmits<{
 }>()
 
 const { errors, clearErrors } = useValidationErrors()
+const { vrules } = useVrules()
 
 const formRef = ref()
 const item = ref<SheetItem>({
@@ -88,11 +100,16 @@ const item = ref<SheetItem>({
   folio_number: "",
   date: "",
 })
+const saving = ref(false)
 
 const isEditMode = computed(() => !!item.value.id)
 const iconTitle = computed(() => (isEditMode.value ? "mdi-pencil" : "mdi-plus"))
 const formTitle = computed(() => (isEditMode.value ? "Editar Consolidado" : "Nuevo Consolidado"))
-const isValid = computed(() => !!(item.value.org_id && item.value.folio_number && item.value.date))
+
+// Reset the local guard when the parent finishes the API call (success or error)
+watch(() => props.loading, (val) => {
+  if (!val) saving.value = false
+}, { immediate: true })
 
 watch(
   () => props.sheet,
@@ -120,7 +137,11 @@ function close() {
 }
 
 async function save() {
-  if (!isValid.value || props.loading) return
+  if (saving.value || props.loading) return
+  const { valid } = await formRef.value?.validate() ?? { valid: false }
+  if (!valid) return
+  if (saving.value || props.loading) return
+  saving.value = true
   emit("save", { ...item.value })
 }
 </script>

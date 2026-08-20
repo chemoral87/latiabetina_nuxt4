@@ -120,13 +120,7 @@ const auth = useAuthStore();
 
 // Hide the "Organización" column when the user has only one org for this
 // permission — the backend resolves the org from auth context.
-const effectiveOrgId = computed(() => {
-  const orgPermission = auth.permissionsOrg["auditorium-event-index"] ?? [];
-  if (orgPermission.length === 1) {
-    return orgPermission[0];
-  }
-  return null;
-});
+const singleOrg = computed(() => auth.hasSingleOrgFor("auditorium-event-index"))
 
 const headers = computed<Header[]>(() => {
   const list: Header[] = [];
@@ -136,7 +130,7 @@ const headers = computed<Header[]>(() => {
   list.push({ title: "Fecha del Evento", value: "event_date", sortable: true });
   list.push({ title: "Hora", value: "time", sortable: false });
   list.push({ title: "Auditorio", value: "auditorium_name", sortable: false });
-  if (effectiveOrgId.value === null) {
+  if (!singleOrg.value) {
     list.push({ title: "Organización", value: "org_name", sortable: false });
   }
   list.push({
