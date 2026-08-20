@@ -46,6 +46,17 @@
                 Guardar
               </VBtn>
             </VCol>
+            <VCol cols="12">
+              <VTextField
+                id="con-status-reason"
+                v-model="reason"
+                density="compact"
+                :disabled="saving"
+                variant="outlined"
+                label="Motivo (opcional)"
+                placeholder="Razón del cambio de estado"
+              />
+            </VCol>
           </VRow>
         </VForm>
 
@@ -69,6 +80,10 @@
                 <VIcon start size="x-small">mdi-account</VIcon>
                 {{ (log.changer as Record<string, unknown> | undefined)?.name || "N/A" }}
                 · {{ formatShortDate(log.created_at) }}
+              </div>
+              <div v-if="log.reason" class="text-caption mt-1">
+                <VIcon start size="x-small" color="primary">mdi-note-text-outline</VIcon>
+                {{ log.reason }}
               </div>
             </VListItem>
             <VDivider v-if="i < logs.length - 1" />
@@ -116,17 +131,20 @@ const saving = ref(false)
 const loading = ref(false)
 const logs = ref<Record<string, unknown>[]>([])
 const selectedStatus = ref("ACTIVO")
+const reason = ref("")
 
 const statuses = [
   { title: "Activo", value: "ACTIVO" },
   { title: "No contesta", value: "NO CONTESTA" },
   { title: "No molestar", value: "NO MOLESTAR" },
+  { title: "Visita", value: "VISITA" },
 ]
 
 const statusColors: Record<string, string> = {
   ACTIVO: "green",
   "NO CONTESTA": "amber",
   "NO MOLESTAR": "red",
+  VISITA: "blue",
 }
 
 function statusLabel(status: unknown): string {
@@ -170,8 +188,9 @@ async function save() {
   if (memberId.value == null) return
   saving.value = true
   try {
-    const updated = await ChurchMember.updateStatus<Record<string, unknown>>(memberId.value, selectedStatus.value)
+    const updated = await ChurchMember.updateStatus<Record<string, unknown>>(memberId.value, selectedStatus.value, reason.value || undefined)
     notify.notify({ success: "Estado actualizado exitosamente" })
+    reason.value = ""
     await fetchLogs()
     emit("statusChanged", updated)
   } catch {

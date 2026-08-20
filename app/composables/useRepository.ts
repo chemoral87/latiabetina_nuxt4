@@ -116,8 +116,10 @@ export function useRepository() {
         return withNotify($api<T>(`/church-member/${memberId}/tracking-logs`, { method: "POST", body: payload }))
       },
       // Clasificación (estado): PUT /church-member/{memberId}/status
-      updateStatus<T = unknown>(memberId: number | string, status: string) {
-        return withNotify($api<T>(`/church-member/${memberId}/status`, { method: "PUT", body: { status } }))
+      updateStatus<T = unknown>(memberId: number | string, status: string, reason?: string) {
+        const payload: Record<string, unknown> = { status }
+        if (reason) payload.reason = reason
+        return withNotify($api<T>(`/church-member/${memberId}/status`, { method: "PUT", body: payload }))
       },
       // Historial de cambios de estado: GET /church-member/{memberId}/status-logs
       statusLogs<T = unknown>(memberId: number | string) {

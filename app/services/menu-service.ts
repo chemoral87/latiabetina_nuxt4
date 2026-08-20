@@ -134,7 +134,7 @@ export class MenuService {
         menu.push({
           icon: "mdi-account-search",
           title: "Seguimiento",
-          to: "/seguimiento",
+          to: "/tracking",
         });
       }
 

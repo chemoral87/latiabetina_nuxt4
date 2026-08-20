@@ -136,12 +136,14 @@ const statuses = [
   { title: "Activo", value: "ACTIVO" },
   { title: "No contesta", value: "NO CONTESTA" },
   { title: "No molestar", value: "NO MOLESTAR" },
+  { title: "Visita", value: "VISITA" },
 ]
 
 const statusColors: Record<string, string> = {
   ACTIVO: "green",
   "NO CONTESTA": "amber",
   "NO MOLESTAR": "red",
+  VISITA: "blue",
 }
 
 function statusLabel(status: unknown): string {
