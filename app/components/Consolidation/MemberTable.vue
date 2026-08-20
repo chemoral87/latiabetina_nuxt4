@@ -44,18 +44,32 @@
           <VIcon size="x-large">mdi-account-cog-outline</VIcon>
         </VBtn>
 
-        <VBtn
-          id="con-membertable-edit-btn"
+<VBtn
+          id="con-membertable-medal-btn"
           icon
           class="ma-1"
           size="small"
-          title="Editar"
-          color="primary"
+          color="amber"
+          rounded="circle"
+          title="Medallas"
+          variant="outlined"
+          @click="emit('medal', item)"
+        >
+          <VIcon size="x-large">mdi-medal-outline</VIcon>
+        </VBtn>
+
+        <VBtn
+          id="con-membertable-track-btn"
+          icon
+          class="ma-1"
+          color="teal"
+          size="small"
           rounded="circle"
           variant="outlined"
-          @click="emit('edit', item)"
+          title="Bitácora de seguimiento"
+          @click="emit('track', item)"
         >
-          <VIcon size="x-large">mdi-pencil</VIcon>
+          <VIcon size="x-large">mdi-notebook-outline</VIcon>
         </VBtn>
 
         <VBtn
@@ -111,6 +125,7 @@ withDefaults(defineProps<{
 })
 
 const emit = defineEmits<{
+  (e: 'medal', val: unknown): void
   (e: 'track', val: unknown): void
   (e: 'status', val: unknown): void
   (e: 'edit', val: unknown): void
@@ -148,7 +163,7 @@ const headers: Header[] = [
   { title: "Dirección", value: "address" },
   { title: "Estado Civil", value: "marriage_status" },
   { title: "Estado", value: "status", sortable: false, align: "center" },
-  { title: "Acciones", value: "actions", sortable: false, align: "center", width: "220px" },
+  { title: "Acciones", value: "actions", sortable: false, align: "center", width: "275px" },
 ]
 </script>
 

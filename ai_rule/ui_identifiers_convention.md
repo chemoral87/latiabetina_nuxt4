@@ -213,6 +213,7 @@ ids intact for the many pages that use them:
 | `Consolidation/Dialog.vue` | `con-dialo-dlg-1` | `cnsld-sheet-dlg-1` (used in `consolidation/index.vue`) |
 | `Consolidation/TrackingLogDialog.vue` | `con-track-dlg-1` | `det-track-dlg` (used in `consolidation/[id]/details.vue`) |
 | `Consolidation/StatusLogDialog.vue` | `con-status-dlg-1` | `det-status-dlg` (used in `consolidation/[id]/details.vue`) |
+| `Consolidation/MedalDialog.vue` | `con-medal-dlg-1` | `det-medal-dlg` (used in `consolidation/[id]/details.vue`) |
 
 Example usage in the details page:
 

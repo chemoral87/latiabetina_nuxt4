@@ -123,6 +123,14 @@ export function useRepository() {
       statusLogs<T = unknown>(memberId: number | string) {
         return withNotify($api<T>(`/church-member/${memberId}/status-logs`))
       },
+      // Medallas: GET /church-member/{memberId}/medals
+      medals<T = unknown>(memberId: number | string) {
+        return withNotify($api<T>(`/church-member/${memberId}/medals`))
+      },
+      // POST /church-member/{memberId}/medals
+      createMedal<T = unknown>(memberId: number | string, payload: Record<string, unknown>) {
+        return withNotify($api<T>(`/church-member/${memberId}/medals`, { method: "POST", body: payload }))
+      },
     },
   }
 }

@@ -151,7 +151,7 @@
       </VCol>
 
       <VCol cols="12">
-        <ConsolidationMemberTable id="det-members-dt" :loading="loading" :members="filteredMembers" @edit="editMember" @status="openStatus" @track="openTracking" @delete="deleteMemberPrompt" />
+        <ConsolidationMemberTable id="det-members-dt" :loading="loading" :members="filteredMembers" @edit="editMember" @medal="openMedal" @status="openStatus" @track="openTracking" @delete="deleteMemberPrompt" />
       </VCol>
 
       <VCol cols="12" class="d-flex justify-end">
@@ -169,6 +169,8 @@
     <ConsolidationTrackingLogDialog v-if="trackDialog" id="det-track-dlg" :member="trackMember" @close="trackDialog = false" />
 
     <ConsolidationStatusLogDialog v-if="statusDialog" id="det-status-dlg" :member="statusMember" @close="statusDialog = false" @status-changed="onStatusChanged" />
+
+    <ConsolidationMedalDialog v-if="medalDialog" id="det-medal-dlg" :member="medalMember" @close="medalDialog = false" />
 
     <DialogConfirm
       v-if="showConfirmDialog"
@@ -211,11 +213,13 @@ const dialog = ref(false)
 const dialogDelete = ref(false)
 const trackDialog = ref(false)
 const statusDialog = ref(false)
+const medalDialog = ref(false)
 const sheet = ref<Record<string, unknown>>({})
 const originalSheet = ref<Record<string, unknown>>({})
 const member = ref<Record<string, unknown>>({})
 const trackMember = ref<Record<string, unknown>>({})
 const statusMember = ref<Record<string, unknown>>({})
+const medalMember = ref<Record<string, unknown>>({})
 const deleteData = ref<Record<string, unknown>>({})
 const members = ref<unknown[]>([])
 const users = ref<{ id: number | string; name: string }[]>([])
@@ -318,6 +322,11 @@ function openTracking(item: unknown) {
 function openStatus(item: unknown) {
   statusMember.value = item as Record<string, unknown>
   statusDialog.value = true
+}
+
+function openMedal(item: unknown) {
+  medalMember.value = item as Record<string, unknown>
+  medalDialog.value = true
 }
 
 function onStatusChanged(updated: Record<string, unknown>) {

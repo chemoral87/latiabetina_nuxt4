@@ -131,6 +131,11 @@ export class MenuService {
           title: "Consolidación",
           to: "/consolidation",
         });
+        menu.push({
+          icon: "mdi-account-search",
+          title: "Seguimiento",
+          to: "/seguimiento",
+        });
       }
 
       if (this.hasPermission("ukelele-course")) {
