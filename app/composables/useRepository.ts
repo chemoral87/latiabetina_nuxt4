@@ -108,8 +108,8 @@ export function useRepository() {
     ChurchMember: {
       ...createCommonRepository($api, "/church-member"),
       // Bitácora de seguimiento: GET /church-member/{memberId}/tracking-logs
-      trackingLogs<T = unknown>(memberId: number | string) {
-        return withNotify($api<T>(`/church-member/${memberId}/tracking-logs`))
+      trackingLogs<T = unknown>(memberId: number | string, params?: Record<string, unknown>) {
+        return withNotify($api<T>(`/church-member/${memberId}/tracking-logs`, { params }))
       },
       // POST /church-member/{memberId}/tracking-logs
       createTrackingLog<T = unknown>(memberId: number | string, payload: Record<string, unknown>) {

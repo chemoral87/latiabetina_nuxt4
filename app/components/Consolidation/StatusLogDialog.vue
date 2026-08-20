@@ -3,7 +3,7 @@
     <VCard>
       <VCardTitle class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center">
         <VIcon start size="small" color="primary">mdi-account-cog-outline</VIcon>
-        Clasificación del miembro
+        Estatus Consolidado
         <VSpacer />
         <VBtn id="con-status-close-btn" icon size="x-small" :disabled="saving" @click="close">
           <VIcon>mdi-close</VIcon>
@@ -33,19 +33,6 @@
                 :rules="[vrules.requiredField('Estado')]"
               />
             </VCol>
-            <VCol sm="4" cols="12" class="d-flex align-center justify-end">
-              <VBtn
-                id="con-status-save-btn"
-                color="primary"
-                :loading="saving"
-                :disabled="saving"
-                variant="elevated"
-                @click="save"
-              >
-                <VIcon start>mdi-content-save</VIcon>
-                Guardar
-              </VBtn>
-            </VCol>
             <VCol cols="12">
               <VTextField
                 id="con-status-reason"
@@ -60,11 +47,12 @@
           </VRow>
         </VForm>
 
-        <VDivider class="my-3" />
+        <template v-if="showHistory">
+          <VDivider class="my-3" />
 
-        <div class="text-subtitle-2 font-weight-bold mb-1">Historial de cambios</div>
+          <div class="text-subtitle-2 font-weight-bold mb-1">Historial de cambios</div>
 
-        <VList v-if="logs.length" id="con-status-list" max-height="320" density="compact" class="overflow-y-auto">
+          <VList v-if="logs.length" id="con-status-list" max-height="320" density="compact" class="overflow-y-auto">
 <template v-for="(log, i) in logs" :key="log.id">
             <VListItem>
               <div class="d-flex align-center">
@@ -88,18 +76,23 @@
             </VListItem>
             <VDivider v-if="i < logs.length - 1" />
           </template>
-        </VList>
+          </VList>
 
-        <div v-else class="text-center pa-4 text-grey">
-          <VIcon color="grey-lighten-1">mdi-history</VIcon>
-          <div class="text-body-2 mt-1">Sin cambios de estado registrados</div>
-        </div>
+          <div v-else class="text-center pa-4 text-grey">
+            <VIcon color="grey-lighten-1">mdi-history</VIcon>
+            <div class="text-body-2 mt-1">Sin cambios de estado registrados</div>
+          </div>
+        </template>
       </VCardText>
 
       <div class="d-flex justify-end px-4 pb-4">
-        <VBtn id="con-status-cancel-btn" color="primary" :disabled="saving" variant="outlined" @click="close">
+        <VBtn id="con-status-cancel-btn" class="mr-4" color="primary" :disabled="saving" variant="outlined" @click="close">
           <VIcon start>mdi-close</VIcon>
-          Cerrar
+          Cancelar
+        </VBtn>
+        <VBtn id="con-status-save-btn" color="primary" :loading="saving" :disabled="saving" variant="elevated" @click="save">
+          <VIcon start>mdi-content-save</VIcon>
+          Guardar
         </VBtn>
       </div>
     </VCard>
@@ -113,8 +106,10 @@ import { formatShortDate } from "~/utils/date"
 const props = withDefaults(defineProps<{
   id?: string
   member?: Record<string, unknown>
+  showHistory?: boolean
 }>(), {
   id: "con-status-dlg-1",
+  showHistory: true,
 })
 
 const emit = defineEmits<{
@@ -191,8 +186,8 @@ async function save() {
     const updated = await ChurchMember.updateStatus<Record<string, unknown>>(memberId.value, selectedStatus.value, reason.value || undefined)
     notify.notify({ success: "Estado actualizado exitosamente" })
     reason.value = ""
-    await fetchLogs()
     emit("statusChanged", updated)
+    emit("close")
   } catch {
     // withNotify already surfaced the error
   } finally {

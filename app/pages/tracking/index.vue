@@ -101,7 +101,7 @@ const orgs = computed(
 
 function viewMember(item: unknown) {
   const id = (item as Record<string, unknown> | undefined)?.id
-  if (id != null) navigateTo(`/church-member/${id}`)
+  if (id != null) navigateTo(`/church-member/${id}?from=tracking`)
 }
 
 // Debounced filter — 300ms, matches the index page pattern.

@@ -14,6 +14,10 @@
         {{ item.name }} {{ item.last_name }}
       </template>
 
+      <template #[`item.cellphone`]="{ item }">
+        {{ item.cellphone || "—" }}
+      </template>
+
       <template #[`item.status`]="{ item }">
         <VChip size="small" :color="statusColor(item.status)">
           {{ statusLabel(item.status) }}
