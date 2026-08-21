@@ -2,9 +2,9 @@
 
 > **Goal:** avoid the recurring browser-console warnings/diagnostics that this app
 > has shipped before: the h3 `statusMessage` deprecation, the `NUXT_E1005`
-> "app initialization" diagnostic, `VUE_ROUTER_R0121`, and `VUE_ROUTER_R0025`.
-> Each section below gives the symptom, the root cause, and the rule that
-> prevents a regression.
+> "app initialization" diagnostic, `VUE_ROUTER_R0121`, `VUE_ROUTER_R0025`,
+> and duplicate API fetches from `VDataTableServer`. Each section below gives
+> the symptom, the root cause, and the rule that prevents a regression.
 
 ---
 
@@ -322,6 +322,92 @@ dialogs), which triggers this warning.
 
 ---
 
+## 6. VDataTableServer duplicate `@update:options` fetch on mount
+
+### Symptom (bad)
+
+Network tab shows the same API endpoint called **twice** on initial page load:
+
+```
+GET /api/church-member/3/tracking-logs?page=1&itemsPerPage=10&... → 200
+GET /api/church-member/3/tracking-logs?page=1&itemsPerPage=10&... → 200
+```
+
+### Root Cause
+
+`VDataTableServer` fires `@update:options` on mount (with initial pagination,
+sort, etc.). If the page **also** calls the fetch function in a top-level
+`await` or `onMounted`, the data is fetched twice — once manually, once by the
+table's own event.
+
+### Rule
+
+1. **Do not manually fetch data that a `VDataTableServer` will fetch via
+   `@update:options` on mount.** The table handles its own initial fetch.
+
+   ```ts
+   // ❌ BAD — duplicate fetch on mount
+   {
+     const data = await SomeAPI.index(params)
+     items.value = data
+     await fetchLogs()  // ← VDataTableServer will also call this on mount
+   }
+
+   // ✅ GOOD — let the table handle it
+   {
+     const data = await SomeAPI.index(params)
+     items.value = data
+     // fetchLogs() called by VDataTableServer's @update:options on mount
+   }
+   ```
+
+2. **If the page needs pre-loaded data for SSR**, use `useAsyncData` or
+   `useFetch` with a unique key. Do not call the same fetch function that the
+   table's `@update:options` handler calls.
+
+3. **The `@update:options` handler** should be the single source of truth for
+   table data fetching. Any manual call to the same function before the table
+   mounts is redundant.
+
+4. **Checklist addition:** For pages using `VDataTableServer`, verify only one
+   code path triggers the initial fetch — either the table's `@update:options`
+   or a manual call, never both.
+
+---
+
+## 7. Never run `migrate:fresh` on a database with real data
+
+### Rule
+
+**CRÍTICO:** NUNCA ejecutar `php artisan migrate:fresh` o `artisan migrate:refresh` en un entorno que tenga datos reales/producción.
+
+Estos comandos **eliminan todas las tablas y datos** antes de re-crear la estructura.
+
+```bash
+# ✅ Correcto — solo aplicar migraciones pendientes
+php artisan migrate
+
+# ❌ Incorrecto — DESTRUYE TODOS LOS DATOS
+php artisan migrate:fresh
+php artisan migrate:refresh
+```
+
+### Migraciones con DROP de índice
+
+Si una migración necesita eliminar un índice que es usado por una foreign key, usar:
+
+```php
+DB::statement('ALTER TABLE table_name DROP INDEX index_name');
+```
+
+O si el índice es largo (excede 64 caracteres), acortar el nombre al crear:
+
+```php
+$table->index(['col1', 'col2'], 'idx_corto');
+```
+
+---
+
 ## Checklist (run before merging changes)
 
 1. `grep -rn "statusMessage" app/` → **0 hits**.
@@ -337,6 +423,9 @@ dialogs), which triggers this warning.
 6. No `next()` callback in `onBeforeRouteLeave` or `beforeRouteLeave` guards —
    use return values instead (`grep -rn "next()" app/pages/` → 0 hits in
    navigation guards).
+7. Pages with `VDataTableServer` must not manually call the same fetch function
+   that `@update:options` triggers — only one initial fetch path.
+8. Never run `migrate:fresh` or `migrate:refresh` — always use `php artisan migrate`.
 
 ## References
 

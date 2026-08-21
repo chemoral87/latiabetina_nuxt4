@@ -48,6 +48,7 @@
                   variant="outlined"
                   autocomplete="username"
                   label="Dirección de correo electrónico"
+                  @input="errorMsg = ''"
                 />
               </VCol>
 
@@ -62,7 +63,14 @@
                   :type="showed ? 'text' : 'password'"
                   :append-inner-icon="showed ? 'mdi-eye' : 'mdi-eye-off'"
                   @click:append-inner="showed = !showed"
+                  @input="errorMsg = ''"
                 />
+              </VCol>
+
+              <VCol v-if="errorMsg" cols="12">
+                <VAlert type="error" density="compact" variant="tonal">
+                  {{ errorMsg }}
+                </VAlert>
               </VCol>
 
               <VCol cols="12" class="text-right">
@@ -112,6 +120,7 @@ const email = ref("");
 const password = ref("");
 const showed = ref(false);
 const isSubmitting = ref(false);
+const errorMsg = ref("");
 
 function loginWithGoogle() {
   if (isSubmitting.value) return;
@@ -137,6 +146,7 @@ function loginWithGoogle() {
 async function submitLogin() {
   if (isSubmitting.value) return;
   isSubmitting.value = true;
+  errorMsg.value = "";
   try {
     const credentials = { email: email.value, password: password.value };
     await auth.loginWith("laravelJWT", { data: credentials });
@@ -146,8 +156,18 @@ async function submitLogin() {
     );
     sessionStorage.removeItem("loginRedirect");
     navigateTo(redirect);
-  } catch (e) {
-    console.error(e);
+  } catch (e: any) {
+    const data = e?.response?._data || e?.data || e;
+    const errors = data?.errors;
+    if (errors?.password) {
+      errorMsg.value = errors.password;
+    } else if (errors?.email) {
+      errorMsg.value = errors.email;
+    } else if (typeof data?.message === "string") {
+      errorMsg.value = data.message;
+    } else {
+      errorMsg.value = "Error al iniciar sesión. Intenta de nuevo.";
+    }
   } finally {
     isSubmitting.value = false;
   }

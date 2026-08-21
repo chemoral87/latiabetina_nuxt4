@@ -129,7 +129,7 @@ const props = withDefaults(
   }>(),
   {
     borderColor: "#f44336",
-    borderWidth: 1,
+    borderWidth: 6,
   },
 );
 

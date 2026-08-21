@@ -20,8 +20,8 @@
         </VChip>
       </template>
 
-      <template #[`item.contact_date`]="{ item }">
-        {{ formatShortDate(item.contact_date) }}
+      <template #[`item.contact_datetime`]="{ item }">
+        {{ formatShortDate(item.contact_datetime) }}
       </template>
 
       <template #[`item.creator`]="{ item }">
@@ -109,7 +109,7 @@ const emit = defineEmits<{
 const page = ref(1)
 const itemsPerPage = ref(10)
 const sortBy = ref<{ key: string; order: string }[]>([
-  { key: "contact_date", order: "desc" },
+  { key: "contact_datetime", order: "desc" },
 ])
 
 const total = computed(() => props.response?.total ?? 0)
@@ -119,7 +119,7 @@ const items = computed(() => props.response?.data ?? [])
 const headers = computed<Header[]>(() => [
   { title: "Medio", value: "medium", sortable: false, align: "center" },
   { title: "Clasificación", value: "classification", sortable: false, align: "center" },
-  { title: "Fecha", value: "contact_date", sortable: true },
+  { title: "Fecha", value: "contact_datetime", sortable: true },
   { title: "Usuario", value: "creator", sortable: false },
   { title: "Descripción", value: "description", sortable: false },
   { title: "Acciones", value: "actions", sortable: false, align: "center", width: "100px" },

@@ -230,7 +230,6 @@ const editingLog = ref<Record<string, unknown> | null>(null);
       route.params.id as string,
     );
     member.value = dbItem as Record<string, unknown>;
-    await fetchTrackingLogs();
   } catch (e) {
     throw createError({ statusCode: 404, message: "Miembro no encontrado" });
   } finally {
@@ -298,7 +297,7 @@ async function openContact(
   const id = route.params.id as string
   try {
     await ChurchMember.createTrackingLog<Record<string, unknown>>(id, {
-      contact_date: new Date().toISOString().slice(0, 10),
+      contact_datetime: new Date().toISOString().slice(0, 19).replace("T", " "),
       medium,
       description: message.value.trim() || undefined,
     })
@@ -326,7 +325,7 @@ async function fetchTrackingLogs() {
     const data = await ChurchMember.trackingLogs<Record<string, unknown>>(id, {
       page: 1,
       itemsPerPage: 10,
-      sortBy: ["contact_date"],
+      sortBy: ["contact_datetime"],
       sortDesc: [true],
     })
     logsResponse.value = data as { data: unknown[]; total: number }

@@ -25,15 +25,23 @@
         <VForm ref="formRef" @submit.prevent="save">
           <VRow density="comfortable">
             <VCol md="6" cols="12">
-              <VTextField
-                id="cmm-tlg-contact-date"
-                v-model="item.contact_date"
+              <MyDatePicker
+                v-model="contactDate"
                 label="Fecha de contacto"
-                type="date"
                 density="compact"
                 variant="outlined"
                 :disabled="loading"
-                @keyup.enter="save"
+              />
+            </VCol>
+            <VCol md="6" cols="12">
+              <VTextField
+                id="cmm-tlg-contact-time"
+                v-model="contactTime"
+                label="Hora"
+                type="time"
+                density="compact"
+                variant="outlined"
+                :disabled="loading"
               />
             </VCol>
             <VCol md="6" cols="12">
@@ -105,14 +113,14 @@
 <script setup lang="ts">
 interface LogItem {
   id?: number | null
-  contact_date?: string
+  contact_datetime?: string
   medium?: string
   classification?: string
   description?: string
   creator?: Record<string, unknown>
 }
 
-withDefaults(defineProps<{
+const props = withDefaults(defineProps<{
   id?: string
   log?: Record<string, unknown>
   loading?: boolean
@@ -128,11 +136,14 @@ const emit = defineEmits<{
 
 const item = ref<LogItem>({
   id: null,
-  contact_date: "",
+  contact_datetime: "",
   medium: "whatsapp",
   classification: "",
   description: "",
 })
+
+const contactDate = ref<string | null>(null)
+const contactTime = ref("")
 
 const mediumOptions = [
   { title: "WhatsApp", value: "whatsapp" },
@@ -151,6 +162,12 @@ watch(
   (val) => {
     if (val && Object.keys(val).length > 0) {
       item.value = { ...item.value, ...val } as LogItem
+      if (val.contact_datetime) {
+        const dt = String(val.contact_datetime)
+        const parts = dt.includes("T") ? dt.split("T") : dt.split(" ")
+        contactDate.value = parts[0] || null
+        contactTime.value = parts[1]?.substring(0, 5) || ""
+      }
     }
   },
   { immediate: true, deep: true },
@@ -161,7 +178,13 @@ function close() {
 }
 
 function save() {
-  emit("save", { ...item.value })
+  const payload = { ...item.value }
+  if (contactDate.value) {
+    payload.contact_datetime = contactTime.value
+      ? `${contactDate.value} ${contactTime.value}:00`
+      : `${contactDate.value} 00:00:00`
+  }
+  emit("save", payload)
 }
 </script>
 

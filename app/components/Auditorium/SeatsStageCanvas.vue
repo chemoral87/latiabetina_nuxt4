@@ -36,6 +36,7 @@
             :subsection="selectedSubsection"
             :selected-seats-array="selectedSeatsArray"
             :border-color="getSubsectionBorderColorForSub(selectedSubsection)"
+            :border-width="SUBSECTION_BORDER_WIDTH"
             @seat-click="handleSeatClick"
           />
         </template>
@@ -76,6 +77,7 @@
                     :loading-seats="loadingSeats"
                     :selected-seats-array="selectedSeatsArray"
                     :border-color="getSubsectionBorderColor(sIdx, subIdx)"
+                    :border-width="SUBSECTION_BORDER_WIDTH"
                     @seat-click="handleSeatClick"
                   />
                 </template>
@@ -92,6 +94,7 @@
 import {
   DEFAULT_SETTINGS,
   SUBSECTION_BORDER_COLORS,
+  SUBSECTION_BORDER_WIDTH,
 } from "~/constants/auditorium"
 import { useUAParser } from "~/utils/userAgent"
 import type { Seat, Section, Subsection } from "~/types/auditorium"

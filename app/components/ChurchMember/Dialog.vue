@@ -236,7 +236,11 @@ async function save() {
     const { valid } = await form.validate();
     if (!valid) return;
   }
-  const { url_image: _, ...payload } = item.value as Record<string, unknown>;
+  const { url_image, url_image_s3, ...rest } = item.value as Record<string, unknown>;
+  const payload = { ...rest };
+  if (url_image instanceof Blob) {
+    payload.url_image = url_image_s3;
+  }
   emit("save", payload);
 }
 </script>

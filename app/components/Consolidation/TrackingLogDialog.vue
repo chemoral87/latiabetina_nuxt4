@@ -20,7 +20,7 @@
             <VCol sm="5" cols="12">
               <MyDatePicker
                 id="con-track-date"
-                v-model="form.contact_date"
+                v-model="contactDate"
                 required
                 density="compact"
                 :disabled="saving"
@@ -29,7 +29,18 @@
                 :rules="[vrules.requiredField('Fecha de contacto')]"
               />
             </VCol>
-            <VCol sm="7" cols="12">
+            <VCol sm="3" cols="6">
+              <VTextField
+                id="con-track-time"
+                v-model="contactTime"
+                label="Hora"
+                type="time"
+                density="compact"
+                :disabled="saving"
+                variant="outlined"
+              />
+            </VCol>
+            <VCol sm="4" cols="6">
               <VSelect
                 id="con-track-medium"
                 v-model="form.medium"
@@ -78,7 +89,7 @@
 <template v-for="(log, i) in logs" :key="log.id">
             <VListItem>
               <div class="d-flex align-center">
-                <span class="text-body-2 font-weight-bold">{{ formatShortDate(log.contact_date) }}</span>
+                <span class="text-body-2 font-weight-bold">{{ formatShortDate(log.contact_datetime) }}</span>
                 <VChip class="ml-2" size="small" :color="mediumColor(log.medium)">
                   {{ mediumLabel(log.medium) }}
                 </VChip>
@@ -163,14 +174,17 @@ function mediumColor(medium: unknown): string {
 }
 
 const form = ref<{
-  contact_date: string
+  contact_datetime: string
   medium: string
   description: string
 }>({
-  contact_date: new Date().toISOString().substr(0, 10),
+  contact_datetime: "",
   medium: "",
   description: "",
 })
+
+const contactDate = ref<string | null>(new Date().toISOString().substr(0, 10))
+const contactTime = ref("")
 
 async function fetchLogs() {
   if (memberId.value == null) return
@@ -198,7 +212,9 @@ async function save() {
   saving.value = true
   try {
     const created = await ChurchMember.createTrackingLog<Record<string, unknown>>(memberId.value, {
-      contact_date: form.value.contact_date,
+      contact_datetime: contactTime.value
+        ? `${contactDate.value} ${contactTime.value}:00`
+        : `${contactDate.value} 00:00:00`,
       medium: form.value.medium,
       description: form.value.description,
     })

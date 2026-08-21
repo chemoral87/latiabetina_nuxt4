@@ -1,7 +1,7 @@
 export interface StageCategory {
-  label: string
-  value: string | null
-  fill: string
+  label: string;
+  value: string | null;
+  fill: string;
 }
 
 // ── Stage categories ──────────────────────────────────────────────────────────
@@ -14,26 +14,26 @@ export const STAGE_CATEGORIES: StageCategory[] = [
   { label: "Embarazadas", value: "Embarazadas", fill: "#9c27b0" },
   { label: "Silla Ruedas", value: "SillaRuedas", fill: "#FFFFFF" },
   { label: "Ninguno", value: null, fill: "#000" },
-]
+];
 
 export const CLASS_STROKE_MAP: Record<string, string> = (() => {
-  const map: Record<string, string> = {}
+  const map: Record<string, string> = {};
   STAGE_CATEGORIES.forEach((category) => {
     if (category.value && category.value !== null) {
-      map[category.value.toLowerCase()] = category.fill
+      map[category.value.toLowerCase()] = category.fill;
     }
-  })
-  return map
-})()
+  });
+  return map;
+})();
 
 // ── Status configuration ──────────────────────────────────────────────────────
 export interface StatusConfig {
-  active: boolean
-  label?: string
-  color: string
-  icon?: string
-  mdi?: string
-  icon_scale?: number
+  active: boolean;
+  label?: string;
+  color: string;
+  icon?: string;
+  mdi?: string;
+  icon_scale?: number;
 }
 
 export const STATUS_CONFIG: Record<string, StatusConfig> = {
@@ -101,18 +101,28 @@ export const STATUS_CONFIG: Record<string, StatusConfig> = {
     active: false,
     icon_scale: 1.7,
   },
-}
+};
 
 // Backwards-compat derived maps
-export const STATUS_COLORS: Record<string, string> = Object.keys(STATUS_CONFIG).reduce((acc, key) => {
-  acc[key] = STATUS_CONFIG[key].color
-  return acc
-}, {} as Record<string, string>)
+export const STATUS_COLORS: Record<string, string> = Object.keys(
+  STATUS_CONFIG,
+).reduce(
+  (acc, key) => {
+    acc[key] = STATUS_CONFIG[key].color;
+    return acc;
+  },
+  {} as Record<string, string>,
+);
 
-export const STATUS_ICONS: Record<string, string> = Object.keys(STATUS_CONFIG).reduce((acc, key) => {
-  acc[key] = STATUS_CONFIG[key].icon ?? ""
-  return acc
-}, {} as Record<string, string>)
+export const STATUS_ICONS: Record<string, string> = Object.keys(
+  STATUS_CONFIG,
+).reduce(
+  (acc, key) => {
+    acc[key] = STATUS_CONFIG[key].icon ?? "";
+    return acc;
+  },
+  {} as Record<string, string>,
+);
 
 // ── Color palettes ────────────────────────────────────────────────────────────
 export const COLORS = {
@@ -122,14 +132,14 @@ export const COLORS = {
   SECTION_BG: "#222d3b",
   SUBSECTION_BG: "#e0e0e0",
   LABEL_TEXT: "#ff9800",
-}
+};
 
 // ── Percentage colour helper ──────────────────────────────────────────────────
 export const getPercentageColor = (percent: number): string => {
-  if (percent >= 86) return "#F44336" // red
-  if (percent >= 57) return "#FF9800" // orange
-  return "#4CAF50" // green
-}
+  if (percent >= 86) return "#F44336"; // red
+  if (percent >= 57) return "#FF9800"; // orange
+  return "#4CAF50"; // green
+};
 
 // ── Default stage layout settings ────────────────────────────────────────────
 export const DEFAULT_SETTINGS = {
@@ -142,7 +152,7 @@ export const DEFAULT_SETTINGS = {
   SECTION_SIDE_PADDING: 0,
   SECTION_BOTTOM_PADDING: 0,
   DRAG_THRESHOLD: 18, // px to differentiate drag from click/tap
-}
+};
 
 // ── Subsection border palette ────────────────────────────────────────────────
 // Distinct border colors used to tell subsections apart on the stage. When
@@ -152,9 +162,11 @@ export const SUBSECTION_BORDER_COLORS = [
   "#2196f3", // blue
   "#4caf50", // green
   "#ff9800", // orange
-]
+  "#9c27b0", // purple
+  "#00bcd4", // cyan
+];
 
-export const SUBSECTION_BORDER_WIDTH = 2.5
+export const SUBSECTION_BORDER_WIDTH = 2;
 
 // ── Default export for auto-import compatibility ──────────────────────────────
 export default {
@@ -166,4 +178,4 @@ export default {
   COLORS,
   getPercentageColor,
   DEFAULT_SETTINGS,
-}
+};
