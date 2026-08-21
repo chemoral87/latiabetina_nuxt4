@@ -31,7 +31,7 @@
 
           <VCardText>
             <VRow density="compact">
-              <VCol md="7" cols="7">
+              <VCol cols="7">
                 <VRow density="compact">
                   <VCol sm="6" cols="12" class="text-body-2">
                     <VIcon start size="small" color="grey-darken-1"
@@ -61,30 +61,19 @@
                     <span class="font-weight-medium">Estado civil:</span>
                     {{ member.marriage_status || "—" }}
                   </VCol>
-                  <VCol cols="12" class="text-body-2 d-flex d-md-none">
+                  <VCol cols="12" class="text-body-2 d-none d-sm-flex">
                     <VIcon start size="small" color="grey-darken-1"
                       >mdi-map-marker</VIcon
                     >
-                    <span class="font-weight-medium">Dirección:</span>
+                    <span class="font-weight-medium">Dirección: </span>
                     {{ member.address || "—" }}
-                  </VCol>
-                  <VCol cols="12">
-                    <VBtn
-                      id="cmm-edit-btn"
-                      color="primary"
-                      variant="outlined"
-                      prepend-icon="mdi-pencil"
-                      @click="editDialog = true"
-                    >
-                      Editar
-                    </VBtn>
                   </VCol>
                 </VRow>
               </VCol>
-              <VCol md="5" cols="5" class="d-flex justify-center align-center">
+              <VCol cols="5" class="d-flex justify-center align-center">
                 <VAvatar
                   v-if="member.url_image_s3"
-                  size="120"
+                  size="110"
                   rounded="circle"
                   style="cursor: pointer"
                   @click="editDialog = true"
@@ -103,6 +92,29 @@
                   @click="editDialog = true"
                   >mdi-account-circle</VIcon
                 >
+              </VCol>
+            </VRow>
+
+            <VRow density="compact" class="d-flex d-sm-none">
+              <VCol cols="12" class="text-body-2">
+                <VIcon start size="small" color="grey-darken-1"
+                  >mdi-map-marker</VIcon
+                >
+                <span class="font-weight-medium">Dirección: </span>
+                {{ member.address || "—" }}
+              </VCol>
+            </VRow>
+            <VRow density="compact">
+              <VCol cols="12">
+                <VBtn
+                  id="cmm-edit-btn"
+                  color="primary"
+                  variant="outlined"
+                  prepend-icon="mdi-pencil"
+                  @click="editDialog = true"
+                >
+                  Editar
+                </VBtn>
               </VCol>
             </VRow>
           </VCardText>
@@ -233,7 +245,7 @@
 
 <script setup lang="ts">
 definePageMeta({
-  title: "Detalle del Consolidado",
+  title: "Detalle Consolidado",
   icon: "mdi-account",
   permission: "conso-sheet-index",
   middleware: ["authenticated", "permission"],
