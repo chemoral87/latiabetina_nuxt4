@@ -4,7 +4,7 @@
   >
     <v-rect
       :config="{
-        x: 1,
+        x: 0,
         y: 3,
         width: subsectionWidth + 18,
         height: subsectionHeight + DEFAULT_SETTINGS.SUBSECTION_RECT_EXTRA,
@@ -328,9 +328,10 @@ onBeforeUnmount(() => {
 
 function getRowLabelConfig(rowIdx: number) {
   return {
-    x: 3,
+    x: 0,
     y: rowIdx * seatSpacing.value + DEFAULT_SETTINGS.SEAT_SIZE / 2 + 35,
     text: (rowIdx + 1).toString(),
+    width: 12,
     fontSize: 8,
     fill: "yellow",
     fontFamily: "Arial",
