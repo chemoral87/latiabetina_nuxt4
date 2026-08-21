@@ -1,12 +1,9 @@
 <template>
-  <VDialog
-    :id="id"
-    persistent
-    max-width="600px"
-    :model-value="true"
-  >
+  <VDialog :id="id" persistent max-width="600px" :model-value="true">
     <VCard>
-      <VCardTitle class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center">
+      <VCardTitle
+        class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center"
+      >
         <VIcon start size="small" color="primary">mdi-pencil</VIcon>
         Editar Miembro
         <VSpacer />
@@ -24,7 +21,41 @@
       <VCardText class="py-1">
         <VForm ref="formRef" @submit.prevent="save">
           <VRow density="comfortable">
-            <VCol md="6" cols="12">
+            <VCol cols="6">
+              <VTextField
+                id="cmm-dialog-name"
+                v-model="item.name"
+                required
+                label="Nombre"
+                density="compact"
+                variant="outlined"
+                :disabled="loading"
+                :rules="[(v) => !!v || 'Nombre es requerido']"
+              />
+            </VCol>
+            <VCol cols="6">
+              <VTextField
+                id="cmm-dialog-last-name"
+                v-model="item.last_name"
+                required
+                label="Apellido"
+                density="compact"
+                variant="outlined"
+                :disabled="loading"
+                :rules="[(v) => !!v || 'Apellido es requerido']"
+              />
+            </VCol>
+            <VCol cols="6">
+              <VTextField
+                id="cmm-dialog-second-last-name"
+                v-model="item.second_last_name"
+                density="compact"
+                variant="outlined"
+                :disabled="loading"
+                label="Segundo Apellido"
+              />
+            </VCol>
+            <VCol cols="6">
               <VTextField
                 id="cmm-dialog-cellphone"
                 v-model="item.cellphone"
@@ -34,47 +65,48 @@
                 :disabled="loading"
               />
             </VCol>
-            <VCol md="6" cols="12">
+            <VCol cols="6">
               <VTextField
                 id="cmm-dialog-years-old"
                 v-model="item.years_old"
+                min="0"
                 label="Edad"
                 type="number"
-                min="0"
                 density="compact"
                 variant="outlined"
                 :disabled="loading"
               />
             </VCol>
-            <VCol md="6" cols="12">
+            <VCol cols="6">
               <VTextField
                 id="cmm-dialog-children"
-                v-model="item.number_of_children"
-                label="Núm. Hijos"
-                type="number"
+                v-model.number="item.number_of_children"
                 min="0"
+                step="1"
+                type="number"
                 density="compact"
+                label="Núm. Hijos"
                 variant="outlined"
                 :disabled="loading"
               />
             </VCol>
-            <VCol md="6" cols="12">
+            <VCol cols="6">
               <VSelect
                 id="cmm-dialog-marriage-status"
                 v-model="item.marriage_status"
-                :items="marriageStatuses"
-                label="Estado Civil"
                 density="compact"
                 variant="outlined"
                 :disabled="loading"
+                label="Estado Civil"
+                :items="marriageStatuses"
               />
             </VCol>
             <VCol cols="12">
               <VTextField
                 id="cmm-dialog-address"
                 v-model="item.address"
-                label="Dirección"
                 density="compact"
+                label="Dirección"
                 variant="outlined"
                 :disabled="loading"
               />
@@ -84,8 +116,8 @@
                 <MyUploadimageCrop
                   v-model="item.url_image"
                   v-model:url="item.url_image_s3"
-                  label="Foto"
                   :size="120"
+                  label="Foto"
                 />
                 <VAvatar
                   v-if="item.url_image_s3"
@@ -93,11 +125,7 @@
                   class="ml-4"
                   rounded="circle"
                 >
-                  <VImg
-                    :src="item.url_image_s3"
-                    alt="Vista previa"
-                    cover
-                  />
+                  <VImg cover alt="Vista previa" :src="item.url_image_s3" />
                 </VAvatar>
               </div>
             </VCol>
@@ -134,33 +162,42 @@
 
 <script setup lang="ts">
 interface MemberItem {
-  id?: number | null
-  cellphone?: string
-  years_old?: number | null
-  number_of_children?: number | null
-  marriage_status?: string
-  address?: string
-  url_image?: string
-  url_image_s3?: string
+  id?: number | null;
+  name?: string;
+  last_name?: string;
+  second_last_name?: string;
+  cellphone?: string;
+  years_old?: number | null;
+  number_of_children?: number | null;
+  marriage_status?: string;
+  address?: string;
+  url_image?: string;
+  url_image_s3?: string;
 }
 
-const props = withDefaults(defineProps<{
-  id?: string
-  member?: Record<string, unknown>
-  loading?: boolean
-}>(), {
-  id: "cmm-dialog-dlg",
-  loading: false,
-})
+const props = withDefaults(
+  defineProps<{
+    id?: string;
+    member?: Record<string, unknown>;
+    loading?: boolean;
+  }>(),
+  {
+    id: "cmm-dialog-dlg",
+    loading: false,
+  },
+);
 
 const emit = defineEmits<{
-  (e: "close"): void
-  (e: "save", val: Record<string, unknown>): void
-}>()
+  (e: "close"): void;
+  (e: "save", val: Record<string, unknown>): void;
+}>();
 
-const formRef = ref()
+const formRef = ref();
 const item = ref<MemberItem>({
   id: null,
+  name: "",
+  last_name: "",
+  second_last_name: "",
   cellphone: "",
   years_old: null,
   number_of_children: null,
@@ -168,7 +205,7 @@ const item = ref<MemberItem>({
   address: "",
   url_image: "",
   url_image_s3: "",
-})
+});
 
 const marriageStatuses = [
   "Soltero/a",
@@ -176,29 +213,30 @@ const marriageStatuses = [
   "Divorciado/a",
   "Viudo/a",
   "Unión Libre",
-]
+];
 
 watch(
   () => props.member,
   (val) => {
     if (val && Object.keys(val).length > 0) {
-      item.value = { ...item.value, ...val } as MemberItem
+      item.value = { ...item.value, ...val } as MemberItem;
     }
   },
   { immediate: true, deep: true },
-)
+);
 
 function close() {
-  emit("close")
+  emit("close");
 }
 
 async function save() {
-  if (loading) return
-  const form = formRef.value
+  if (props.loading) return;
+  const form = formRef.value;
   if (form) {
-    const { valid } = await form.validate()
-    if (!valid) return
+    const { valid } = await form.validate();
+    if (!valid) return;
   }
-  emit("save", { ...item.value })
+  const { url_image: _, ...payload } = item.value as Record<string, unknown>;
+  emit("save", payload);
 }
 </script>

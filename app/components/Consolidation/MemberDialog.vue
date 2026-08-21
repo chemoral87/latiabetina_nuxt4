@@ -348,6 +348,7 @@ async function save() {
   if (item.value.address !== addressText.value) {
     item.value.address = addressText.value;
   }
-  emit("save", { ...item.value });
+  const { url_image: _, ...payload } = item.value as Record<string, unknown>
+  emit("save", payload);
 }
 </script>

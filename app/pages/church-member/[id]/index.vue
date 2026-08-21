@@ -10,13 +10,6 @@
           <VCardTitle
             class="text-subtitle-1 font-weight-medium d-flex align-center"
           >
-            <MyUploadimageCrop
-              v-if="!loadingItem"
-              :url="member.url_image_s3"
-              @update:url="onPhotoUpload"
-              label="Foto"
-              :size="120"
-            />
             <VAvatar
               v-if="member.url_image_s3"
               size="48"
@@ -441,30 +434,6 @@ async function saveMember(payload: Record<string, unknown>) {
   } finally {
     saving.value = false;
   }
-}
-
-function onPhotoUpload(dataUrl: string | null) {
-  if (!dataUrl) return
-  saving.value = true
-  const id = route.params.id as string
-  ChurchMember.update<Record<string, unknown>>(id, { url_image: dataUrl })
-    .then((updated) => {
-      member.value = {
-        ...member.value,
-        ...((updated as Record<string, unknown>)?.data ?? {}),
-      }
-      notify.notify({ success: "Foto actualizada exitosamente" })
-    })
-    .catch((error) => {
-      notify.notify({
-        error:
-          (error as { response?: { data?: { message?: string } } }).response?.data
-            ?.message || "Error al actualizar la foto",
-      })
-    })
-    .finally(() => {
-      saving.value = false
-    })
 }
 </script>
 
