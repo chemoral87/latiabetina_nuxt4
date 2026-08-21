@@ -205,7 +205,7 @@ function getSectionConfig(sIdx: number) {
     y += getSectionHeight(props.sections[i])
   }
   if (sIdx > 0) {
-    y += sIdx * 20
+    y += sIdx * DEFAULT_SETTINGS.SECTION_TOP_MARGIN
   }
   const maxSectionWidth = Math.max(
     ...props.sections.map((s) => getSectionWidth(s)),

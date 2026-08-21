@@ -7,7 +7,7 @@
         x: 1,
         y: 3,
         width: subsectionWidth + 18,
-        height: subsectionHeight + 31,
+        height: subsectionHeight + 36,
         fill: 'black',
         stroke: borderColor,
         strokeWidth: borderWidth,
@@ -35,7 +35,7 @@
     <v-text
       :config="{
         x: 2,
-        y: -7,
+        y: 5,
         text: `${stats.withStatus}/${stats.total}`,
         fontSize: 10,
         fill: 'white',
@@ -48,7 +48,7 @@
     <v-text
       :config="{
         x: 36,
-        y: -7,
+        y: 5,
         text: `${stats.percent}%`,
         fontSize: 10,
         fill: percentageColor,
@@ -177,7 +177,7 @@ const maxColumns = computed(() => {
 const subsectionTitleConfig = computed(() => {
   return {
     x: 4,
-    y: 5,
+    y: 20,
     text: props.subsection.n || props.subsection.name,
     fontSize: 11,
     fill: "#fff",
@@ -237,7 +237,7 @@ const seats = computed<SeatRender[]>(() => {
             col: seat.c !== undefined ? seat.c : seat.col,
             category: seat.k || seat.category,
             x: colIdx * seatSpacing.value + DEFAULT_SETTINGS.SEAT_SIZE / 2 + 14,
-            y: rowIdx * seatSpacing.value + DEFAULT_SETTINGS.SEAT_SIZE / 2 + 20,
+            y: rowIdx * seatSpacing.value + DEFAULT_SETTINGS.SEAT_SIZE / 2 + 35,
             config: getSeatConfig(seat),
           };
 
@@ -329,7 +329,7 @@ onBeforeUnmount(() => {
 function getRowLabelConfig(rowIdx: number) {
   return {
     x: 3,
-    y: rowIdx * seatSpacing.value + DEFAULT_SETTINGS.SEAT_SIZE / 2 + 20,
+    y: rowIdx * seatSpacing.value + DEFAULT_SETTINGS.SEAT_SIZE / 2 + 35,
     text: (rowIdx + 1).toString(),
     fontSize: 8,
     fill: "yellow",

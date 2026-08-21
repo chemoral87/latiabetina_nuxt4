@@ -145,10 +145,9 @@ export const getPercentageColor = (percent: number): string => {
 export const DEFAULT_SETTINGS = {
   SEAT_SIZE: 12,
   SEATS_DISTANCE: 2,
-  SUBSECTION_SPACING: 30,
-  SECTION_TOP_MARGIN: 0,
-  SECTION_BOTTOM_MARGIN: 15,
-  SECTION_TOP_PADDING: 32,
+  SUBSECTION_SPACING: 25,
+  SECTION_TOP_MARGIN: 5,
+  SECTION_TOP_PADDING: 33,
   SECTION_SIDE_PADDING: 0,
   SECTION_BOTTOM_PADDING: 0,
   DRAG_THRESHOLD: 18, // px to differentiate drag from click/tap
