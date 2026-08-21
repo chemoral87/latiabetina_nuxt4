@@ -7,7 +7,7 @@
         x: 1,
         y: 3,
         width: subsectionWidth + 18,
-        height: subsectionHeight + 39,
+        height: subsectionHeight + DEFAULT_SETTINGS.SUBSECTION_RECT_EXTRA,
         fill: 'black',
         stroke: borderColor,
         strokeWidth: borderWidth,
@@ -344,7 +344,7 @@ function getColLabelConfig(colIdx: number) {
   const labelSpacing = seatSpacing.value;
   return {
     x: colIdx * labelSpacing + DEFAULT_SETTINGS.SEAT_SIZE / 2 + 11,
-    y: subsectionHeight.value + 37,
+    y: subsectionHeight.value + DEFAULT_SETTINGS.SUBSECTION_RECT_EXTRA - 6,
     text: String.fromCharCode(65 + colIdx),
     fontSize: 8,
     fill: "yellow",

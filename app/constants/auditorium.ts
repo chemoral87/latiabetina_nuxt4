@@ -151,6 +151,7 @@ export const DEFAULT_SETTINGS = {
   SECTION_SIDE_PADDING: 0,
   SECTION_BOTTOM_PADDING: 0,
   DRAG_THRESHOLD: 18, // px to differentiate drag from click/tap
+  SUBSECTION_RECT_EXTRA: 43, // extra height below seats for rect background + column labels
 };
 
 // ── Subsection border palette ────────────────────────────────────────────────
