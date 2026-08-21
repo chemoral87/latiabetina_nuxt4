@@ -10,7 +10,26 @@
           <VCardTitle
             class="text-subtitle-1 font-weight-medium d-flex align-center"
           >
-            <VIcon start color="primary">mdi-account</VIcon>
+            <MyUploadimageCrop
+              v-if="!loadingItem"
+              :url="member.url_image_s3"
+              @update:url="onPhotoUpload"
+              label="Foto"
+              :size="120"
+            />
+            <VAvatar
+              v-if="member.url_image_s3"
+              size="48"
+              class="mr-3"
+              tile
+            >
+              <VImg
+                :src="member.url_image_s3"
+                alt="Foto del miembro"
+                contain
+              />
+            </VAvatar>
+            <VIcon v-else start color="primary" size="large">mdi-account</VIcon>
             {{ fullName }}
             <VSpacer />
             <VChip size="small" :color="statusColor(member.status)">
@@ -18,16 +37,14 @@
             </VChip>
             <VBtn
               id="cmm-status-edit-btn"
-              icon
+              icon="mdi-pencil"
               size="x-small"
               variant="text"
               color="primary"
               rounded="circle"
               title="Cambiar estado"
               @click="statusDialog = true"
-            >
-              <VIcon size="small">mdi-pencil</VIcon>
-            </VBtn>
+            />
           </VCardTitle>
           <VDivider />
 
@@ -71,9 +88,9 @@
                   id="cmm-edit-btn"
                   color="primary"
                   variant="outlined"
+                  prepend-icon="mdi-pencil"
                   @click="editDialog = true"
                 >
-                  <VIcon start>mdi-pencil</VIcon>
                   Editar
                 </VBtn>
               </VCol>
@@ -149,53 +166,14 @@
           </VCardTitle>
           <VDivider />
           <VCardText>
-            <VDataTableServer
-              id="cmm-interactions-dt"
-              v-model:page="logsPage"
-              v-model:items-per-page="logsItemsPerPage"
-              v-model:sort-by="logsSortBy"
-              :headers="logsHeaders"
-              :items="logsResponse.data"
-              :items-length="logsResponse.total"
+            <ChurchMemberTrackingLogTable
+              id="cmm-tracking-log-table"
+              :response="logsResponse"
               :loading="loadingLogs"
-              density="compact"
-              class="elevation-1"
-              :items-per-page-options="[10, 15, 25]"
-              items-per-page-text="Filas por página"
-              @update:options="onLogsUpdateOptions"
-            >
-              <template #[`item.medium`]="{ item }">
-                <VChip size="small" variant="tonal" :color="mediumColor(item.medium)">
-                  {{ mediumLabel(item.medium) }}
-                </VChip>
-              </template>
-
-              <template #[`item.contact_date`]="{ item }">
-                {{ formatShortDate(item.contact_date) }}
-              </template>
-
-              <template #[`item.creator`]="{ item }">
-                {{ (item.creator as Record<string, unknown> | undefined)?.name || "N/A" }}
-              </template>
-
-              <template #[`item.classification`]="{ item }">
-                <VChip v-if="item.classification" size="small" variant="tonal" :color="classificationColor(item.classification)">
-                  {{ item.classification }}
-                </VChip>
-              </template>
-
-              <template #[`item.description`]="{ item }">
-                <span v-if="item.description">{{ item.description }}</span>
-                <span v-else class="text-grey">—</span>
-              </template>
-
-              <template #no-data>
-                <div class="text-center pa-4">
-                  <VIcon color="grey-lighten-1">mdi-history</VIcon>
-                  <div class="text-body-2 mt-1">Sin interacciones registradas</div>
-                </div>
-              </template>
-            </VDataTableServer>
+              @sorting="onLogsUpdateOptions"
+              @edit="editTrackingLog"
+              @delete="deleteTrackingLog"
+            />
           </VCardText>
         </VCard>
       </VCol>
@@ -218,12 +196,19 @@
       @save="saveMember"
       @close="editDialog = false"
     />
+
+    <ChurchMemberTrackingLogDialog
+      v-if="trackingLogDialog"
+      id="cmm-tracking-log-dlg"
+      :log="editingLog"
+      :loading="saving"
+      @close="trackingLogDialog = false"
+      @save="saveTrackingLog"
+    />
   </VContainer>
 </template>
 
 <script setup lang="ts">
-import { formatShortDate } from "~/utils/date"
-
 definePageMeta({
   title: "Detalle del Consolidado",
   icon: "mdi-account",
@@ -242,19 +227,9 @@ const statusDialog = ref(false);
 const editDialog = ref(false);
 const saving = ref(false);
 const loadingLogs = ref(false);
-const trackingLogs = ref<Record<string, unknown>[]>([]);
-
-const logsPage = ref(1);
-const logsItemsPerPage = ref(10);
-const logsSortBy = ref<{ key: string; order: string }[]>([{ key: "contact_date", order: "desc" }]);
 const logsResponse = ref({ data: [], total: 0 });
-const logsHeaders = [
-  { title: "Medio", value: "medium", sortable: false, align: "center" },
-  { title: "Clasificación", value: "classification", sortable: false, align: "center" },
-  { title: "Fecha", value: "contact_date", sortable: true },
-  { title: "Usuario", value: "creator", sortable: false },
-  { title: "Descripción", value: "description", sortable: false },
-];
+const trackingLogDialog = ref(false);
+const editingLog = ref<Record<string, unknown> | null>(null);
 
 {
   try {
@@ -334,8 +309,12 @@ async function openContact(
       medium,
       description: message.value.trim() || undefined,
     })
-  } catch {
-    // log failure should not block the action
+  } catch (error) {
+    notify.notify({
+      error:
+        (error as { response?: { data?: { message?: string } } }).response?.data
+          ?.message || "Error al registrar la interacción",
+    })
   } finally {
     if (medium === "whatsapp") {
       window.open(url, "_blank", "noopener")
@@ -351,15 +330,12 @@ async function fetchTrackingLogs() {
   if (!id) return
   loadingLogs.value = true
   try {
-    const params: Record<string, unknown> = {
-      page: logsPage.value,
-      itemsPerPage: logsItemsPerPage.value,
-    }
-    if (logsSortBy.value.length > 0) {
-      params.sortBy = [logsSortBy.value[0].key]
-      params.sortDesc = [logsSortBy.value[0].order === "desc"]
-    }
-    const data = await ChurchMember.trackingLogs<Record<string, unknown>>(id, params)
+    const data = await ChurchMember.trackingLogs<Record<string, unknown>>(id, {
+      page: 1,
+      itemsPerPage: 10,
+      sortBy: ["contact_date"],
+      sortDesc: [true],
+    })
     logsResponse.value = data as { data: unknown[]; total: number }
   } catch {
     logsResponse.value = { data: [], total: 0 }
@@ -369,44 +345,58 @@ async function fetchTrackingLogs() {
 }
 
 function onLogsUpdateOptions(opts: Record<string, unknown>) {
-  logsPage.value = (opts.page as number) ?? 1
-  logsItemsPerPage.value = (opts.itemsPerPage as number) ?? 10
-  if (Array.isArray(opts.sortBy)) {
-    const sb = opts.sortBy as ({ key: string; order: string } | string)[]
-    logsSortBy.value = sb.map((s) =>
-      typeof s === "string" ? { key: s, order: "asc" } : s,
-    )
-  }
   fetchTrackingLogs()
 }
 
-function mediumLabel(medium: unknown): string {
-  const labels: Record<string, string> = {
-    whatsapp: "WhatsApp",
-    sms: "Mensaje",
-    llamada: "Llamada",
-    presencial: "Presencial",
-  }
-  return labels[String(medium)] || String(medium ?? "—")
+function editTrackingLog(log: Record<string, unknown>) {
+  editingLog.value = { ...log }
+  trackingLogDialog.value = true
 }
 
-function mediumColor(medium: unknown): string {
-  const colors: Record<string, string> = {
-    whatsapp: "green",
-    sms: "teal",
-    llamada: "primary",
-    presencial: "amber",
+async function saveTrackingLog(payload: Record<string, unknown>) {
+  const id = route.params.id as string
+  const logId = editingLog.value?.id
+  if (!id || !logId) return
+  try {
+    saving.value = true
+    await ChurchMember.updateTrackingLog<Record<string, unknown>>(id, logId, payload)
+    editingLog.value = null
+    trackingLogDialog.value = false
+    await fetchTrackingLogs()
+    notify.notify({ success: "Interacción actualizada exitosamente" })
+  } catch (error) {
+    notify.notify({
+      error:
+        (error as { response?: { data?: { message?: string } } }).response?.data
+          ?.message || "Error al actualizar la interacción",
+    })
+  } finally {
+    saving.value = false
   }
-  return colors[String(medium)] ?? "grey"
 }
 
-function classificationColor(classification: unknown): string {
-  const colors: Record<string, string> = {
-    CONTESTA: "green",
-    "NO CONTESTA": "amber",
+async function deleteTrackingLog(log: Record<string, unknown>) {
+  const id = route.params.id as string
+  const logId = (log as Record<string, unknown> | undefined)?.id
+  if (!id || !logId) return
+  if (!confirm("¿Desea eliminar esta interacción?")) return
+  try {
+    saving.value = true
+    await ChurchMember.deleteTrackingLog<Record<string, unknown>>(id, logId)
+    await fetchTrackingLogs()
+    notify.notify({ success: "Interacción eliminada exitosamente" })
+  } catch (error) {
+    notify.notify({
+      error:
+        (error as { response?: { data?: { message?: string } } }).response?.data
+          ?.message || "Error al eliminar la interacción",
+    })
+  } finally {
+    saving.value = false
   }
-  return colors[String(classification)] ?? "grey"
 }
+
+
 
 onMounted(() => {
   route.meta.back = backRoute.value;
@@ -451,6 +441,30 @@ async function saveMember(payload: Record<string, unknown>) {
   } finally {
     saving.value = false;
   }
+}
+
+function onPhotoUpload(dataUrl: string | null) {
+  if (!dataUrl) return
+  saving.value = true
+  const id = route.params.id as string
+  ChurchMember.update<Record<string, unknown>>(id, { url_image: dataUrl })
+    .then((updated) => {
+      member.value = {
+        ...member.value,
+        ...((updated as Record<string, unknown>)?.data ?? {}),
+      }
+      notify.notify({ success: "Foto actualizada exitosamente" })
+    })
+    .catch((error) => {
+      notify.notify({
+        error:
+          (error as { response?: { data?: { message?: string } } }).response?.data
+            ?.message || "Error al actualizar la foto",
+      })
+    })
+    .finally(() => {
+      saving.value = false
+    })
 }
 </script>
 

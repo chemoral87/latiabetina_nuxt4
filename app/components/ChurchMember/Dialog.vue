@@ -79,6 +79,28 @@
                 :disabled="loading"
               />
             </VCol>
+            <VCol cols="12">
+              <div class="d-flex align-center">
+                <MyUploadimageCrop
+                  v-model="item.url_image"
+                  v-model:url="item.url_image_s3"
+                  label="Foto"
+                  :size="120"
+                />
+                <VAvatar
+                  v-if="item.url_image_s3"
+                  size="80"
+                  class="ml-4"
+                  rounded="circle"
+                >
+                  <VImg
+                    :src="item.url_image_s3"
+                    alt="Vista previa"
+                    cover
+                  />
+                </VAvatar>
+              </div>
+            </VCol>
           </VRow>
         </VForm>
       </VCardText>
@@ -100,7 +122,6 @@
           color="primary"
           :loading="loading"
           variant="elevated"
-          :disabled="loading"
           @click="save"
         >
           <VIcon start>mdi-content-save</VIcon>
@@ -119,6 +140,8 @@ interface MemberItem {
   number_of_children?: number | null
   marriage_status?: string
   address?: string
+  url_image?: string
+  url_image_s3?: string
 }
 
 const props = withDefaults(defineProps<{
@@ -135,6 +158,7 @@ const emit = defineEmits<{
   (e: "save", val: Record<string, unknown>): void
 }>()
 
+const formRef = ref()
 const item = ref<MemberItem>({
   id: null,
   cellphone: "",
@@ -142,6 +166,8 @@ const item = ref<MemberItem>({
   number_of_children: null,
   marriage_status: "",
   address: "",
+  url_image: "",
+  url_image_s3: "",
 })
 
 const marriageStatuses = [
@@ -166,7 +192,13 @@ function close() {
   emit("close")
 }
 
-function save() {
+async function save() {
+  if (loading) return
+  const form = formRef.value
+  if (form) {
+    const { valid } = await form.validate()
+    if (!valid) return
+  }
   emit("save", { ...item.value })
 }
 </script>

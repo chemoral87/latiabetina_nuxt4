@@ -151,7 +151,7 @@
       </VCol>
 
       <VCol cols="12">
-        <ConsolidationMemberTable id="det-members-dt" :loading="loading" :members="filteredMembers" @edit="editMember" @medal="openMedal" @status="openStatus" @track="openTracking" @delete="deleteMemberPrompt" />
+        <ConsolidationMemberTable id="det-members-dt" :loading="loading" :members="filteredMembers" @status-change="onInlineStatusChange" />
       </VCol>
 
       <VCol cols="12" class="d-flex justify-end">
@@ -185,7 +185,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeRouteLeave } from "vue-router"
+import { onBeforeRouteLeave, useRouter } from "vue-router"
 import { formatShortDateDash } from "~/utils/date"
 
 definePageMeta({
@@ -198,6 +198,7 @@ definePageMeta({
 })
 
 const route = useRoute()
+const router = useRouter()
 const { ConsoSheet, ChurchMember } = useRepository()
 const notify = useNotifyStore()
 const auth = useAuthStore()
@@ -224,7 +225,7 @@ const deleteData = ref<Record<string, unknown>>({})
 const members = ref<unknown[]>([])
 const users = ref<{ id: number | string; name: string }[]>([])
 const showConfirmDialog = ref(false)
-let resolveNext: ((val?: unknown) => void) | null = null
+let pendingRoute: { to: unknown } | null = null
 
 // Initial load (asyncData equivalent)
 {
@@ -237,12 +238,11 @@ let resolveNext: ((val?: unknown) => void) | null = null
   members.value = Array.isArray(dataMembers) ? dataMembers : (dataMembers as { data?: unknown[] })?.data || []
 }
 
-onBeforeRouteLeave((_to, _from, next) => {
+onBeforeRouteLeave((to, _from) => {
   if (isDirty.value) {
     showConfirmDialog.value = true
-    resolveNext = next as unknown as (val?: unknown) => void
-  } else {
-    next()
+    pendingRoute = { to }
+    return false
   }
 })
 
@@ -341,6 +341,26 @@ function onStatusChanged(updated: Record<string, unknown>) {
   }
 }
 
+async function onInlineStatusChange(item: Record<string, unknown>, status: string) {
+  try {
+    await ChurchMember.updateStatus(item.id as number, status)
+    const idx = members.value.findIndex(
+      (m) => (m as Record<string, unknown>).id === item.id,
+    )
+    if (idx !== -1) {
+      members.value[idx] = {
+        ...(members.value[idx] as Record<string, unknown>),
+        status,
+      }
+    }
+    notify.notify({ success: "Estado actualizado exitosamente" })
+  } catch (error) {
+    notify.notify({
+      error: (error as { response?: { data?: { message?: string } } }).response?.data?.message || "Error al actualizar estado",
+    })
+  }
+}
+
 function deleteMemberPrompt(item: unknown) {
   const m = item as Record<string, unknown>
   deleteData.value = {
@@ -398,30 +418,25 @@ function closeDialog() {
 async function confirmSave() {
   await saveSheet()
   showConfirmDialog.value = false
-  if (resolveNext) {
+  if (pendingRoute) {
     if (!isDirty.value) {
-      resolveNext()
-    } else {
-      resolveNext(false)
+      router.push(pendingRoute.to as any)
     }
-    resolveNext = null
+    pendingRoute = null
   }
 }
 
 function confirmDiscard() {
   showConfirmDialog.value = false
-  if (resolveNext) {
-    resolveNext()
-    resolveNext = null
+  if (pendingRoute) {
+    router.push(pendingRoute.to as string)
+    pendingRoute = null
   }
 }
 
 function confirmAbort() {
   showConfirmDialog.value = false
-  if (resolveNext) {
-    resolveNext(false)
-    resolveNext = null
-  }
+  pendingRoute = null
 }
 </script>
 

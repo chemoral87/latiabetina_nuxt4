@@ -115,6 +115,14 @@ export function useRepository() {
       createTrackingLog<T = unknown>(memberId: number | string, payload: Record<string, unknown>) {
         return withNotify($api<T>(`/church-member/${memberId}/tracking-logs`, { method: "POST", body: payload }))
       },
+      // PUT /church-member/{memberId}/tracking-logs/{logId}
+      updateTrackingLog<T = unknown>(memberId: number | string, logId: number | string, payload: Record<string, unknown>) {
+        return withNotify($api<T>(`/church-member/${memberId}/tracking-logs/${logId}`, { method: "PUT", body: payload }))
+      },
+      // DELETE /church-member/{memberId}/tracking-logs/{logId}
+      deleteTrackingLog<T = unknown>(memberId: number | string, logId: number | string) {
+        return withNotify($api<T>(`/church-member/${memberId}/tracking-logs/${logId}`, { method: "DELETE" }))
+      },
       // Clasificación (estado): PUT /church-member/{memberId}/status
       updateStatus<T = unknown>(memberId: number | string, status: string, reason?: string) {
         const payload: Record<string, unknown> = { status }

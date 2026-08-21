@@ -181,6 +181,8 @@ function clearImage() {
   blobCropped.value = null
   filename.value = ""
   if (fileInput.value) fileInput.value.value = ""
+  emit("update:modelValue", null)
+  emit("update:url", null)
 }
 
 function dataURItoBlob(dataURI: string): Blob {

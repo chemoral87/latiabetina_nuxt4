@@ -137,12 +137,31 @@
                     <span class="text-body-2 font-weight-medium">{{
                       suggestion.displayName
                     }}</span>
-                    <!-- <div class="text-caption text-grey-darken-2">
-                      {{ addressPartsRaw(suggestion) }}
-                    </div> -->
                   </VListItem>
                 </VList>
               </VMenu>
+            </VCol>
+            <VCol cols="12">
+              <div class="d-flex align-center">
+                <MyUploadimageCrop
+                  v-model="item.url_image"
+                  v-model:url="item.url_image_s3"
+                  label="Foto"
+                  :size="120"
+                />
+                <VAvatar
+                  v-if="item.url_image_s3"
+                  size="80"
+                  class="ml-4"
+                  rounded="circle"
+                >
+                  <VImg
+                    :src="item.url_image_s3"
+                    alt="Vista previa"
+                    cover
+                  />
+                </VAvatar>
+              </div>
             </VCol>
           </VRow>
         </VForm>
@@ -165,7 +184,6 @@
           color="primary"
           :loading="loading"
           variant="elevated"
-          :disabled="!isValid || loading"
           @click="save"
         >
           <VIcon start>mdi-content-save</VIcon>
@@ -193,6 +211,8 @@ interface MemberItem {
   cellphone?: string;
   address?: string;
   marriage_status?: string;
+  url_image?: string;
+  url_image_s3?: string;
 }
 
 const props = withDefaults(
@@ -224,6 +244,8 @@ const item = ref<MemberItem>({
   cellphone: "",
   address: "",
   marriage_status: "",
+  url_image: "",
+  url_image_s3: "",
 });
 
 const marriageStatuses = [
@@ -301,7 +323,6 @@ const iconTitle = computed(() =>
 const formTitle = computed(() =>
   isEditMode.value ? "Editar Miembro" : "Nuevo Miembro",
 );
-const isValid = computed(() => !!(item.value.name && item.value.last_name));
 
 watch(
   () => props.member,
@@ -317,8 +338,13 @@ function close() {
   emit("close");
 }
 
-function save() {
-  if (!isValid.value || props.loading) return;
+async function save() {
+  if (loading) return;
+  const form = formRef.value;
+  if (form) {
+    const { valid } = await form.validate();
+    if (!valid) return;
+  }
   if (item.value.address !== addressText.value) {
     item.value.address = addressText.value;
   }

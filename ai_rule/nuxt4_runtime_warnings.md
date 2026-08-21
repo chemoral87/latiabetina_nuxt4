@@ -2,8 +2,9 @@
 
 > **Goal:** avoid the recurring browser-console warnings/diagnostics that this app
 > has shipped before: the h3 `statusMessage` deprecation, the `NUXT_E1005`
-> "app initialization" diagnostic, and `VUE_ROUTER_R0121`. Each section below
-> gives the symptom, the root cause, and the rule that prevents a regression.
+> "app initialization" diagnostic, `VUE_ROUTER_R0121`, and `VUE_ROUTER_R0025`.
+> Each section below gives the symptom, the root cause, and the rule that
+> prevents a regression.
 
 ---
 
@@ -236,6 +237,91 @@ Vuetify component (e.g. `<VRow dense>`) triggers this warning at render.
 
 ---
 
+## 5. `[VUE_ROUTER_R0025] next() callback in navigation guards is deprecated`
+
+### Symptom (bad)
+
+Browser console warning when leaving a page with a dirty form:
+
+```
+[VUE_ROUTER_R0025] The `next()` callback in navigation guards is deprecated.
+├▶ fix: Return the value instead: `next()` becomes `return`, `next(false)` becomes `return false`, `next("/path")` becomes `return "/path"`.
+```
+
+### Root Cause
+
+Vue Router 4 deprecated the `next()` callback in navigation guards. The old
+pattern stored `next` in a variable to call later (for dirty-form confirmation
+dialogs), which triggers this warning.
+
+### Rule
+
+1. **Never pass or call `next` in `onBeforeRouteLeave`** (or any navigation
+   guard). Return a value instead:
+
+   ```ts
+   // ❌ BAD — triggers VUE_ROUTER_R0025
+   onBeforeRouteLeave((_to, _from, next) => {
+     if (isDirty.value) {
+       showConfirmDialog.value = true
+       resolveNext = next  // deprecated callback
+     } else {
+       next()
+     }
+   })
+
+   // ✅ GOOD — returns value, no warning
+   onBeforeRouteLeave((to, _from) => {
+     if (isDirty.value) {
+       showConfirmDialog.value = true
+       pendingRoute = { to }
+       return false  // cancels navigation
+     }
+     // implicit return = allow navigation
+   })
+   ```
+
+2. **For deferred navigation** (dirty-form confirm dialogs): store the target
+   route, return `false` to cancel, then use `router.push()` after the user
+   decides:
+
+   ```ts
+   let pendingRoute: { to: unknown } | null = null
+
+   onBeforeRouteLeave((to, _from) => {
+     if (isDirty.value) {
+       showConfirmDialog.value = true
+       pendingRoute = { to }
+       return false
+     }
+   })
+
+   function confirmDiscard() {
+     showConfirmDialog.value = false
+     if (pendingRoute) {
+       router.push(pendingRoute.to as any)
+       pendingRoute = null
+     }
+   }
+
+   function confirmAbort() {
+     showConfirmDialog.value = false
+     pendingRoute = null  // stay on page
+   }
+   ```
+
+3. **Import `useRouter`** when using this pattern:
+   ```ts
+   import { onBeforeRouteLeave, useRouter } from "vue-router"
+   const router = useRouter()
+   ```
+
+4. **Checklist addition:** `grep -rn "next()" app/pages/` should return 0 hits
+   in navigation guards. Any `beforeRouteLeave` / `onBeforeRouteLeave` using
+   `next` must be converted to the return-value pattern.
+
+---
+
 ## Checklist (run before merging changes)
 
 1. `grep -rn "statusMessage" app/` → **0 hits**.
@@ -248,6 +334,9 @@ Vuetify component (e.g. `<VRow dense>`) triggers this warning at render.
    `try/catch`).
 5. Any new plugin touches `window` or constructs network clients → add
    `.client` suffix + config guard.
+6. No `next()` callback in `onBeforeRouteLeave` or `beforeRouteLeave` guards —
+   use return values instead (`grep -rn "next()" app/pages/` → 0 hits in
+   navigation guards).
 
 ## References
 
