@@ -1,10 +1,5 @@
 <template>
-  <VDialog
-    :id="id"
-    persistent
-    max-width="600px"
-    :model-value="true"
-  >
+  <VDialog :id="id" persistent max-width="600px" :model-value="true">
     <VCard>
       <VCardTitle
         class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center"
@@ -155,11 +150,7 @@
                   class="ml-4"
                   rounded="circle"
                 >
-                  <VImg
-                    :src="item.url_image_s3"
-                    alt="Vista previa"
-                    cover
-                  />
+                  <VImg :src="item.url_image_s3" alt="Vista previa" cover />
                 </VAvatar>
               </div>
             </VCol>
@@ -197,6 +188,7 @@
 <script setup lang="ts">
 import {
   searchAddresses,
+  buildAddressWithCity,
   type AddressSuggestion,
 } from "~/services/address-service";
 
@@ -284,7 +276,7 @@ function onAddressText(query: string) {
 }
 
 function onAddressPick(suggestion: AddressSuggestion) {
-  item.value.address = suggestion.address;
+  item.value.address = buildAddressWithCity(suggestion);
   addressMenu.value = false;
 }
 
@@ -339,7 +331,7 @@ function close() {
 }
 
 async function save() {
-  if (loading) return;
+  if (props.loading) return;
   const form = formRef.value;
   if (form) {
     const { valid } = await form.validate();
@@ -348,7 +340,7 @@ async function save() {
   if (item.value.address !== addressText.value) {
     item.value.address = addressText.value;
   }
-  const { url_image: _, ...payload } = item.value as Record<string, unknown>
+  const { url_image: _, ...payload } = item.value as Record<string, unknown>;
   emit("save", payload);
 }
 </script>
