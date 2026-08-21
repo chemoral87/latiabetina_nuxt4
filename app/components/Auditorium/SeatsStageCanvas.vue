@@ -339,7 +339,9 @@ function getSectionHeight(section: Section) {
       DEFAULT_SETTINGS.SECTION_BOTTOM_PADDING +
       40
     )
-  const extraHeightPadding = 40
+  // Column labels sit at subsectionHeight + 37 (fontSize 8 ≈ 10px tall),
+  // plus the rect at y=3 with height subsectionHeight+39 → total ≈ +47
+  const extraHeightPadding = 47
   return (
     maxRows * seatSpacing.value -
     DEFAULT_SETTINGS.SEATS_DISTANCE +
