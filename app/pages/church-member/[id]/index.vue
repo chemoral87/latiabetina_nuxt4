@@ -138,12 +138,7 @@
                   Llamar
                 </VBtn>
               </VCol>
-              <VCol cols="12" sm="auto" class="ml-sm-auto d-flex justify-center justify-sm-end">
-                <VBtn color="primary" variant="outlined" @click="goBack">
-                  <VIcon start>mdi-arrow-left</VIcon>
-                  Volver
-                </VBtn>
-              </VCol>
+
             </VRow>
           </VCardActions>
         </VCard>
@@ -169,6 +164,15 @@
             />
           </VCardText>
         </VCard>
+      </VCol>
+    </VRow>
+
+    <VRow justify="center">
+      <VCol md="8" cols="12" class="d-flex justify-end">
+        <VBtn id="cmm-back-btn" color="primary" variant="outlined" @click="goBack">
+          <VIcon start>mdi-arrow-left</VIcon>
+          Volver
+        </VBtn>
       </VCol>
     </VRow>
 

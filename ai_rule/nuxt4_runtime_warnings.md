@@ -408,6 +408,68 @@ $table->index(['col1', 'col2'], 'idx_corto');
 
 ---
 
+## 8. `ReferenceError: <propName> is not defined` — props in `<script setup>` must use `props.`
+
+### Symptom (bad)
+
+Browser console:
+
+```
+[Vue warn]: Unhandled error during execution of native event handler
+  at <VBtn id="con-memberdialog-save-btn" ...>
+  ...
+MemberDialog.vue:334 Uncaught (in promise) ReferenceError: loading is not defined
+    at save (MemberDialog.vue:334:3)
+```
+
+### Root Cause
+
+In `<script setup>`, props defined with `defineProps` are accessible only through
+the returned object (e.g. `const props = defineProps<{ … }>()`). Unlike Options
+API, bare prop names are **not** available as standalone identifiers inside
+functions (`save`, watchers, callbacks, etc.). Referencing `loading` instead of
+`props.loading` throws a `ReferenceError` at runtime.
+
+This is especially easy to miss because template expressions **can** use bare prop
+names (Vue compiles them correctly), so the error only appears when accessing a
+prop from a `<script setup>` function.
+
+### Rule
+
+1. **Always access props through the `props` object** in `<script setup>`:
+
+   ```vue
+   <script setup lang="ts">
+   const props = defineProps<{
+     loading?: boolean;
+     member?: Record<string, unknown>;
+   }>()
+
+   async function save() {
+     if (props.loading) return  // ✅ correct
+     // if (loading) return      // ❌ ReferenceError
+   }
+   ```
+
+2. **Destructuring is safe only for values that don't change.** Since props are
+   reactive, prefer `props.xxx` inside functions that run over time. Destructured
+   values lose reactivity:
+
+   ```ts
+   const { loading } = props  // ❌ loses reactivity — stale after parent updates
+   const props = defineProps<{ loading: boolean }>()
+   // then use props.loading everywhere
+   ```
+
+3. **Naming pattern:** When a component has many props, keep `const props =
+   defineProps<{…}>()` and always prefix with `props.`. This prevents the entire
+   class of `ReferenceError` bugs.
+
+4. **Checklist addition:** `grep -rn "if (loading)" app/components/` should
+   return 0 hits — any prop used bare inside a function is a bug.
+
+---
+
 ## Checklist (run before merging changes)
 
 1. `grep -rn "statusMessage" app/` → **0 hits**.
@@ -426,6 +488,9 @@ $table->index(['col1', 'col2'], 'idx_corto');
 7. Pages with `VDataTableServer` must not manually call the same fetch function
    that `@update:options` triggers — only one initial fetch path.
 8. Never run `migrate:fresh` or `migrate:refresh` — always use `php artisan migrate`.
+9. In `<script setup>` functions, always access props via `props.xxx`, never bare
+   names like `loading` — bare usage causes `ReferenceError` at runtime (template
+   is fine, script functions are not).
 
 ## References
 

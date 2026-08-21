@@ -14,7 +14,7 @@
       :loading="loading"
       :items-length="total"
       :row-props="rowProps"
-      class="elevation-1 xwidth800"
+      class="elevation-1 xwidth600"
       :items-per-page-options="[10, 15, 30]"
       items-per-page-text="Filas por página"
       @update:options="onUpdateOptions"

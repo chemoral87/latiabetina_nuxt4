@@ -162,7 +162,7 @@
       </VCol>
     </VRow>
 
-    <ConsolidationMemberDialog v-if="dialog" id="det-member-dlg" :member="member" :loading="saving" @save="saveMember" @close="closeDialog" />
+    <ChurchMemberDialog v-if="dialog" id="det-member-dlg" :member="member" :loading="saving" @save="saveMember" @close="closeDialog" />
 
     <DialogDelete v-if="dialogDelete" id="det-member-delete-dlg" :loading="deleting" :dialog="deleteData" @ok="confirmDelete" @close="dialogDelete = false" />
 

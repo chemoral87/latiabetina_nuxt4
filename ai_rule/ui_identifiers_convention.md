@@ -207,7 +207,7 @@ ids intact for the many pages that use them:
 | Component | Default id | Contextual id used in `consolidation/[id]/details.vue` |
 |-----------|-----------|--------------------------------------------------------|
 | `Consolidation/MemberTable.vue` | `con-membe-members-dt-1` | `det-members-dt` |
-| `Consolidation/MemberDialog.vue` | `con-membe-dlg-1` | `det-member-dlg` |
+| `ChurchMember/Dialog.vue` | `cmm-dialog-dlg` | `det-member-dlg` |
 | `DialogDelete.vue` | `dialo-delet-dlg-1` | `det-member-delete-dlg` |
 | `DialogConfirm.vue` | `dialo-confi-dlg-1` | `det-sheet-dirty-dlg` |
 | `Consolidation/Dialog.vue` | `con-dialo-dlg-1` | `cnsld-sheet-dlg-1` (used in `consolidation/index.vue`) |
@@ -219,7 +219,7 @@ Example usage in the details page:
 
 ```vue
 <ConsolidationMemberTable id="det-members-dt" :loading="loading" :members="filteredMembers" @edit="editMember" @delete="deleteMemberPrompt" />
-<ConsolidationMemberDialog v-if="dialog" id="det-member-dlg" :member="member" :loading="saving" @save="saveMember" @close="closeDialog" />
+<ChurchMemberDialog v-if="dialog" id="det-member-dlg" :member="member" :loading="saving" @save="saveMember" @close="closeDialog" />
 <DialogDelete v-if="dialogDelete" id="det-member-delete-dlg" :loading="deleting" :dialog="deleteData" @ok="confirmDelete" @close="dialogDelete = false" />
 <DialogConfirm id="det-sheet-dirty-dlg" ... />
 ```

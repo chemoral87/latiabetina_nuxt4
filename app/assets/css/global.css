@@ -23,7 +23,12 @@
   background-color: rgba(var(--v-theme-on-surface), 0.03) !important;
 }
 
-.v-theme--light .v-table--striped-odd > .v-table__wrapper > table > tbody > tr:nth-child(odd) {
+.v-theme--light
+  .v-table--striped-odd
+  > .v-table__wrapper
+  > table
+  > tbody
+  > tr:nth-child(odd) {
   background-color: #f5fbff !important;
 }
 
@@ -35,19 +40,60 @@
    wrapper (`overflow: auto` by default in Vuetify 4) scrolls horizontally.
    Apply alongside `elevation-1` on VDataTableServer, e.g.
    class="elevation-1 xwidth1200". */
-.xwidth800 .v-table__wrapper table { min-width: 800px !important; }
-.xwidth900 .v-table__wrapper table { min-width: 900px !important; }
-.xwidth1000 .v-table__wrapper table { min-width: 1000px !important; }
-.xwidth1100 .v-table__wrapper table { min-width: 1100px !important; }
-.xwidth1200 .v-table__wrapper table { min-width: 1200px !important; }
-.xwidth1300 .v-table__wrapper table { min-width: 1300px !important; }
-.xwidth1400 .v-table__wrapper table { min-width: 1400px !important; }
-.xwidth1500 .v-table__wrapper table { min-width: 1500px !important; }
-.xwidth1600 .v-table__wrapper table { min-width: 1600px !important; }
-.xwidth1700 .v-table__wrapper table { min-width: 1700px !important; }
-.xwidth1800 .v-table__wrapper table { min-width: 1800px !important; }
-.xwidth1900 .v-table__wrapper table { min-width: 1900px !important; }
-.xwidth2000 .v-table__wrapper table { min-width: 2000px !important; }
+.xwidth400 .v-table__wrapper table {
+  min-width: 400px !important;
+}
+.xwidth450 .v-table__wrapper table {
+  min-width: 450px !important;
+}
+.xwidth500 .v-table__wrapper table {
+  min-width: 500px !important;
+}
+.xwidth600 .v-table__wrapper table {
+  min-width: 600px !important;
+}
+.xwidth700 .v-table__wrapper table {
+  min-width: 700px !important;
+}
+.xwidth800 .v-table__wrapper table {
+  min-width: 800px !important;
+}
+.xwidth900 .v-table__wrapper table {
+  min-width: 900px !important;
+}
+.xwidth1000 .v-table__wrapper table {
+  min-width: 1000px !important;
+}
+.xwidth1100 .v-table__wrapper table {
+  min-width: 1100px !important;
+}
+.xwidth1200 .v-table__wrapper table {
+  min-width: 1200px !important;
+}
+.xwidth1300 .v-table__wrapper table {
+  min-width: 1300px !important;
+}
+.xwidth1400 .v-table__wrapper table {
+  min-width: 1400px !important;
+}
+.xwidth1500 .v-table__wrapper table {
+  min-width: 1500px !important;
+}
+.xwidth1600 .v-table__wrapper table {
+  min-width: 1600px !important;
+}
+.xwidth1700 .v-table__wrapper table {
+  min-width: 1700px !important;
+}
+.xwidth1800 .v-table__wrapper table {
+  min-width: 1800px !important;
+}
+.xwidth1900 .v-table__wrapper table {
+  min-width: 1900px !important;
+}
+.xwidth2000 .v-table__wrapper table {
+  min-width: 2000px !important;
+}
 
 /* Reduced horizontal cell padding for all data tables — port of the rule from
    latiabetina_aui/assets/global.css. Td with `pa-1` (e.g. a tight edit-action
@@ -65,7 +111,6 @@
 .row-highlight td {
   animation: row-highlight-flash var(--row-highlight-animation-ms) ease-out;
 }
-
 
 @keyframes row-highlight-flash {
   0% {

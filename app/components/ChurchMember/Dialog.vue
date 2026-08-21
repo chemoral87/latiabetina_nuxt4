@@ -4,8 +4,8 @@
       <VCardTitle
         class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center"
       >
-        <VIcon start size="small" color="primary">mdi-pencil</VIcon>
-        Editar Miembro
+        <VIcon start size="small" color="primary">{{ iconTitle }}</VIcon>
+        {{ formTitle }}
         <VSpacer />
         <VBtn
           id="cmm-dialog-close-btn"
@@ -38,7 +38,7 @@
                 id="cmm-dialog-last-name"
                 v-model="item.last_name"
                 required
-                label="Apellido"
+                label="Apellido Paterno"
                 density="compact"
                 variant="outlined"
                 :disabled="loading"
@@ -52,7 +52,7 @@
                 density="compact"
                 variant="outlined"
                 :disabled="loading"
-                label="Segundo Apellido"
+                label="Apellido Materno"
               />
             </VCol>
             <VCol cols="6">
@@ -69,25 +69,26 @@
               <VTextField
                 id="cmm-dialog-years-old"
                 v-model="item.years_old"
-                min="0"
                 label="Edad"
-                type="number"
                 density="compact"
                 variant="outlined"
                 :disabled="loading"
+                inputmode="numeric"
+                :rules="numericRules"
+                @keypress="onlyDigits"
               />
             </VCol>
             <VCol cols="6">
               <VTextField
                 id="cmm-dialog-children"
-                v-model.number="item.number_of_children"
-                min="0"
-                step="1"
-                type="number"
+                v-model="item.number_of_children"
                 density="compact"
                 label="Núm. Hijos"
                 variant="outlined"
                 :disabled="loading"
+                inputmode="numeric"
+                :rules="numericRules"
+                @keypress="onlyDigits"
               />
             </VCol>
             <VCol cols="6">
@@ -102,14 +103,40 @@
               />
             </VCol>
             <VCol cols="12">
-              <VTextField
-                id="cmm-dialog-address"
-                v-model="item.address"
-                density="compact"
-                label="Dirección"
-                variant="outlined"
-                :disabled="loading"
-              />
+              <VMenu
+                v-model="addressMenu"
+                max-height="310"
+                location="bottom start"
+                :disabled="!addressSuggestions.length"
+              >
+                <template #activator="{ props: activatorProps }">
+                  <VTextField
+                    id="cmm-dialog-address"
+                    v-model="addressText"
+                    v-bind="activatorProps"
+                    clearable
+                    density="compact"
+                    label="Dirección"
+                    variant="outlined"
+                    :disabled="loading"
+                    :loading="addressSearching"
+                    @click:clear="onAddressClear"
+                    @update:model-value="onAddressText"
+                  />
+                </template>
+                <VList density="compact">
+                  <VListItem
+                    v-for="(suggestion, i) in addressSuggestions"
+                    :key="i"
+                    :active="false"
+                    @click="onAddressPick(suggestion)"
+                  >
+                    <span class="text-body-2 font-weight-medium">{{
+                      suggestion.displayName
+                    }}</span>
+                  </VListItem>
+                </VList>
+              </VMenu>
             </VCol>
             <VCol cols="12">
               <div class="d-flex align-center">
@@ -161,8 +188,15 @@
 </template>
 
 <script setup lang="ts">
+import {
+  searchAddresses,
+  buildAddressWithCity,
+  type AddressSuggestion,
+} from "~/services/address-service";
+
 interface MemberItem {
   id?: number | null;
+  conso_sheet_id?: number | string | null;
   name?: string;
   last_name?: string;
   second_last_name?: string;
@@ -195,6 +229,7 @@ const emit = defineEmits<{
 const formRef = ref();
 const item = ref<MemberItem>({
   id: null,
+  conso_sheet_id: null,
   name: "",
   last_name: "",
   second_last_name: "",
@@ -215,6 +250,65 @@ const marriageStatuses = [
   "Unión Libre",
 ];
 
+/* ── Address autocomplete ─────────────────────────────────── */
+
+const addressSuggestions = ref<AddressSuggestion[]>([]);
+const addressText = ref("");
+const addressMenu = ref(false);
+const addressSearching = ref(false);
+let addressDebounce: ReturnType<typeof setTimeout> | null = null;
+
+function onAddressText(query: string) {
+  if (addressDebounce) clearTimeout(addressDebounce);
+  if (!query || query.trim().length < 3) {
+    addressSuggestions.value = [];
+    addressMenu.value = false;
+    return;
+  }
+  addressDebounce = setTimeout(async () => {
+    try {
+      addressSearching.value = true;
+      addressSuggestions.value = await searchAddresses(query);
+      addressMenu.value = true;
+    } catch {
+      addressSuggestions.value = [];
+      addressMenu.value = false;
+    } finally {
+      addressSearching.value = false;
+    }
+  }, 500);
+}
+
+function onAddressPick(suggestion: AddressSuggestion) {
+  item.value.address = buildAddressWithCity(suggestion);
+  addressMenu.value = false;
+}
+
+function onAddressClear() {
+  item.value.address = "";
+  addressSuggestions.value = [];
+  addressMenu.value = false;
+}
+
+watch(
+  () => item.value.address,
+  (val) => {
+    if (typeof val === "string") addressText.value = val || "";
+  },
+);
+
+/* ── Computed ─────────────────────────────────────────────── */
+
+const isEditMode = computed(() => !!item.value.id);
+const iconTitle = computed(() =>
+  isEditMode.value ? "mdi-pencil" : "mdi-plus",
+);
+const formTitle = computed(() =>
+  isEditMode.value ? "Editar Miembro" : "Nuevo Miembro",
+);
+
+/* ── Props watcher ────────────────────────────────────────── */
+
 watch(
   () => props.member,
   (val) => {
@@ -224,6 +318,23 @@ watch(
   },
   { immediate: true, deep: true },
 );
+
+/* ── Validation ───────────────────────────────────────────── */
+
+function onlyDigits(e: KeyboardEvent) {
+  if (!/\d/.test(e.key)) e.preventDefault();
+}
+
+const numericRules = [
+  (v: string | number | null) =>
+    v === null ||
+    v === "" ||
+    String(v).trim() === "" ||
+    /^\d+$/.test(String(v)) ||
+    "Solo se permiten números",
+];
+
+/* ── Actions ──────────────────────────────────────────────── */
 
 function close() {
   emit("close");
@@ -236,8 +347,23 @@ async function save() {
     const { valid } = await form.validate();
     if (!valid) return;
   }
-  const { url_image, url_image_s3, ...rest } = item.value as Record<string, unknown>;
+  if (item.value.address !== addressText.value) {
+    item.value.address = addressText.value;
+  }
+  const { url_image, url_image_s3, ...rest } = item.value as Record<
+    string,
+    unknown
+  >;
   const payload = { ...rest };
+  if (payload.years_old !== null && payload.years_old !== "") {
+    payload.years_old = Number(payload.years_old);
+  }
+  if (
+    payload.number_of_children !== null &&
+    payload.number_of_children !== ""
+  ) {
+    payload.number_of_children = Number(payload.number_of_children);
+  }
   if (url_image instanceof Blob) {
     payload.url_image = url_image_s3;
   }
