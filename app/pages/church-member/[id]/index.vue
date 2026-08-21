@@ -10,31 +10,19 @@
           <VCardTitle
             class="text-subtitle-1 font-weight-medium d-flex align-center"
           >
-            <VAvatar
-              v-if="member.url_image_s3"
-              size="48"
-              class="mr-3"
-              tile
-            >
-              <VImg
-                :src="member.url_image_s3"
-                alt="Foto del miembro"
-                contain
-              />
-            </VAvatar>
-            <VIcon v-else start color="primary" size="large">mdi-account</VIcon>
-            {{ fullName }}
+            <VIcon start size="large" color="primary">mdi-account</VIcon>
+            <span class="text-subtitle-2 member-name">{{ fullName }}</span>
             <VSpacer />
             <VChip size="small" :color="statusColor(member.status)">
               {{ statusLabel(member.status) }}
             </VChip>
             <VBtn
               id="cmm-status-edit-btn"
-              icon="mdi-pencil"
               size="x-small"
               variant="text"
               color="primary"
               rounded="circle"
+              icon="mdi-pencil"
               title="Cambiar estado"
               @click="statusDialog = true"
             />
@@ -43,49 +31,78 @@
 
           <VCardText>
             <VRow density="compact">
-              <VCol md="3" sm="6" cols="12" class="text-body-2">
-                <VIcon start size="small" color="grey-darken-1"
-                  >mdi-phone</VIcon
-                >
-                <span class="font-weight-medium">Celular:</span>
-                {{ member.cellphone || "—" }}
+              <VCol md="7" cols="7">
+                <VRow density="compact">
+                  <VCol sm="6" cols="12" class="text-body-2">
+                    <VIcon start size="small" color="grey-darken-1"
+                      >mdi-phone</VIcon
+                    >
+                    <span class="font-weight-medium">Celular:</span>
+                    {{ member.cellphone || "—" }}
+                  </VCol>
+                  <VCol sm="6" cols="12" class="text-body-2">
+                    <VIcon start size="small" color="grey-darken-1"
+                      >mdi-calendar-account</VIcon
+                    >
+                    <span class="font-weight-medium">Edad:</span>
+                    {{ member.years_old ?? "—" }}
+                  </VCol>
+                  <VCol sm="6" cols="12" class="text-body-2">
+                    <VIcon start size="small" color="grey-darken-1"
+                      >mdi-account-multiple</VIcon
+                    >
+                    <span class="font-weight-medium">Hijos:</span>
+                    {{ member.number_of_children ?? "—" }}
+                  </VCol>
+                  <VCol sm="6" cols="12" class="text-body-2">
+                    <VIcon start size="small" color="grey-darken-1"
+                      >mdi-ring</VIcon
+                    >
+                    <span class="font-weight-medium">Estado civil:</span>
+                    {{ member.marriage_status || "—" }}
+                  </VCol>
+                  <VCol cols="12" class="text-body-2 d-flex d-md-none">
+                    <VIcon start size="small" color="grey-darken-1"
+                      >mdi-map-marker</VIcon
+                    >
+                    <span class="font-weight-medium">Dirección:</span>
+                    {{ member.address || "—" }}
+                  </VCol>
+                  <VCol cols="12">
+                    <VBtn
+                      id="cmm-edit-btn"
+                      color="primary"
+                      variant="outlined"
+                      prepend-icon="mdi-pencil"
+                      @click="editDialog = true"
+                    >
+                      Editar
+                    </VBtn>
+                  </VCol>
+                </VRow>
               </VCol>
-              <VCol md="3" sm="6" cols="12" class="text-body-2">
-                <VIcon start size="small" color="grey-darken-1"
-                  >mdi-calendar-account</VIcon
-                >
-                <span class="font-weight-medium">Edad:</span>
-                {{ member.years_old ?? "—" }}
-              </VCol>
-              <VCol md="3" sm="6" cols="12" class="text-body-2">
-                <VIcon start size="small" color="grey-darken-1"
-                  >mdi-account-multiple</VIcon
-                >
-                <span class="font-weight-medium">Hijos:</span>
-                {{ member.number_of_children ?? "—" }}
-              </VCol>
-              <VCol md="3" sm="6" cols="12" class="text-body-2">
-                <VIcon start size="small" color="grey-darken-1">mdi-ring</VIcon>
-                <span class="font-weight-medium">Estado civil:</span>
-                {{ member.marriage_status || "—" }}
-              </VCol>
-              <VCol cols="12" class="text-body-2">
-                <VIcon start size="small" color="grey-darken-1"
-                  >mdi-map-marker</VIcon
-                >
-                <span class="font-weight-medium">Dirección:</span>
-                {{ member.address || "—" }}
-              </VCol>
-              <VCol cols="12">
-                <VBtn
-                  id="cmm-edit-btn"
-                  color="primary"
-                  variant="outlined"
-                  prepend-icon="mdi-pencil"
+              <VCol md="5" cols="5" class="d-flex justify-center align-center">
+                <VAvatar
+                  v-if="member.url_image_s3"
+                  size="120"
+                  rounded="circle"
+                  style="cursor: pointer"
                   @click="editDialog = true"
                 >
-                  Editar
-                </VBtn>
+                  <VImg
+                    cover
+                    alt="Foto del miembro"
+                    :src="member.url_image_s3"
+                  />
+                </VAvatar>
+                <VIcon
+                  v-else
+                  size="80"
+                  color="grey-lighten-1"
+                  style="cursor: pointer"
+                  @click="editDialog = true"
+                  >mdi-account-circle</VIcon
+                >
               </VCol>
             </VRow>
           </VCardText>
@@ -106,7 +123,12 @@
                   append-inner-icon="mdi-message-text-outline"
                 />
               </VCol>
-              <VCol v-if="phoneDigits" cols="12" sm="auto" class="d-flex flex-wrap justify-center justify-sm-end">
+              <VCol
+                v-if="phoneDigits"
+                cols="12"
+                sm="auto"
+                class="d-flex flex-wrap justify-center justify-sm-end"
+              >
                 <VBtn
                   id="cmm-whatsapp-btn"
                   class="ma-1"
@@ -138,7 +160,6 @@
                   Llamar
                 </VBtn>
               </VCol>
-
             </VRow>
           </VCardActions>
         </VCard>
@@ -156,11 +177,11 @@
           <VCardText>
             <ChurchMemberTrackingLogTable
               id="cmm-tracking-log-table"
-              :response="logsResponse"
               :loading="loadingLogs"
-              @sorting="onLogsUpdateOptions"
+              :response="logsResponse"
               @edit="editTrackingLog"
               @delete="deleteTrackingLog"
+              @sorting="onLogsUpdateOptions"
             />
           </VCardText>
         </VCard>
@@ -169,7 +190,12 @@
 
     <VRow justify="center">
       <VCol md="8" cols="12" class="d-flex justify-end">
-        <VBtn id="cmm-back-btn" color="primary" variant="outlined" @click="goBack">
+        <VBtn
+          id="cmm-back-btn"
+          color="primary"
+          variant="outlined"
+          @click="goBack"
+        >
           <VIcon start>mdi-arrow-left</VIcon>
           Volver
         </VBtn>
@@ -197,10 +223,10 @@
     <ChurchMemberTrackingLogDialog
       v-if="trackingLogDialog"
       id="cmm-tracking-log-dlg"
-      :log="editingLog"
       :loading="saving"
-      @close="trackingLogDialog = false"
+      :log="editingLog"
       @save="saveTrackingLog"
+      @close="trackingLogDialog = false"
     />
   </VContainer>
 </template>
@@ -297,102 +323,104 @@ async function openContact(
   medium: "whatsapp" | "sms" | "llamada",
   url: string | null,
 ) {
-  if (!url) return
-  const id = route.params.id as string
+  if (!url) return;
+  const id = route.params.id as string;
   try {
     await ChurchMember.createTrackingLog<Record<string, unknown>>(id, {
       contact_datetime: new Date().toISOString().slice(0, 19).replace("T", " "),
       medium,
       description: message.value.trim() || undefined,
-    })
+    });
   } catch (error) {
     notify.notify({
       error:
         (error as { response?: { data?: { message?: string } } }).response?.data
           ?.message || "Error al registrar la interacción",
-    })
+    });
   } finally {
     if (medium === "whatsapp") {
-      window.open(url, "_blank", "noopener")
+      window.open(url, "_blank", "noopener");
     } else {
-      window.location.href = url
+      window.location.href = url;
     }
   }
-  await fetchTrackingLogs()
+  await fetchTrackingLogs();
 }
 
 async function fetchTrackingLogs() {
-  const id = route.params.id as string
-  if (!id) return
-  loadingLogs.value = true
+  const id = route.params.id as string;
+  if (!id) return;
+  loadingLogs.value = true;
   try {
     const data = await ChurchMember.trackingLogs<Record<string, unknown>>(id, {
       page: 1,
       itemsPerPage: 10,
       sortBy: ["contact_datetime"],
       sortDesc: [true],
-    })
-    logsResponse.value = data as { data: unknown[]; total: number }
+    });
+    logsResponse.value = data as { data: unknown[]; total: number };
   } catch {
-    logsResponse.value = { data: [], total: 0 }
+    logsResponse.value = { data: [], total: 0 };
   } finally {
-    loadingLogs.value = false
+    loadingLogs.value = false;
   }
 }
 
 function onLogsUpdateOptions(opts: Record<string, unknown>) {
-  fetchTrackingLogs()
+  fetchTrackingLogs();
 }
 
 function editTrackingLog(log: Record<string, unknown>) {
-  editingLog.value = { ...log }
-  trackingLogDialog.value = true
+  editingLog.value = { ...log };
+  trackingLogDialog.value = true;
 }
 
 async function saveTrackingLog(payload: Record<string, unknown>) {
-  const id = route.params.id as string
-  const logId = editingLog.value?.id
-  if (!id || !logId) return
+  const id = route.params.id as string;
+  const logId = editingLog.value?.id;
+  if (!id || !logId) return;
   try {
-    saving.value = true
-    await ChurchMember.updateTrackingLog<Record<string, unknown>>(id, logId, payload)
-    editingLog.value = null
-    trackingLogDialog.value = false
-    await fetchTrackingLogs()
-    notify.notify({ success: "Interacción actualizada exitosamente" })
+    saving.value = true;
+    await ChurchMember.updateTrackingLog<Record<string, unknown>>(
+      id,
+      logId,
+      payload,
+    );
+    editingLog.value = null;
+    trackingLogDialog.value = false;
+    await fetchTrackingLogs();
+    notify.notify({ success: "Interacción actualizada exitosamente" });
   } catch (error) {
     notify.notify({
       error:
         (error as { response?: { data?: { message?: string } } }).response?.data
           ?.message || "Error al actualizar la interacción",
-    })
+    });
   } finally {
-    saving.value = false
+    saving.value = false;
   }
 }
 
 async function deleteTrackingLog(log: Record<string, unknown>) {
-  const id = route.params.id as string
-  const logId = (log as Record<string, unknown> | undefined)?.id
-  if (!id || !logId) return
-  if (!confirm("¿Desea eliminar esta interacción?")) return
+  const id = route.params.id as string;
+  const logId = (log as Record<string, unknown> | undefined)?.id;
+  if (!id || !logId) return;
+  if (!confirm("¿Desea eliminar esta interacción?")) return;
   try {
-    saving.value = true
-    await ChurchMember.deleteTrackingLog<Record<string, unknown>>(id, logId)
-    await fetchTrackingLogs()
-    notify.notify({ success: "Interacción eliminada exitosamente" })
+    saving.value = true;
+    await ChurchMember.deleteTrackingLog<Record<string, unknown>>(id, logId);
+    await fetchTrackingLogs();
+    notify.notify({ success: "Interacción eliminada exitosamente" });
   } catch (error) {
     notify.notify({
       error:
         (error as { response?: { data?: { message?: string } } }).response?.data
           ?.message || "Error al eliminar la interacción",
-    })
+    });
   } finally {
-    saving.value = false
+    saving.value = false;
   }
 }
-
-
 
 onMounted(() => {
   route.meta.back = backRoute.value;
@@ -440,4 +468,11 @@ async function saveMember(payload: Record<string, unknown>) {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.member-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+</style>
