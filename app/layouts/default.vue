@@ -87,7 +87,7 @@
         v-if="backRoute"
         id="lay-back-btn"
         icon
-        class="mx-2"
+        class="mx-1"
         size="small"
         rounded="circle"
         variant="outlined"
@@ -96,10 +96,12 @@
         <VIcon size="x-large">mdi-arrow-left</VIcon>
       </VBtn>
       <VIcon v-if="icon" class="mr-0">{{ icon }}</VIcon>
-      <VToolbarTitle id="lay-title" class="mx-1 pl-0">{{
-        title
-      }}</VToolbarTitle>
-      <VSpacer />
+      <VToolbarTitle
+        id="lay-title"
+        class="mx-1 px-0 text-truncate"
+        style="flex: 1 1 0%; min-width: 0"
+        >{{ title }}</VToolbarTitle
+      >
       <ClientOnly>
         <VBtn
           v-if="!auth.loggedIn && showLogin"
