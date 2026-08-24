@@ -1,12 +1,9 @@
 <template>
-  <VDialog
-    :id="id"
-    persistent
-    max-width="600px"
-    :model-value="true"
-  >
+  <VDialog :id="id" persistent max-width="600px" :model-value="true">
     <VCard>
-      <VCardTitle class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center">
+      <VCardTitle
+        class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center"
+      >
         <VIcon start size="small" color="primary">mdi-pencil</VIcon>
         Editar Interacción
         <VSpacer />
@@ -27,18 +24,18 @@
             <VCol md="6" cols="12">
               <MyDatePicker
                 v-model="contactDate"
-                label="Fecha de contacto"
                 density="compact"
                 variant="outlined"
                 :disabled="loading"
+                label="Fecha de contacto"
               />
             </VCol>
             <VCol md="6" cols="12">
               <VTextField
                 id="cmm-tlg-contact-time"
                 v-model="contactTime"
-                label="Hora"
                 type="time"
+                label="Hora"
                 density="compact"
                 variant="outlined"
                 :disabled="loading"
@@ -48,34 +45,35 @@
               <VSelect
                 id="cmm-tlg-medium"
                 v-model="item.medium"
-                :items="mediumOptions"
                 label="Medio"
                 density="compact"
                 variant="outlined"
                 :disabled="loading"
+                :items="mediumOptions"
               />
             </VCol>
             <VCol md="6" cols="12">
               <VSelect
                 id="cmm-tlg-classification"
                 v-model="item.classification"
-                :items="classificationOptions"
-                label="Clasificación"
+                clearable
                 density="compact"
                 variant="outlined"
                 :disabled="loading"
+                label="Clasificación"
+                :items="classificationOptions"
               />
             </VCol>
             <VCol cols="12">
               <VTextarea
                 id="cmm-tlg-description"
                 v-model="item.description"
-                label="Descripción"
+                rows="3"
+                auto-grow
                 density="compact"
                 variant="outlined"
                 :disabled="loading"
-                rows="3"
-                auto-grow
+                label="Descripción"
               />
             </VCol>
           </VRow>
@@ -112,27 +110,30 @@
 
 <script setup lang="ts">
 interface LogItem {
-  id?: number | null
-  contact_datetime?: string
-  medium?: string
-  classification?: string
-  description?: string
-  creator?: Record<string, unknown>
+  id?: number | null;
+  contact_datetime?: string;
+  medium?: string;
+  classification?: string;
+  description?: string;
+  creator?: Record<string, unknown>;
 }
 
-const props = withDefaults(defineProps<{
-  id?: string
-  log?: Record<string, unknown>
-  loading?: boolean
-}>(), {
-  id: "cmm-tracking-log-dlg",
-  loading: false,
-})
+const props = withDefaults(
+  defineProps<{
+    id?: string;
+    log?: Record<string, unknown>;
+    loading?: boolean;
+  }>(),
+  {
+    id: "cmm-tracking-log-dlg",
+    loading: false,
+  },
+);
 
 const emit = defineEmits<{
-  (e: "close"): void
-  (e: "save", val: Record<string, unknown>): void
-}>()
+  (e: "close"): void;
+  (e: "save", val: Record<string, unknown>): void;
+}>();
 
 const item = ref<LogItem>({
   id: null,
@@ -140,51 +141,51 @@ const item = ref<LogItem>({
   medium: "whatsapp",
   classification: "",
   description: "",
-})
+});
 
-const contactDate = ref<string | null>(null)
-const contactTime = ref("")
+const contactDate = ref<string | null>(null);
+const contactTime = ref("");
 
 const mediumOptions = [
   { title: "WhatsApp", value: "whatsapp" },
   { title: "Llamada", value: "llamada" },
   { title: "Presencial", value: "presencial" },
   { title: "SMS", value: "sms" },
-]
+];
 
 const classificationOptions = [
   { title: "Contesta", value: "CONTESTA" },
   { title: "No contesta", value: "NO CONTESTA" },
-]
+];
 
 watch(
   () => props.log,
   (val) => {
     if (val && Object.keys(val).length > 0) {
-      item.value = { ...item.value, ...val } as LogItem
+      item.value = { ...item.value, ...val } as LogItem;
       if (val.contact_datetime) {
-        const dt = String(val.contact_datetime)
-        const parts = dt.includes("T") ? dt.split("T") : dt.split(" ")
-        contactDate.value = parts[0] || null
-        contactTime.value = parts[1]?.substring(0, 5) || ""
+        const dt = String(val.contact_datetime);
+        const parts = dt.includes("T") ? dt.split("T") : dt.split(" ");
+        contactDate.value = parts[0] || null;
+        contactTime.value = parts[1]?.substring(0, 5) || "";
       }
     }
   },
   { immediate: true, deep: true },
-)
+);
 
 function close() {
-  emit("close")
+  emit("close");
 }
 
 function save() {
-  const payload = { ...item.value }
+  const payload = { ...item.value };
   if (contactDate.value) {
     payload.contact_datetime = contactTime.value
       ? `${contactDate.value} ${contactTime.value}:00`
-      : `${contactDate.value} 00:00:00`
+      : `${contactDate.value} 00:00:00`;
   }
-  emit("save", payload)
+  emit("save", payload);
 }
 </script>
 
