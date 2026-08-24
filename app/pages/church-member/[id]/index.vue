@@ -339,7 +339,7 @@ async function openContact(
   const id = route.params.id as string;
   try {
     await ChurchMember.createTrackingLog<Record<string, unknown>>(id, {
-      contact_datetime: new Date().toISOString().slice(0, 19).replace("T", " "),
+      contact_datetime: localDateTimeString(),
       medium,
       description: message.value.trim() || undefined,
     });
@@ -357,6 +357,11 @@ async function openContact(
     }
   }
   await fetchTrackingLogs();
+}
+
+function localDateTimeString(date = new Date()): string {
+  const pad = (value: number) => String(value).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
 }
 
 async function fetchTrackingLogs() {
@@ -439,9 +444,13 @@ onMounted(() => {
 });
 
 const backRoute = computed(() => {
-  if (route.query.from === "tracking") return "/tracking";
-  return "/tracking";
-});
+  const from = route.query.from as string | undefined
+  if (from === "tracking") return "/tracking"
+  if (typeof from === "string" && from.startsWith("/")) {
+    return safeInternalRedirect(from, "/tracking")
+  }
+  return "/tracking"
+})
 
 function goBack() {
   navigateTo(backRoute.value);

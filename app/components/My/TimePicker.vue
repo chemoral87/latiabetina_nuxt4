@@ -2,7 +2,7 @@
   <VMenu id="cmp-my-time-picker" ref="timeMenuRef" v-model="timeMenu" :close-on-content-click="false" transition="scale-transition" offset-y :disabled="disabled">
     <template #activator="{ props: menuProps }">
       <VTextField
-        id="my-timep-label-tf-1"
+        :id="props.id"
         ref="inputField"
         :model-value="displayValue"
         :label="label"
@@ -58,6 +58,7 @@
 
 <script setup lang="ts">
 const props = withDefaults(defineProps<{
+  id?: string
   modelValue?: string | null
   label?: string
   errorMessages?: string | string[]
@@ -66,6 +67,7 @@ const props = withDefaults(defineProps<{
   outlined?: boolean
   hideDetails?: boolean
 }>(), {
+  id: "my-timep-label-tf-1",
   modelValue: null,
   label: "Hora",
   errorMessages: () => [],

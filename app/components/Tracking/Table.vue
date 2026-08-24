@@ -25,7 +25,7 @@
       </template>
 
       <template #[`item.last_contacted`]="{ item }">
-        {{ formatDate(item.last_contacted) }}
+        {{ formatShortDateTime12h(String(item.last_contacted ?? "")) || "—" }}
       </template>
 
       <template #[`item.org_id`]="{ item }">
@@ -61,6 +61,8 @@
 </template>
 
 <script setup lang="ts">
+import { formatShortDateTime12h } from "~/utils/date"
+
 interface Header {
   title: string;
   value: string;
@@ -118,17 +120,6 @@ function statusColor(status: unknown): string {
 function orgLabel(id: unknown): string {
   const found = props.orgs.find((o) => String(o.id) === String(id));
   return found ? found.name : "—";
-}
-
-function formatDate(value: unknown): string {
-  if (!value) return "—";
-  const date = new Date(String(value));
-  if (Number.isNaN(date.getTime())) return String(value);
-  return date.toLocaleDateString("es-ES", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
 }
 
 const headers = computed<Header[]>(() => {

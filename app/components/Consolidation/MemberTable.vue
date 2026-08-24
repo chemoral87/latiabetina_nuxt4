@@ -38,7 +38,7 @@
             rounded="circle"
             variant="outlined"
             title="Ver miembro"
-            :href="`/church-member/${item.id}`"
+            :href="`/church-member/${item.id}?from=${encodeURIComponent(route.fullPath)}`"
           >
             <VIcon size="x-large">mdi-eye</VIcon>
           </VBtn>
@@ -66,6 +66,8 @@
 </template>
 
 <script setup lang="ts">
+const route = useRoute()
+
 interface Header {
   title: string;
   value: string;

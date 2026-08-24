@@ -2,14 +2,14 @@
   <div id="cmp-church-member-tracking-log-table">
     <VDataTableServer
       v-model:page="page"
-      v-model:items-per-page="itemsPerPage"
       v-model:sort-by="sortBy"
-      :headers="headers"
+      v-model:items-per-page="itemsPerPage"
       :items="items"
-      :items-length="total"
-      :loading="loading"
       density="compact"
-      class="elevation-1"
+      :headers="headers"
+      :loading="loading"
+      :items-length="total"
+      class="elevation-1 xwidth1000"
       :items-per-page-options="[10, 15, 25]"
       items-per-page-text="Filas por página"
       @update:options="onUpdateOptions"
@@ -21,7 +21,7 @@
       </template>
 
       <template #[`item.contact_datetime`]="{ item }">
-        {{ formatShortDate(item.contact_datetime) }}
+        {{ formatShortDateTime12h(String(item.contact_datetime ?? "")) || "—" }}
       </template>
 
       <template #[`item.creator`]="{ item }">
@@ -45,10 +45,10 @@
           icon
           class="ma-1"
           size="small"
-          color="primary"
-          variant="outlined"
-          rounded="circle"
           title="Editar"
+          color="primary"
+          rounded="circle"
+          variant="outlined"
           @click="emit('edit', item)"
         >
           <VIcon size="x-large">mdi-pencil</VIcon>
@@ -59,9 +59,9 @@
           class="ma-1"
           size="small"
           color="error"
-          variant="outlined"
           rounded="circle"
           title="Eliminar"
+          variant="outlined"
           @click="emit('delete', item)"
         >
           <VIcon size="x-large">mdi-delete</VIcon>
@@ -79,7 +79,7 @@
 </template>
 
 <script setup lang="ts">
-import { formatShortDate } from "~/utils/date"
+import { formatShortDateTime12h } from "~/utils/date"
 import { rowPropsFor } from "~/composables/useRowHighlight"
 
 interface Header {
@@ -122,7 +122,7 @@ const headers = computed<Header[]>(() => [
   { title: "Fecha", value: "contact_datetime", sortable: true },
   { title: "Usuario", value: "creator", sortable: false },
   { title: "Descripción", value: "description", sortable: false },
-  { title: "Acciones", value: "actions", sortable: false, align: "center", width: "100px" },
+  { title: "Acciones", value: "actions", sortable: false, align: "center", width: "110px" },
 ])
 
 const rowProps = rowPropsFor(() => null, () => null)
@@ -167,17 +167,6 @@ function classificationColor(classification: unknown): string {
     "NO CONTESTA": "amber",
   }
   return colors[String(classification)] ?? "grey"
-}
-
-function formatShortDate(value: unknown): string {
-  if (!value) return "—"
-  const date = new Date(String(value))
-  if (Number.isNaN(date.getTime())) return String(value)
-  return date.toLocaleDateString("es-ES", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  })
 }
 </script>
 

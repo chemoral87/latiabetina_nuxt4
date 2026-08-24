@@ -65,6 +65,20 @@ export function formatShortDateTime(value?: string | null): string {
 }
 
 /**
+ * Formats an ISO datetime (e.g. "2026-08-24 13:05:00" or "2026-08-24T13:05:00")
+ * as "DD MMM YYYY h:mm am/pm" (es), e.g. "24 Ago 2026 1:05 pm".
+ * String-based, no timezone shifts. Uses formatShortDate + formatHourTime.
+ */
+export function formatShortDateTime12h(value?: string | null): string {
+  if (!value) return ""
+  const datePart = formatShortDate(String(value))
+  if (!datePart) return String(value)
+  const m = String(value).match(/(?:T|\s)(\d{1,2}):(\d{2})/)
+  if (!m) return datePart
+  return `${datePart} ${formatHourTime(`${m[1]}:${m[2]}`)}`
+}
+
+/**
  * Formats a "HH:mm" (24h) time string as "hh:mm am/pm".
  * Mirrors the old `$moment(time, 'HH:mm').format("hh:mm a")`.
  */

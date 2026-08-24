@@ -31,13 +31,12 @@
               />
             </VCol>
             <VCol md="6" cols="12">
-              <VTextField
+              <MyTimePicker
                 id="cmm-tlg-contact-time"
                 v-model="contactTime"
-                type="time"
                 label="Hora"
-                density="compact"
-                variant="outlined"
+                dense
+                outlined
                 :disabled="loading"
               />
             </VCol>
