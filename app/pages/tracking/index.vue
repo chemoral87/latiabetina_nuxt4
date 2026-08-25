@@ -74,6 +74,7 @@ definePageMeta({
 const { ChurchMember } = useRepository()
 const notify = useNotifyStore()
 const auth = useAuthStore()
+const { statuses: statusOptions } = useChurchMemberStatus()
 
 const filterInput = ref("")
 const filterTerm = ref("")
@@ -82,12 +83,7 @@ const filterOrgId = ref<string | number | null>(null)
 const loading = ref(false)
 const members = ref<Record<string, unknown>[]>([])
 
-const statusOptions = [
-  { title: "ACTIVO", value: "ACTIVO" },
-  { title: "VISITA", value: "VISITA" },
-  { title: "NO CONTESTA", value: "NO CONTESTA" },
-  { title: "NO MOLESTAR", value: "NO MOLESTAR" },
-]
+
 
 const showOrgSelect = computed(
   () => auth.orgIdsFor("conso-sheet-index").length > 1,

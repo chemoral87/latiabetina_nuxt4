@@ -141,6 +141,28 @@
   color: rgb(var(--v-theme-error));
 }
 
+/* Church member status background for VSelect / VChip — extracted from Consolidation/MemberTable.vue */
+.status-bg-activo .v-field,
+.status-bg-activo.v-field {
+  background-color: rgba(76, 175, 80, 0.12) !important;
+  border-color: rgba(76, 175, 80, 0.4) !important;
+}
+.status-bg-no-contesta .v-field,
+.status-bg-no-contesta.v-field {
+  background-color: rgba(255, 193, 7, 0.12) !important;
+  border-color: rgba(255, 193, 7, 0.4) !important;
+}
+.status-bg-no-molestar .v-field,
+.status-bg-no-molestar.v-field {
+  background-color: rgba(244, 67, 54, 0.12) !important;
+  border-color: rgba(244, 67, 54, 0.4) !important;
+}
+.status-bg-visita .v-field,
+.status-bg-visita.v-field {
+  background-color: rgba(33, 150, 243, 0.12) !important;
+  border-color: rgba(33, 150, 243, 0.4) !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .row-highlight td,
   .row-removing {

@@ -138,6 +138,14 @@ export class MenuService {
         });
       }
 
+      if (this.hasPermission("whatsapp-index")) {
+        menu.push({
+          icon: "mdi-whatsapp",
+          title: "WhatsApp",
+          to: "/whatsapp",
+        });
+      }
+
       if (this.hasPermission("ukelele-course")) {
         menu.push({
           icon: "mdi-guitar-acoustic",

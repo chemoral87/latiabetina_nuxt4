@@ -42,6 +42,19 @@
           >
             <VIcon size="x-large">mdi-eye</VIcon>
           </VBtn>
+          <VBtn
+            id="con-membertable-delete-btn"
+            icon
+            class="ma-1"
+            size="small"
+            color="error"
+            rounded="circle"
+            variant="outlined"
+            title="Eliminar miembro"
+            @click="emit('delete', item)"
+          >
+            <VIcon size="x-large">mdi-delete</VIcon>
+          </VBtn>
         </div>
       </template>
 
@@ -66,7 +79,10 @@
 </template>
 
 <script setup lang="ts">
+import { useChurchMemberStatus } from "~/composables/useChurchMemberStatus"
+
 const route = useRoute()
+const { statuses, statusBgClass } = useChurchMemberStatus()
 
 interface Header {
   title: string;
@@ -91,40 +107,8 @@ withDefaults(
 
 const emit = defineEmits<{
   (e: "status-change", item: unknown, status: string): void;
+  (e: "delete", item: unknown): void;
 }>();
-
-const statuses = [
-  { title: "Activo", value: "ACTIVO" },
-  { title: "No contesta", value: "NO CONTESTA" },
-  { title: "No molestar", value: "NO MOLESTAR" },
-  { title: "Visita", value: "VISITA" },
-];
-
-const statusColors: Record<string, string> = {
-  ACTIVO: "green",
-  "NO CONTESTA": "amber",
-  "NO MOLESTAR": "red",
-  VISITA: "blue",
-};
-
-function statusLabel(status: unknown): string {
-  const found = statuses.find((s) => s.value === status);
-  return found ? found.title : String(status ?? "Sin estado");
-}
-
-function statusColor(status: unknown): string {
-  return statusColors[String(status)] ?? "grey";
-}
-
-function statusBgClass(status: unknown): string {
-  const map: Record<string, string> = {
-    ACTIVO: "status-bg-activo",
-    "NO CONTESTA": "status-bg-no-contesta",
-    "NO MOLESTAR": "status-bg-no-molestar",
-    VISITA: "status-bg-visita",
-  };
-  return map[String(status)] ?? "";
-}
 
 function onStatusChange(item: Record<string, unknown>, status: string) {
   emit("status-change", item, status);
@@ -151,7 +135,7 @@ const headers: Header[] = [
     value: "actions",
     sortable: false,
     align: "center",
-    width: "80px",
+    width: "120px",
   },
 ];
 </script>
@@ -159,25 +143,5 @@ const headers: Header[] = [
 <style scoped>
 .status-select {
   max-width: 170px;
-}
-
-:deep(.status-bg-activo.v-field) {
-  background-color: rgba(76, 175, 80, 0.12) !important;
-  border-color: rgba(76, 175, 80, 0.4) !important;
-}
-
-:deep(.status-bg-no-contesta.v-field) {
-  background-color: rgba(255, 193, 7, 0.12) !important;
-  border-color: rgba(255, 193, 7, 0.4) !important;
-}
-
-:deep(.status-bg-no-molestar.v-field) {
-  background-color: rgba(244, 67, 54, 0.12) !important;
-  border-color: rgba(244, 67, 54, 0.4) !important;
-}
-
-:deep(.status-bg-visita.v-field) {
-  background-color: rgba(33, 150, 243, 0.12) !important;
-  border-color: rgba(33, 150, 243, 0.4) !important;
 }
 </style>

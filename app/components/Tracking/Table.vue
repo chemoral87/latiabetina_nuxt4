@@ -62,6 +62,7 @@
 
 <script setup lang="ts">
 import { formatShortDateTime12h } from "~/utils/date"
+import { useChurchMemberStatus } from "~/composables/useChurchMemberStatus"
 
 interface Header {
   title: string;
@@ -91,31 +92,9 @@ const emit = defineEmits<{
 }>();
 
 const auth = useAuthStore();
+const { statusLabel, statusColor } = useChurchMemberStatus()
 
 const singleOrg = computed(() => auth.hasSingleOrgFor("conso-sheet-index"));
-
-const statuses = [
-  { title: "Activo", value: "ACTIVO" },
-  { title: "No contesta", value: "NO CONTESTA" },
-  { title: "No molestar", value: "NO MOLESTAR" },
-  { title: "Visita", value: "VISITA" },
-];
-
-const statusColors: Record<string, string> = {
-  ACTIVO: "green",
-  "NO CONTESTA": "amber",
-  "NO MOLESTAR": "red",
-  VISITA: "blue",
-};
-
-function statusLabel(status: unknown): string {
-  const found = statuses.find((s) => s.value === status);
-  return found ? found.title : String(status ?? "Sin estado");
-}
-
-function statusColor(status: unknown): string {
-  return statusColors[String(status)] ?? "grey";
-}
 
 function orgLabel(id: unknown): string {
   const found = props.orgs.find((o) => String(o.id) === String(id));

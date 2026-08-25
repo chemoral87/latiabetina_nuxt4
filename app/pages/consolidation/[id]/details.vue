@@ -151,7 +151,13 @@
       </VCol>
 
       <VCol cols="12">
-        <ConsolidationMemberTable id="det-members-dt" :loading="loading" :members="filteredMembers" @status-change="onInlineStatusChange" />
+        <ConsolidationMemberTable
+          id="det-members-dt"
+          :loading="loading"
+          :members="filteredMembers"
+          @status-change="onInlineStatusChange"
+          @delete="deleteMemberPrompt"
+        />
       </VCol>
 
       <VCol cols="12" class="d-flex justify-end">

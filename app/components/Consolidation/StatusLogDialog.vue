@@ -102,6 +102,7 @@
 <script setup lang="ts">
 import { useVrules } from "~/composables/useVrules"
 import { formatShortDate } from "~/utils/date"
+import { useChurchMemberStatus } from "~/composables/useChurchMemberStatus"
 
 const props = withDefaults(defineProps<{
   id?: string
@@ -120,6 +121,7 @@ const emit = defineEmits<{
 const { ChurchMember } = useRepository()
 const notify = useNotifyStore()
 const { vrules } = useVrules()
+const { statuses, statusLabel, statusColor } = useChurchMemberStatus()
 
 const formRef = ref()
 const saving = ref(false)
@@ -127,29 +129,6 @@ const loading = ref(false)
 const logs = ref<Record<string, unknown>[]>([])
 const selectedStatus = ref("ACTIVO")
 const reason = ref("")
-
-const statuses = [
-  { title: "Activo", value: "ACTIVO" },
-  { title: "No contesta", value: "NO CONTESTA" },
-  { title: "No molestar", value: "NO MOLESTAR" },
-  { title: "Visita", value: "VISITA" },
-]
-
-const statusColors: Record<string, string> = {
-  ACTIVO: "green",
-  "NO CONTESTA": "amber",
-  "NO MOLESTAR": "red",
-  VISITA: "blue",
-}
-
-function statusLabel(status: unknown): string {
-  const found = statuses.find((s) => s.value === status)
-  return found ? found.title : String(status ?? "Sin estado")
-}
-
-function statusColor(status: unknown): string {
-  return statusColors[String(status)] ?? "grey"
-}
 
 const memberId = computed(() => (props.member as Record<string, unknown> | undefined)?.id as number | undefined)
 const memberName = computed(() => {

@@ -255,6 +255,7 @@ definePageMeta({
 const route = useRoute();
 const { ChurchMember } = useRepository();
 const notify = useNotifyStore();
+const { statusLabel, statusColor } = useChurchMemberStatus();
 
 const loadingItem = ref(true);
 const member = ref<Record<string, unknown>>({});
@@ -279,35 +280,12 @@ const editingLog = ref<Record<string, unknown> | null>(null);
   }
 }
 
-const statusOptions = [
-  { title: "Activo", value: "ACTIVO" },
-  { title: "No contesta", value: "NO CONTESTA" },
-  { title: "No molestar", value: "NO MOLESTAR" },
-  { title: "Visita", value: "VISITA" },
-];
-
-const statusColors: Record<string, string> = {
-  ACTIVO: "green",
-  "NO CONTESTA": "amber",
-  "NO MOLESTAR": "red",
-  VISITA: "blue",
-};
-
 const fullName = computed(
   () =>
     [member.value.name, member.value.last_name, member.value.second_last_name]
       .filter(Boolean)
       .join(" ") || "Miembro",
 );
-
-function statusLabel(status: unknown): string {
-  const found = statusOptions.find((s) => s.value === status);
-  return found ? found.title : String(status ?? "—");
-}
-
-function statusColor(status: unknown): string {
-  return statusColors[String(status)] ?? "grey";
-}
 
 const phoneDigits = computed(() =>
   String(member.value.cellphone || "").replace(/\D/g, ""),

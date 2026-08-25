@@ -142,5 +142,23 @@ export function useRepository() {
         return withNotify($api<T>(`/church-member/${memberId}/medals`, { method: "POST", body: payload }))
       },
     },
+    WhatsApp: {
+      // GET /whatsapp/logs?sender=&receiver=&success=&per_page=&page=  (WhatsAppController.php:70)
+      logs<T = unknown>(params?: Record<string, unknown>) {
+        return withNotify($api<T>("/whatsapp/logs", { params }))
+      },
+      // GET /whatsapp/status  (WhatsAppController.php:21)
+      status<T = unknown>() {
+        return withNotify($api<T>("/whatsapp/status"))
+      },
+      // POST /whatsapp/send  (WhatsAppController.php:35) -> dispatches SendWhatsAppMessageJob.php:34
+      send<T = unknown>(payload: Record<string, unknown>) {
+        return withNotify($api<T>("/whatsapp/send", { method: "POST", body: payload }))
+      },
+      // POST /whatsapp/logs/{id}/resend  (WhatsAppController.php:94)
+      resend<T = unknown>(id: number | string) {
+        return withNotify($api<T>(`/whatsapp/logs/${id}/resend`, { method: "POST" }))
+      },
+    },
   }
 }
