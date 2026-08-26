@@ -2,14 +2,16 @@
   <VContainer :fluid="true" class="breathing-container">
     <!-- Header -->
     <VRow justify="center" density="comfortable">
-      <VCol cols="12">
+      <VCol cols="12" class="py-1">
         <div class="text-center">
-          <h1 class="font-weight-medium py-0 my-0">Ejercicio de Res</h1>
+          <h1 class="text-h5 text-sm-h4 font-weight-medium py-0 my-0">
+            Ejercicio de Res
+          </h1>
         </div>
       </VCol>
     </VRow>
     <!-- Área de animación y controles -->
-    <VRow class="mb-3" justify="center" density="comfortable">
+    <VRow class="mb-1" justify="center" density="comfortable">
       <VCol cols="12">
         <VCard
           id="rel-animation-card"
@@ -19,157 +21,164 @@
           color="grey-lighten-5"
         >
           <VRow align="center" density="comfortable">
-            <!-- Botón de control -->
+            <!-- Controles: botón, indicadores de estado y temporizador -->
+            <VCol cols="7">
+              <div class="d-flex flex-column ga-2">
+                <!-- Botón de control -->
+                <div>
+                  <VBtn
+                    id="rel-toggle-btn"
+                    rounded
+                    size="small"
+                    elevation="2"
+                    :color="isPlaying ? 'error' : 'primary'"
+                    @click="toggleAnimation"
+                  >
+                    <VIcon start size="small">
+                      {{ isPlaying ? "mdi-stop" : "mdi-play" }}
+                    </VIcon>
+                    {{ isPlaying ? "Detener" : "Comenzar" }}
+                  </VBtn>
+                </div>
+
+                <!-- Indicadores de estado -->
+                <div class="d-flex flex-wrap gap-1">
+                  <VChip
+                    v-if="initialContract > 0"
+                    id="rel-status-initial-contract"
+                    size="small"
+                    class="mr-1 mb-1"
+                    :color="
+                      animationState === 'initialContract'
+                        ? 'orange-darken-2'
+                        : 'grey-lighten-1'
+                    "
+                  >
+                    <VIcon start size="x-small">mdi-arrow-collapse-all</VIcon>
+                    Contracción inicial
+                    <span
+                      v-if="animationState === 'initialContract'"
+                      class="rel-countdown"
+                      >{{ stepRemainingDisplay }}</span
+                    >
+                  </VChip>
+                  <VChip
+                    v-if="expansion > 0"
+                    id="rel-status-expansion"
+                    size="small"
+                    class="mr-1 mb-1"
+                    :color="
+                      animationState === 'expansion'
+                        ? 'blue-darken-2'
+                        : 'grey-lighten-1'
+                    "
+                  >
+                    <VIcon start size="x-small">mdi-arrow-expand-all</VIcon>
+                    Expansión
+                    <span
+                      v-if="animationState === 'expansion'"
+                      class="rel-countdown"
+                      >{{ stepRemainingDisplay }}</span
+                    >
+                  </VChip>
+                  <VChip
+                    v-if="immobile1 > 0"
+                    id="rel-status-immobile-1"
+                    size="small"
+                    class="mr-1 mb-1"
+                    :color="
+                      animationState === 'immobile1'
+                        ? 'green-darken-2'
+                        : 'grey-lighten-1'
+                    "
+                  >
+                    <VIcon start size="x-small">mdi-timer-sand</VIcon>
+                    Inmóvil 1
+                    <span
+                      v-if="animationState === 'immobile1'"
+                      class="rel-countdown"
+                      >{{ stepRemainingDisplay }}</span
+                    >
+                  </VChip>
+                  <VChip
+                    v-if="contraction > 0"
+                    id="rel-status-contraction"
+                    size="small"
+                    class="mr-1 mb-1"
+                    :color="
+                      animationState === 'contraction'
+                        ? 'red-darken-2'
+                        : 'grey-lighten-1'
+                    "
+                  >
+                    <VIcon start size="x-small">mdi-arrow-collapse-all</VIcon>
+                    Contracción
+                    <span
+                      v-if="animationState === 'contraction'"
+                      class="rel-countdown"
+                      >{{ stepRemainingDisplay }}</span
+                    >
+                  </VChip>
+                  <VChip
+                    v-if="immobile2 > 0"
+                    id="rel-status-immobile-2"
+                    class="mb-1"
+                    size="small"
+                    :color="
+                      animationState === 'immobile2'
+                        ? 'green-darken-2'
+                        : 'grey-lighten-1'
+                    "
+                  >
+                    <VIcon start size="x-small">mdi-timer-sand</VIcon>
+                    Inmóvil 2
+                    <span
+                      v-if="animationState === 'immobile2'"
+                      class="rel-countdown"
+                      >{{ stepRemainingDisplay }}</span
+                    >
+                  </VChip>
+                </div>
+
+                <!-- Temporizador -->
+                <div>
+                  <VChip
+                    v-if="isPlaying"
+                    id="rel-timer-1"
+                    size="small"
+                    color="primary"
+                    variant="outlined"
+                  >
+                    <VIcon start size="x-small">mdi-clock-outline</VIcon>
+                    {{ formattedTime }}
+                  </VChip>
+                  <VChip
+                    v-else
+                    id="rel-timer-2"
+                    disabled
+                    color="grey"
+                    size="small"
+                    variant="outlined"
+                  >
+                    <VIcon start size="x-small">mdi-clock-outline</VIcon>
+                    00:00
+                  </VChip>
+                </div>
+              </div>
+            </VCol>
+
+            <!-- Círculo de animación -->
             <VCol cols="5">
-              <VBtn
-                id="rel-toggle-btn"
-                rounded
-                size="small"
-                elevation="2"
-                :color="isPlaying ? 'error' : 'primary'"
-                @click="toggleAnimation"
-              >
-                <VIcon start size="small">
-                  {{ isPlaying ? "mdi-stop" : "mdi-play" }}
-                </VIcon>
-                {{ isPlaying ? "Detener" : "Comenzar" }}
-              </VBtn>
-            </VCol>
-
-            <!-- Indicadores de estado -->
-            <VCol cols="7" class="d-flex flex-wrap gap-1">
-              <VChip
-                v-if="initialContract > 0"
-                id="rel-status-initial-contract"
-                size="small"
-                class="mr-1 mb-1"
-                :color="
-                  animationState === 'initialContract'
-                    ? 'orange-darken-2'
-                    : 'grey-lighten-1'
-                "
-              >
-                <VIcon start size="x-small">mdi-arrow-collapse-all</VIcon>
-                Contracción inicial
-                <span
-                  v-if="animationState === 'initialContract'"
-                  class="rel-countdown"
-                  >{{ stepRemainingDisplay }}</span
-                >
-              </VChip>
-              <VChip
-                v-if="expansion > 0"
-                id="rel-status-expansion"
-                size="small"
-                class="mr-1 mb-1"
-                :color="
-                  animationState === 'expansion'
-                    ? 'blue-darken-2'
-                    : 'grey-lighten-1'
-                "
-              >
-                <VIcon start size="x-small">mdi-arrow-expand-all</VIcon>
-                Expansión
-                <span
-                  v-if="animationState === 'expansion'"
-                  class="rel-countdown"
-                  >{{ stepRemainingDisplay }}</span
-                >
-              </VChip>
-              <VChip
-                v-if="immobile1 > 0"
-                id="rel-status-immobile-1"
-                size="small"
-                class="mr-1 mb-1"
-                :color="
-                  animationState === 'immobile1'
-                    ? 'green-darken-2'
-                    : 'grey-lighten-1'
-                "
-              >
-                <VIcon start size="x-small">mdi-timer-sand</VIcon>
-                Inmóvil 1
-                <span
-                  v-if="animationState === 'immobile1'"
-                  class="rel-countdown"
-                  >{{ stepRemainingDisplay }}</span
-                >
-              </VChip>
-              <VChip
-                v-if="contraction > 0"
-                id="rel-status-contraction"
-                size="small"
-                class="mr-1 mb-1"
-                :color="
-                  animationState === 'contraction'
-                    ? 'red-darken-2'
-                    : 'grey-lighten-1'
-                "
-              >
-                <VIcon start size="x-small">mdi-arrow-collapse-all</VIcon>
-                Contracción
-                <span
-                  v-if="animationState === 'contraction'"
-                  class="rel-countdown"
-                  >{{ stepRemainingDisplay }}</span
-                >
-              </VChip>
-              <VChip
-                v-if="immobile2 > 0"
-                id="rel-status-immobile-2"
-                class="mb-1"
-                size="small"
-                :color="
-                  animationState === 'immobile2'
-                    ? 'green-darken-2'
-                    : 'grey-lighten-1'
-                "
-              >
-                <VIcon start size="x-small">mdi-timer-sand</VIcon>
-                Inmóvil 2
-                <span
-                  v-if="animationState === 'immobile2'"
-                  class="rel-countdown"
-                  >{{ stepRemainingDisplay }}</span
-                >
-              </VChip>
-            </VCol>
-
-            <!-- Temporizador -->
-            <VCol cols="auto">
-              <VChip
-                v-if="isPlaying"
-                id="rel-timer-1"
-                size="small"
-                color="primary"
-                variant="outlined"
-              >
-                <VIcon start size="x-small">mdi-clock-outline</VIcon>
-                {{ formattedTime }}
-              </VChip>
-              <VChip
-                v-else
-                id="rel-timer-2"
-                disabled
-                color="grey"
-                size="small"
-                variant="outlined"
-              >
-                <VIcon start size="x-small">mdi-clock-outline</VIcon>
-                00:00
-              </VChip>
+              <div class="animation-wrapper">
+                <div :style="circleStyle" class="circle-animation">
+                  <div
+                    :style="innerCircleStyle"
+                    class="inner-circle-animation"
+                  ></div>
+                </div>
+              </div>
             </VCol>
           </VRow>
-
-          <!-- Círculo de animación -->
-          <div class="animation-wrapper">
-            <div :style="circleStyle" class="circle-animation">
-              <div
-                :style="innerCircleStyle"
-                class="inner-circle-animation"
-              ></div>
-            </div>
-          </div>
         </VCard>
       </VCol>
     </VRow>
@@ -177,13 +186,13 @@
     <VRow justify="center" density="comfortable">
       <VCol cols="12">
         <VCard id="rel-config-card" class="pa-1" rounded="lg" elevation="2">
-          <VCardTitle class="text-subtitle-1 py-0 my-0">
+          <VCardTitle class="text-subtitle-1 py-2 my-0">
             <VIcon start size="small" color="primary">mdi-cog-outline</VIcon>
             Configuración
           </VCardTitle>
 
           <VRow class="mb-1" density="comfortable">
-            <VCol md="4" sm="6" cols="12">
+            <VCol md="4" sm="6" cols="6">
               <VSelect
                 id="rel-exercise"
                 v-model="selectedExercise"
@@ -196,10 +205,8 @@
                 prepend-inner-icon="mdi-meditation"
               />
             </VCol>
-          </VRow>
 
-          <VRow density="comfortable">
-            <VCol cols="auto">
+            <VCol md="2" sm="4" cols="6">
               <VTextField
                 id="rel-initial-contract"
                 v-model.number="initialContract"
@@ -221,7 +228,7 @@
               </VTextField>
             </VCol>
 
-            <VCol cols="auto">
+            <VCol md="2" sm="4" cols="6">
               <VTextField
                 id="rel-expansion"
                 v-model.number="expansion"
@@ -241,7 +248,7 @@
               </VTextField>
             </VCol>
 
-            <VCol cols="auto">
+            <VCol md="2" sm="4" cols="6">
               <VTextField
                 id="rel-immobile-1"
                 v-model.number="immobile1"
@@ -261,7 +268,7 @@
               </VTextField>
             </VCol>
 
-            <VCol cols="auto">
+            <VCol md="2" sm="4" cols="6">
               <VTextField
                 id="rel-contraction"
                 v-model.number="contraction"
@@ -281,7 +288,7 @@
               </VTextField>
             </VCol>
 
-            <VCol cols="auto">
+            <VCol md="2" sm="4" cols="6">
               <VTextField
                 id="rel-immobile-2"
                 v-model.number="immobile2"
@@ -300,7 +307,7 @@
                 </template>
               </VTextField>
             </VCol>
-            <VCol cols="auto">
+            <VCol md="2" sm="4" cols="6">
               <VTextField
                 id="rel-goal-time"
                 v-model.number="goalTime"
@@ -485,8 +492,8 @@ const selectedExercise = computed({
 });
 
 const circleStyle = reactive({
-  width: "80px",
-  height: "80px",
+  width: "30%",
+  height: "30%",
   borderRadius: "50%",
   backgroundColor: "#2E7D32",
   transition: "transform 0.5s ease-out",
@@ -498,8 +505,8 @@ const circleStyle = reactive({
 });
 
 const innerCircleStyle = reactive({
-  width: "40px",
-  height: "40px",
+  width: "50%",
+  height: "50%",
   borderRadius: "50%",
   backgroundColor: "white",
   transition: "transform 0.5s ease-out",
@@ -641,7 +648,8 @@ onMounted(() => {
     }
   };
   document.addEventListener("visibilitychange", onVisibility);
-  relaxVisibilityCleanup = () => document.removeEventListener("visibilitychange", onVisibility);
+  relaxVisibilityCleanup = () =>
+    document.removeEventListener("visibilitychange", onVisibility);
 });
 
 function animateCircle() {
@@ -743,13 +751,19 @@ onBeforeUnmount(() => {
   padding: 0.5rem;
 }
 
+@media (max-width: 600px) {
+  .breathing-container {
+    padding: 0.375rem;
+  }
+}
+
 .animation-wrapper {
+  width: 100%;
+  aspect-ratio: 1 / 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 250px;
   overflow: hidden;
-  padding: 10px;
 }
 
 .circle-animation {
