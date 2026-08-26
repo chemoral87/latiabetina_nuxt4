@@ -36,6 +36,7 @@
           :loading="loading"
           :highlight-id="highlightId"
           :removing-id="removingId"
+          :initial-sort-by="(lastOptions.sortBy as any)"
           @sorting="handleSorting"
           @editPermissions="editRolePermissions"
           @distribution="distributeRole"
@@ -57,6 +58,7 @@
 </template>
 
 <script setup lang="ts">
+import { buildApiParams } from "~/utils/buildApiParams"
 import { useRowHighlight } from "~/composables/useRowHighlight"
 
 definePageMeta({
@@ -78,23 +80,20 @@ const roleDialog = ref(false)
 const roleDialogDelete = ref(false)
 const { highlightId, prependCreated, updateRow, removingId, removeWithAnimation } = useRowHighlight()
 
-const lastOptions = ref<Record<string, unknown> | null>(null)
+const lastOptions = ref<Record<string, unknown>>({
+  page: 1,
+  itemsPerPage: 10,
+  sortBy: [{ key: "name", order: "asc" }],
+})
 
 // Initial list data is loaded during SSR via useAsyncData so the payload is
 // reused on the client (no double fetch, no hydration mismatch). See
 // ai_rule/nuxt4_ssr_hydration.md.
-// Store the Vuetify 4 format in lastOptions so loadRoles() conversion logic
-// works correctly.
 {
+  const apiParams = buildApiParams(lastOptions.value)
   const { data: initialData } = await useAsyncData(
     "role-index",
     async () => {
-      const apiParams: Record<string, unknown> = {
-        page: 1,
-        itemsPerPage: 10,
-        sortBy: ["name"],
-        sortDesc: [false],
-      }
       return await Role.index<{ data: unknown[]; total: number }>(apiParams)
         .catch(() => ({ data: [] as unknown[], total: 0 }))
     },
@@ -102,11 +101,6 @@ const lastOptions = ref<Record<string, unknown> | null>(null)
   )
 
   response.value = initialData.value
-  lastOptions.value = {
-    page: 1,
-    itemsPerPage: 10,
-    sortBy: [{ key: "name", order: "asc" }],
-  }
 }
 
 // Debounced filter — matches Organization index pattern (300ms)
@@ -127,18 +121,8 @@ async function loadRoles(opts: Record<string, unknown>) {
   try {
     loading.value = true
     lastOptions.value = opts
-    const params: Record<string, unknown> = {
-      page: opts.page ?? 1,
-      itemsPerPage: opts.itemsPerPage ?? 10,
-    }
-    const sortBy = (opts.sortBy as { key: string; order: string }[]) ?? []
-    if (sortBy.length > 0) {
-      params.sortBy = [sortBy[0].key]
-      params.sortDesc = [sortBy[0].order === 'desc']
-    }
-    if (filterRole.value) {
-      params.filter = filterRole.value
-    }
+    const params = buildApiParams(opts)
+    if (filterRole.value && !params.filter) params.filter = filterRole.value
     response.value = await Role.index(params)
   } catch (e) {
     console.error("Error al cargar roles", e)

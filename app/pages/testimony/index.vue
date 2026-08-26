@@ -84,6 +84,7 @@
           :response="response"
           :search="filterTestimony"
           :highlight-id="highlightId"
+          :initial-sort-by="(lastOptions.sortBy as any)"
           @edit="editTestimony"
           @show="showTestimony"
           @sorting="handleSorting"
@@ -111,6 +112,7 @@
 </template>
 
 <script setup lang="ts">
+import { buildApiParams } from "~/utils/buildApiParams";
 import { useRowHighlight } from "~/composables/useRowHighlight";
 
 definePageMeta({
@@ -162,12 +164,7 @@ const effectiveOrgId = computed(() => {
 
 // Initial load (asyncData equivalent)
 {
-  const apiParams: Record<string, unknown> = {
-    page: 1,
-    itemsPerPage: 10,
-    sortBy: ["created_at"],
-    sortDesc: [true],
-  };
+  const apiParams = buildApiParams(lastOptions.value);
   const initialResponse = await Testimony.index(apiParams).catch(() => ({
     data: [],
     total: 0,
@@ -251,26 +248,6 @@ async function loadTestimonies(overrides: Record<string, unknown> = {}) {
   } finally {
     loading.value = false;
   }
-}
-
-function buildApiParams(
-  opts: Record<string, unknown>,
-): Record<string, unknown> {
-  const params: Record<string, unknown> = {
-    page: opts.page ?? 1,
-    itemsPerPage: opts.itemsPerPage ?? 10,
-  };
-  const sortBy = (opts.sortBy as { key: string; order: string }[]) ?? [];
-  if (sortBy.length > 0) {
-    params.sortBy = [sortBy[0].key];
-    params.sortDesc = [sortBy[0].order === "desc"];
-  }
-  if (opts.filter) params.filter = opts.filter;
-  if (opts.status) params.status = opts.status;
-  if (opts.org_id) params.org_id = opts.org_id;
-  if (opts.date_from) params.date_from = opts.date_from;
-  if (opts.date_to) params.date_to = opts.date_to;
-  return params;
 }
 
 async function onStatusChange(value: unknown) {

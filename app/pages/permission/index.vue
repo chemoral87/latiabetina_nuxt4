@@ -42,6 +42,7 @@
           :removing-id="removingId"
           :search="filterPermission"
           :highlight-id="highlightId"
+          :initial-sort-by="(lastOptions.sortBy as any)"
           @edit="editPermission"
           @sorting="handleSorting"
           @delete="deletePermission"
@@ -62,6 +63,7 @@
 </template>
 
 <script setup lang="ts">
+import { buildApiParams } from "~/utils/buildApiParams";
 import { useRowHighlight } from "~/composables/useRowHighlight";
 
 definePageMeta({
@@ -84,28 +86,20 @@ const permissionDialogDelete = ref(false);
 const { highlightId, flash, prependCreated, removingId, removeWithAnimation } =
   useRowHighlight();
 
-const lastOptions = ref<Record<string, unknown> | null>(null);
+const lastOptions = ref<Record<string, unknown>>({
+  page: 1,
+  itemsPerPage: 10,
+  sortBy: [{ key: "name", order: "asc" }],
+});
 
 // Top-level await — loads initial data before render (asyncData equivalent)
-// Use backend-compatible format for the API call, but store Vuetify 4 format
-// in lastOptions so loadPermissions() conversion logic works correctly.
 {
-  const apiParams: Record<string, unknown> = {
-    page: 1,
-    itemsPerPage: 10,
-    sortBy: ["name"],
-    sortDesc: [false],
-  };
+  const apiParams = buildApiParams(lastOptions.value);
   const initialResponse = await Permission.index(apiParams).catch(() => ({
     data: [],
     total: 0,
   }));
   response.value = initialResponse as { data: unknown[]; total: number };
-  lastOptions.value = {
-    page: 1,
-    itemsPerPage: 10,
-    sortBy: [{ key: "name", order: "asc" }],
-  };
 }
 
 // Debounced filter (300ms)
@@ -126,18 +120,8 @@ async function loadPermissions(opts: Record<string, unknown>) {
   try {
     loading.value = true;
     lastOptions.value = opts;
-    const params: Record<string, unknown> = {
-      page: opts.page ?? 1,
-      itemsPerPage: opts.itemsPerPage ?? 10,
-    };
-    const sortBy = (opts.sortBy as { key: string; order: string }[]) ?? [];
-    if (sortBy.length > 0) {
-      params.sortBy = [sortBy[0].key];
-      params.sortDesc = [sortBy[0].order === "desc"];
-    }
-    if (filterPermission.value) {
-      params.filter = filterPermission.value;
-    }
+    const params = buildApiParams(opts);
+    if (filterPermission.value && !params.filter) params.filter = filterPermission.value;
     response.value = await Permission.index(params);
   } catch (e) {
     console.error("Error al cargar permisos", e);

@@ -116,11 +116,13 @@ const props = withDefaults(defineProps<{
   loading?: boolean
   search?: string
   permission?: string
+  initialSortBy?: { key: string; order: string }[]
 }>(), {
   response: null,
   loading: false,
   search: "",
   permission: "church-event-index",
+  initialSortBy: () => [{ key: "event_date", order: "desc" }],
 })
 
 const emit = defineEmits<{
@@ -134,7 +136,7 @@ const auth = useAuthStore()
 
 const page = ref(1)
 const itemsPerPage = ref(10)
-const sortBy = ref<{ key: string; order: string }[]>([{ key: "event_date", order: "desc" }])
+const sortBy = ref<{ key: string; order: string }[]>([...props.initialSortBy])
 
 const total = computed(() => props.response?.total ?? 0)
 const items = computed(() => props.response?.data ?? [])

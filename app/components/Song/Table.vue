@@ -98,10 +98,12 @@ const props = withDefaults(defineProps<{
   response?: { total?: number; data?: unknown[] } | null
   loading?: boolean
   highlightId?: number | null
+  initialSortBy?: { key: string; order: string }[]
 }>(), {
   response: null,
   loading: false,
   highlightId: null,
+  initialSortBy: () => [{ key: "updated_at", order: "desc" }],
 })
 
 const emit = defineEmits<{
@@ -113,7 +115,7 @@ const emit = defineEmits<{
 
 const page = ref(1)
 const itemsPerPage = ref(10)
-const sortBy = ref<{ key: string; order: string }[]>([{ key: "updated_at", order: "desc" }])
+const sortBy = ref<{ key: string; order: string }[]>([...props.initialSortBy])
 
 const headers: Header[] = [
   { title: "", value: "view", sortable: false },

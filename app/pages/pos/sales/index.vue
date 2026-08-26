@@ -35,6 +35,7 @@
           :loading="loading"
           :highlight-id="highlightId"
           :removing-id="removingId"
+          :initial-sort-by="(lastOptions.sortBy as any)"
           @sorting="handleSorting"
           @view="viewDetail"
           @edit="editSale"
@@ -46,6 +47,7 @@
 </template>
 
 <script setup lang="ts">
+import { buildApiParams } from "~/utils/buildApiParams"
 import { createRealtimeListeners } from "~/utils/realtime"
 import { useRowHighlight } from "~/composables/useRowHighlight"
 
@@ -68,7 +70,11 @@ const saving = ref(false)
 const saleDialogDelete = ref(false)
 const { highlightId, removingId, removeWithAnimation } = useRowHighlight()
 
-const lastOptions = ref<Record<string, unknown> | null>(null)
+const lastOptions = ref<Record<string, unknown>>({
+  page: 1,
+  itemsPerPage: 10,
+  sortBy: [{ key: "created_at", order: "desc" }],
+})
 const echoConnected = ref(false)
 
 let realtimeCleanup: (() => void) | null = null
@@ -77,23 +83,13 @@ let realtimeCleanup: (() => void) | null = null
 const { data: initialData } = await useAsyncData(
   "pos-sales-index",
   async () => {
-    const apiParams: Record<string, unknown> = {
-      page: 1,
-      itemsPerPage: 10,
-      sortBy: ["created_at"],
-      sortDesc: [true],
-    }
+    const apiParams = buildApiParams(lastOptions.value)
     return await Sale.index<{ data: Record<string, unknown>[]; total: number }>(apiParams)
       .catch(() => ({ data: [] as Record<string, unknown>[], total: 0 }))
   },
   { default: () => ({ data: [] as Record<string, unknown>[], total: 0 }) },
 )
 response.value = initialData.value
-lastOptions.value = {
-  page: 1,
-  itemsPerPage: 10,
-  sortBy: [{ key: "created_at", order: "desc" }],
-}
 
 // Debounced filter (300ms)
 let debounceTimer: ReturnType<typeof setTimeout> | null = null
@@ -121,18 +117,8 @@ async function loadSales(opts: Record<string, unknown>) {
   try {
     loading.value = true
     lastOptions.value = opts
-    const params: Record<string, unknown> = {
-      page: opts.page ?? 1,
-      itemsPerPage: opts.itemsPerPage ?? 10,
-    }
-    const sortBy = (opts.sortBy as { key: string; order: string }[]) ?? []
-    if (sortBy.length > 0) {
-      params.sortBy = [sortBy[0].key]
-      params.sortDesc = [sortBy[0].order === 'desc']
-    }
-    if (filterSale.value) {
-      params.filter = filterSale.value
-    }
+    const params = buildApiParams(opts)
+    if (filterSale.value && !params.filter) params.filter = filterSale.value
     response.value = await Sale.index<{ data: Record<string, unknown>[]; total: number }>(params)
   } catch (e) {
     console.error("Error al cargar ventas", e)

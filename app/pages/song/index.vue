@@ -50,6 +50,7 @@
           :loading="loading"
           :response="response"
           :highlight-id="highlightId"
+          :initial-sort-by="(lastOptions.sortBy as any)"
           @edit="editSong"
           @view="viewSong"
           @sorting="handleSorting"
@@ -69,6 +70,7 @@
 </template>
 
 <script setup lang="ts">
+import { buildApiParams } from "~/utils/buildApiParams"
 import { useRowHighlight } from "~/composables/useRowHighlight"
 
 definePageMeta({
@@ -119,12 +121,7 @@ const effectiveOrgId = computed(() => {
 const { data: initialData } = await useAsyncData(
   "song-index",
   async () => {
-    const apiParams: Record<string, unknown> = {
-      page: 1,
-      itemsPerPage: 10,
-      sortBy: ["updated_at"],
-      sortDesc: [true],
-    }
+    const apiParams = buildApiParams(lastOptions.value)
     return await Song.index<{ data: unknown[]; total: number }>(
       apiParams,
     ).catch(() => ({ data: [], total: 0 }))
@@ -201,23 +198,6 @@ async function loadSongs(overrides: Record<string, unknown> = {}) {
   } finally {
     loading.value = false
   }
-}
-
-function buildApiParams(
-  opts: Record<string, unknown>,
-): Record<string, unknown> {
-  const params: Record<string, unknown> = {
-    page: opts.page ?? 1,
-    itemsPerPage: opts.itemsPerPage ?? 10,
-  }
-  const sortBy = (opts.sortBy as { key: string; order: string }[]) ?? []
-  if (sortBy.length > 0) {
-    params.sortBy = [sortBy[0].key]
-    params.sortDesc = [sortBy[0].order === "desc"]
-  }
-  if (opts.filter) params.filter = opts.filter
-  if (opts.org_id) params.org_id = opts.org_id
-  return params
 }
 
 async function refreshSongs() {

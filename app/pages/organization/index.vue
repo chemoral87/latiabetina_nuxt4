@@ -39,6 +39,7 @@
           :removing-id="removingId"
           :highlight-id="highlightId"
           :search="filterOrganization"
+          :initial-sort-by="(lastOptions.sortBy as any)"
           @config="goConfig"
           @edit="editOrganization"
           @sorting="handleSorting"
@@ -58,6 +59,7 @@
 </template>
 
 <script setup lang="ts">
+import { buildApiParams } from "~/utils/buildApiParams";
 import { useRowHighlight } from "~/composables/useRowHighlight";
 
 definePageMeta({
@@ -75,7 +77,6 @@ const filterOrganization = ref("");
 const loading = ref(false);
 const saving = ref(false);
 const organization = ref<Record<string, unknown> | null>(null);
-const lastOptions = ref<Record<string, unknown> | null>(null);
 const {
   highlightId,
   prependCreated,
@@ -86,24 +87,20 @@ const {
 
 const { Organization } = useRepository();
 
+const lastOptions = ref<Record<string, unknown>>({
+  page: 1,
+  itemsPerPage: 5,
+  sortBy: [{ key: "name", order: "asc" }],
+});
+
 // Top-level await — loads initial data before render (asyncData equivalent)
 {
-  const apiParams: Record<string, unknown> = {
-    page: 1,
-    itemsPerPage: 5,
-    sortBy: ["name"],
-    sortDesc: [false],
-  };
+  const apiParams = buildApiParams(lastOptions.value);
   const initialResponse = await Organization.index(apiParams).catch(() => ({
     data: [],
     total: 0,
   }));
   response.value = initialResponse as { data: unknown[]; total: number };
-  lastOptions.value = {
-    page: 1,
-    itemsPerPage: 5,
-    sortBy: [{ key: "name", order: "asc" }],
-  };
 }
 
 let debounceTimer: ReturnType<typeof setTimeout> | null = null;
@@ -121,18 +118,8 @@ watch(filterInput, (val) => {
 
 async function indexOrganizations(opts: Record<string, unknown>) {
   lastOptions.value = opts;
-  const params: Record<string, unknown> = {
-    page: opts.page ?? 1,
-    itemsPerPage: opts.itemsPerPage ?? 5,
-  };
-  const sortBy = (opts.sortBy as { key: string; order: string }[]) ?? [];
-  if (sortBy.length > 0) {
-    params.sortBy = [sortBy[0].key];
-    params.sortDesc = [sortBy[0].order === "desc"];
-  }
-  if (filterOrganization.value) {
-    params.filter = filterOrganization.value;
-  }
+  const params = buildApiParams(opts);
+  if (filterOrganization.value && !params.filter) params.filter = filterOrganization.value;
   try {
     loading.value = true;
     response.value = await Organization.index(params);

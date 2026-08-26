@@ -118,6 +118,7 @@ const props = withDefaults(
     removingId?: number | string | null;
     dialogDelete?: boolean;
     deleting?: boolean;
+    initialSortBy?: { key: string; order: string }[];
   }>(),
   {
     response: null,
@@ -127,6 +128,7 @@ const props = withDefaults(
     removingId: null,
     dialogDelete: false,
     deleting: false,
+    initialSortBy: () => [{ key: "date", order: "desc" }],
   },
 );
 
@@ -140,9 +142,7 @@ const emit = defineEmits<{
 
 const page = ref(1);
 const itemsPerPage = ref(10);
-const sortBy = ref<{ key: string; order: string }[]>([
-  { key: "id", order: "asc" },
-]);
+const sortBy = ref<{ key: string; order: string }[]>([...props.initialSortBy]);
 
 const auth = useAuthStore();
 
@@ -152,8 +152,8 @@ const singleOrg = computed(() => auth.hasSingleOrgFor("conso-sheet-index"));
 
 const headers = computed<Header[]>(() => {
   const list: Header[] = [
-    { title: "Folio", value: "folio_number" },
-    { title: "Fecha", value: "date" },
+    { title: "Folio", value: "folio_number", sortable: true },
+    { title: "Fecha", value: "date", sortable: true },
   ];
   if (!singleOrg.value) {
     list.push({ title: "Organización", value: "organization" });

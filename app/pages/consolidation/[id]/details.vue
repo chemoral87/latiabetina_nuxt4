@@ -359,7 +359,6 @@ async function onInlineStatusChange(item: Record<string, unknown>, status: strin
         status,
       }
     }
-    notify.notify({ success: "Estado actualizado exitosamente" })
   } catch (error) {
     notify.notify({
       error: (error as { response?: { data?: { message?: string } } }).response?.data?.message || "Error al actualizar estado",
@@ -382,7 +381,8 @@ async function confirmDelete(item: unknown) {
   try {
     deleting.value = true
     await ChurchMember.delete(m.id as number)
-    await fetchMembers()
+    const idx = members.value.findIndex((r) => (r as Record<string, unknown>).id === m.id)
+    if (idx !== -1) members.value.splice(idx, 1)
     dialogDelete.value = false
     notify.notify({ success: "Miembro eliminado exitosamente" })
   } catch (error) {
@@ -400,12 +400,20 @@ async function saveMember(item: Record<string, unknown>) {
     const payload = { ...item, org_id: sheetOrgId }
     const isUpdate = Boolean(item.id)
     if (isUpdate) {
-      await ChurchMember.update(item.id as number, payload)
+      const res = await ChurchMember.update<Record<string, unknown>>(item.id as number, payload)
+      const updated = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined ?? res as unknown as Record<string, unknown>
+      const idx = members.value.findIndex((r) => (r as Record<string, unknown>).id === updated.id)
+      if (idx !== -1) {
+        members.value[idx] = updated
+      } else {
+        members.value.unshift(updated)
+      }
     } else {
-      await ChurchMember.create(payload)
+      const res = await ChurchMember.create<Record<string, unknown>>(payload)
+      const created = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined ?? res as unknown as Record<string, unknown>
+      members.value.unshift(created)
     }
     notify.notify({ success: `Miembro ${isUpdate ? "actualizado" : "creado"} exitosamente` })
-    await fetchMembers()
     dialog.value = false
   } catch (error) {
     notify.notify({ error: (error as { response?: { data?: { message?: string } } }).response?.data?.message || `Error al ${item.id ? "actualizar" : "crear"} miembro` })

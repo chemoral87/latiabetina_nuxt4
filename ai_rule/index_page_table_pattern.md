@@ -61,29 +61,42 @@ const { highlightId, prependCreated, updateRow } = useRowHighlight()
 const lastOptions = ref<Record<string, unknown> | null>(null)
 ```
 
-### 1. SSR initial load — top-level await
+### 1. SSR initial load — top-level await (dynamic single-source sorting)
+
+**Rule: never hard-code `sortBy`/`sortDesc` twice.** `lastOptions` is the single source of truth (Vuetify 4 format). `buildApiParams()` converts it to backend format for every fetch, including the SSR initial load. Changing the default sort requires editing **only** `lastOptions` — the table and the initial fetch follow automatically.
 
 ```ts
-{
-  const apiParams: Record<string, unknown> = {
-    page: 1,
-    itemsPerPage: 10,                    // organization uses 5
-    sortBy: ["name"],                    // backend format
-    sortDesc: [false],
+// Single source — Vuetify 4 format
+const lastOptions = ref<Record<string, unknown>>({
+  page: 1,
+  itemsPerPage: 10,                    // organization uses 5
+  sortBy: [{ key: "name", order: "asc" }],
+})
+
+function buildApiParams(opts: Record<string, unknown>): Record<string, unknown> {
+  const params: Record<string, unknown> = {
+    page: opts.page ?? 1,
+    itemsPerPage: opts.itemsPerPage ?? 10,
   }
+  const sortBy = (opts.sortBy as { key: string; order: string }[]) ?? []
+  if (sortBy.length > 0) {
+    params.sortBy = [sortBy[0].key]              // backend: ["name"]
+    params.sortDesc = [sortBy[0].order === "desc"] // backend: [false]
+  }
+  if (filterRole.value) params.filter = filterRole.value
+  return params
+}
+
+// buildApiParams MUST be defined before this block (used at top-level await)
+{
+  const apiParams = buildApiParams(lastOptions.value)  // dynamic, not hard-coded
   const initialResponse = await Role.index(apiParams).catch(() => ({ data: [], total: 0 }))
   response.value = initialResponse as { data: unknown[]; total: number }
-  lastOptions.value = {
-    page: 1,
-    itemsPerPage: 10,
-    sortBy: [{ key: "name", order: "asc" }],   // Vuetify 4 format
-  }
 }
 ```
 
-- **Backend format** (`sortBy: ["name"]`) for the API call.
-- **Vuetify 4 format** (`sortBy: [{ key, order }]`) stored in `lastOptions` so
-  the loader's conversion works on refresh.
+- **Dynamic:** `lastOptions` → `buildApiParams()` → `apiParams` (Vuetify `[{key,order}]` → backend `["name"]`/`[false]`). The consolidation module (`date desc`) already uses this pattern `app/pages/consolidation/index.vue:92-136` and `app/components/Consolidation/Table.vue:113-142` with `initialSortBy` prop.
+- **No duplication:** do not write `sortBy: ["name"]` and `sortBy: [{key:"name",order:"asc"}]` in two places — the second is derived.
 - The repository must be destructured **before** this block (temporal dead zone).
 
 ### 2. Debounced filter (300ms)
@@ -288,9 +301,9 @@ function closeDialog() {
 ```
 
 - Local state: `page = ref(1)`, `itemsPerPage = ref(10)`,
-  `sortBy = ref([{ key: "name", order: "asc" }])`.
+  `sortBy = ref([...props.initialSortBy])` with prop `initialSortBy` (default `[{key:"name",order:"asc"}]` or `date desc` for consolidation). Single source is the page's `lastOptions.sortBy` passed as `:initial-sort-by="(lastOptions.sortBy as any)"` `app/pages/consolidation/index.vue:41` — table no longer hard-codes a competing default.
 - Props: `response`, `loading`, `search`, `highlightId`, `dialogDelete` (for
-  the `v-model:dialog-delete`).
+  the `v-model:dialog-delete`) plus `initialSortBy?: {key:string,order:string}[]`.
 - Computeds: `total = props.response?.total ?? 0`, `items = props.response?.data ?? []`,
   `loading = props.loading ?? false`.
 - Headers use `title`/`value`/`sortable` (`title`, NOT `text` — Vuetify 4).
@@ -408,9 +421,9 @@ const auth = useAuthStore()
 // re-implement this inline.
 const singleOrg = computed(() => auth.hasSingleOrgFor("auditorium-index"))
 
-// Initial SSR fetch — no org_id
+// Initial SSR fetch — no org_id, dynamic via buildApiParams(lastOptions)
 const { data: initialData } = await useAsyncData("auditorium-index", async () => {
-  const apiParams: Record<string, unknown> = { page: 1, itemsPerPage: 10, sortBy: ["name"], sortDesc: [false] }
+  const apiParams = buildApiParams(lastOptions.value)
   return await Auditorium.index<{ data: unknown[]; total: number }>(apiParams).catch(() => ({ data: [], total: 0 }))
 }, { default: () => ({ data: [] as unknown[], total: 0 }) })
 

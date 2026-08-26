@@ -38,6 +38,7 @@
           :search="filterTerm"
           :removing-id="removingId"
           :highlight-id="highlightId"
+          :initial-sort-by="lastOptions.sortBy as any"
           @edit="editSheet"
           @view="viewSheet"
           @delete="deleteSheet"
@@ -58,6 +59,7 @@
 </template>
 
 <script setup lang="ts">
+import { buildApiParams } from "~/utils/buildApiParams";
 import { useRowHighlight } from "~/composables/useRowHighlight";
 
 definePageMeta({
@@ -92,7 +94,7 @@ const response = ref<{ data: unknown[]; total: number }>({
 const lastOptions = ref<Record<string, unknown>>({
   page: 1,
   itemsPerPage: 10,
-  sortBy: [{ key: "id", order: "asc" }],
+  sortBy: [{ key: "date", order: "desc" }],
 });
 
 // Debounced filter — 300ms, matches the index page pattern. filterInput is
@@ -117,12 +119,7 @@ watch(filterInput, (val) => {
   const { data: initialData } = await useAsyncData(
     "consolidation-index",
     async () => {
-      const apiParams: Record<string, unknown> = {
-        page: 1,
-        itemsPerPage: 10,
-        sortBy: ["id"],
-        sortDesc: [false],
-      };
+      const apiParams = buildApiParams(lastOptions.value);
       return await ConsoSheet.index<{ data: unknown[]; total: number }>(
         apiParams,
       ).catch(() => ({ data: [] as unknown[], total: 0 }));
@@ -149,6 +146,7 @@ async function fetchData(overrides: Record<string, unknown> = {}) {
   try {
     const requestOptions = { ...lastOptions.value, ...overrides };
     const params = buildApiParams(requestOptions);
+    if (filterTerm.value && !params.filter) params.filter = filterTerm.value;
     const res = await ConsoSheet.index(params);
     response.value = normalizeResponse(res);
     lastOptions.value = requestOptions;
@@ -162,22 +160,6 @@ async function fetchData(overrides: Record<string, unknown> = {}) {
   } finally {
     loading.value = false;
   }
-}
-
-function buildApiParams(
-  opts: Record<string, unknown>,
-): Record<string, unknown> {
-  const params: Record<string, unknown> = {
-    page: opts.page ?? 1,
-    itemsPerPage: opts.itemsPerPage ?? 10,
-  };
-  const sortBy = (opts.sortBy as { key: string; order: string }[]) ?? [];
-  if (sortBy.length > 0) {
-    params.sortBy = [sortBy[0].key];
-    params.sortDesc = [sortBy[0].order === "desc"];
-  }
-  if (filterTerm.value) params.filter = filterTerm.value;
-  return params;
 }
 
 function newSheet() {

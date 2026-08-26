@@ -38,10 +38,10 @@
                 id="cmm-dialog-last-name"
                 v-model="item.last_name"
                 required
-                label="Apellido Paterno"
                 density="compact"
                 variant="outlined"
                 :disabled="loading"
+                label="Apellido Paterno"
                 :rules="[(v) => !!v || 'Apellido es requerido']"
               />
             </VCol>
@@ -143,7 +143,7 @@
                 <MyUploadimageCrop
                   v-model="item.url_image"
                   v-model:url="item.url_image_s3"
-                  :size="120"
+                  :size="460"
                   label="Foto"
                 />
                 <VAvatar

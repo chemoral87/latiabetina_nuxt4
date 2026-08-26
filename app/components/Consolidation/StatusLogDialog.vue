@@ -119,7 +119,6 @@ const emit = defineEmits<{
 }>()
 
 const { ChurchMember } = useRepository()
-const notify = useNotifyStore()
 const { vrules } = useVrules()
 const { statuses, statusLabel, statusColor } = useChurchMemberStatus()
 
@@ -162,8 +161,8 @@ async function save() {
   if (memberId.value == null) return
   saving.value = true
   try {
-    const updated = await ChurchMember.updateStatus<Record<string, unknown>>(memberId.value, selectedStatus.value, reason.value || undefined)
-    notify.notify({ success: "Estado actualizado exitosamente" })
+    const res = await ChurchMember.updateStatus<Record<string, unknown>>(memberId.value, selectedStatus.value, reason.value || undefined)
+    const updated = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined ?? res as unknown as Record<string, unknown>
     reason.value = ""
     emit("statusChanged", updated)
     emit("close")

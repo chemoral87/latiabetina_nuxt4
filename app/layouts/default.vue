@@ -164,7 +164,6 @@
         <VSnackbar
           v-for="(snack, i) in notify.snacks"
           :key="snack.id"
-          absolute
           model-value
           :timeout="-1"
           :color="snack.color"

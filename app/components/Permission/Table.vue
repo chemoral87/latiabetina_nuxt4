@@ -90,14 +90,17 @@ interface Header {
   width?: string;
 }
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   dialogDelete: unknown;
   response?: { total?: number; data?: unknown[] } | null;
   loading?: boolean;
   search?: string;
   highlightId?: number | null;
   removingId?: number | string | null;
-}>();
+  initialSortBy?: { key: string; order: string }[];
+}>(), {
+  initialSortBy: () => [{ key: "name", order: "asc" }],
+});
 
 const emit = defineEmits<{
   (e: "update:dialogDelete", val: boolean): void;
@@ -109,9 +112,7 @@ const emit = defineEmits<{
 
 const page = ref(1);
 const itemsPerPage = ref(10);
-const sortBy = ref<{ key: string; order: string }[]>([
-  { key: "name", order: "asc" },
-]);
+const sortBy = ref<{ key: string; order: string }[]>([...props.initialSortBy]);
 const dialogDeleteProp = ref<Record<string, unknown>>({});
 
 const headers: Header[] = [

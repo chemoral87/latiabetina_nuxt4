@@ -46,6 +46,7 @@
           :response="response"
           :removing-id="removingId"
           :highlight-id="highlightId"
+          :initial-sort-by="(options.sortBy as any) ?? (initialOptions.sortBy as any)"
           @sorting="handleSorting"
           @edit="editAuditoriumEvent"
           @mark="markAuditoriumEvent"
@@ -72,6 +73,7 @@
 </template>
 
 <script setup lang="ts">
+import { buildApiParams } from "~/utils/buildApiParams";
 import { STATUS_CONFIG } from "~/constants/auditorium";
 import { useRowHighlight } from "~/composables/useRowHighlight";
 
@@ -126,12 +128,7 @@ const initialOptions: Record<string, unknown> = {
 const { data: initialData } = await useAsyncData(
   "auditorium-event-index",
   async () => {
-    const apiParams: Record<string, unknown> = {
-      page: 1,
-      itemsPerPage: 10,
-      sortBy: ["event_date"],
-      sortDesc: [true],
-    };
+    const apiParams = buildApiParams(initialOptions);
     return await AuditoriumEvent.index<{ data: unknown[]; total: number }>(
       apiParams,
     ).catch(() => ({ data: [], total: 0 }));
@@ -179,25 +176,7 @@ async function getAuditoriumEvents(overrides: Record<string, unknown> = {}) {
   };
   options.value = requestOptions;
 
-  const params: Record<string, unknown> = {
-    page: requestOptions.page ?? 1,
-    itemsPerPage: requestOptions.itemsPerPage ?? 10,
-  };
-  const sortBy =
-    (requestOptions.sortBy as { key: string; order: string }[]) ?? [];
-  if (sortBy.length > 0) {
-    params.sortBy = [sortBy[0].key];
-    params.sortDesc = [sortBy[0].order === "desc"];
-  }
-  if (
-    requestOptions.filter &&
-    (requestOptions.filter as unknown[]).length > 0
-  ) {
-    params.filter = requestOptions.filter;
-  }
-  if (requestOptions.org_id) {
-    params.org_id = requestOptions.org_id;
-  }
+  const params = buildApiParams(requestOptions);
 
   try {
     loading.value = true;

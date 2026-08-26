@@ -17,7 +17,7 @@
       </VCol>
 
       <VCol cols="12">
-        <UserTable v-model:dialog-delete="dialogDeleteUser" :search="filterUser" :response="response" :loading="loading" :highlight-id="highlightId" :removing-id="removingId"          @sorting="handleSorting" @edit="editUser" @edit-profiles="editProfiles" @delete="deleteUser" />
+        <UserTable v-model:dialog-delete="dialogDeleteUser" :search="filterUser" :response="response" :loading="loading" :highlight-id="highlightId" :removing-id="removingId" :initial-sort-by="(lastOptions.sortBy as any)" @sorting="handleSorting" @edit="editUser" @edit-profiles="editProfiles" @delete="deleteUser" />
       </VCol>
     </VRow>
 
@@ -26,6 +26,7 @@
 </template>
 
 <script setup lang="ts">
+import { buildApiParams } from "~/utils/buildApiParams"
 import { useRowHighlight } from "~/composables/useRowHighlight"
 
 definePageMeta({
@@ -43,26 +44,21 @@ const filterUser = ref("")
 const loading = ref(false)
 const saving = ref(false)
 const userx = ref<Record<string, unknown> | null>(null)
-const lastOptions = ref<Record<string, unknown> | null>(null)
 const { highlightId, prependCreated, updateRow, removingId, removeWithAnimation } = useRowHighlight()
 
 const { User } = useRepository()
 
+const lastOptions = ref<Record<string, unknown>>({
+  page: 1,
+  itemsPerPage: 10,
+  sortBy: [{ key: "name", order: "asc" }],
+})
+
 // Top-level await — loads initial data before render (asyncData equivalent)
 {
-  const apiParams: Record<string, unknown> = {
-    page: 1,
-    itemsPerPage: 10,
-    sortBy: ["name"],
-    sortDesc: [false],
-  }
+  const apiParams = buildApiParams(lastOptions.value)
   const initialResponse = await User.index(apiParams).catch(() => ({ data: [], total: 0 }))
   response.value = initialResponse as { data: unknown[]; total: number }
-  lastOptions.value = {
-    page: 1,
-    itemsPerPage: 10,
-    sortBy: [{ key: "name", order: "asc" }],
-  }
 }
 
 let debounceTimer: ReturnType<typeof setTimeout> | null = null
@@ -80,18 +76,8 @@ watch(filterInput, (val) => {
 
 async function indexUsers(opts: Record<string, unknown>) {
   lastOptions.value = opts
-  const params: Record<string, unknown> = {
-    page: opts.page ?? 1,
-    itemsPerPage: opts.itemsPerPage ?? 10,
-  }
-  const sortBy = (opts.sortBy as { key: string; order: string }[]) ?? []
-  if (sortBy.length > 0) {
-    params.sortBy = [sortBy[0].key]
-    params.sortDesc = [sortBy[0].order === 'desc']
-  }
-  if (filterUser.value) {
-    params.filter = filterUser.value
-  }
+  const params = buildApiParams(opts)
+  if (filterUser.value && !params.filter) params.filter = filterUser.value
   try {
     loading.value = true
     response.value = await User.index(params)

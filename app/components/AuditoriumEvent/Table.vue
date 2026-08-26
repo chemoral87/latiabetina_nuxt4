@@ -94,13 +94,17 @@ interface Header {
   width?: string;
 }
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   response?: { total?: number; data?: unknown[] } | null;
   options?: Record<string, unknown>;
   loading?: boolean;
   highlightId?: number | null;
   removingId?: number | string | null;
-}>();
+  initialSortBy?: { key: string; order: string }[];
+}>(), {
+  options: () => ({}),
+  initialSortBy: () => [{ key: "event_date", order: "desc" }],
+});
 
 const emit = defineEmits<{
   (e: "sorting", val: Record<string, unknown>): void;
@@ -112,9 +116,7 @@ const emit = defineEmits<{
 
 const page = ref(1);
 const itemsPerPage = ref(10);
-const sortBy = ref<{ key: string; order: string }[]>([
-  { key: "event_date", order: "desc" },
-]);
+const sortBy = ref<{ key: string; order: string }[]>([...props.initialSortBy]);
 
 const auth = useAuthStore();
 
