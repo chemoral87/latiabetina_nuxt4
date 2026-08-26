@@ -576,16 +576,22 @@ function closeCompletion() {
   elapsedSeconds.value = 0;
 }
 
-function toggleAnimation() {
+async function toggleAnimation() {
   if (isPlaying.value) {
     stopAnimation();
   } else {
-    startAnimation();
+    await startAnimation();
   }
 }
 
-function startAnimation() {
-  ensureAudioContext();
+async function startAnimation() {
+  // iOS: unlock MUST be inside the user gesture tick - await resume+prime before any timers
+  const { unlockRelaxAudio } = useRelaxAudio();
+  try {
+    await unlockRelaxAudio();
+  } catch {
+    // ignore unlock failure - playBeep will retry
+  }
   isPlaying.value = true;
   elapsedSeconds.value = 0;
   timerInterval.value = setInterval(() => {
@@ -617,55 +623,25 @@ function stopAnimation() {
   innerCircleStyle.transitionDuration = "0.5s";
 }
 
-let audioContext: AudioContext | null = null;
-
-function ensureAudioContext(): AudioContext {
-  if (!audioContext) {
-    const AC =
-      window.AudioContext ||
-      (window as unknown as { webkitAudioContext: typeof AudioContext })
-        .webkitAudioContext;
-    audioContext = new AC({ latencyHint: "interactive" });
-  }
-  if (audioContext.state === "suspended") {
-    audioContext.resume();
-  }
-  return audioContext;
+// iOS-safe audio: WebAudio must be primed inside the Comenzar gesture.
+// Logic lives in app/composables/useRelaxAudio.ts (latencyHint fallback, suspended/interrupted handling, silent prime)
+function playBeep() {
+  const { playRelaxBeep } = useRelaxAudio();
+  // fire-and-forget - composable handles resume/prime internally
+  void playRelaxBeep(1000, 0.3);
 }
 
-async function playBeep() {
-  const ctx = ensureAudioContext();
-  try {
-    if (ctx.state === "suspended") {
-      await ctx.resume();
-    }
-    const t = ctx.currentTime + 0.05;
-    const oscillator = ctx.createOscillator();
-    const gainNode = ctx.createGain();
-    oscillator.connect(gainNode);
-    gainNode.connect(ctx.destination);
-    oscillator.frequency.value = 1000;
-    oscillator.type = "sine";
-    gainNode.gain.setValueAtTime(0.0001, t);
-    gainNode.gain.exponentialRampToValueAtTime(0.8, t + 0.02);
-    gainNode.gain.exponentialRampToValueAtTime(0.0001, t + 0.3);
-    oscillator.start(t);
-    oscillator.stop(t + 0.3);
-  } catch {
-    // ignore
-  }
-}
-
+let relaxVisibilityCleanup: (() => void) | null = null;
 onMounted(() => {
-  const unlock = () => ensureAudioContext();
-  window.addEventListener("pointerdown", unlock, { once: true });
-  window.addEventListener("touchstart", unlock, { once: true });
-  window.addEventListener("click", unlock, { once: true });
-  onBeforeUnmount(() => {
-    window.removeEventListener("pointerdown", unlock);
-    window.removeEventListener("touchstart", unlock);
-    window.removeEventListener("click", unlock);
-  });
+  // Keep context warm for subsequent phases + recover after tab background on iOS
+  const { ensureRelaxAudioRunning } = useRelaxAudio();
+  const onVisibility = () => {
+    if (!document.hidden && isPlaying.value) {
+      void ensureRelaxAudioRunning();
+    }
+  };
+  document.addEventListener("visibilitychange", onVisibility);
+  relaxVisibilityCleanup = () => document.removeEventListener("visibilitychange", onVisibility);
 });
 
 function animateCircle() {
@@ -749,6 +725,10 @@ function animateCircle() {
 }
 
 onBeforeUnmount(() => {
+  if (relaxVisibilityCleanup) {
+    relaxVisibilityCleanup();
+    relaxVisibilityCleanup = null;
+  }
   clearInterval(timerInterval.value ?? undefined);
   timerInterval.value = null;
   timeouts.value.forEach((timeout) => clearTimeout(timeout));
