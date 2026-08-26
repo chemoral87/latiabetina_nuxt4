@@ -15,7 +15,7 @@
           <template v-for="(item, i) in items" :key="i">
             <VListGroup
               v-if="item.children"
-              :value="false"
+              :value="`group-${i}`"
               :prepend-icon="item.icon"
             >
               <template #activator="{ props }">
@@ -25,8 +25,8 @@
               </template>
               <VListItem
                 v-for="(child, j) in item.children"
-                :id="`lay-nav-child-${j}`"
-                :key="`child-${j}`"
+                :id="`lay-nav-child-${i}-${j}`"
+                :key="`child-${i}-${j}`"
                 exact
                 router
                 :to="child.to"
@@ -174,7 +174,7 @@
           <span class="text-subtitle-1 font-weight-bold">{{ snack.text }}</span>
           <template #actions>
             <VBtn
-              id="lay-snack-close"
+              :id="`lay-snack-close-${snack.id}`"
               icon
               color="grey"
               size="small"

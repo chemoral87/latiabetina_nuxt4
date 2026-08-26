@@ -4,9 +4,7 @@
     <VRow justify="center" density="comfortable">
       <VCol cols="12">
         <div class="text-center">
-          <h1 class="text-h6 font-weight-medium py-0 my-0">
-            Ejercicio de Respiración
-          </h1>
+          <h1 class="font-weight-medium py-0 my-0">Ejercicio de Res</h1>
         </div>
       </VCol>
     </VRow>
