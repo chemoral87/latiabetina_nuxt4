@@ -58,8 +58,8 @@
 </template>
 
 <script setup lang="ts">
-import { buildApiParams } from "~/utils/buildApiParams"
 import { useRowHighlight } from "~/composables/useRowHighlight"
+import { buildApiParams } from "~/utils/buildApiParams"
 
 definePageMeta({
   title: "Roles",
@@ -103,19 +103,8 @@ const lastOptions = ref<Record<string, unknown>>({
   response.value = initialData.value
 }
 
-// Debounced filter — matches Organization index pattern (300ms)
-let debounceTimer: ReturnType<typeof setTimeout> | null = null
-
-watch(filterInput, (val) => {
-  if (debounceTimer) clearTimeout(debounceTimer)
-  if (!val) {
-    filterRole.value = ""
-    return
-  }
-  debounceTimer = setTimeout(() => {
-    filterRole.value = val
-  }, 300)
-})
+// Debounced filter — shared useDebouncedFilter (300ms immediate clear)
+useDebouncedFilter(filterInput, filterRole)
 
 async function loadRoles(opts: Record<string, unknown>) {
   try {

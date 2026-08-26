@@ -96,8 +96,8 @@
 </template>
 
 <script setup lang="ts">
-import { buildApiParams } from "~/utils/buildApiParams";
 import { useChurchEventActions } from "~/composables/useChurchEventActions";
+import { buildApiParams } from "~/utils/buildApiParams";
 
 definePageMeta({
   title: "Eventos de Iglesia",
@@ -174,20 +174,8 @@ function normalizeResponse(res: unknown): { data: unknown[]; total: number } {
   return { data: [], total: 0 };
 }
 
-// Debounced filter (300ms): the input ref feeds the API-driving ref, and the
-// clear is immediate (never debounced) — see index_page_table_pattern.md.
-let debounceTimer: ReturnType<typeof setTimeout> | null = null;
-
-watch(filterInput, (val) => {
-  if (debounceTimer) clearTimeout(debounceTimer);
-  if (!val) {
-    filterChurchEvent.value = "";
-    return;
-  }
-  debounceTimer = setTimeout(() => {
-    filterChurchEvent.value = val;
-  }, 300);
-});
+// Debounced filter — shared useDebouncedFilter (300ms immediate clear)
+useDebouncedFilter(filterInput, filterChurchEvent)
 
 watch(filterChurchEvent, (val) => {
   if (skipFilterWatch.value) {

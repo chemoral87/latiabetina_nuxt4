@@ -100,19 +100,8 @@ function viewMember(item: unknown) {
   if (id != null) navigateTo(`/church-member/${id}?from=tracking`)
 }
 
-// Debounced filter — 300ms, matches the index page pattern.
-let debounceTimer: ReturnType<typeof setTimeout> | null = null
-
-watch(filterInput, (val) => {
-  if (debounceTimer) clearTimeout(debounceTimer)
-  if (!val) {
-    filterTerm.value = ""
-    return
-  }
-  debounceTimer = setTimeout(() => {
-    filterTerm.value = val
-  }, 300)
-})
+// Debounced filter — shared useDebouncedFilter (300ms immediate clear)
+useDebouncedFilter(filterInput, filterTerm)
 
 function normalizeMembers(res: unknown): Record<string, unknown>[] {
   if (Array.isArray(res)) return res as Record<string, unknown>[]

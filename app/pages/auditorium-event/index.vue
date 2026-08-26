@@ -73,9 +73,9 @@
 </template>
 
 <script setup lang="ts">
-import { buildApiParams } from "~/utils/buildApiParams";
 import { STATUS_CONFIG } from "~/constants/auditorium";
 import { useRowHighlight } from "~/composables/useRowHighlight";
+import { buildApiParams } from "~/utils/buildApiParams";
 
 definePageMeta({
   title: "Eventos de Auditorio",

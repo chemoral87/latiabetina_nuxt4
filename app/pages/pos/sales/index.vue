@@ -47,9 +47,9 @@
 </template>
 
 <script setup lang="ts">
-import { buildApiParams } from "~/utils/buildApiParams"
 import { createRealtimeListeners } from "~/utils/realtime"
 import { useRowHighlight } from "~/composables/useRowHighlight"
+import { buildApiParams } from "~/utils/buildApiParams"
 
 definePageMeta({
   title: "Ventas",
@@ -91,19 +91,8 @@ const { data: initialData } = await useAsyncData(
 )
 response.value = initialData.value
 
-// Debounced filter (300ms)
-let debounceTimer: ReturnType<typeof setTimeout> | null = null
-
-watch(filterInput, (val) => {
-  if (debounceTimer) clearTimeout(debounceTimer)
-  if (!val) {
-    filterSale.value = ""
-    return
-  }
-  debounceTimer = setTimeout(() => {
-    filterSale.value = val
-  }, 300)
-})
+// Debounced filter — shared useDebouncedFilter (300ms immediate clear)
+useDebouncedFilter(filterInput, filterSale)
 
 watch(filterSale, () => {
   loadSales({

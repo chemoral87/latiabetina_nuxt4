@@ -112,8 +112,8 @@
 </template>
 
 <script setup lang="ts">
-import { buildApiParams } from "~/utils/buildApiParams";
 import { useRowHighlight } from "~/composables/useRowHighlight";
+import { buildApiParams } from "~/utils/buildApiParams";
 
 definePageMeta({
   title: "Testimonios",

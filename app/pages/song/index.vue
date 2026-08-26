@@ -70,8 +70,8 @@
 </template>
 
 <script setup lang="ts">
-import { buildApiParams } from "~/utils/buildApiParams"
 import { useRowHighlight } from "~/composables/useRowHighlight"
+import { buildApiParams } from "~/utils/buildApiParams"
 
 definePageMeta({
   title: "Cancionero",
@@ -141,18 +141,8 @@ function normalizeResponse(res: unknown): { data: unknown[]; total: number } {
   return { data: [], total: 0 }
 }
 
-let debounceTimer: ReturnType<typeof setTimeout> | null = null
-
-watch(filterInput, (val) => {
-  if (debounceTimer) clearTimeout(debounceTimer)
-  if (!val) {
-    filterSong.value = ""
-    return
-  }
-  debounceTimer = setTimeout(() => {
-    filterSong.value = val
-  }, 300)
-})
+// Debounced filter — shared useDebouncedFilter (300ms immediate clear)
+useDebouncedFilter(filterInput, filterSong)
 
 watch(filterSong, (val) => {
   if (skipFilterWatch.value) {

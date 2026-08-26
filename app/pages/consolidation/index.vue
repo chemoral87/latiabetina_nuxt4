@@ -59,8 +59,8 @@
 </template>
 
 <script setup lang="ts">
-import { buildApiParams } from "~/utils/buildApiParams";
 import { useRowHighlight } from "~/composables/useRowHighlight";
+import { buildApiParams } from "~/utils/buildApiParams";
 
 definePageMeta({
   title: "Consolidación",
@@ -97,21 +97,8 @@ const lastOptions = ref<Record<string, unknown>>({
   sortBy: [{ key: "date", order: "desc" }],
 });
 
-// Debounced filter — 300ms, matches the index page pattern. filterInput is
-// bound to the VTextField; filterTerm drives the API call (and the table's
-// :search). Clear immediately when the input empties.
-let debounceTimer: ReturnType<typeof setTimeout> | null = null;
-
-watch(filterInput, (val) => {
-  if (debounceTimer) clearTimeout(debounceTimer);
-  if (!val) {
-    filterTerm.value = "";
-    return;
-  }
-  debounceTimer = setTimeout(() => {
-    filterTerm.value = val;
-  }, 300);
-});
+// Debounced filter — shared useDebouncedFilter (300ms immediate clear)
+useDebouncedFilter(filterInput, filterTerm)
 
 // Initial list data is loaded during SSR via useAsyncData so the payload is
 // reused on the client (no double fetch, no hydration mismatch).

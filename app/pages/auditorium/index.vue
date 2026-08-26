@@ -71,8 +71,8 @@
 </template>
 
 <script setup lang="ts">
-import { buildApiParams } from "~/utils/buildApiParams";
 import { useRowHighlight } from "~/composables/useRowHighlight";
+import { buildApiParams } from "~/utils/buildApiParams";
 
 definePageMeta({
   title: "Auditorios",
@@ -118,18 +118,8 @@ const { data: initialData } = await useAsyncData(
 
 response.value = initialData.value;
 
-let debounceTimer: ReturnType<typeof setTimeout> | null = null;
-
-watch(filterInput, (val) => {
-  if (debounceTimer) clearTimeout(debounceTimer);
-  if (!val) {
-    filterAuditorium.value = "";
-    return;
-  }
-  debounceTimer = setTimeout(() => {
-    filterAuditorium.value = val;
-  }, 300);
-});
+// Debounced filter — shared useDebouncedFilter (300ms immediate clear)
+useDebouncedFilter(filterInput, filterAuditorium)
 
 // The initial SSR fetch does NOT include org_id.
 // OrganizationSelect uses prevent-auto-select so it won't trigger a

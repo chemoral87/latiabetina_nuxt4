@@ -66,6 +66,8 @@ const lastOptions = ref<Record<string, unknown> | null>(null)
 **Rule: never hard-code `sortBy`/`sortDesc` twice.** `lastOptions` is the single source of truth (Vuetify 4 format). `buildApiParams()` converts it to backend format for every fetch, including the SSR initial load. Changing the default sort requires editing **only** `lastOptions` — the table and the initial fetch follow automatically.
 
 ```ts
+import { buildApiParams } from "~/utils/buildApiParams"  // shared — app/utils/buildApiParams.ts:8
+
 // Single source — Vuetify 4 format
 const lastOptions = ref<Record<string, unknown>>({
   page: 1,
@@ -73,21 +75,7 @@ const lastOptions = ref<Record<string, unknown>>({
   sortBy: [{ key: "name", order: "asc" }],
 })
 
-function buildApiParams(opts: Record<string, unknown>): Record<string, unknown> {
-  const params: Record<string, unknown> = {
-    page: opts.page ?? 1,
-    itemsPerPage: opts.itemsPerPage ?? 10,
-  }
-  const sortBy = (opts.sortBy as { key: string; order: string }[]) ?? []
-  if (sortBy.length > 0) {
-    params.sortBy = [sortBy[0].key]              // backend: ["name"]
-    params.sortDesc = [sortBy[0].order === "desc"] // backend: [false]
-  }
-  if (filterRole.value) params.filter = filterRole.value
-  return params
-}
-
-// buildApiParams MUST be defined before this block (used at top-level await)
+// buildApiParams imported — must be imported before top-level await (used at SSR)
 {
   const apiParams = buildApiParams(lastOptions.value)  // dynamic, not hard-coded
   const initialResponse = await Role.index(apiParams).catch(() => ({ data: [], total: 0 }))
@@ -95,48 +83,40 @@ function buildApiParams(opts: Record<string, unknown>): Record<string, unknown> 
 }
 ```
 
-- **Dynamic:** `lastOptions` → `buildApiParams()` → `apiParams` (Vuetify `[{key,order}]` → backend `["name"]`/`[false]`). The consolidation module (`date desc`) already uses this pattern `app/pages/consolidation/index.vue:92-136` and `app/components/Consolidation/Table.vue:113-142` with `initialSortBy` prop.
-- **No duplication:** do not write `sortBy: ["name"]` and `sortBy: [{key:"name",order:"asc"}]` in two places — the second is derived.
+- **Dynamic & shared:** `lastOptions` → `buildApiParams()` from `app/utils/buildApiParams.ts:8` → `apiParams` (Vuetify `[{key,order}]` → backend `["name"]`/`[false]` + passthrough `filter`/`org_id`/`status`/`date_from` etc.). The consolidation module (`date desc`) already uses this pattern `app/pages/consolidation/index.vue:62,136` and `app/components/Consolidation/Table.vue:113-142` with `initialSortBy` prop. Do not duplicate `buildApiParams` per page.
+- **No duplication:** do not write `sortBy: ["name"]` and `sortBy: [{key:"name",order:"asc"}]` in two places — the second is derived. Changing default requires editing only `lastOptions`.
 - The repository must be destructured **before** this block (temporal dead zone).
 
-### 2. Debounced filter (300ms)
+### 2. Debounced filter (300ms) — shared `useDebouncedFilter`
 
 ```ts
-let debounceTimer: ReturnType<typeof setTimeout> | null = null
+// Shared — app/composables/useDebouncedFilter.ts:8 (auto-imported, no import needed)
+const filterInput = ref("")  // bound to the VTextField
+const filterRole = ref("")   // drives the API call
 
-watch(filterInput, (val) => {
-  if (debounceTimer) clearTimeout(debounceTimer)
-  if (!val) {
-    filterRole.value = ""
-    return
-  }
-  debounceTimer = setTimeout(() => {
-    filterRole.value = val
-  }, 300)
-})
+// Debounced filter — shared useDebouncedFilter (300ms immediate clear)
+useDebouncedFilter(filterInput, filterRole)            // 300ms default
+// useDebouncedFilter(filterInput, filterRole, 500)    // custom delay (e.g. testimony)
+
+// Alternative — creates both refs and wires the debounce:
+// const { filterInput, filter: filterRole } = useFilterInput(300)
 ```
 
-Clear immediately when the input empties; never debounce the clear.
+Clear immediately when the input empties; never debounce the clear. Do not duplicate the inline `watch`/`debounceTimer`/`setTimeout` per page — use the shared composable (handles cleanup on unmount).
 
-### 3. Single loader function
+### 3. Single loader function (via shared `buildApiParams`)
 
 ```ts
+import { buildApiParams } from "~/utils/buildApiParams"
+
 async function loadRoles(opts: Record<string, unknown>) {
   try {
     loading.value = true
     lastOptions.value = opts
-    const params: Record<string, unknown> = {
-      page: opts.page ?? 1,
-      itemsPerPage: opts.itemsPerPage ?? 10,
-    }
-    const sortBy = (opts.sortBy as { key: string; order: string }[]) ?? []
-    if (sortBy.length > 0) {
-      params.sortBy = [sortBy[0].key]
-      params.sortDesc = [sortBy[0].order === 'desc']
-    }
-    if (filterRole.value) {
-      params.filter = filterRole.value
-    }
+    // Simple pages: merge filter if not already in opts (generic passthrough covers opts.filter)
+    const _opts = { ...opts }
+    if (filterRole.value && !("filter" in _opts)) _opts.filter = filterRole.value
+    const params = buildApiParams(_opts)  // shared — handles pagination + sort + passthrough
     response.value = await Role.index(params)
   } catch (e) {
     console.error("Error al cargar roles", e)
@@ -144,10 +124,13 @@ async function loadRoles(opts: Record<string, unknown>) {
     loading.value = false
   }
 }
+
+// For pages with multiple filters (testimony: filter/status/org_id/date_from/date_to,
+// church-event: filter/org_id) build `requestOptions = {...lastOptions.value, ...overrides}`
+// ensuring overrides contain the filter values, then `buildApiParams(requestOptions)` — no closure needed.
 ```
 
-Converts Vuetify 4 `sortBy` → backend `sortBy[]` / `sortDesc[]`, adds the
-`filter`, wraps with `loading`.
+Shared `app/utils/buildApiParams.ts:8` converts Vuetify 4 `sortBy` → backend `sortBy[]` / `sortDesc[]` and passes through any extra keys (`filter`, `org_id`, `status` …) skipping empty values. Loader only wraps with `loading` and merges `filter` if the table's `opts` doesn't already carry it.
 
 ### 4. Suppress mount-time duplicate with `initialLoaded`
 

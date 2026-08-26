@@ -63,8 +63,8 @@
 </template>
 
 <script setup lang="ts">
-import { buildApiParams } from "~/utils/buildApiParams";
 import { useRowHighlight } from "~/composables/useRowHighlight";
+import { buildApiParams } from "~/utils/buildApiParams";
 
 definePageMeta({
   title: "Permisos",
@@ -102,19 +102,8 @@ const lastOptions = ref<Record<string, unknown>>({
   response.value = initialResponse as { data: unknown[]; total: number };
 }
 
-// Debounced filter (300ms)
-let debounceTimer: ReturnType<typeof setTimeout> | null = null;
-
-watch(filterInput, (val) => {
-  if (debounceTimer) clearTimeout(debounceTimer);
-  if (!val) {
-    filterPermission.value = "";
-    return;
-  }
-  debounceTimer = setTimeout(() => {
-    filterPermission.value = val;
-  }, 300);
-});
+// Debounced filter — shared useDebouncedFilter (300ms immediate clear)
+useDebouncedFilter(filterInput, filterPermission)
 
 async function loadPermissions(opts: Record<string, unknown>) {
   try {

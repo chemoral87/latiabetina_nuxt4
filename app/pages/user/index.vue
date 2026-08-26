@@ -26,8 +26,8 @@
 </template>
 
 <script setup lang="ts">
-import { buildApiParams } from "~/utils/buildApiParams"
 import { useRowHighlight } from "~/composables/useRowHighlight"
+import { buildApiParams } from "~/utils/buildApiParams"
 
 definePageMeta({
   title: "Usuarios",
@@ -61,18 +61,8 @@ const lastOptions = ref<Record<string, unknown>>({
   response.value = initialResponse as { data: unknown[]; total: number }
 }
 
-let debounceTimer: ReturnType<typeof setTimeout> | null = null
-
-watch(filterInput, (val) => {
-  if (debounceTimer) clearTimeout(debounceTimer)
-  if (!val) {
-    filterUser.value = ""
-    return
-  }
-  debounceTimer = setTimeout(() => {
-    filterUser.value = val
-  }, 300)
-})
+// Debounced filter — shared useDebouncedFilter (300ms immediate clear)
+useDebouncedFilter(filterInput, filterUser)
 
 async function indexUsers(opts: Record<string, unknown>) {
   lastOptions.value = opts
