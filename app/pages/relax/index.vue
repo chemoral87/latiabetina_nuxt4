@@ -12,7 +12,7 @@
     </VRow>
     <!-- Área de animación y controles -->
     <VRow class="mb-1" justify="center" density="comfortable">
-      <VCol cols="12">
+      <VCol cols="12" md="7">
         <VCard
           id="rel-animation-card"
           class="pa-3"
@@ -181,10 +181,9 @@
           </VRow>
         </VCard>
       </VCol>
-    </VRow>
-    <!-- Controles de configuración -->
-    <VRow justify="center" density="comfortable">
-      <VCol cols="12">
+
+      <!-- Controles de configuración -->
+      <VCol cols="12" md="5">
         <VCard id="rel-config-card" class="pa-1" rounded="lg" elevation="2">
           <VCardTitle class="text-subtitle-1 py-2 my-0">
             <VIcon start size="small" color="primary">mdi-cog-outline</VIcon>
@@ -192,7 +191,7 @@
           </VCardTitle>
 
           <VRow class="mb-1" density="comfortable">
-            <VCol md="4" sm="6" cols="6">
+            <VCol cols="6" sm="6" md="12" lg="6">
               <VSelect
                 id="rel-exercise"
                 v-model="selectedExercise"
@@ -206,7 +205,7 @@
               />
             </VCol>
 
-            <VCol md="2" sm="4" cols="6">
+            <VCol cols="6" sm="4" md="6" lg="4">
               <VTextField
                 id="rel-initial-contract"
                 v-model.number="initialContract"
@@ -228,7 +227,7 @@
               </VTextField>
             </VCol>
 
-            <VCol md="2" sm="4" cols="6">
+            <VCol cols="6" sm="4" md="6" lg="4">
               <VTextField
                 id="rel-expansion"
                 v-model.number="expansion"
@@ -248,7 +247,7 @@
               </VTextField>
             </VCol>
 
-            <VCol md="2" sm="4" cols="6">
+            <VCol cols="6" sm="4" md="6" lg="4">
               <VTextField
                 id="rel-immobile-1"
                 v-model.number="immobile1"
@@ -268,7 +267,7 @@
               </VTextField>
             </VCol>
 
-            <VCol md="2" sm="4" cols="6">
+            <VCol cols="6" sm="4" md="6" lg="4">
               <VTextField
                 id="rel-contraction"
                 v-model.number="contraction"
@@ -288,7 +287,7 @@
               </VTextField>
             </VCol>
 
-            <VCol md="2" sm="4" cols="6">
+            <VCol cols="6" sm="4" md="6" lg="4">
               <VTextField
                 id="rel-immobile-2"
                 v-model.number="immobile2"
@@ -307,7 +306,7 @@
                 </template>
               </VTextField>
             </VCol>
-            <VCol md="2" sm="4" cols="6">
+            <VCol cols="6" sm="4" md="6" lg="4">
               <VTextField
                 id="rel-goal-time"
                 v-model.number="goalTime"
