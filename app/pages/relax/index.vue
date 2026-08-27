@@ -170,9 +170,9 @@
             <!-- Círculo de animación -->
             <VCol cols="5">
               <div class="animation-wrapper">
-                <div :style="circleStyle" class="circle-animation">
+                <div ref="circleEl" class="circle-animation">
                   <div
-                    :style="innerCircleStyle"
+                    ref="innerCircleEl"
                     class="inner-circle-animation"
                   ></div>
                 </div>
@@ -490,31 +490,8 @@ const selectedExercise = computed({
   },
 });
 
-const circleStyle = reactive({
-  width: "30%",
-  height: "30%",
-  borderRadius: "50%",
-  backgroundColor: "#2E7D32",
-  transitionProperty: "transform, background-color",
-  transitionDuration: "0.5s",
-  transitionTimingFunction: "ease-out",
-  position: "relative",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-});
-
-const innerCircleStyle = reactive({
-  width: "50%",
-  height: "50%",
-  borderRadius: "50%",
-  backgroundColor: "white",
-  transitionProperty: "transform",
-  transitionDuration: "0.5s",
-  transitionTimingFunction: "ease-out",
-  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-});
+const circleEl = ref<HTMLElement | null>(null);
+const innerCircleEl = ref<HTMLElement | null>(null);
 
 const formattedTime = computed(() => {
   const m = Math.floor(elapsedSeconds.value / 60)
@@ -573,11 +550,17 @@ function completeAnimation() {
   timeouts.value = [];
   stopCountdown();
   animationState.value = "idle";
-  circleStyle.backgroundColor = "#2E7D32";
-  circleStyle.transform = "scale(1)";
-  circleStyle.transitionDuration = "0.5s";
-  innerCircleStyle.transform = "scale(1)";
-  innerCircleStyle.transitionDuration = "0.5s";
+  const c = circleEl.value;
+  const ic = innerCircleEl.value;
+  if (c) {
+    c.style.transitionDuration = "0.5s";
+    c.style.backgroundColor = "#2E7D32";
+    c.style.transform = "scale(1)";
+  }
+  if (ic) {
+    ic.style.transitionDuration = "0.5s";
+    ic.style.transform = "scale(1)";
+  }
   showCompletionDialog.value = true;
 }
 
@@ -595,12 +578,14 @@ async function toggleAnimation() {
 }
 
 async function startAnimation() {
+  console.log("[relax] startAnimation called, circleEl:", !!circleEl.value);
   // iOS: unlock MUST be inside the user gesture tick - await resume+prime before any timers
   const { unlockRelaxAudio } = useRelaxAudio();
   try {
     await unlockRelaxAudio();
-  } catch {
-    // ignore unlock failure - playBeep will retry
+    console.log("[relax] audio unlocked OK");
+  } catch (e) {
+    console.warn("[relax] audio unlock failed:", e);
   }
   isPlaying.value = true;
   elapsedSeconds.value = 0;
@@ -612,6 +597,7 @@ async function startAnimation() {
   }, 1000);
   startCountdown();
   setPhase("initialContract");
+  console.log("[relax] starting animateCircle, state:", animationState.value);
   animateCircle();
 }
 
@@ -626,11 +612,17 @@ function stopAnimation() {
   stopCountdown();
 
   animationState.value = "idle";
-  circleStyle.backgroundColor = "#2E7D32";
-  circleStyle.transform = "scale(1)";
-  circleStyle.transitionDuration = "0.5s";
-  innerCircleStyle.transform = "scale(1)";
-  innerCircleStyle.transitionDuration = "0.5s";
+  const c = circleEl.value;
+  const ic = innerCircleEl.value;
+  if (c) {
+    c.style.transitionDuration = "0.5s";
+    c.style.backgroundColor = "#2E7D32";
+    c.style.transform = "scale(1)";
+  }
+  if (ic) {
+    ic.style.transitionDuration = "0.5s";
+    ic.style.transform = "scale(1)";
+  }
 }
 
 // iOS-safe audio: WebAudio must be primed inside the Comenzar gesture.
@@ -643,7 +635,46 @@ function playBeep() {
 
 let relaxVisibilityCleanup: (() => void) | null = null;
 onMounted(() => {
-  // Keep context warm for subsequent phases + recover after tab background on iOS
+  console.log("[relax] onMounted — circleEl:", !!circleEl.value, "innerCircleEl:", !!innerCircleEl.value);
+  if (circleEl.value) {
+    const cs = getComputedStyle(circleEl.value);
+    console.log("[relax] circle computed:", {
+      width: cs.width,
+      height: cs.height,
+      display: cs.display,
+      transitionProperty: cs.transitionProperty,
+      transitionDuration: cs.transitionDuration,
+      transform: cs.transform,
+      willChange: cs.willChange,
+      visibility: cs.visibility,
+      opacity: cs.opacity,
+      overflow: cs.overflow,
+      offsetWidth: circleEl.value.offsetWidth,
+      offsetHeight: circleEl.value.offsetHeight,
+    });
+  } else {
+    console.warn("[relax] circleEl is NULL on mount!");
+  }
+  if (innerCircleEl.value) {
+    const cs = getComputedStyle(innerCircleEl.value);
+    console.log("[relax] innerCircle computed:", {
+      width: cs.width,
+      height: cs.height,
+      transitionProperty: cs.transitionProperty,
+      transitionDuration: cs.transitionDuration,
+      transform: cs.transform,
+    });
+  } else {
+    console.warn("[relax] innerCircleEl is NULL on mount!");
+  }
+  // Listen for transitionend to verify transitions actually fire
+  circleEl.value?.addEventListener("transitionend", (e) => {
+    console.log("[relax] transitionend on circle:", e.propertyName, e.target === circleEl.value);
+  });
+  innerCircleEl.value?.addEventListener("transitionend", (e) => {
+    console.log("[relax] transitionend on innerCircle:", e.propertyName, e.target === innerCircleEl.value);
+  });
+
   const { ensureRelaxAudioRunning } = useRelaxAudio();
   const onVisibility = () => {
     if (!document.hidden && isPlaying.value) {
@@ -655,12 +686,6 @@ onMounted(() => {
     document.removeEventListener("visibilitychange", onVisibility);
 });
 
-function forceRepaint(): Promise<void> {
-  return new Promise((resolve) => {
-    requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
-  });
-}
-
 function scheduleNext(phase: string, delayMs: number) {
   const t = setTimeout(() => {
     animationState.value = phase;
@@ -669,68 +694,72 @@ function scheduleNext(phase: string, delayMs: number) {
   timeouts.value.push(t);
 }
 
-async function animateCircle() {
-  if (!isPlaying.value) return;
+function applyCircleStyle(
+  transitionDuration: string,
+  transitionTimingFunction: string,
+  backgroundColor: string,
+  transform: string,
+  innerTransform: string,
+) {
+  const c = circleEl.value;
+  const ic = innerCircleEl.value;
+  if (!c || !ic) {
+    console.warn("[relax] applyCircleStyle: circleEl or innerCircleEl is NULL!", { c: !!c, ic: !!ic });
+    return;
+  }
+
+  const transformBefore = getComputedStyle(c).transform;
+
+  c.style.transitionDuration = transitionDuration;
+  c.style.transitionTimingFunction = transitionTimingFunction;
+  ic.style.transitionDuration = transitionDuration;
+  ic.style.transitionTimingFunction = transitionTimingFunction;
+
+  // Force synchronous reflow so Safari commits the transition config
+  void c.offsetHeight;
+
+  c.style.backgroundColor = backgroundColor;
+  c.style.transform = transform;
+  ic.style.transform = innerTransform;
+
+  const transformAfter = getComputedStyle(c).transform;
+  console.log("[relax] applyCircleStyle:", {
+    transitionDuration,
+    backgroundColor,
+    transform,
+    innerTransform,
+    transformBefore,
+    transformAfter,
+    offsetHeight: c.offsetHeight,
+  });
+}
+
+function animateCircle() {
+  if (!isPlaying.value) {
+    console.log("[relax] animateCircle: not playing, aborting");
+    return;
+  }
 
   setPhase(animationState.value);
   playBeep();
 
   const dur = phaseDuration.value;
+  console.log("[relax] animateCircle: state=" + animationState.value + " dur=" + dur);
 
   if (animationState.value === "initialContract") {
-    circleStyle.transitionDuration = `${dur}s`;
-    circleStyle.transitionTimingFunction = "ease-in";
-    innerCircleStyle.transitionDuration = `${dur}s`;
-    innerCircleStyle.transitionTimingFunction = "ease-in";
-    await nextTick();
-    await forceRepaint();
-    circleStyle.backgroundColor = "#FF9800";
-    circleStyle.transform = "scale(0.75)";
-    innerCircleStyle.transform = "scale(1.3)";
+    applyCircleStyle(`${dur}s`, "ease-in", "#FF9800", "scale(0.75)", "scale(1.3)");
     scheduleNext("expansion", dur * 1000);
   } else if (animationState.value === "expansion") {
-    circleStyle.transitionDuration = `${dur}s`;
-    circleStyle.transitionTimingFunction = "ease-out";
-    innerCircleStyle.transitionDuration = `${dur}s`;
-    innerCircleStyle.transitionTimingFunction = "ease-out";
-    await nextTick();
-    await forceRepaint();
-    circleStyle.backgroundColor = "#1565C0";
-    circleStyle.transform = "scale(3)";
-    innerCircleStyle.transform = "scale(0.777)";
+    applyCircleStyle(`${dur}s`, "ease-out", "#1565C0", "scale(3)", "scale(0.777)");
     scheduleNext("immobile1", dur * 1000);
   } else if (animationState.value === "immobile1") {
-    circleStyle.transitionDuration = `${dur}s`;
-    circleStyle.transitionTimingFunction = "linear";
-    innerCircleStyle.transitionDuration = `${dur}s`;
-    innerCircleStyle.transitionTimingFunction = "linear";
-    await nextTick();
-    await forceRepaint();
-    circleStyle.backgroundColor = "#2E7D32";
-    circleStyle.transform = "scale(3)";
-    innerCircleStyle.transform = "scale(0.777)";
+    applyCircleStyle(`${dur}s`, "linear", "#2E7D32", "scale(3)", "scale(0.777)");
     scheduleNext("contraction", dur * 1000);
   } else if (animationState.value === "contraction") {
-    circleStyle.transitionDuration = `${dur}s`;
-    circleStyle.transitionTimingFunction = "ease-in-out";
-    innerCircleStyle.transitionDuration = `${dur}s`;
-    innerCircleStyle.transitionTimingFunction = "ease-in-out";
-    await nextTick();
-    await forceRepaint();
-    circleStyle.backgroundColor = "#C62828";
-    circleStyle.transform = "scale(1)";
-    innerCircleStyle.transform = "scale(1)";
+    applyCircleStyle(`${dur}s`, "ease-in-out", "#C62828", "scale(1)", "scale(1)");
     scheduleNext("immobile2", dur * 1000);
   } else if (animationState.value === "immobile2") {
-    circleStyle.transitionDuration = `${dur}s`;
-    circleStyle.transitionTimingFunction = "linear";
-    innerCircleStyle.transitionDuration = `${dur}s`;
-    innerCircleStyle.transitionTimingFunction = "linear";
-    await nextTick();
-    await forceRepaint();
-    circleStyle.backgroundColor = "#2E7D32";
-    circleStyle.transform = "scale(1)";
-    innerCircleStyle.transform = "scale(1)";
+    applyCircleStyle(`${dur}s`, "linear", "#2E7D32", "scale(1)", "scale(1)");
     scheduleNext("initialContract", dur * 1000);
   }
 }
@@ -779,14 +808,32 @@ onBeforeUnmount(() => {
 }
 
 .circle-animation {
-  display: inline-block;
-  margin: auto;
+  width: 30%;
+  height: 30%;
+  border-radius: 50%;
+  background-color: #2E7D32;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition-property: transform, background-color;
+  transition-duration: 0.5s;
+  transition-timing-function: ease-out;
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
 
 .inner-circle-animation {
+  width: 50%;
+  height: 50%;
+  border-radius: 50%;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition-property: transform;
+  transition-duration: 0.5s;
+  transition-timing-function: ease-out;
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
