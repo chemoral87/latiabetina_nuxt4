@@ -766,12 +766,30 @@ onBeforeUnmount(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
+  /* clip-path instead of overflow:hidden — avoids Safari compositing bug with transform transitions */
+  clip-path: inset(0);
+}
+
+/* Fallback for Safari <15.4: aspect-ratio not supported */
+@supports not (aspect-ratio: 1/1) {
+  .animation-wrapper {
+    padding-bottom: 100%;
+    height: 0;
+  }
 }
 
 .circle-animation {
   display: inline-block;
   margin: auto;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.inner-circle-animation {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .celebration-icon {
