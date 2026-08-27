@@ -24,13 +24,18 @@
         </VChip>
       </template>
 
-      <template #[`item.last_contacted`]="{ item }">
-        {{ formatShortDateTime12h(String(item.last_contacted ?? "")) || "—" }}
+     <template #[`item.last_contacted`]="{ item }">
+       {{ formatShortDateTime12h(String(item.last_contacted ?? "")) || "—" }}
+     </template>
+    
+      
+      <template #[`item.last_contacted_by`]="{ item }">
+        {{ item.last_contacted_by || "—" }}
       </template>
-
-      <template #[`item.org_id`]="{ item }">
-        {{ orgLabel(item.org_id) }}
-      </template>
+      
+     <template #[`item.org_id`]="{ item }">
+       {{ orgLabel(item.org_id) }}
+     </template>
 
       <template #[`item.actions`]="{ item }">
         <VBtn
@@ -114,12 +119,13 @@ const headers = computed<Header[]>(() => {
     { title: "Teléfono", value: "cellphone" },
     { title: "Estado", value: "status", sortable: false, align: "center" },
     { title: "Último contacto", value: "last_contacted", sortable: true },
-  ];
-  if (!singleOrg.value) {
-    cols.push({ title: "Organización", value: "org_id", sortable: false });
-  }
-  return cols;
-});
+    { title: "Contactado por", value: "last_contacted_by", sortable: false },
+    ];
+    if (!singleOrg.value) {
+      cols.push({ title: "Organización", value: "org_id", sortable: false });
+    }
+    return cols;
+  });
 </script>
 
 <style scoped></style>

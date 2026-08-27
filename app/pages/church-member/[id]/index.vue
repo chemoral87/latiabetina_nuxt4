@@ -1,9 +1,6 @@
 <template>
   <VContainer :fluid="true">
-    <VCol v-if="loading" cols="12" class="text-center pa-5">
-          <VProgressCircular indeterminate color="primary" />
-        </VCol>
-        <VCol v-else cols="12">
+      <VCol cols="12">
           <VCard>
           <VCardTitle
             class="text-subtitle-1 font-weight-medium d-flex align-center"
@@ -174,7 +171,6 @@
           </VCardActions>
         </VCard>
       </VCol>
-    </VRow>
 
     <VRow justify="center">
       <VCol md="8" cols="12">
@@ -211,8 +207,6 @@
         </VBtn>
       </VCol>
     </VRow>
-  </VContainer>
-</template>
 
     <ConsolidationStatusLogDialog
       v-if="statusDialog"
@@ -267,38 +261,45 @@ const editDialog = ref(false);
 const saving = ref(false);
 const trackingLogDialog = ref(false);
 const editingLog = ref<Record<string, unknown> | null>(null);
+const logsResponse = ref<{ data: unknown[]; total: number }>({ data: [], total: 0 });
+const loadingLogs = ref(false);
 
 // Initial member data and tracking logs are loaded during SSR via useAsyncData
-const { data: memberData, pending: memberPending } = await useAsyncData(
-  `church-member-${route.params.id}`,
-  async () => {
-    return await ChurchMember.show<Record<string, unknown>>(
-      route.params.id as string,
-    )
-  },
-  { default: () => ({}) as Record<string, unknown> },
-)
+// so the payload is reused on the client (no double fetch, no hydration mismatch).
+// See ai_rule/nuxt4_ssr_hydration.md.
+{
+  const { data: initialMember } = await useAsyncData(
+    `church-member-${route.params.id}`,
+    async () => {
+      return await ChurchMember.show<Record<string, unknown>>(
+        route.params.id as string,
+      ).catch(() => ({}) as Record<string, unknown>)
+    },
+    { default: () => ({}) as Record<string, unknown> },
+  )
+  member.value = initialMember.value
+}
 
-const { data: logsData, pending: logsPending } = await useAsyncData(
-  `church-member-tracking-logs-${route.params.id}`,
-  async () => {
-    return await ChurchMember.trackingLogs<{ data: unknown[]; total: number }>(
-      route.params.id as string,
-      {
-        page: 1,
-        itemsPerPage: 10,
-        sortBy: ["contact_datetime"],
-        sortDesc: [true],
-      }
-    )
-  },
-  { default: () => ({ data: [], total: 0 }) },
-)
+{
+  const { data: initialLogs } = await useAsyncData(
+    `church-member-tracking-logs-${route.params.id}`,
+    async () => {
+      return await ChurchMember.trackingLogs<{ data: unknown[]; total: number }>(
+        route.params.id as string,
+        {
+          page: 1,
+          itemsPerPage: 10,
+          sortBy: ["contact_datetime"],
+          sortDesc: [true],
+        }
+      ).catch(() => ({ data: [] as unknown[], total: 0 }))
+    },
+    { default: () => ({ data: [] as unknown[], total: 0 }) },
+  )
+  logsResponse.value = initialLogs.value
+}
 
-member.value = memberData.value
-logsResponse.value = logsData.value
-
-const loading = computed(() => memberPending.value || logsPending.value)
+const loading = ref(false)
 
 const fullName = computed(
   () =>

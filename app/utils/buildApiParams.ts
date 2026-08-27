@@ -4,6 +4,7 @@
  * `lastOptions` (Vuetify `{key,order}`) → `buildApiParams()` → backend `{sortBy:[],sortDesc:[]}`.
  * Also passes through any extra filters (`filter`, `status`, `org_id`, `date_from`, `date_to`, …)
  * present in `opts` so callers don't maintain per-page filter branches.
+ * Filters out known problematic Vuetify/internal parameters that should not be sent to the API.
  */
 export function buildApiParams(
   opts: Record<string, unknown>,
@@ -21,8 +22,14 @@ export function buildApiParams(
 
   // Passthrough any additional query keys (filter, org_id, status, date_from, …)
   // Skip pagination/sort which are already mapped; ignore empty values.
+  // Also filter out known problematic parameters that should not be sent to API
+  const blockedParams = new Set([
+    'page', 'itemsPerPage', 'sortBy', // Already mapped above
+    'isTrusted', '_vts', 'stopImmediatePropagation', // Vuetify/internal problematic params
+  ]);
+
   for (const [key, value] of Object.entries(opts)) {
-    if (["page", "itemsPerPage", "sortBy"].includes(key)) continue;
+    if (blockedParams.has(key)) continue;
     if (value === undefined || value === null || value === "") continue;
     params[key] = value;
   }

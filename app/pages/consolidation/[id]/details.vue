@@ -1,7 +1,7 @@
 <template>
   <VContainer fluid>
     <VRow density="comfortable">
-      <VCol v-if="sheet.id" cols="12">
+      <VCol cols="12">
         <VCard id="con-detai-card-1" class="mb-3" variant="outlined">
           <VCardTitle class="text-subtitle-1 font-weight-bold d-flex align-center">
             <VIcon start>mdi-clipboard-list</VIcon>
@@ -155,8 +155,8 @@
           id="det-members-dt"
           :loading="loading"
           :members="filteredMembers"
-          @status-change="onInlineStatusChange"
           @delete="deleteMemberPrompt"
+          @status-change="onInlineStatusChange"
         />
       </VCol>
 
@@ -192,7 +192,9 @@
 
 <script setup lang="ts">
 import { onBeforeRouteLeave, useRouter } from "vue-router"
+import { useAsyncData } from '#app'
 import { formatShortDateDash } from "~/utils/date"
+import { computed } from 'vue'
 
 definePageMeta({
   title: "Detalles de Consolidado",
@@ -212,7 +214,6 @@ const auth = useAuthStore()
 const sheetId = computed(() => route.params.id as string)
 
 const filterTerm = ref("")
-const loading = ref(false)
 const saving = ref(false)
 const savingSheet = ref(false)
 const deleting = ref(false)
@@ -233,16 +234,29 @@ const users = ref<{ id: number | string; name: string }[]>([])
 const showConfirmDialog = ref(false)
 let pendingRoute: { to: unknown } | null = null
 
-// Initial load (asyncData equivalent)
-{
-  const [sheetData, dataMembers] = await Promise.all([
-    ConsoSheet.show<Record<string, unknown>>(sheetId.value).catch(() => ({} as Record<string, unknown>)),
-    ChurchMember.index<unknown>({ conso_sheet_id: sheetId.value }).catch(() => [] as unknown),
-  ])
-  sheet.value = sheetData as Record<string, unknown>
-  originalSheet.value = JSON.parse(JSON.stringify(sheet.value))
-  members.value = Array.isArray(dataMembers) ? dataMembers : (dataMembers as { data?: unknown[] })?.data || []
-}
+// Initial member data is loaded during SSR via useAsyncData so the payload is
+// reused on the client (no double fetch, no hydration mismatch).
+const { data: sheetData, pending: sheetPending } = await useAsyncData(
+  `consolidation-details-${route.params.id}`,
+  async () => {
+    return await ConsoSheet.show<Record<string, unknown>>(sheetId.value)
+  },
+  { default: () => ({}) as Record<string, unknown> },
+)
+
+const { data: membersData, pending: membersPending } = await useAsyncData(
+  `consolidation-details-members-${route.params.id}`,
+  async () => {
+    return await ChurchMember.index<unknown>({ conso_sheet_id: sheetId.value })
+  },
+  { default: () => [] as unknown[] },
+)
+
+sheet.value = sheetData.value as Record<string, unknown>
+originalSheet.value = JSON.parse(JSON.stringify(sheet.value))
+members.value = Array.isArray(membersData.value) ? membersData.value : (membersData.value as { data?: unknown[] })?.data || []
+
+const loading = computed(() => sheetPending.value || membersPending.value)
 
 onBeforeRouteLeave((to, _from) => {
   if (isDirty.value) {
@@ -384,7 +398,7 @@ async function confirmDelete(item: unknown) {
     const idx = members.value.findIndex((r) => (r as Record<string, unknown>).id === m.id)
     if (idx !== -1) members.value.splice(idx, 1)
     dialogDelete.value = false
-    notify.notify({ success: "Miembro eliminado exitosamente" })
+
   } catch (error) {
     notify.notify({ error: (error as { response?: { data?: { message?: string } } }).response?.data?.message || "Error al eliminar miembro" })
   } finally {
@@ -413,7 +427,7 @@ async function saveMember(item: Record<string, unknown>) {
       const created = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined ?? res as unknown as Record<string, unknown>
       members.value.unshift(created)
     }
-    notify.notify({ success: `Miembro ${isUpdate ? "actualizado" : "creado"} exitosamente` })
+
     dialog.value = false
   } catch (error) {
     notify.notify({ error: (error as { response?: { data?: { message?: string } } }).response?.data?.message || `Error al ${item.id ? "actualizar" : "crear"} miembro` })

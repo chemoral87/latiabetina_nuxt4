@@ -495,7 +495,9 @@ const circleStyle = reactive({
   height: "30%",
   borderRadius: "50%",
   backgroundColor: "#2E7D32",
-  transition: "transform 0.5s ease-out",
+  transitionProperty: "transform, background-color",
+  transitionDuration: "0.5s",
+  transitionTimingFunction: "ease-out",
   position: "relative",
   display: "flex",
   alignItems: "center",
@@ -508,7 +510,9 @@ const innerCircleStyle = reactive({
   height: "50%",
   borderRadius: "50%",
   backgroundColor: "white",
-  transition: "transform 0.5s ease-out",
+  transitionProperty: "transform",
+  transitionDuration: "0.5s",
+  transitionTimingFunction: "ease-out",
   boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
 });
 
