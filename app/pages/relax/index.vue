@@ -655,83 +655,83 @@ onMounted(() => {
     document.removeEventListener("visibilitychange", onVisibility);
 });
 
-function animateCircle() {
+function forceRepaint(): Promise<void> {
+  return new Promise((resolve) => {
+    requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+  });
+}
+
+function scheduleNext(phase: string, delayMs: number) {
+  const t = setTimeout(() => {
+    animationState.value = phase;
+    animateCircle();
+  }, delayMs);
+  timeouts.value.push(t);
+}
+
+async function animateCircle() {
   if (!isPlaying.value) return;
 
   setPhase(animationState.value);
   playBeep();
 
+  const dur = phaseDuration.value;
+
   if (animationState.value === "initialContract") {
-    // 1. Contracción inicial: el círculo se encoge levemente
-    circleStyle.transitionDuration = `${initialContract.value}s`;
+    circleStyle.transitionDuration = `${dur}s`;
     circleStyle.transitionTimingFunction = "ease-in";
+    innerCircleStyle.transitionDuration = `${dur}s`;
+    innerCircleStyle.transitionTimingFunction = "ease-in";
+    await nextTick();
+    await forceRepaint();
     circleStyle.backgroundColor = "#FF9800";
     circleStyle.transform = "scale(0.75)";
-    innerCircleStyle.transitionDuration = `${initialContract.value}s`;
-    innerCircleStyle.transitionTimingFunction = "ease-in";
     innerCircleStyle.transform = "scale(1.3)";
-    const t1 = setTimeout(() => {
-      animationState.value = "expansion";
-      animateCircle();
-    }, initialContract.value * 1000);
-    timeouts.value.push(t1);
+    scheduleNext("expansion", dur * 1000);
   } else if (animationState.value === "expansion") {
-    // 2. Expansión: el círculo crece al máximo
-    circleStyle.transitionDuration = `${expansion.value}s`;
+    circleStyle.transitionDuration = `${dur}s`;
     circleStyle.transitionTimingFunction = "ease-out";
+    innerCircleStyle.transitionDuration = `${dur}s`;
+    innerCircleStyle.transitionTimingFunction = "ease-out";
+    await nextTick();
+    await forceRepaint();
     circleStyle.backgroundColor = "#1565C0";
     circleStyle.transform = "scale(3)";
-    innerCircleStyle.transitionDuration = `${expansion.value}s`;
-    innerCircleStyle.transitionTimingFunction = "ease-out";
     innerCircleStyle.transform = "scale(0.777)";
-    const t2 = setTimeout(() => {
-      animationState.value = "immobile1";
-      animateCircle();
-    }, expansion.value * 1000);
-    timeouts.value.push(t2);
+    scheduleNext("immobile1", dur * 1000);
   } else if (animationState.value === "immobile1") {
-    // 2.5 Inmóvil 1: el círculo permanece expandido
-    circleStyle.transitionDuration = `${immobile1.value}s`;
+    circleStyle.transitionDuration = `${dur}s`;
     circleStyle.transitionTimingFunction = "linear";
+    innerCircleStyle.transitionDuration = `${dur}s`;
+    innerCircleStyle.transitionTimingFunction = "linear";
+    await nextTick();
+    await forceRepaint();
     circleStyle.backgroundColor = "#2E7D32";
     circleStyle.transform = "scale(3)";
-    innerCircleStyle.transitionDuration = `${immobile1.value}s`;
-    innerCircleStyle.transitionTimingFunction = "linear";
     innerCircleStyle.transform = "scale(0.777)";
-    const t25 = setTimeout(() => {
-      animationState.value = "contraction";
-      animateCircle();
-    }, immobile1.value * 1000);
-    timeouts.value.push(t25);
+    scheduleNext("contraction", dur * 1000);
   } else if (animationState.value === "contraction") {
-    // 3. Contracción: el círculo vuelve a su tamaño normal
-    circleStyle.transitionDuration = `${contraction.value}s`;
+    circleStyle.transitionDuration = `${dur}s`;
     circleStyle.transitionTimingFunction = "ease-in-out";
+    innerCircleStyle.transitionDuration = `${dur}s`;
+    innerCircleStyle.transitionTimingFunction = "ease-in-out";
+    await nextTick();
+    await forceRepaint();
     circleStyle.backgroundColor = "#C62828";
     circleStyle.transform = "scale(1)";
-    innerCircleStyle.transitionDuration = `${contraction.value}s`;
-    innerCircleStyle.transitionTimingFunction = "ease-in-out";
     innerCircleStyle.transform = "scale(1)";
-    const t3 = setTimeout(() => {
-      animationState.value = "immobile2";
-      animateCircle();
-    }, contraction.value * 1000);
-    timeouts.value.push(t3);
+    scheduleNext("immobile2", dur * 1000);
   } else if (animationState.value === "immobile2") {
-    // 4. Inmóvil 2: el círculo permanece quieto
-    circleStyle.transitionDuration = `${immobile2.value}s`;
+    circleStyle.transitionDuration = `${dur}s`;
     circleStyle.transitionTimingFunction = "linear";
+    innerCircleStyle.transitionDuration = `${dur}s`;
+    innerCircleStyle.transitionTimingFunction = "linear";
+    await nextTick();
+    await forceRepaint();
     circleStyle.backgroundColor = "#2E7D32";
     circleStyle.transform = "scale(1)";
-    innerCircleStyle.transitionDuration = `${immobile2.value}s`;
-    innerCircleStyle.transitionTimingFunction = "linear";
     innerCircleStyle.transform = "scale(1)";
-    const t4 = setTimeout(() => {
-      // Reinicia el ciclo
-      animationState.value = "initialContract";
-      animateCircle();
-    }, immobile2.value * 1000);
-    timeouts.value.push(t4);
+    scheduleNext("initialContract", dur * 1000);
   }
 }
 
