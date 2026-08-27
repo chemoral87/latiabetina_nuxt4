@@ -1,12 +1,10 @@
 <template>
   <VContainer :fluid="true">
-    <VRow justify="center">
-      <VCol md="8" cols="12">
-        <VCard v-if="loadingItem" class="text-center pa-5">
+    <VCol v-if="loading" cols="12" class="text-center pa-5">
           <VProgressCircular indeterminate color="primary" />
-        </VCard>
-
-        <VCard v-else>
+        </VCol>
+        <VCol v-else cols="12">
+          <VCard>
           <VCardTitle
             class="text-subtitle-1 font-weight-medium d-flex align-center"
           >
@@ -180,7 +178,7 @@
 
     <VRow justify="center">
       <VCol md="8" cols="12">
-        <VCard v-if="!loadingItem">
+        <VCard>
           <VCardTitle class="text-subtitle-1 font-weight-medium">
             <VIcon start color="primary">mdi-history</VIcon>
             Interacciones
@@ -189,7 +187,7 @@
           <VCardText>
             <ChurchMemberTrackingLogTable
               id="cmm-tracking-log-table"
-              :loading="loadingLogs"
+              :loading="loading"
               :response="logsResponse"
               @edit="editTrackingLog"
               @delete="deleteTrackingLog"
@@ -213,6 +211,8 @@
         </VBtn>
       </VCol>
     </VRow>
+  </VContainer>
+</template>
 
     <ConsolidationStatusLogDialog
       v-if="statusDialog"
@@ -244,6 +244,10 @@
 </template>
 
 <script setup lang="ts">
+import { useAsyncData } from '#app'
+import { buildApiParams } from "~/utils/buildApiParams"
+import { computed } from 'vue'
+
 definePageMeta({
   title: "Detalle Consolidado",
   icon: "mdi-account",
@@ -257,28 +261,44 @@ const { ChurchMember } = useRepository();
 const notify = useNotifyStore();
 const { statusLabel, statusColor } = useChurchMemberStatus();
 
-const loadingItem = ref(true);
 const member = ref<Record<string, unknown>>({});
 const statusDialog = ref(false);
 const editDialog = ref(false);
 const saving = ref(false);
-const loadingLogs = ref(false);
-const logsResponse = ref({ data: [], total: 0 });
 const trackingLogDialog = ref(false);
 const editingLog = ref<Record<string, unknown> | null>(null);
 
-{
-  try {
-    const dbItem = await ChurchMember.show<Record<string, unknown>>(
+// Initial member data and tracking logs are loaded during SSR via useAsyncData
+const { data: memberData, pending: memberPending } = await useAsyncData(
+  `church-member-${route.params.id}`,
+  async () => {
+    return await ChurchMember.show<Record<string, unknown>>(
       route.params.id as string,
-    );
-    member.value = dbItem as Record<string, unknown>;
-  } catch (e) {
-    throw createError({ statusCode: 404, message: "Miembro no encontrado" });
-  } finally {
-    loadingItem.value = false;
-  }
-}
+    )
+  },
+  { default: () => ({}) as Record<string, unknown> },
+)
+
+const { data: logsData, pending: logsPending } = await useAsyncData(
+  `church-member-tracking-logs-${route.params.id}`,
+  async () => {
+    return await ChurchMember.trackingLogs<{ data: unknown[]; total: number }>(
+      route.params.id as string,
+      {
+        page: 1,
+        itemsPerPage: 10,
+        sortBy: ["contact_datetime"],
+        sortDesc: [true],
+      }
+    )
+  },
+  { default: () => ({ data: [], total: 0 }) },
+)
+
+member.value = memberData.value
+logsResponse.value = logsData.value
+
+const loading = computed(() => memberPending.value || logsPending.value)
 
 const fullName = computed(
   () =>
