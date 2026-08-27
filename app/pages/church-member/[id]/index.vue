@@ -172,8 +172,8 @@
         </VCard>
       </VCol>
 
-    <VRow justify="center">
-      <VCol md="8" cols="12">
+    <VRow>
+      <VCol cols="12">
         <VCard>
           <VCardTitle class="text-subtitle-1 font-weight-medium">
             <VIcon start color="primary">mdi-history</VIcon>
@@ -194,8 +194,8 @@
       </VCol>
     </VRow>
 
-    <VRow justify="center">
-      <VCol md="8" cols="12" class="d-flex justify-end">
+    <VRow>
+      <VCol cols="12" class="d-flex justify-end">
         <VBtn
           id="cmm-back-btn"
           color="primary"
@@ -382,8 +382,14 @@ async function fetchTrackingLogs() {
   }
 }
 
+let initialLogsLoaded = false
+
 function onLogsUpdateOptions(opts: Record<string, unknown>) {
-  fetchTrackingLogs();
+  if (!initialLogsLoaded) {
+    initialLogsLoaded = true
+    return
+  }
+  fetchTrackingLogs()
 }
 
 function editTrackingLog(log: Record<string, unknown>) {
