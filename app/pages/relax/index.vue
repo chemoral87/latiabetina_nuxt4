@@ -406,6 +406,10 @@ const exerciseOptions: { title: string; value: string }[] = [
   { title: "Box 5", value: "box5" },
   { title: "Box 6", value: "box6" },
   { title: "Box 7", value: "box7" },
+  { title: "Rect 4", value: "rect4" },
+  { title: "Rect 5", value: "rect5" },
+  { title: "Rect 6", value: "rect6" },
+  { title: "Rect 7", value: "rect7" },
   { title: "Militar 4-7-8", value: "military" },
   { title: "Personalizado", value: "custom" },
 ];
@@ -452,6 +456,34 @@ const exerciseMap: Record<string, BreathingExercise> = {
     immobile1: 7,
     contraction: 8,
     immobile2: 0,
+  },
+  rect4: {
+    initialContract: 0,
+    expansion: 4,
+    immobile1: 3,
+    contraction: 4,
+    immobile2: 3,
+  },
+  rect5: {
+    initialContract: 0,
+    expansion: 5,
+    immobile1: 3,
+    contraction: 5,
+    immobile2: 3,
+  },
+  rect6: {
+    initialContract: 0,
+    expansion: 6,
+    immobile1: 3,
+    contraction: 6,
+    immobile2: 3,
+  },
+  rect7: {
+    initialContract: 0,
+    expansion: 7,
+    immobile1: 3,
+    contraction: 7,
+    immobile2: 3,
   },
 };
 
