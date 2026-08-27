@@ -416,7 +416,6 @@ const exerciseOptions: { title: string; value: string }[] = [
   { title: "Triangle 7", value: "triangle7" },
   { title: "4-7-8 Weil", value: "weil" },
   { title: "1:2 Respiración", value: "ratio12" },
-  { title: "Militar 4-7-8", value: "military" },
   { title: "Personalizado", value: "custom" },
 ];
 
@@ -455,13 +454,6 @@ const exerciseMap: Record<string, BreathingExercise> = {
     immobile1: 7,
     contraction: 7,
     immobile2: 7,
-  },
-  military: {
-    initialContract: 0,
-    expansion: 4,
-    immobile1: 7,
-    contraction: 8,
-    immobile2: 0,
   },
   rect4: {
     initialContract: 0,
