@@ -167,6 +167,18 @@
                   Llamar
                 </VBtn>
               </VCol>
+              <VCol cols="12" sm="auto">
+                <VBtn
+                  id="cmm-face-to-face-btn"
+                  class="ma-1"
+                  color="deep-orange"
+                  variant="outlined"
+                  @click="openContact('presencial')"
+                >
+                  <VIcon start>mdi-account-group</VIcon>
+                  Presencial
+                </VBtn>
+              </VCol>
             </VRow>
           </VCardActions>
         </VCard>
@@ -331,17 +343,18 @@ const telHref = computed(() =>
 );
 
 async function openContact(
-  medium: "whatsapp" | "sms" | "llamada",
-  url: string | null,
+  medium: "whatsapp" | "sms" | "llamada" | "presencial",
+  url?: string | null,
 ) {
-  if (!url) return;
   const id = route.params.id as string;
   try {
-    await ChurchMember.createTrackingLog<Record<string, unknown>>(id, {
+    const newLog = await ChurchMember.createTrackingLog<Record<string, unknown>>(id, {
       contact_datetime: localDateTimeString(),
       medium,
       description: message.value.trim() || undefined,
     });
+    logsResponse.value.data.unshift(newLog);
+    logsResponse.value.total += 1;
   } catch (error) {
     notify.notify({
       error:
@@ -349,13 +362,14 @@ async function openContact(
           ?.message || "Error al registrar la interacción",
     });
   } finally {
+    if (medium === "presencial") return;
+    if (!url) return;
     if (medium === "whatsapp") {
       window.open(url, "_blank", "noopener");
     } else {
       window.location.href = url;
     }
   }
-  await fetchTrackingLogs();
 }
 
 function localDateTimeString(date = new Date()): string {

@@ -156,7 +156,7 @@ function mediumColor(medium: unknown): string {
     whatsapp: "green",
     sms: "teal",
     llamada: "primary",
-    presencial: "amber",
+    presencial: "deep-orange",
   }
   return colors[String(medium)] ?? "grey"
 }
