@@ -141,6 +141,14 @@ export function useRepository() {
       createMedal<T = unknown>(memberId: number | string, payload: Record<string, unknown>) {
         return withNotify($api<T>(`/church-member/${memberId}/medals`, { method: "POST", body: payload }))
       },
+      // Consolidadores: GET /church-member/{memberId}/consolidators
+      consolidators<T = unknown>(memberId: number | string) {
+        return withNotify($api<T>(`/church-member/${memberId}/consolidators`))
+      },
+      // PUT /church-member/{memberId}/consolidators
+      syncConsolidators<T = unknown>(memberId: number | string, consolidatorIds: (number | string)[]) {
+        return withNotify($api<T>(`/church-member/${memberId}/consolidators`, { method: "PUT", body: { consolidator_ids: consolidatorIds } }))
+      },
     },
     WhatsApp: {
       // GET /whatsapp/logs?sender=&receiver=&success=&per_page=&page=  (WhatsAppController.php:70)

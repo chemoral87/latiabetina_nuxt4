@@ -13,7 +13,7 @@
     >
       <template #[`item.status`]="{ item }">
         <VSelect
-          id="det-member-status"
+          :id="`det-member-status-${item.id}`"
           hide-details
           density="compact"
           :items="statuses"
@@ -30,7 +30,7 @@
       <template #[`item.actions`]="{ item }">
         <div class="d-flex flex-nowrap justify-center">
           <VBtn
-            id="con-membertable-goto-btn"
+            :id="`det-member-goto-btn-${item.id}`"
             icon
             class="ma-1"
             size="small"
@@ -43,7 +43,7 @@
             <VIcon size="x-large">mdi-eye</VIcon>
           </VBtn>
           <VBtn
-            id="con-membertable-delete-btn"
+            :id="`det-member-delete-btn-${item.id}`"
             icon
             class="ma-1"
             size="small"

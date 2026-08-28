@@ -9,6 +9,7 @@
       hide-default-footer
       :items-per-page="-1"
       mobile-breakpoint="0"
+      v-model:sort-by="sortBy"
     >
       <template #[`item.name`]="{ item }">
         {{ item.name }} {{ item.last_name }}
@@ -100,6 +101,8 @@ const auth = useAuthStore();
 const { statusLabel, statusColor } = useChurchMemberStatus()
 
 const singleOrg = computed(() => auth.hasSingleOrgFor("conso-sheet-index"));
+
+const sortBy = ref([{ key: "last_contacted", order: "asc" }]);
 
 function orgLabel(id: unknown): string {
   const found = props.orgs.find((o) => String(o.id) === String(id));

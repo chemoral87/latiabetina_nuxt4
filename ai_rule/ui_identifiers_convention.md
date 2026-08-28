@@ -138,6 +138,47 @@ Every interactive element in a page (`app/pages/**`) must carry an id built as
 
 Do not rename existing ids that already follow the pattern; only add ids where missing.
 
+## Unique IDs in Table Row Slots
+
+**IDs inside `VDataTable` / `VDataTableServer` row templates must be unique per row.**
+Using a static `id` in a slot that renders once per item creates duplicate IDs in the
+DOM, which causes accessibility violations and breaks `document.getElementById`.
+
+**Wrong** — duplicate IDs on every row:
+
+```vue
+<template #[`item.actions`]="{ item }">
+  <VBtn id="con-table-view-btn" @click="view(item)" />
+  <VBtn id="con-table-edit-btn" @click="edit(item)" />
+</template>
+```
+
+**Correct** — bind with `item.id` (or item key) for uniqueness:
+
+```vue
+<template #[`item.actions`]="{ item }">
+  <VBtn :id="`con-table-view-btn-${item.id}`" @click="view(item)" />
+  <VBtn :id="`con-table-edit-btn-${item.id}`" @click="edit(item)" />
+</template>
+```
+
+Pattern: `` :id="`{view}-{purpose}-btn-${item.id}`" ``
+
+This also applies to any element inside a row slot: `VSelect`, `VChip`, `VIcon`,
+`div`, etc. Always interpolate `item.id` (or the row's unique key) into the id.
+
+### Common mistake with `det-member-status`
+
+A `VSelect` inside a table row template must use a dynamic id:
+
+```vue
+<!-- WRONG — same id on every row -->
+<VSelect id="det-member-status" ... />
+
+<!-- CORRECT — unique per row -->
+<VSelect :id="`det-member-status-${item.id}`" ... />
+```
+
 ## Input Styling
 
 All form controls and inputs (`VTextField`, `VSelect`, `VCombobox`,
@@ -153,6 +194,44 @@ All form controls and inputs (`VTextField`, `VSelect`, `VCombobox`,
 - Omit `variant`/`density` only when a deliberate visual exception is required
   (e.g. `VCheckbox`/`VSwitch` labels, which have no outlined variant).
 - Dialog fields keep `:disabled`, `:error-messages`, and `:rules` as needed.
+
+### Vuetify `aria-labelledby` fix
+
+When using `hide-details` on a `VTextField`, `VSelect`, or `VAutocomplete`,
+Vuetify internally generates an `aria-labelledby` attribute referencing
+`{element-id}-label`. If no `label` prop is provided, that label element is
+never rendered, causing the browser warning: _"An `aria-labelledby` attribute
+doesn't match any element id"_.
+
+**Fix:** Always add a `label` prop (matching the `placeholder`) when using
+`hide-details`. Vuetify renders the label element in the DOM (visually hidden)
+so the `aria-labelledby` resolves correctly:
+
+```vue
+<!-- WRONG — aria-labelledby points to non-existent label -->
+<VTextField id="cnsld-index-filter" hide-details placeholder="Filtro" />
+
+<!-- CORRECT — label renders the matching element -->
+<VTextField id="cnsld-index-filter" hide-details placeholder="Filtro" label="Filtro" />
+```
+
+This rule applies to **all** form controls with `hide-details`:
+`VTextField`, `VSelect`, `VAutocomplete`, `VCombobox`.
+
+The only unfixable `aria-labelledby` warning is from Vuetify's internal
+rows-per-page combobox (`input-v-0-0-20-label`) in `VDataTableServer` — ignore
+that one.
+
+### Known Vuetify hidden `<select>` warning
+
+`VDataTableServer` (and `VDataTable`) generate a hidden `<select>` element for
+the rows-per-page dropdown that has no `id` or `name` attribute. This triggers
+the Chrome Issues tab warning: _"A form field element should have an id or name
+attribute"_.
+
+This is a **Vuetify internal element** (rendered with `hidden` attribute) and
+cannot be configured from application code. It does not affect accessibility or
+functionality. Ignore this warning.
 
 ## Component Rule
 

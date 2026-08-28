@@ -10,6 +10,7 @@
           density="compact"
           variant="outlined"
           placeholder="Filtro"
+          label="Filtro"
           append-inner-icon="mdi-magnify"
         />
       </VCol>

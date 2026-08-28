@@ -1,7 +1,8 @@
 <template>
   <VContainer :fluid="true">
+    <VRow>
       <VCol cols="12">
-          <VCard>
+        <VCard>
           <VCardTitle
             class="text-subtitle-1 font-weight-medium d-flex align-center"
           >
@@ -183,6 +184,29 @@
           </VCardActions>
         </VCard>
       </VCol>
+    </VRow>
+
+    <VRow v-if="auth.hasPermission('church-member-consolidator-assign')">
+      <VCol cols="12">
+        <VCard>
+          <VCardTitle class="text-subtitle-1 font-weight-medium">
+            <VIcon start color="primary">mdi-account-multiple</VIcon>
+            Consolidadores
+          </VCardTitle>
+          <VDivider />
+          <VCardText>
+            <ConsolidationConsolidatorCombobox
+              id="cmm-consolidator-combobox"
+              :consolidatorsx="currentConsolidators"
+              :org-id="member.org_id"
+              :disabled="savingConsolidators"
+              label="Asignar consolidadores"
+              @model-change="onConsolidatorsChange"
+            />
+          </VCardText>
+        </VCard>
+      </VCol>
+    </VRow>
 
     <VRow>
       <VCol cols="12">
@@ -265,6 +289,7 @@ definePageMeta({
 const route = useRoute();
 const { ChurchMember } = useRepository();
 const notify = useNotifyStore();
+const auth = useAuthStore();
 const { statusLabel, statusColor } = useChurchMemberStatus();
 
 const member = ref<Record<string, unknown>>({});
@@ -275,6 +300,8 @@ const trackingLogDialog = ref(false);
 const editingLog = ref<Record<string, unknown> | null>(null);
 const logsResponse = ref<{ data: unknown[]; total: number }>({ data: [], total: 0 });
 const loadingLogs = ref(false);
+const currentConsolidators = ref<{ id: number | string; name: string }[]>([]);
+const savingConsolidators = ref(false);
 
 // Initial member data and tracking logs are loaded during SSR via useAsyncData
 // so the payload is reused on the client (no double fetch, no hydration mismatch).
@@ -309,6 +336,20 @@ const loadingLogs = ref(false);
     { default: () => ({ data: [] as unknown[], total: 0 }) },
   )
   logsResponse.value = initialLogs.value
+}
+
+{
+  const { data: initialConsolidators } = await useAsyncData(
+    `church-member-consolidators-${route.params.id}`,
+    async () => {
+      if (!auth.hasPermission('church-member-consolidator-assign')) return []
+      return await ChurchMember.consolidators<{ id: number | string; name: string }[]>(
+        route.params.id as string,
+      ).catch(() => [])
+    },
+    { default: () => [] as { id: number | string; name: string }[] },
+  )
+  currentConsolidators.value = initialConsolidators.value
 }
 
 const loading = ref(false)
@@ -504,6 +545,26 @@ async function saveMember(payload: Record<string, unknown>) {
     });
   } finally {
     saving.value = false;
+  }
+}
+
+async function onConsolidatorsChange(consolidators: { id: number | string; name: string }[]) {
+  const id = route.params.id as string;
+  if (!id) return;
+  try {
+    savingConsolidators.value = true;
+    const ids = consolidators.map((c) => c.id);
+    const updated = await ChurchMember.syncConsolidators<{ id: number | string; name: string }[]>(id, ids);
+    currentConsolidators.value = updated as unknown as { id: number | string; name: string }[];
+    notify.notify({ success: "Consolidadores actualizados" });
+  } catch (error) {
+    notify.notify({
+      error:
+        (error as { response?: { data?: { message?: string } } }).response?.data
+          ?.message || "Error al actualizar consolidadores",
+    });
+  } finally {
+    savingConsolidators.value = false;
   }
 }
 </script>

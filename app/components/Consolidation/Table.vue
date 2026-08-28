@@ -22,7 +22,7 @@
       <template #[`item.actions`]="{ item }">
         <div class="d-flex flex-nowrap justify-center">
           <VBtn
-            id="con-table-view-btn"
+            :id="`con-table-view-btn-${item.id}`"
             icon
             class="ma-1"
             size="small"
@@ -36,7 +36,7 @@
           </VBtn>
 
           <VBtn
-            id="con-table-edit-btn"
+            :id="`con-table-edit-btn-${item.id}`"
             icon
             class="ma-1"
             size="small"
@@ -50,7 +50,7 @@
           </VBtn>
 
           <VBtn
-            id="con-table-delete-btn"
+            :id="`con-table-delete-btn-${item.id}`"
             icon
             class="ma-1"
             size="small"

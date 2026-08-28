@@ -81,6 +81,7 @@
       <VAppBarNavIcon
         v-if="showDrawer"
         id="lay-nav-icon"
+        aria-label="Menú"
         @click.stop="drawer = !drawer"
       />
       <VBtn
@@ -127,6 +128,7 @@
               color="blue"
               size="small"
               variant="flat"
+              aria-label="Cuenta de usuario"
               v-bind="props"
             >
               <VIcon color="white">mdi-account</VIcon>

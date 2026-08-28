@@ -13,7 +13,7 @@
         />
       </VCol>
 
-      <VCol md="2" sm="4" cols="12">
+      <VCol md="2" sm="4" cols="6">
         <VSelect
           id="seg-index-status"
           v-model="filterStatus"
@@ -26,7 +26,7 @@
         />
       </VCol>
 
-      <VCol md="2" sm="4" cols="12">
+      <VCol md="2" sm="4" cols="6">
         <VTextField
           id="seg-index-filter"
           v-model="filterInput"
@@ -53,9 +53,9 @@
 
       <VCol cols="12">
         <TrackingTable
-          :members="members"
-          :loading="loading"
           :orgs="orgs"
+          :loading="loading"
+          :members="members"
           @view="viewMember"
         />
       </VCol>
@@ -69,71 +69,69 @@ definePageMeta({
   icon: "mdi-account-search",
   permission: "conso-sheet-index",
   middleware: ["authenticated", "permission"],
-})
+});
 
-const { ChurchMember } = useRepository()
-const notify = useNotifyStore()
-const auth = useAuthStore()
-const { statuses: statusOptions } = useChurchMemberStatus()
+const { ChurchMember } = useRepository();
+const notify = useNotifyStore();
+const auth = useAuthStore();
+const { statuses: statusOptions } = useChurchMemberStatus();
 
-const filterInput = ref("")
-const filterTerm = ref("")
-const filterStatus = ref("ACTIVO")
-const filterOrgId = ref<string | number | null>(null)
-const loading = ref(false)
-const members = ref<Record<string, unknown>[]>([])
-
-
+const filterInput = ref("");
+const filterTerm = ref("");
+const filterStatus = ref("ACTIVO");
+const filterOrgId = ref<string | number | null>(null);
+const loading = ref(false);
+const members = ref<Record<string, unknown>[]>([]);
 
 const showOrgSelect = computed(
   () => auth.orgIdsFor("conso-sheet-index").length > 1,
-)
+);
 
 const orgs = computed(
   () =>
     (auth.user?.orgs as { id: number | string; name: string }[] | undefined) ??
     [],
-)
+);
 
 function viewMember(item: unknown) {
-  const id = (item as Record<string, unknown> | undefined)?.id
-  if (id != null) navigateTo(`/church-member/${id}?from=tracking`)
+  const id = (item as Record<string, unknown> | undefined)?.id;
+  if (id != null) navigateTo(`/church-member/${id}?from=tracking`);
 }
 
 // Debounced filter — shared useDebouncedFilter (300ms immediate clear)
-useDebouncedFilter(filterInput, filterTerm)
+useDebouncedFilter(filterInput, filterTerm);
 
 function normalizeMembers(res: unknown): Record<string, unknown>[] {
-  if (Array.isArray(res)) return res as Record<string, unknown>[]
-  const r = res as { data?: unknown[] } | null | undefined
-  if (r && Array.isArray(r.data)) return r.data as Record<string, unknown>[]
-  return []
+  if (Array.isArray(res)) return res as Record<string, unknown>[];
+  const r = res as { data?: unknown[] } | null | undefined;
+  if (r && Array.isArray(r.data)) return r.data as Record<string, unknown>[];
+  return [];
 }
 
 async function fetchData() {
-  loading.value = true
-  const params: Record<string, unknown> = { mine: true }
-  if (filterStatus.value) params.status = filterStatus.value
-  if (filterTerm.value) params.filter = filterTerm.value
-  if (filterOrgId.value) params.org_id = filterOrgId.value
+  loading.value = true;
+  const params: Record<string, unknown> = { mine: true };
+  if (filterStatus.value) params.status = filterStatus.value;
+  if (filterTerm.value) params.filter = filterTerm.value;
+  if (filterOrgId.value) params.org_id = filterOrgId.value;
   try {
-    const res = await ChurchMember.index<unknown>(params)
-    members.value = normalizeMembers(res)
+    const res = await ChurchMember.index<unknown>(params);
+    members.value = normalizeMembers(res);
   } catch (error) {
     notify.notify({
       error:
         (error as { response?: { data?: { message?: string } } }).response?.data
           ?.message || "Error al cargar miembros",
-    })
-    members.value = []
+    });
+    members.value = [];
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 
-watch(filterStatus, fetchData)
-watch(filterOrgId, fetchData)
-watch(filterTerm, fetchData)
+watch(filterStatus, fetchData);
+watch(filterOrgId, fetchData);
+watch(filterTerm, fetchData);
 
 // Initial list data is loaded during SSR via useAsyncData so the payload is
 // reused on the client (no double fetch, no hydration mismatch).
@@ -145,9 +143,9 @@ watch(filterTerm, fetchData)
         () => [] as unknown,
       ),
     { default: () => [] as unknown },
-  )
+  );
 
-  members.value = normalizeMembers(initialData.value)
+  members.value = normalizeMembers(initialData.value);
 }
 </script>
 

@@ -17,6 +17,11 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   devServer: { host: '0.0.0.0', port: 3003 },
   modules: ['vuetify-nuxt-module', '@pinia/nuxt'],
+  app: {
+    head: {
+      htmlAttrs: { lang: 'es' },
+    },
+  },
   routeRules: {
     // The Google OAuth callback carries a JWT in the query string; never let
     // that URL leak through the Referer header to any external resource.
