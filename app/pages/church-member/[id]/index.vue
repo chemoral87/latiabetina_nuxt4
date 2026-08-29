@@ -57,6 +57,13 @@
                     <span class="font-weight-medium">Estado civil:</span>
                     {{ member.marriage_status || "—" }}
                   </VCol>
+                  <VCol sm="6" cols="12" class="text-body-2">
+                    <VIcon start size="small" color="grey-darken-1"
+                      >mdi-account-check</VIcon
+                    >
+                    <span class="font-weight-medium">Creado por:</span>
+                    {{ creatorName || "—" }}
+                  </VCol>
                   <VCol cols="12" class="text-body-2 d-none d-sm-flex">
                     <VIcon start size="small" color="grey-darken-1"
                       >mdi-map-marker</VIcon
@@ -172,8 +179,8 @@
                 <VBtn
                   id="cmm-face-to-face-btn"
                   class="ma-1"
-                  color="deep-orange"
                   variant="outlined"
+                  color="deep-orange"
                   @click="openContact('presencial')"
                 >
                   <VIcon start>mdi-account-group</VIcon>
@@ -182,28 +189,6 @@
               </VCol>
             </VRow>
           </VCardActions>
-        </VCard>
-      </VCol>
-    </VRow>
-
-    <VRow v-if="auth.hasPermission('church-member-consolidator-assign')">
-      <VCol cols="12">
-        <VCard>
-          <VCardTitle class="text-subtitle-1 font-weight-medium">
-            <VIcon start color="primary">mdi-account-multiple</VIcon>
-            Consolidadores
-          </VCardTitle>
-          <VDivider />
-          <VCardText>
-            <ConsolidationConsolidatorCombobox
-              id="cmm-consolidator-combobox"
-              :consolidatorsx="currentConsolidators"
-              :org-id="member.org_id"
-              :disabled="savingConsolidators"
-              label="Asignar consolidadores"
-              @model-change="onConsolidatorsChange"
-            />
-          </VCardText>
         </VCard>
       </VCol>
     </VRow>
@@ -229,7 +214,27 @@
         </VCard>
       </VCol>
     </VRow>
-
+    <VRow v-if="auth.hasPermission('church-member-consolidator-assign')">
+      <VCol cols="12">
+        <VCard>
+          <VCardTitle class="text-subtitle-1 font-weight-medium">
+            <VIcon start color="primary">mdi-account-multiple</VIcon>
+            Consolidadores
+          </VCardTitle>
+          <VDivider />
+          <VCardText>
+            <ConsolidationConsolidatorCombobox
+              id="cmm-consolidator-combobox"
+              :org-id="member.org_id"
+              label="Asignar consolidadores"
+              :disabled="savingConsolidators"
+              :consolidatorsx="currentConsolidators"
+              @model-change="onConsolidatorsChange"
+            />
+          </VCardText>
+        </VCard>
+      </VCol>
+    </VRow>
     <VRow>
       <VCol cols="12" class="d-flex justify-end">
         <VBtn
@@ -274,9 +279,9 @@
 </template>
 
 <script setup lang="ts">
-import { useAsyncData } from '#app'
-import { buildApiParams } from "~/utils/buildApiParams"
-import { computed } from 'vue'
+import { useAsyncData } from "#app";
+import { buildApiParams } from "~/utils/buildApiParams";
+import { computed } from "vue";
 
 definePageMeta({
   title: "Detalle Consolidado",
@@ -298,61 +303,90 @@ const editDialog = ref(false);
 const saving = ref(false);
 const trackingLogDialog = ref(false);
 const editingLog = ref<Record<string, unknown> | null>(null);
-const logsResponse = ref<{ data: unknown[]; total: number }>({ data: [], total: 0 });
+const logsResponse = ref<{ data: unknown[]; total: number }>({
+  data: [],
+  total: 0,
+});
 const loadingLogs = ref(false);
 const currentConsolidators = ref<{ id: number | string; name: string }[]>([]);
 const savingConsolidators = ref(false);
+
+// Resolved early (before the member fetch) so the "not found / no access" redirect
+// below can reuse it without depending on later declarations.
+const backRoute = computed(() => {
+  const from = route.query.from as string | undefined;
+  if (from === "tracking") return "/tracking";
+  if (typeof from === "string" && from.startsWith("/")) {
+    return safeInternalRedirect(from, "/tracking");
+  }
+  return "/tracking";
+});
 
 // Initial member data and tracking logs are loaded during SSR via useAsyncData
 // so the payload is reused on the client (no double fetch, no hydration mismatch).
 // See ai_rule/nuxt4_ssr_hydration.md.
 {
-  const { data: initialMember } = await useAsyncData(
+  const { data: initialMember, error: memberError } = await useAsyncData(
     `church-member-${route.params.id}`,
-    async () => {
-      return await ChurchMember.show<Record<string, unknown>>(
-        route.params.id as string,
-      ).catch(() => ({}) as Record<string, unknown>)
-    },
+    () => ChurchMember.show<Record<string, unknown>>(route.params.id as string),
     { default: () => ({}) as Record<string, unknown> },
-  )
-  member.value = initialMember.value
+  );
+
+  // The API scopes church-member/:id to the caller's orgs and returns 404 for
+  // out-of-scope or non-existent members. Surface that as a real error page
+  // instead of silently redirecting via the (spoofable) ?from= query param.
+  if (memberError.value) {
+    const err = memberError.value as unknown as {
+      statusCode?: number;
+      status?: number;
+      data?: { message?: string };
+      statusMessage?: string;
+    };
+    throw createError({
+      statusCode: err.statusCode || err.status || 404,
+      statusMessage:
+        err.data?.message ||
+        err.statusMessage ||
+        "Miembro no encontrado o sin acceso a esta organización",
+      fatal: true,
+    });
+  }
+
+  member.value = initialMember.value;
 }
 
 {
   const { data: initialLogs } = await useAsyncData(
     `church-member-tracking-logs-${route.params.id}`,
     async () => {
-      return await ChurchMember.trackingLogs<{ data: unknown[]; total: number }>(
-        route.params.id as string,
-        {
-          page: 1,
-          itemsPerPage: 10,
-          sortBy: ["contact_datetime"],
-          sortDesc: [true],
-        }
-      ).catch(() => ({ data: [] as unknown[], total: 0 }))
+      return await ChurchMember.trackingLogs<{
+        data: unknown[];
+        total: number;
+      }>(route.params.id as string, {
+        page: 1,
+        itemsPerPage: 10,
+        sortBy: ["contact_datetime"],
+        sortDesc: [true],
+      }).catch(() => ({ data: [] as unknown[], total: 0 }));
     },
     { default: () => ({ data: [] as unknown[], total: 0 }) },
-  )
-  logsResponse.value = initialLogs.value
-}
+  );
+  logsResponse.value = initialLogs.value;
 
-{
   const { data: initialConsolidators } = await useAsyncData(
     `church-member-consolidators-${route.params.id}`,
     async () => {
-      if (!auth.hasPermission('church-member-consolidator-assign')) return []
-      return await ChurchMember.consolidators<{ id: number | string; name: string }[]>(
-        route.params.id as string,
-      ).catch(() => [])
+      if (!auth.hasPermission("church-member-consolidator-assign")) return [];
+      return await ChurchMember.consolidators<
+        { id: number | string; name: string }[]
+      >(route.params.id as string).catch(() => []);
     },
     { default: () => [] as { id: number | string; name: string }[] },
-  )
-  currentConsolidators.value = initialConsolidators.value
+  );
+  currentConsolidators.value = initialConsolidators.value;
 }
 
-const loading = ref(false)
+const loading = ref(false);
 
 const fullName = computed(
   () =>
@@ -360,6 +394,14 @@ const fullName = computed(
       .filter(Boolean)
       .join(" ") || "Miembro",
 );
+
+const creatorName = computed(() => {
+  const creator = member.value.creator as
+    | { name?: string; last_name?: string }
+    | undefined;
+  if (!creator) return null;
+  return [creator.name, creator.last_name].filter(Boolean).join(" ") || null;
+});
 
 const phoneDigits = computed(() =>
   String(member.value.cellphone || "").replace(/\D/g, ""),
@@ -389,7 +431,9 @@ async function openContact(
 ) {
   const id = route.params.id as string;
   try {
-    const newLog = await ChurchMember.createTrackingLog<Record<string, unknown>>(id, {
+    const newLog = await ChurchMember.createTrackingLog<
+      Record<string, unknown>
+    >(id, {
       contact_datetime: localDateTimeString(),
       medium,
       description: message.value.trim() || undefined,
@@ -437,14 +481,14 @@ async function fetchTrackingLogs() {
   }
 }
 
-let initialLogsLoaded = false
+let initialLogsLoaded = false;
 
 function onLogsUpdateOptions(opts: Record<string, unknown>) {
   if (!initialLogsLoaded) {
-    initialLogsLoaded = true
-    return
+    initialLogsLoaded = true;
+    return;
   }
-  fetchTrackingLogs()
+  fetchTrackingLogs();
 }
 
 function editTrackingLog(log: Record<string, unknown>) {
@@ -466,7 +510,6 @@ async function saveTrackingLog(payload: Record<string, unknown>) {
     editingLog.value = null;
     trackingLogDialog.value = false;
     await fetchTrackingLogs();
-    notify.notify({ success: "Interacción actualizada exitosamente" });
   } catch (error) {
     notify.notify({
       error:
@@ -487,7 +530,6 @@ async function deleteTrackingLog(log: Record<string, unknown>) {
     saving.value = true;
     await ChurchMember.deleteTrackingLog<Record<string, unknown>>(id, logId);
     await fetchTrackingLogs();
-    notify.notify({ success: "Interacción eliminada exitosamente" });
   } catch (error) {
     notify.notify({
       error:
@@ -502,15 +544,6 @@ async function deleteTrackingLog(log: Record<string, unknown>) {
 onMounted(() => {
   route.meta.back = backRoute.value;
 });
-
-const backRoute = computed(() => {
-  const from = route.query.from as string | undefined
-  if (from === "tracking") return "/tracking"
-  if (typeof from === "string" && from.startsWith("/")) {
-    return safeInternalRedirect(from, "/tracking")
-  }
-  return "/tracking"
-})
 
 function goBack() {
   navigateTo(backRoute.value);
@@ -536,7 +569,6 @@ async function saveMember(payload: Record<string, unknown>) {
       ...((updated as Record<string, unknown>)?.data ?? payload),
     };
     editDialog.value = false;
-    notify.notify({ success: "Miembro actualizado exitosamente" });
   } catch (error) {
     notify.notify({
       error:
@@ -548,15 +580,18 @@ async function saveMember(payload: Record<string, unknown>) {
   }
 }
 
-async function onConsolidatorsChange(consolidators: { id: number | string; name: string }[]) {
+async function onConsolidatorsChange(
+  consolidators: { id: number | string; name: string }[],
+) {
   const id = route.params.id as string;
   if (!id) return;
   try {
     savingConsolidators.value = true;
     const ids = consolidators.map((c) => c.id);
-    const updated = await ChurchMember.syncConsolidators<{ id: number | string; name: string }[]>(id, ids);
-    currentConsolidators.value = updated as unknown as { id: number | string; name: string }[];
-    notify.notify({ success: "Consolidadores actualizados" });
+    const updated = await ChurchMember.syncConsolidators<{
+      data: { id: number | string; name: string }[];
+    }>(id, { consolidator_ids: ids });
+    currentConsolidators.value = updated.data;
   } catch (error) {
     notify.notify({
       error:

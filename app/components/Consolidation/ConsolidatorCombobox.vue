@@ -40,9 +40,9 @@
       <template #item="{ item, props: itemProps }">
         <VListItem v-bind="itemProps">
           <template #title>
-            <VChip label size="large" color="success" variant="elevated">{{
-              (item as UserItem).name
-            }}</VChip>
+            <VChip label size="large" color="success" variant="elevated">
+              {{ (item as UserItem).name }}
+            </VChip>
           </template>
         </VListItem>
       </template>
@@ -83,6 +83,7 @@ const { ConsoSheet } = useRepository();
 
 const consolidatorsId = computed(() => model.value.map((el) => el.id));
 
+let initializing = true;
 let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 let requestId = 0;
 
@@ -144,23 +145,27 @@ watch(model, (val, prev) => {
       copy.splice(i, 1);
   }
 
+  const hasChanged = copy.length !== val.length;
+  if (hasChanged) {
+    model.value = copy as UserItem[];
+  }
+
   if (val.length > prev.length) {
     nextTick(() => {
       menu.value = true;
     });
   }
 
-  if (copy.length !== val.length) {
-    model.value = copy as UserItem[];
-    return;
+  if (!initializing) {
+    emit("modelChange", copy as UserItem[]);
   }
-  emit("modelChange", copy as UserItem[]);
 });
 
 if (props.consolidatorsx && props.consolidatorsx.length > 0) {
   model.value = [...props.consolidatorsx];
   items.value = [...props.consolidatorsx];
 }
+nextTick(() => { initializing = false; });
 
 watch(
   () => props.consolidatorsx,
