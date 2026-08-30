@@ -298,6 +298,23 @@ const currentNoteOptions = computed(() =>
 onMounted(() => {
   // Restaurar ajustes guardados después de la hidratación SSR de Pinia
   store.loadFromStorage();
+
+  // Apply URL query parameters to override settings.
+  // Examples: ?NotGuitar=false&NotUkelele=false&NotTrumpet=false&LatinNotation=true
+  const route = useRoute();
+  if (route.query.NotGuitar !== undefined) {
+    store.setShowGuitarNotation(route.query.NotGuitar !== 'false');
+  }
+  if (route.query.NotUkelele !== undefined) {
+    store.setShowUkeleleNotation(route.query.NotUkelele !== 'false');
+  }
+  if (route.query.NotTrumpet !== undefined) {
+    store.setShowTrumpetNotation(route.query.NotTrumpet !== 'false');
+  }
+  if (route.query.LatinNotation !== undefined) {
+    store.setLatinNotation(route.query.LatinNotation !== 'false');
+  }
+
   loadProcessor(selectedProcessor.value);
 });
 
