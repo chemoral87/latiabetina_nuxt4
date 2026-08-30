@@ -215,7 +215,7 @@ definePageMeta({
   title: "Tuner",
   icon: "mdi-tune",
   // permission: "pitch-train",
-  middleware: ["authenticated", "permission"],
+  // middleware: ["authenticated", "permission"],
 });
 
 interface HistoryPoint {
