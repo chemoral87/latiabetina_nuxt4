@@ -3,7 +3,7 @@
     <div v-if="hasContent" class="song-viewer">
       <div v-for="section in content.sections" :key="section.id" class="mb-4">
         <div class="text-subtitle-1 font-weight-bold mb-1 section-name">
-          [{{ section.name }}]
+          [{{ section.name }}]<span v-if="(section.times ?? 1) > 1" class="ml-2 text-primary">×{{ section.times }}</span>
         </div>
         <div v-for="line in section.lines" :key="line.id" class="song-line">
           <div class="syllables">

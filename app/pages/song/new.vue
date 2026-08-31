@@ -120,7 +120,7 @@ function onJsonFileChange(event: Event) {
         artist: imported.artist,
         key: imported.key,
         tempo: imported.tempo,
-        org_id: imported.org_id,
+        org_id: null,
         content: imported.content,
       } as unknown as Record<string, unknown>
       notify.notify({ success: `JSON cargado: ${(imported.title as string) || file.name}` })
@@ -143,9 +143,8 @@ function close() {
 
 async function saveSong(item: Record<string, unknown>) {
   const payload = { ...item }
-  if (payload.org_id && typeof payload.org_id === "object") {
-    payload.org_id = (payload.org_id as { id?: unknown }).id
-  }
+  // org_id is now global/optional – always null
+  payload.org_id = null
 
   try {
     saving.value = true

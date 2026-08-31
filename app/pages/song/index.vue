@@ -31,19 +31,6 @@
         </VBtn>
       </VCol>
 
-      <VCol v-if="!orgFilterHidden" lg="1" md="3" sm="4" cols="6">
-        <OrganizationSelect
-          v-model="filterOrgId"
-          v-model:hidden="orgFilterHidden"
-          hide-one
-          clearable
-          hide-details
-          density="compact"
-          variant="outlined"
-          prevent-auto-select
-        />
-      </VCol>
-
       <VCol cols="12">
         <SongTable
           :loading="loading"
@@ -80,13 +67,10 @@ definePageMeta({
 
 const { Song } = useRepository();
 const notify = useNotifyStore();
-const auth = useAuthStore();
 const { highlightId } = useRowHighlight();
 
 const filterInput = ref("");
 const filterSong = ref("");
-const filterOrgId = ref<string | number | null>(null);
-const orgFilterHidden = ref(false);
 const response = ref<{ data: unknown[]; total: number }>({
   data: [],
   total: 0,
@@ -101,14 +85,6 @@ const lastOptions = ref<Record<string, unknown>>({
   page: 1,
   itemsPerPage: 10,
   sortBy: [{ key: "updated_at", order: "desc" }],
-});
-
-const effectiveOrgId = computed(() => {
-  const orgs = auth.user?.orgs ?? [];
-  if (orgs.length === 1) {
-    return (orgs[0] as { id: unknown }).id;
-  }
-  return null;
 });
 
 // SSR initial load — first paint contains the list
@@ -147,13 +123,6 @@ watch(filterSong, (val) => {
     return;
   }
   loadSongs({ filter: val || "", page: 1 });
-});
-
-watch(filterOrgId, (value) => {
-  if (effectiveOrgId.value) return;
-  const overrides: Record<string, unknown> = { page: 1 };
-  overrides.org_id = value ?? undefined;
-  loadSongs(overrides);
 });
 
 async function loadSongs(overrides: Record<string, unknown> = {}) {
