@@ -43,7 +43,9 @@
                   label="Nombre del permiso"
                   :loading="creatingPermission"
                   :disabled="creatingPermission"
-                  placeholder="ej. product-create"
+                  placeholder="ej. product-create o song-update, song-delete"
+                  hint="Separa varios permisos con comas"
+                  persistent-hint
                   @keyup.enter="createAndAddPermission"
                 />
               </VCol>
@@ -131,37 +133,69 @@ function setPermissions(permissions: Record<string, unknown>[]) {
 }
 
 async function createAndAddPermission() {
-  const name = (newPermissionName.value || "").trim();
-  if (!name) return;
+  const raw = (newPermissionName.value || "").trim();
+  if (!raw) return;
+
+  // Support comma-separated bulk creation: "song-update, song-delete"
+  const names = raw
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  // Deduplicate case-insensitive within input
+  const uniqueMap = new Map<string, string>();
+  for (const n of names) {
+    const low = n.toLowerCase();
+    if (!uniqueMap.has(low)) uniqueMap.set(low, n);
+  }
+  const uniqueNames = [...uniqueMap.values()];
+  if (uniqueNames.length === 0) return;
 
   const currentPermissions =
     (mRole.value.permissions as Record<string, unknown>[]) ?? [];
-  const alreadyAssigned = currentPermissions.some(
-    (p) => (p.name as string).toLowerCase() === name.toLowerCase(),
+  const currentNamesLower = new Set(
+    currentPermissions.map((p) => (p.name as string).toLowerCase()),
   );
-  if (alreadyAssigned) {
-    notify.notify({ warning: `El permiso "${name}" ya está asignado al rol.` });
-    return;
+
+  const toCreate = uniqueNames.filter((n) => !currentNamesLower.has(n.toLowerCase()));
+  const alreadyAssigned = uniqueNames.filter((n) => currentNamesLower.has(n.toLowerCase()));
+
+  if (alreadyAssigned.length > 0) {
+    notify.notify({
+      warning: `Ya asignado: ${alreadyAssigned.join(", ")}`,
+    });
   }
+  if (toCreate.length === 0) return;
 
   creatingPermission.value = true;
   try {
-    const res = await $api<{ permission: Record<string, unknown> }>(
-      `/role/${mRole.value.id as number}/permission`,
-      {
-        method: "POST",
-        body: { name },
-      },
-    );
+    // Backend supports comma-separated `name` or `names` array; send as `name` joined
+    const body =
+      toCreate.length === 1 ? { name: toCreate[0] } : { name: toCreate.join(", ") };
+    const res = await $api<{
+      permission: Record<string, unknown>;
+      permissions: Record<string, unknown>[];
+    }>(`/role/${mRole.value.id as number}/permission`, {
+      method: "POST",
+      body,
+    });
+    const newPerms: Record<string, unknown>[] =
+      (res.permissions as Record<string, unknown>[]) ??
+      (res.permission ? [res.permission] : []);
     if (!mRole.value.permissions) mRole.value.permissions = [];
     mRole.value.permissions = [
       ...(mRole.value.permissions as Record<string, unknown>[]),
-      res.permission,
+      ...newPerms,
     ];
     newPermissionName.value = "";
-    notify.notify({
-      success: `Permiso "${res.permission.name}" agregado al rol.`,
-    });
+    if (newPerms.length === 1) {
+      notify.notify({
+        success: `Permiso "${newPerms[0].name}" agregado al rol.`,
+      });
+    } else {
+      notify.notify({
+        success: `Permisos agregados: ${newPerms.map((p) => p.name).join(", ")}`,
+      });
+    }
   } catch (e) {
     const errMsg = (e as Record<string, unknown>)?.response
       ? (((e as Record<string, unknown>).response as Record<string, unknown>)

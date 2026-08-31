@@ -75,10 +75,26 @@
           <VIcon start>mdi-plus</VIcon>
           Agregar sección
         </VBtn>
-        <VBtn class="mb-1" size="small" color="primary" variant="outlined" @click="addTab">
+        <VBtn size="small" color="primary" class="mr-2 mb-1" variant="outlined" @click="addTab">
           <VIcon start>mdi-plus</VIcon>
           Agregar tab
         </VBtn>
+        <VBtn id="song-import-json-btn" size="small" color="primary" class="mr-2 mb-1" variant="outlined" @click="triggerImportJson">
+          <VIcon start>mdi-file-upload-outline</VIcon>
+          Cargar JSON
+        </VBtn>
+        <VBtn id="song-export-json-btn" size="small" color="primary" class="mb-1" variant="outlined" @click="exportJson">
+          <VIcon start>mdi-file-download-outline</VIcon>
+          Exportar JSON
+        </VBtn>
+        <input
+          id="song-json-file-input"
+          ref="jsonFileInput"
+          type="file"
+          accept=".json,application/json"
+          style="display: none"
+          @change="onJsonFileChange"
+        />
       </div>
 
       <div
@@ -205,6 +221,8 @@ import { useValidationErrors } from "~/composables/useValidationErrors"
 import { useVrules } from "~/composables/useVrules"
 import {
   defaultSong,
+  exportSongToJson,
+  importSongFromJson,
   normalizeContent,
   newLine,
   newSection,
@@ -234,10 +252,12 @@ const emit = defineEmits<{
 const { vrules } = useVrules()
 const { errors, clearErrors } = useValidationErrors()
 const auth = useAuthStore()
+const notifyJson = useNotifyStore()
 
 const formRef = ref()
 const saving = ref(false)
 const pasteDialog = ref(false)
+const jsonFileInput = ref<HTMLInputElement | null>(null)
 
 const item = ref<Song>(defaultSong())
 const content = computed<SongContent>({
@@ -356,6 +376,80 @@ function applyPasted(text: string, mode: "replace" | "append") {
   pasteDialog.value = false
 }
 
+function triggerImportJson() {
+  jsonFileInput.value?.click()
+}
+
+function onJsonFileChange(event: Event) {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  if (!file) return
+  const reader = new FileReader()
+  reader.onload = () => {
+    try {
+      const text = reader.result as string
+      const parsed = JSON.parse(text)
+      const imported = importSongFromJson(parsed)
+      // Merge imported data into current item; keep org_id handling
+      const currentOrgId = item.value.org_id
+      item.value = {
+        ...defaultSong(),
+        ...imported,
+        content: normalizeContent(imported.content),
+        // Preserve existing org_id for edit mode, otherwise use imported or default
+        org_id: isEditMode.value ? currentOrgId : (imported.org_id ?? currentOrgId),
+        id: item.value.id,
+      } as Song
+      // If create mode and single org auto-select
+      if (!item.value.org_id && !showOrgSelect.value) {
+        const orgIds = auth.permissionsOrg[props.permission ?? "song-create"] ?? []
+        if (Array.isArray(orgIds) && orgIds.length === 1) {
+          item.value.org_id = orgIds[0]
+        }
+      }
+      // Title fallback from JSON if present
+      if (imported.title) item.value.title = imported.title as string
+      if (imported.artist) item.value.artist = imported.artist as string
+      if (imported.key) item.value.key = imported.key as string
+      if (imported.tempo) item.value.tempo = imported.tempo as string
+      notifyJson.notify({ success: `JSON cargado: ${imported.title || file.name}` })
+    } catch (err) {
+      notifyJson.notify({ error: `Error al cargar JSON: ${(err as Error).message}` })
+    } finally {
+      // Reset input so same file can be re-selected
+      if (input) input.value = ""
+    }
+  }
+  reader.onerror = () => {
+    notifyJson.notify({ error: "No se pudo leer el archivo." })
+    if (input) input.value = ""
+  }
+  reader.readAsText(file)
+}
+
+function exportJson() {
+  const payload = exportSongToJson(item.value)
+  const jsonStr = JSON.stringify(payload, null, 2)
+  const blob = new Blob([jsonStr], { type: "application/json" })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement("a")
+  const slug = (item.value.title || "cancion")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "")
+  a.href = url
+  a.download = `${slug || "cancion"}.json`
+  document.body.appendChild(a)
+  a.click()
+  setTimeout(() => {
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }, 0)
+  notifyJson.notify({ success: "JSON exportado." })
+}
+
 function close() {
   emit("close")
 }
@@ -373,6 +467,12 @@ async function save() {
   if (isEditMode.value) delete payload.org_id
   emit("save", payload)
 }
+
+defineExpose({
+  exportJson,
+  triggerImportJson,
+  getSong: () => item.value,
+})
 </script>
 
 <style scoped>

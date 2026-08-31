@@ -24,7 +24,7 @@ import { normalizeContent } from "~/types/song"
 definePageMeta({
   title: "Editar canción",
   icon: "mdi-music-note-edit",
-  permission: "song-index",
+  permission: "song-update",
   middleware: ["authenticated", "permission"],
 })
 

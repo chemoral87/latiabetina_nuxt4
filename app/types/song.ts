@@ -113,3 +113,102 @@ export function contentToText(content: SongContent): string {
   }
   return out.join("\n").trimEnd()
 }
+
+/** JSON export: matches attached format { title, sections: [{ name, lines: [{ syllables: [{ syllable, chords }] }] }] } */
+export function exportSongToJson(song: Song): Record<string, unknown> {
+  return {
+    title: song.title,
+    ...(song.artist ? { artist: song.artist } : {}),
+    ...(song.key ? { key: song.key } : {}),
+    ...(song.tempo ? { tempo: song.tempo } : {}),
+    sections: song.content.sections.map((sec) => ({
+      name: sec.name,
+      lines: sec.lines.map((line) => ({
+        syllables: line.syllables.map((syl) => {
+          const obj: Record<string, unknown> = { syllable: syl.text }
+          if (syl.chords.length) obj.chords = [...syl.chords]
+          if (syl.notes.length) obj.notes = [...syl.notes]
+          return obj
+        }),
+      })),
+    })),
+    ...(song.content.tabs.length
+      ? {
+          tabs: song.content.tabs.map((tab) => ({
+            title: tab.title,
+            tablature: tab.tablature,
+          })),
+        }
+      : {}),
+  }
+}
+
+/** JSON import: accepts attached format, full song, or { content: { sections } } */
+export function importSongFromJson(raw: unknown): Partial<Song> {
+  if (!raw || typeof raw !== "object") return { content: emptyContent() }
+
+  const r = raw as Record<string, unknown>
+  let sectionsRaw: unknown[] = []
+  let tabsRaw: unknown[] = []
+  let title = ""
+  let artist = ""
+  let key = ""
+  let tempo = ""
+  let orgId: unknown = null
+
+  // Prefer content wrapper if present (internal format)
+  const contentObj = r.content as Record<string, unknown> | undefined
+  if (contentObj && typeof contentObj === "object" && (Array.isArray(contentObj.sections) || Array.isArray(contentObj.tabs))) {
+    sectionsRaw = (contentObj.sections as unknown[]) ?? (r.sections as unknown[]) ?? []
+    tabsRaw = (contentObj.tabs as unknown[]) ?? (r.tabs as unknown[]) ?? []
+    title = (r.title as string) ?? ""
+    artist = (r.artist as string) ?? ""
+    key = (r.key as string) ?? ""
+    tempo = (r.tempo as string) ?? ""
+    orgId = r.org_id ?? null
+  } else if (Array.isArray(r.sections)) {
+    sectionsRaw = r.sections as unknown[]
+    tabsRaw = (r.tabs as unknown[]) ?? []
+    title = (r.title as string) ?? ""
+    artist = (r.artist as string) ?? ""
+    key = (r.key as string) ?? ""
+    tempo = (r.tempo as string) ?? ""
+    orgId = r.org_id ?? null
+  } else if (Array.isArray(r)) {
+    sectionsRaw = r as unknown[]
+  }
+
+  const sections: SongSection[] = (sectionsRaw as Record<string, unknown>[]).map((sec) => ({
+    id: (sec.id as string) ?? uid("sec"),
+    name: (sec.name as string) ?? "Sección",
+    lines: Array.isArray(sec.lines)
+      ? (sec.lines as Record<string, unknown>[]).map((line) => ({
+          id: (line.id as string) ?? uid("ln"),
+          syllables: Array.isArray(line.syllables)
+            ? (line.syllables as Record<string, unknown>[]).map((syl) => ({
+                id: (syl.id as string) ?? uid("sy"),
+                text: ((syl.text as string) ?? (syl.syllable as string) ?? "") as string,
+                chords: Array.isArray(syl.chords) ? (syl.chords as string[]) : [],
+                notes: Array.isArray(syl.notes) ? (syl.notes as string[]) : [],
+              }))
+            : [],
+        }))
+      : [],
+  }))
+
+  const tabs: SongTab[] = (tabsRaw as Record<string, unknown>[]).map((tab) => ({
+    id: (tab.id as string) ?? uid("tab"),
+    title: (tab.title as string) ?? "Tab",
+    tablature: (tab.tablature as string) ?? (tab.content as string) ?? "",
+  }))
+
+  const result: Partial<Song> = {
+    title,
+    artist,
+    key,
+    tempo,
+    content: { sections, tabs },
+  }
+  if (orgId !== null && orgId !== undefined) result.org_id = orgId as string | number
+  return result
+}

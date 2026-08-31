@@ -11,7 +11,7 @@ interface Org {
 
 const props = withDefaults(defineProps<{
   id?: string
-  permission: string
+  permission?: string
   hideOne?: boolean
   preventAutoSelect?: boolean
   modelValue?: string | number | null
@@ -20,6 +20,7 @@ const props = withDefaults(defineProps<{
   orgs?: Org[]
 }>(), {
   id: "cmp-organization-select",
+  permission: undefined,
   hideOne: false,
   preventAutoSelect: false,
   modelValue: null,
@@ -51,9 +52,16 @@ const showSelect = computed(() => {
 const userOrgs = computed<Org[]>(() => (auth.user?.orgs as Org[] | undefined) ?? [])
 
 function buildItems() {
-  const orgIds = auth.permissionsOrg[props.permission] ?? []
   const source = props.orgs && props.orgs.length > 0 ? props.orgs : userOrgs.value
-  const filteredOrgs = source.filter((org) => orgIds.includes(org.id))
+  let filteredOrgs: Org[]
+  if (!props.permission) {
+    filteredOrgs = source
+  } else {
+    const orgIds = auth.permissionsOrg[props.permission] ?? []
+    // If permission is specified but user has no orgs for it, fall back to all orgs
+    // so that pages without a dedicated index permission (e.g. song) still show the filter.
+    filteredOrgs = orgIds.length > 0 ? source.filter((org) => orgIds.includes(org.id)) : source
+  }
   items.value = filteredOrgs
 
   if (filteredOrgs.length === 1) {

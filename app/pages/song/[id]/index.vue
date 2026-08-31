@@ -50,8 +50,7 @@ import { normalizeContent } from "~/types/song"
 definePageMeta({
   title: "Canción",
   icon: "mdi-music-note-eighth",
-  permission: "song-index",
-  middleware: ["authenticated", "permission"],
+  middleware: ["authenticated"],
 })
 
 const route = useRoute()
