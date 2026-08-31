@@ -10,6 +10,7 @@ export interface SongSyllable {
 export interface SongLine {
   id: string
   syllables: SongSyllable[]
+  times: number
 }
 
 export interface SongSection {
@@ -47,8 +48,8 @@ export function newSyllable(text = ""): SongSyllable {
   return { id: uid("sy"), text, chords: [], notes: [] }
 }
 
-export function newLine(syllables: SongSyllable[] = []): SongLine {
-  return { id: uid("ln"), syllables }
+export function newLine(syllables: SongSyllable[] = [], times = 1): SongLine {
+  return { id: uid("ln"), syllables, times: Math.max(1, Number(times) || 1) }
 }
 
 export function newSection(name = "Verso", lines: SongLine[] = [], times = 1): SongSection {
@@ -74,6 +75,13 @@ export function normalizeContent(value: unknown): SongContent {
       let t = Number(raw)
       if (!Number.isFinite(t) || t < 1) t = 1
       s.times = Math.floor(t)
+      for (const line of s.lines ?? []) {
+        const l = line as SongLine & Record<string, unknown>
+        const rawLine = l.times ?? (l as Record<string, unknown>)["repeat"] ?? (l as Record<string, unknown>)["repeats"]
+        let lt = Number(rawLine)
+        if (!Number.isFinite(lt) || lt < 1) lt = 1
+        l.times = Math.floor(lt)
+      }
     }
     return {
       sections,
@@ -123,7 +131,7 @@ export function contentToText(content: SongContent): string {
   return out.join("\n").trimEnd()
 }
 
-/** JSON export: matches attached format { title, sections: [{ name, times, lines: [{ syllables: [{ syllable, chords }] }] }] } */
+/** JSON export: matches attached format { title, sections: [{ name, times, lines: [{ times, syllables: [{ syllable, chords }] }] }] } */
 export function exportSongToJson(song: Song): Record<string, unknown> {
   return {
     title: song.title,
@@ -134,6 +142,7 @@ export function exportSongToJson(song: Song): Record<string, unknown> {
       name: sec.name,
       times: sec.times ?? 1,
       lines: sec.lines.map((line) => ({
+        times: (line as SongLine).times ?? 1,
         syllables: line.syllables.map((syl) => {
           const obj: Record<string, unknown> = { syllable: syl.text }
           if (syl.chords.length) obj.chords = [...syl.chords]
@@ -198,17 +207,24 @@ export function importSongFromJson(raw: unknown): Partial<Song> {
       name: (sec.name as string) ?? "Sección",
       times,
       lines: Array.isArray(sec.lines)
-        ? (sec.lines as Record<string, unknown>[]).map((line) => ({
-            id: (line.id as string) ?? uid("ln"),
-            syllables: Array.isArray(line.syllables)
-              ? (line.syllables as Record<string, unknown>[]).map((syl) => ({
-                  id: (syl.id as string) ?? uid("sy"),
-                  text: ((syl.text as string) ?? (syl.syllable as string) ?? "") as string,
-                  chords: Array.isArray(syl.chords) ? (syl.chords as string[]) : [],
-                  notes: Array.isArray(syl.notes) ? (syl.notes as string[]) : [],
-                }))
-              : [],
-          }))
+        ? (sec.lines as Record<string, unknown>[]).map((line) => {
+            const timesRawLine = (line.times as unknown) ?? (line as Record<string, unknown>)["repeat"] ?? (line as Record<string, unknown>)["repeats"]
+            let lineTimes = Number(timesRawLine)
+            if (!Number.isFinite(lineTimes) || lineTimes < 1) lineTimes = 1
+            lineTimes = Math.floor(lineTimes)
+            return {
+              id: (line.id as string) ?? uid("ln"),
+              times: lineTimes,
+              syllables: Array.isArray(line.syllables)
+                ? (line.syllables as Record<string, unknown>[]).map((syl) => ({
+                    id: (syl.id as string) ?? uid("sy"),
+                    text: ((syl.text as string) ?? (syl.syllable as string) ?? "") as string,
+                    chords: Array.isArray(syl.chords) ? (syl.chords as string[]) : [],
+                    notes: Array.isArray(syl.notes) ? (syl.notes as string[]) : [],
+                  }))
+                : [],
+            }
+          })
         : [],
     }
   })

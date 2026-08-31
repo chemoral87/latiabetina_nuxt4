@@ -5,14 +5,15 @@
         <div class="text-subtitle-1 font-weight-bold mb-1 section-name">
           [{{ section.name }}]<span v-if="(section.times ?? 1) > 1" class="ml-2 text-primary">×{{ section.times }}</span>
         </div>
-        <div v-for="line in section.lines" :key="line.id" class="song-line">
-          <div class="syllables">
+        <div v-for="line in section.lines" :key="line.id" class="song-line d-flex align-center">
+          <div class="syllables flex-grow-1">
             <span v-for="syllable in line.syllables" :key="syllable.id" class="syllable">
               <span v-if="syllable.chords.length" class="chord">{{ syllable.chords.join(" ") }}</span>
               <span class="text">{{ syllable.text }}</span>
               <span v-if="syllable.notes.length" class="note">{{ syllable.notes.join(" ") }}</span>
             </span>
           </div>
+          <span v-if="((line as unknown as { times?: number }).times ?? 1) > 1" class="ml-2 text-caption text-primary font-weight-bold">×{{ (line as unknown as { times?: number }).times }}</span>
         </div>
       </div>
 

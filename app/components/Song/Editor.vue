@@ -188,6 +188,25 @@
           :key="line.id"
           class="line-editor mb-2"
         >
+          <div class="d-flex align-center mb-1" style="gap: 8px">
+            <span class="text-caption text-grey" style="min-width: 48px">Línea {{ li + 1 }}</span>
+            <VTextField
+              :id="`song-line-times-${si}-${li}`"
+              v-model.number="line.times"
+              type="number"
+              hide-details
+              label="Veces"
+              density="compact"
+              variant="outlined"
+              :disabled="disabled"
+              :min="1"
+              :max="10"
+              style="max-width: 90px"
+              title="Veces que se repite la línea"
+              @update:model-value="(v: unknown) => { const n = Number(v); line.times = !Number.isFinite(n) || n < 1 ? 1 : Math.floor(n) }"
+            />
+            <span v-if="line.times > 1" class="text-caption text-primary">×{{ line.times }}</span>
+          </div>
           <div class="line-table-wrap">
             <table class="line-table">
               <tbody>
@@ -202,7 +221,7 @@
                     ]"
                     :style="{
                       width:
-                        Math.max(1, chordsText(syllable).length) + 0.63 + 'ch',
+                        Math.max(1, chordsText(syllable).length) + 0.66 + 'ch',
                     }"
                     @click.stop="setActiveSyllable(syllable.id)"
                   >
@@ -222,7 +241,9 @@
                     :key="'t-' + syllable.id"
                     :style="{
                       width:
-                        Math.max(1, (syllable.text || ' ').length) + 0.63 + 'ch',
+                        Math.max(1, (syllable.text || ' ').length) +
+                        0.66 +
+                        'ch',
                     }"
                     :class="[
                       'cell-lyric',
@@ -251,7 +272,7 @@
                     ]"
                     :style="{
                       width:
-                        Math.max(1, notesText(syllable).length) + 0.63 + 'ch',
+                        Math.max(1, notesText(syllable).length) + 0.66 + 'ch',
                     }"
                     @click.stop="setActiveSyllable(syllable.id)"
                   >
@@ -646,18 +667,19 @@ function removeLine(section: SongSection, index: number) {
 }
 
 function duplicateLine(section: SongSection, index: number) {
-  const line = section.lines[index];
-  if (!line) return;
+  const line = section.lines[index]
+  if (!line) return
   const cloned: SongLine = {
     id: uid("ln"),
+    times: (line as SongLine).times ?? 1,
     syllables: line.syllables.map((s) => ({
       id: uid("sy"),
       text: s.text,
       chords: [...(s.chords || [])],
       notes: [...(s.notes || [])],
     })),
-  };
-  section.lines.splice(index + 1, 0, cloned);
+  }
+  section.lines.splice(index + 1, 0, cloned)
 }
 
 function moveLine(section: SongSection, index: number, direction: number) {
