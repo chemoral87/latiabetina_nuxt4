@@ -170,6 +170,9 @@ onMounted(() => {
 </style>
 
 <style>
+@page {
+  margin: 8mm 6mm;
+}
 @media print {
   #lay-nav-drawer,
   #lay-app-bar,
@@ -189,11 +192,28 @@ onMounted(() => {
   body {
     background: white !important;
   }
+  .v-container,
+  .v-container--fluid {
+    padding: 0 !important;
+    max-width: none !important;
+  }
+  .v-row {
+    margin: 0 !important;
+  }
+  .v-col {
+    padding: 0 !important;
+  }
   #cmp-song-viewer-card {
     box-shadow: none !important;
     border: none !important;
     margin: 0 !important;
     max-width: 100% !important;
+    width: 100% !important;
+  }
+  #cmp-song-viewer-card .v-card-title,
+  #cmp-song-viewer-card .v-card-text {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 }
 </style>
