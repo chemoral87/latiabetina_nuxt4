@@ -102,9 +102,11 @@
    to `padding: 0 16px` (VTable.css), overridden below per axis so density
    vertical padding is preserved. */
 .v-data-table .v-table__wrapper td:not(.pa-1),
-.v-data-table .v-table__wrapper th {
-  padding-left: 7px !important;
-  padding-right: 7px !important;
+.v-data-table .v-table__wrapper th,
+.v-table .v-table__wrapper td:not(.pa-1),
+.v-table .v-table__wrapper th {
+  padding-left: 6px !important;
+  padding-right: 6px !important;
 }
 
 /* Momentary row flash after edit — driven by row-props + highlight-id in table components */

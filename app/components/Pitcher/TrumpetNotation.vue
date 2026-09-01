@@ -12,8 +12,8 @@
         >Nota escrita: {{ noteInfo.written }}</VChip
       >
     </VCardTitle>
-    <VCardText>
-      <VRow no-gutters>
+    <VCardText class="pa-1">
+      <VRow no-gutters density="compact">
         <VCol md="4" cols="12">
           <VSelect
             id="pit-trumpet-tuning"
@@ -145,7 +145,7 @@
             >
               <thead>
                 <tr>
-                  <th class="text-left">Sonido</th>
+                  <th class="text-left">Nota</th>
                   <th class="text-left">Pos</th>
                 </tr>
               </thead>
