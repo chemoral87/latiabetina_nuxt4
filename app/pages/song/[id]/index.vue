@@ -21,7 +21,55 @@
           </VCardTitle>
 
           <VCardText>
-            <div class="d-flex justify-end mb-2">
+            <div style="gap: 8px" class="d-flex justify-end align-center flex-wrap mb-2 print-hide">
+              <div class="d-flex align-center">
+                <VBtn
+                  id="song-view-columns-1-btn"
+                  size="small"
+                  title="1 columna"
+                  :color="columns === 1 ? 'primary' : undefined"
+                  :variant="columns === 1 ? 'flat' : 'outlined'"
+                  @click="columns = 1"
+                >
+                  <VIcon start size="small">mdi-view-sequential</VIcon>
+                  1
+                </VBtn>
+                <VBtn
+                  id="song-view-columns-2-btn"
+                  class="ml-1"
+                  size="small"
+                  title="2 columnas"
+                  :color="columns === 2 ? 'primary' : undefined"
+                  :variant="columns === 2 ? 'flat' : 'outlined'"
+                  @click="columns = 2"
+                >
+                  <VIcon start size="small">mdi-view-column</VIcon>
+                  2
+                </VBtn>
+                <VBtn
+                  id="song-view-columns-3-btn"
+                  class="ml-1"
+                  size="small"
+                  title="3 columnas"
+                  :color="columns === 3 ? 'primary' : undefined"
+                  :variant="columns === 3 ? 'flat' : 'outlined'"
+                  @click="columns = 3"
+                >
+                  <VIcon start size="small">mdi-view-grid</VIcon>
+                  3
+                </VBtn>
+              </div>
+              <VBtn
+                id="song-view-print-btn"
+                size="small"
+                color="primary"
+                title="Imprimir"
+                variant="outlined"
+                @click="printSong"
+              >
+                <VIcon start size="small">mdi-printer</VIcon>
+                Imprimir
+              </VBtn>
               <VBtn
                 id="song-viewer-toggle-repeat-btn"
                 size="small"
@@ -34,7 +82,7 @@
                 {{ expandRepeats ? 'Colapsar repeticiones' : 'Expandir repeticiones' }}
               </VBtn>
             </div>
-            <SongViewer :content="song.content as any" :expand-repeats="expandRepeats" />
+            <SongViewer :columns="columns" :content="song.content as any" :expand-repeats="expandRepeats" />
           </VCardText>
 
           <div class="d-flex justify-end px-4 pb-4">
@@ -72,6 +120,7 @@ const { Song } = useRepository()
 const loadingItem = ref(true)
 const song = ref<Record<string, unknown>>({})
 const expandRepeats = ref(true)
+const columns = ref<1 | 2 | 3>(1)
 
 // Initial load (asyncData equivalent)
 {
@@ -88,6 +137,10 @@ const expandRepeats = ref(true)
   }
 }
 
+function printSong() {
+  window.print()
+}
+
 onMounted(() => {
   const title = (song.value.title as string) || ""
   route.meta.title = title ? `Canción - ${title}` : "Canción"
@@ -96,4 +149,51 @@ onMounted(() => {
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+@media print {
+  .print-hide {
+    display: none !important;
+  }
+  #song-view-back-btn,
+  #song-view-edit-btn {
+    display: none !important;
+  }
+  #cmp-song-viewer-card {
+    box-shadow: none !important;
+    border: none !important;
+  }
+  :deep(.song-viewer) {
+    font-family: "Consolas", "SFMono-Regular", "Monaco", "Courier New", monospace;
+    font-variant-ligatures: none;
+  }
+}
+</style>
+
+<style>
+@media print {
+  #lay-nav-drawer,
+  #lay-app-bar,
+  #lay-nav-list,
+  header,
+  nav,
+  .v-navigation-drawer,
+  .v-app-bar,
+  .v-toolbar {
+    display: none !important;
+  }
+  .v-main {
+    padding: 0 !important;
+    --v-layout-top: 0 !important;
+  }
+  .v-application,
+  body {
+    background: white !important;
+  }
+  #cmp-song-viewer-card {
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+  }
+}
+</style>

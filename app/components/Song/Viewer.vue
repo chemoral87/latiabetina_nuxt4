@@ -1,6 +1,6 @@
 <template>
   <div id="cmp-song-viewer">
-    <div v-if="hasContent" class="song-viewer">
+    <div v-if="hasContent" :class="['song-viewer', `cols-${columns}`]">
       <div v-for="section in displayContent.sections" :key="section.id" class="mb-4">
         <div class="text-subtitle-1 font-weight-bold mb-1 section-name">
           [{{ section.name }}]<span
@@ -64,10 +64,14 @@
 import { normalizeContent, type SongContent } from "~/types/song";
 import { uid } from "~/utils/syllables";
 
-const props = defineProps<{
-  content?: SongContent | null;
-  expandRepeats?: boolean;
-}>();
+const props = withDefaults(
+  defineProps<{
+    content?: SongContent | null;
+    expandRepeats?: boolean;
+    columns?: number;
+  }>(),
+  { columns: 1 },
+);
 
 const content = computed<SongContent>(() => normalizeContent(props.content));
 const hasContent = computed(
@@ -116,6 +120,8 @@ const displayContent = computed<SongContent>(() => {
   align-items: flex-end;
   flex-wrap: wrap;
   gap: 0;
+  font-family: "Consolas", "SFMono-Regular", "Monaco", "Courier New", monospace;
+  font-variant-ligatures: none;
 }
 
 .syllable {
@@ -124,7 +130,8 @@ const displayContent = computed<SongContent>(() => {
   align-items: flex-start;
   margin-right: 0;
   min-width: unset;
-  padding: 0;
+  padding: 0 1px;
+  flex-shrink: 0;
 }
 
 .syllable.is-space {
@@ -174,5 +181,45 @@ const displayContent = computed<SongContent>(() => {
   font-size: 12px;
   line-height: 1.25;
   white-space: pre;
+}
+
+.song-viewer.cols-2 {
+  column-count: 2;
+  column-gap: 32px;
+}
+.song-viewer.cols-3 {
+  column-count: 3;
+  column-gap: 24px;
+}
+.song-viewer.cols-2 > div,
+.song-viewer.cols-3 > div {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+@media (max-width: 900px) {
+  .song-viewer.cols-2,
+  .song-viewer.cols-3 {
+    column-count: 1;
+  }
+}
+
+@media print {
+  .song-viewer {
+    font-family: "Consolas", "SFMono-Regular", "Monaco", "Courier New", monospace;
+  }
+  .syllables {
+    gap: 0;
+    break-inside: avoid;
+  }
+  .song-line {
+    break-inside: avoid;
+    break-after: auto;
+  }
+  .chord,
+  .text,
+  .note {
+    white-space: pre;
+  }
 }
 </style>
