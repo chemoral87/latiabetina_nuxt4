@@ -8,8 +8,8 @@
             id="song-new-load-json-btn"
             size="small"
             color="primary"
-            variant="outlined"
             class="mr-2 mb-1"
+            variant="outlined"
             @click="triggerLoadJson"
           >
             <VIcon start>mdi-file-upload-outline</VIcon>
@@ -17,10 +17,10 @@
           </VBtn>
           <VBtn
             id="song-new-export-json-btn"
+            class="mb-1"
             size="small"
             color="primary"
             variant="outlined"
-            class="mb-1"
             @click="triggerExportJson"
           >
             <VIcon start>mdi-file-download-outline</VIcon>
@@ -30,16 +30,16 @@
             id="song-new-json-file-input"
             ref="jsonFileInput"
             type="file"
-            accept=".json,application/json"
             style="display: none"
+            accept=".json,application/json"
             @change="onJsonFileChange"
           />
         </div>
         <SongEditor
           ref="editorRef"
-          :song="importedSong as Record<string, unknown>"
           :loading="saving"
           permission="song-create"
+          :song="importedSong as Record<string, unknown>"
           @close="close"
           @save="saveSong"
         />

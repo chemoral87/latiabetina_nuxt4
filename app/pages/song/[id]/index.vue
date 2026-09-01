@@ -21,7 +21,20 @@
           </VCardTitle>
 
           <VCardText>
-            <SongViewer :content="song.content" />
+            <div class="d-flex justify-end mb-2">
+              <VBtn
+                id="song-viewer-toggle-repeat-btn"
+                size="small"
+                variant="outlined"
+                :color="expandRepeats ? 'primary' : 'grey'"
+                :title="expandRepeats ? 'Mostrar ×' : 'Repetir texto con acordes'"
+                @click="expandRepeats = !expandRepeats"
+              >
+                <VIcon start size="small">{{ expandRepeats ? 'mdi-collapse-all' : 'mdi-repeat' }}</VIcon>
+                {{ expandRepeats ? 'Colapsar repeticiones' : 'Expandir repeticiones' }}
+              </VBtn>
+            </div>
+            <SongViewer :content="song.content as any" :expand-repeats="expandRepeats" />
           </VCardText>
 
           <div class="d-flex justify-end px-4 pb-4">
@@ -58,6 +71,7 @@ const { Song } = useRepository()
 
 const loadingItem = ref(true)
 const song = ref<Record<string, unknown>>({})
+const expandRepeats = ref(true)
 
 // Initial load (asyncData equivalent)
 {

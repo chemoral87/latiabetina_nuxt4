@@ -1,5 +1,5 @@
 <template>
-  <div class="syllable-cell">
+  <div id="cmp-song-syllable-cell" class="syllable-cell">
     <input
       :value="chordsText"
       placeholder="Acordes"

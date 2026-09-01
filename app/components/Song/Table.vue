@@ -20,6 +20,7 @@
     >
       <template #[`item.view`]="{ item }">
         <VBtn
+          :id="`song-table-view-btn-${(item as Record<string, unknown>).id}`"
           icon
           title="Ver"
           class="ma-1"
@@ -45,6 +46,7 @@
       <template #[`item.actions`]="{ item }">
         <div class="d-flex flex-nowrap justify-center">
           <VBtn
+            :id="`song-table-edit-btn-${(item as Record<string, unknown>).id}`"
             icon
             class="ma-1"
             size="small"
@@ -58,6 +60,7 @@
           </VBtn>
 
           <VBtn
+            :id="`song-table-delete-btn-${(item as Record<string, unknown>).id}`"
             icon
             class="ma-1"
             size="small"

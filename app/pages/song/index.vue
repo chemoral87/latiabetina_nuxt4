@@ -9,6 +9,7 @@
           hide-details
           density="compact"
           variant="outlined"
+          label="Buscar canción..."
           append-inner-icon="mdi-magnify"
           placeholder="Buscar canción..."
         />
@@ -33,6 +34,7 @@
 
       <VCol cols="12">
         <SongTable
+          id="song-table"
           :loading="loading"
           :response="response"
           :highlight-id="highlightId"
@@ -47,6 +49,7 @@
 
     <DialogDelete
       v-if="songDialogDelete"
+      id="song-delete-dlg"
       :loading="deleting"
       :dialog="dialogDelete"
       @ok="deleteSong"

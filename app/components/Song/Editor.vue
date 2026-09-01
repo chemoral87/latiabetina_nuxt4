@@ -12,6 +12,7 @@
         <VRow>
           <VCol md="4" cols="12">
             <VTextField
+              id="song-editor-title"
               v-model="item.title"
               required
               autofocus
@@ -26,6 +27,7 @@
           </VCol>
           <VCol md="4" cols="12">
             <VTextField
+              id="song-editor-artist"
               v-model="item.artist"
               density="compact"
               variant="outlined"
@@ -36,6 +38,7 @@
           </VCol>
           <VCol md="2" cols="6">
             <VTextField
+              id="song-editor-key"
               v-model="item.key"
               density="compact"
               label="Tonalidad"
@@ -46,6 +49,7 @@
           </VCol>
           <VCol md="2" cols="6">
             <VTextField
+              id="song-editor-tempo"
               v-model="item.tempo"
               label="Tempo"
               density="compact"
@@ -59,6 +63,7 @@
 
       <div class="d-flex align-center flex-wrap my-3">
         <VBtn
+          id="song-editor-paste-btn"
           size="small"
           color="primary"
           class="mr-2 mb-1"
@@ -69,6 +74,7 @@
           Pegar letra
         </VBtn>
         <VBtn
+          id="song-editor-add-section-btn"
           size="small"
           color="primary"
           class="mr-2 mb-1"
@@ -79,6 +85,7 @@
           Agregar sección
         </VBtn>
         <VBtn
+          id="song-editor-add-tab-btn"
           size="small"
           color="primary"
           class="mr-2 mb-1"
@@ -135,6 +142,7 @@
       >
         <div style="gap: 8px" class="d-flex align-center mb-2">
           <VTextField
+            :id="`song-section-name-${section.id}`"
             v-model="section.name"
             hide-details
             label="Sección"
@@ -165,6 +173,7 @@
             "
           />
           <VBtn
+            :id="`song-section-add-line-btn-${section.id}`"
             size="small"
             variant="text"
             title="Agregar línea"
@@ -173,6 +182,7 @@
             <VIcon>mdi-plus</VIcon>
           </VBtn>
           <VBtn
+            :id="`song-section-remove-btn-${section.id}`"
             size="small"
             color="error"
             variant="text"
@@ -188,24 +198,33 @@
           :key="line.id"
           class="line-editor mb-2"
         >
-          <div class="d-flex align-center mb-1" style="gap: 8px">
-            <span class="text-caption text-grey" style="min-width: 48px">Línea {{ li + 1 }}</span>
+          <div style="gap: 8px" class="d-flex align-center mb-1">
+            <span style="min-width: 48px" class="text-caption text-grey"
+              >Línea {{ li + 1 }}</span
+            >
             <VTextField
               :id="`song-line-times-${si}-${li}`"
               v-model.number="line.times"
-              type="number"
+              :min="1"
+              :max="10"
               hide-details
               label="Veces"
+              type="number"
               density="compact"
               variant="outlined"
               :disabled="disabled"
-              :min="1"
-              :max="10"
               style="max-width: 90px"
               title="Veces que se repite la línea"
-              @update:model-value="(v: unknown) => { const n = Number(v); line.times = !Number.isFinite(n) || n < 1 ? 1 : Math.floor(n) }"
+              @update:model-value="
+                (v: unknown) => {
+                  const n = Number(v);
+                  line.times = !Number.isFinite(n) || n < 1 ? 1 : Math.floor(n);
+                }
+              "
             />
-            <span v-if="line.times > 1" class="text-caption text-primary">×{{ line.times }}</span>
+            <span v-if="line.times > 1" class="text-caption text-primary"
+              >×{{ line.times }}</span
+            >
           </div>
           <div class="line-table-wrap">
             <table class="line-table">
@@ -221,7 +240,7 @@
                     ]"
                     :style="{
                       width:
-                        Math.max(1, chordsText(syllable).length) + 0.66 + 'ch',
+                        Math.max(1, chordsText(syllable).length) + 0.69 + 'ch',
                     }"
                     @click.stop="setActiveSyllable(syllable.id)"
                   >
@@ -231,6 +250,7 @@
                       title="Acordes (separados por coma o espacio)"
                       @focus="activeSyllableId = syllable.id"
                       @change="onChordsChange(syllable, $event)"
+                      @keydown="onSyllableKeydown($event, line, syllable)"
                     />
                   </td>
                 </tr>
@@ -242,7 +262,7 @@
                     :style="{
                       width:
                         Math.max(1, (syllable.text || ' ').length) +
-                        0.66 +
+                        0.69 +
                         'ch',
                     }"
                     :class="[
@@ -258,6 +278,7 @@
                       v-model="syllable.text"
                       class="cell-input text-input"
                       @focus="activeSyllableId = syllable.id"
+                      @keydown="onSyllableKeydown($event, line, syllable)"
                     />
                   </td>
                 </tr>
@@ -272,7 +293,7 @@
                     ]"
                     :style="{
                       width:
-                        Math.max(1, notesText(syllable).length) + 0.66 + 'ch',
+                        Math.max(1, notesText(syllable).length) + 0.69 + 'ch',
                     }"
                     @click.stop="setActiveSyllable(syllable.id)"
                   >
@@ -282,6 +303,7 @@
                       title="Melodía (notas separadas por coma o espacio)"
                       @focus="activeSyllableId = syllable.id"
                       @change="onNotesChange(syllable, $event)"
+                      @keydown="onSyllableKeydown($event, line, syllable)"
                     />
                   </td>
                 </tr>
@@ -290,6 +312,7 @@
           </div>
           <div v-if="line.syllables.length === 0" class="mt-1">
             <VBtn
+              :id="`song-line-add-syllable-btn-${line.id}`"
               size="x-small"
               variant="text"
               color="primary"
@@ -303,33 +326,37 @@
             <!-- Syllable insert/remove for selected cell – at beginning -->
             <template v-if="getActiveSyllableInLine(line)">
               <VBtn
-                :id="`song-syllable-insert-left-${si}-${li}`"
+                :id="`song-syllable-insert-left-${line.id}`"
                 text
                 size="x-small"
                 variant="text"
                 color="primary"
                 :disabled="disabled"
                 title="Agregar sílaba antes de la celda seleccionada"
-                @click="addSyllableBefore(line, getActiveSyllableInLine(line)!)"
+                @click.stop="
+                  addSyllableBefore(line, getActiveSyllableInLine(line)!)
+                "
               >
                 <VIcon size="small">mdi-plus</VIcon>
                 <VIcon size="10">mdi-arrow-left</VIcon>
               </VBtn>
               <VBtn
-                :id="`song-syllable-insert-right-${si}-${li}`"
+                :id="`song-syllable-insert-right-${line.id}`"
                 text
                 size="x-small"
                 variant="text"
                 color="primary"
                 :disabled="disabled"
                 title="Agregar sílaba después de la celda seleccionada"
-                @click="addSyllableAfter(line, getActiveSyllableInLine(line)!)"
+                @click.stop="
+                  addSyllableAfter(line, getActiveSyllableInLine(line)!)
+                "
               >
                 <VIcon size="small">mdi-plus</VIcon>
                 <VIcon size="10">mdi-arrow-right</VIcon>
               </VBtn>
               <VBtn
-                :id="`song-syllable-remove-${si}-${li}`"
+                :id="`song-syllable-remove-${line.id}`"
                 text
                 color="error"
                 size="x-small"
@@ -386,6 +413,7 @@
               />
             </template>
             <VBtn
+              :id="`song-line-split-btn-${line.id}`"
               text
               size="x-small"
               variant="text"
@@ -395,6 +423,7 @@
               Dividir sílabas
             </VBtn>
             <VBtn
+              :id="`song-line-merge-btn-${line.id}`"
               text
               size="x-small"
               variant="text"
@@ -404,6 +433,7 @@
               Unir
             </VBtn>
             <VBtn
+              :id="`song-line-notes-btn-${line.id}`"
               text
               size="x-small"
               variant="text"
@@ -413,7 +443,7 @@
               {{ isNotesRowVisible(line) ? "Ocultar notas" : "Notas" }}
             </VBtn>
             <VBtn
-              :id="`song-line-duplicate-btn-${si}-${li}`"
+              :id="`song-line-duplicate-btn-${line.id}`"
               text
               size="x-small"
               variant="text"
@@ -425,7 +455,7 @@
               Duplicar
             </VBtn>
             <VBtn
-              :id="`song-line-up-btn-${si}-${li}`"
+              :id="`song-line-up-btn-${line.id}`"
               text
               size="x-small"
               variant="text"
@@ -436,7 +466,7 @@
               <VIcon size="small">mdi-arrow-up</VIcon>
             </VBtn>
             <VBtn
-              :id="`song-line-down-btn-${si}-${li}`"
+              :id="`song-line-down-btn-${line.id}`"
               text
               size="x-small"
               variant="text"
@@ -447,6 +477,7 @@
               <VIcon size="small">mdi-arrow-down</VIcon>
             </VBtn>
             <VBtn
+              :id="`song-line-remove-btn-${line.id}`"
               text
               color="error"
               size="x-small"
@@ -468,6 +499,7 @@
         <VCardText>
           <div class="d-flex align-center mb-2">
             <VTextField
+              :id="`song-tab-title-${tab.id}`"
               v-model="tab.title"
               label="Tab"
               class="mr-2"
@@ -477,6 +509,7 @@
               :disabled="disabled"
             />
             <VBtn
+              :id="`song-tab-remove-btn-${tab.id}`"
               size="small"
               color="error"
               variant="text"
@@ -487,6 +520,7 @@
             </VBtn>
           </div>
           <VTextarea
+            :id="`song-tab-content-${tab.id}`"
             v-model="tab.tablature"
             rows="4"
             auto-grow
@@ -503,6 +537,7 @@
 
     <div class="d-flex justify-end px-4 pb-4">
       <VBtn
+        id="song-editor-cancel-btn"
         class="mr-4"
         variant="text"
         color="primary"
@@ -512,6 +547,7 @@
         Cancelar
       </VBtn>
       <VBtn
+        id="song-editor-save-btn"
         color="primary"
         variant="elevated"
         :loading="saving || loading"
@@ -528,6 +564,35 @@
       @apply="applyPasted"
       @close="pasteDialog = false"
     />
+
+    <div class="history-fab">
+      <VBtn
+        id="song-history-undo-btn"
+        size="small"
+        elevation="4"
+        color="primary"
+        variant="elevated"
+        :disabled="!canUndo"
+        title="Deshacer (Ctrl+Z)"
+        @click="undo"
+      >
+        <VIcon>mdi-undo</VIcon>
+        <VTooltip location="top" activator="parent">Deshacer (Ctrl+Z)</VTooltip>
+      </VBtn>
+      <VBtn
+        id="song-history-redo-btn"
+        size="small"
+        elevation="4"
+        color="primary"
+        variant="elevated"
+        :disabled="!canRedo"
+        title="Rehacer (Ctrl+Y)"
+        @click="redo"
+      >
+        <VIcon>mdi-redo</VIcon>
+        <VTooltip location="top" activator="parent">Rehacer (Ctrl+Y)</VTooltip>
+      </VBtn>
+    </div>
   </VCard>
 </template>
 
@@ -585,6 +650,141 @@ function getActiveSyllableInLine(line: SongLine): SongSyllable | null {
   return line.syllables.find((s) => s.id === activeSyllableId.value) ?? null;
 }
 
+function focusSyllableInput(rowType: "chord" | "text" | "note" = "text") {
+  nextTick(() => {
+    let selector = "td.cell-lyric.is-active input.text-input";
+    if (rowType === "chord")
+      selector = "td.cell-chord.is-active input.chord-input";
+    else if (rowType === "note")
+      selector = "td.cell-note.is-active input.note-input";
+    let el = document.querySelector(selector) as HTMLInputElement | null;
+    if (!el && rowType === "note") {
+      el = document.querySelector(
+        "td.cell-lyric.is-active input.text-input",
+      ) as HTMLInputElement | null;
+    }
+    el?.focus();
+    el?.select?.();
+  });
+}
+
+function findActiveContext() {
+  const id = activeSyllableId.value;
+  if (!id) return null;
+  let flatIndex = 0;
+  for (let si = 0; si < content.value.sections.length; si++) {
+    const sec = content.value.sections[si]!;
+    for (let li = 0; li < sec.lines.length; li++) {
+      const ln = sec.lines[li]!;
+      const sIdx = ln.syllables.findIndex((s) => s.id === id);
+      if (sIdx !== -1) {
+        return {
+          section: sec,
+          sectionIdx: si,
+          line: ln,
+          lineIdx: li,
+          syllable: ln.syllables[sIdx]!,
+          syllableIdx: sIdx,
+          globalLineIdx: flatIndex,
+        };
+      }
+      flatIndex++;
+    }
+  }
+  return null;
+}
+
+function handleVertical(
+  delta: number,
+  currentLine: SongLine,
+  currentSyllable: SongSyllable,
+  rowType: "chord" | "text" | "note",
+) {
+  const ctx = findActiveContext();
+  const colIdx = ctx
+    ? ctx.syllableIdx
+    : currentLine.syllables.findIndex((s) => s.id === currentSyllable.id);
+  const flatLines: SongLine[] = [];
+  for (const sec of content.value.sections) flatLines.push(...sec.lines);
+  const curGlobal = ctx
+    ? ctx.globalLineIdx
+    : flatLines.findIndex((ln) => ln.id === currentLine.id);
+  if (curGlobal === -1) return;
+  const targetGlobal = curGlobal + delta;
+  if (targetGlobal < 0 || targetGlobal >= flatLines.length) return;
+  const targetLine = flatLines[targetGlobal]!;
+  if (targetLine.syllables.length === 0) return;
+  const targetIdx = Math.min(
+    Math.max(0, colIdx),
+    targetLine.syllables.length - 1,
+  );
+  const targetSy = targetLine.syllables[targetIdx]!;
+  activeSyllableId.value = targetSy.id;
+  focusSyllableInput(rowType);
+}
+
+function onSyllableKeydown(
+  e: KeyboardEvent,
+  line: SongLine,
+  syllable: SongSyllable,
+) {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key))
+    return;
+  const target = e.target as HTMLElement;
+  let rowType: "chord" | "text" | "note" = "text";
+  if (target.classList.contains("chord-input")) rowType = "chord";
+  else if (target.classList.contains("note-input")) rowType = "note";
+  if (activeSyllableId.value !== syllable.id)
+    activeSyllableId.value = syllable.id;
+  if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+    e.preventDefault();
+    const idx = line.syllables.findIndex((s) => s.id === syllable.id);
+    const delta = e.key === "ArrowRight" ? 1 : -1;
+    const newIdx = idx + delta;
+    if (newIdx < 0 || newIdx >= line.syllables.length) return;
+    const next = line.syllables[newIdx]!;
+    activeSyllableId.value = next.id;
+    focusSyllableInput(rowType);
+  } else if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+    e.preventDefault();
+    const delta = e.key === "ArrowDown" ? 1 : -1;
+    handleVertical(delta, line, syllable, rowType);
+  }
+}
+
+function onGlobalKeydown(e: KeyboardEvent) {
+  if (e.defaultPrevented) return;
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (!activeSyllableId.value) return;
+  if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key))
+    return;
+  const ae = document.activeElement as HTMLElement | null;
+  const insideTable =
+    !!ae?.closest?.(".line-table-wrap") ||
+    !!ae?.classList?.contains("cell-input");
+  const isBody = ae === document.body;
+  const isCellTd = !!ae?.closest?.(".cell-lyric, .cell-chord, .cell-note");
+  if (!insideTable && !isBody && !isCellTd) return;
+  const ctx = findActiveContext();
+  if (!ctx) return;
+  let rowType: "chord" | "text" | "note" = "text";
+  if (ae?.classList.contains("chord-input")) rowType = "chord";
+  else if (ae?.classList.contains("note-input")) rowType = "note";
+  e.preventDefault();
+  if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+    const delta = e.key === "ArrowRight" ? 1 : -1;
+    const newIdx = ctx.syllableIdx + delta;
+    if (newIdx < 0 || newIdx >= ctx.line.syllables.length) return;
+    const next = ctx.line.syllables[newIdx]!;
+    activeSyllableId.value = next.id;
+    focusSyllableInput(rowType);
+  } else {
+    const delta = e.key === "ArrowDown" ? 1 : -1;
+    handleVertical(delta, ctx.line, ctx.syllable, rowType);
+  }
+}
+
 const item = ref<Song>(defaultSong());
 const content = computed<SongContent>({
   get: () => normalizeContent(item.value.content),
@@ -592,6 +792,103 @@ const content = computed<SongContent>({
     item.value.content = v;
   },
 });
+
+// --- History (undo/redo) — last 10 changes ---
+const undoStack = ref<Song[]>([]);
+const redoStack = ref<Song[]>([]);
+const isHistoryRestoring = ref(false);
+const lastSnapshotJson = ref("");
+
+const canUndo = computed(() => undoStack.value.length > 0);
+const canRedo = computed(() => redoStack.value.length > 0);
+
+function cloneSong(s: Song): Song {
+  return JSON.parse(JSON.stringify(s)) as Song;
+}
+
+function resetHistoryWithCurrent() {
+  lastSnapshotJson.value = JSON.stringify(item.value);
+  undoStack.value = [];
+  redoStack.value = [];
+}
+
+function pushHistoryIfNeeded(newJson: string) {
+  if (isHistoryRestoring.value) return;
+  if (!lastSnapshotJson.value) {
+    lastSnapshotJson.value = newJson;
+    return;
+  }
+  if (newJson === lastSnapshotJson.value) return;
+  try {
+    const prev = JSON.parse(lastSnapshotJson.value) as Song;
+    undoStack.value.push(prev);
+    if (undoStack.value.length > 10) undoStack.value.shift();
+    redoStack.value = [];
+  } catch {
+    // ignore
+  }
+  lastSnapshotJson.value = newJson;
+}
+
+watch(
+  () => JSON.stringify(item.value),
+  (newJson) => {
+    pushHistoryIfNeeded(newJson);
+  },
+);
+
+function undo() {
+  if (undoStack.value.length === 0) return;
+  const snapshot = undoStack.value.pop()!;
+  try {
+    const current = cloneSong(item.value);
+    redoStack.value.push(current);
+    if (redoStack.value.length > 10) redoStack.value.shift();
+  } catch {
+    // ignore
+  }
+  isHistoryRestoring.value = true;
+  item.value = cloneSong(snapshot);
+  lastSnapshotJson.value = JSON.stringify(item.value);
+  nextTick(() => {
+    isHistoryRestoring.value = false;
+  });
+}
+
+function redo() {
+  if (redoStack.value.length === 0) return;
+  const snapshot = redoStack.value.pop()!;
+  try {
+    const current = cloneSong(item.value);
+    undoStack.value.push(current);
+    if (undoStack.value.length > 10) undoStack.value.shift();
+  } catch {
+    // ignore
+  }
+  isHistoryRestoring.value = true;
+  item.value = cloneSong(snapshot);
+  lastSnapshotJson.value = JSON.stringify(item.value);
+  nextTick(() => {
+    isHistoryRestoring.value = false;
+  });
+}
+
+function onHistoryKeydown(e: KeyboardEvent) {
+  const isMac = navigator.platform.toUpperCase().includes("MAC");
+  const mod = isMac ? e.metaKey : e.ctrlKey;
+  if (!mod) return;
+  const key = e.key.toLowerCase();
+  // Ctrl+Z = undo, Ctrl+Y or Ctrl+Shift+Z = redo
+  if (key === "z" && !e.shiftKey) {
+    if (!canUndo.value) return;
+    e.preventDefault();
+    undo();
+  } else if ((key === "y") || (key === "z" && e.shiftKey)) {
+    if (!canRedo.value) return;
+    e.preventDefault();
+    redo();
+  }
+}
 
 watch(
   () => props.loading,
@@ -611,11 +908,18 @@ watch(
   () => props.song,
   (val) => {
     if (val && Object.keys(val).length > 0) {
+      isHistoryRestoring.value = true;
       item.value = {
         ...defaultSong(),
         ...val,
         content: normalizeContent(val.content),
       } as Song;
+      lastSnapshotJson.value = JSON.stringify(item.value);
+      undoStack.value = [];
+      redoStack.value = [];
+      nextTick(() => {
+        isHistoryRestoring.value = false;
+      });
     }
   },
   { immediate: true, deep: true },
@@ -623,6 +927,7 @@ watch(
 
 onMounted(() => {
   if (props.song && Object.keys(props.song).length > 0) {
+    isHistoryRestoring.value = true;
     item.value = {
       ...defaultSong(),
       ...props.song,
@@ -634,11 +939,22 @@ onMounted(() => {
     item.value.org_id = null;
   }
   clearErrors();
+  // init history snapshot after initial item is ready
+  lastSnapshotJson.value = JSON.stringify(item.value);
+  undoStack.value = [];
+  redoStack.value = [];
+  nextTick(() => {
+    isHistoryRestoring.value = false;
+  });
   document.addEventListener("click", onDocClick);
+  document.addEventListener("keydown", onGlobalKeydown);
+  document.addEventListener("keydown", onHistoryKeydown);
 });
 
 onBeforeUnmount(() => {
   document.removeEventListener("click", onDocClick);
+  document.removeEventListener("keydown", onGlobalKeydown);
+  document.removeEventListener("keydown", onHistoryKeydown);
 });
 
 function onDocClick(e: MouseEvent) {
@@ -667,8 +983,8 @@ function removeLine(section: SongSection, index: number) {
 }
 
 function duplicateLine(section: SongSection, index: number) {
-  const line = section.lines[index]
-  if (!line) return
+  const line = section.lines[index];
+  if (!line) return;
   const cloned: SongLine = {
     id: uid("ln"),
     times: (line as SongLine).times ?? 1,
@@ -678,8 +994,8 @@ function duplicateLine(section: SongSection, index: number) {
       chords: [...(s.chords || [])],
       notes: [...(s.notes || [])],
     })),
-  }
-  section.lines.splice(index + 1, 0, cloned)
+  };
+  section.lines.splice(index + 1, 0, cloned);
 }
 
 function moveLine(section: SongSection, index: number, direction: number) {
@@ -695,16 +1011,35 @@ function addSyllable(line: SongLine) {
 
 function addSyllableAfter(line: SongLine, syllable: SongSyllable) {
   const idx = line.syllables.findIndex((s) => s.id === syllable.id);
+  const created = newSyllable();
   line.syllables.splice(
     idx === -1 ? line.syllables.length : idx + 1,
     0,
-    newSyllable(),
+    created,
   );
+  // Keep the newly created syllable selected so user can chain inserts
+  activeSyllableId.value = created.id;
+  nextTick(() => {
+    activeSyllableId.value = created.id;
+    const el = document.querySelector(
+      "td.cell-lyric.is-active input.text-input",
+    ) as HTMLInputElement | null;
+    el?.focus();
+  });
 }
 
 function addSyllableBefore(line: SongLine, syllable: SongSyllable) {
   const idx = line.syllables.findIndex((s) => s.id === syllable.id);
-  line.syllables.splice(idx === -1 ? 0 : idx, 0, newSyllable());
+  const created = newSyllable();
+  line.syllables.splice(idx === -1 ? 0 : idx, 0, created);
+  activeSyllableId.value = created.id;
+  nextTick(() => {
+    activeSyllableId.value = created.id;
+    const el = document.querySelector(
+      "td.cell-lyric.is-active input.text-input",
+    ) as HTMLInputElement | null;
+    el?.focus();
+  });
 }
 
 function removeSyllable(line: SongLine, syllable: SongSyllable) {
@@ -910,6 +1245,8 @@ defineExpose({
   border-collapse: separate;
   border-spacing: 0;
   width: max-content;
+  font-family: "Consolas", "SFMono-Regular", "Monaco", "Courier New", monospace;
+  font-variant-ligatures: none;
 }
 
 .line-table .row-label {
@@ -1005,5 +1342,15 @@ defineExpose({
 .tab-input :deep(textarea) {
   font-family: "Consolas", "Monaco", monospace;
   font-size: 12px;
+}
+
+.history-fab {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 20;
+  display: flex;
+  gap: 8px;
+  pointer-events: auto;
 }
 </style>
