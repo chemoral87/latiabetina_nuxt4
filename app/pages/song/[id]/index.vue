@@ -1,13 +1,13 @@
 <template>
-  <VContainer :fluid="true">
-    <VRow justify="center">
+  <VContainer class="pa-2" :fluid="true">
+    <VRow dense justify="center">
       <VCol md="10" cols="12">
         <div v-if="loadingItem" class="text-center pa-5">
           <VProgressCircular indeterminate color="primary" />
         </div>
 
         <VCard v-else id="cmp-song-viewer-card">
-          <VCardTitle class="d-flex align-start flex-column">
+          <VCardTitle class="d-flex align-start flex-column py-2">
             <div style="width: 100%" class="d-flex align-center justify-space-between">
               <div>
                 <div class="text-h6">{{ song.title || "Sin título" }}</div>
@@ -20,8 +20,8 @@
             </div>
           </VCardTitle>
 
-          <VCardText>
-            <div style="gap: 8px" class="d-flex justify-end align-center flex-wrap mb-2 print-hide">
+          <VCardText class="py-2">
+            <div style="gap: 6px" class="d-flex justify-end align-center flex-wrap mb-1 print-hide">
               <div class="d-flex align-center">
                 <VBtn
                   id="song-view-columns-1-btn"
@@ -85,7 +85,7 @@
             <SongViewer :columns="columns" :content="song.content as any" :expand-repeats="expandRepeats" />
           </VCardText>
 
-          <div class="d-flex justify-end px-4 pb-4">
+          <div class="d-flex justify-end px-3 pb-2 pt-1">
             <VBtn id="song-view-back-btn" text class="mr-5" variant="text" color="primary" @click="navigateTo('/song')">
               Volver
             </VBtn>

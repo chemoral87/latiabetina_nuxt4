@@ -1,8 +1,8 @@
 <template>
   <div id="cmp-song-viewer">
     <div v-if="hasContent" :class="['song-viewer', `cols-${columns}`]">
-      <div v-for="section in displayContent.sections" :key="section.id" class="mb-4">
-        <div class="text-subtitle-1 font-weight-bold mb-1 section-name">
+      <div v-for="section in displayContent.sections" :key="section.id" class="mb-2">
+        <div class="text-subtitle-1 font-weight-bold mb-0 section-name">
           [{{ section.name }}]<span
             v-if="!expandRepeats && (section.times ?? 1) > 1"
             class="ml-2 text-primary"
@@ -45,8 +45,8 @@
         </div>
       </div>
 
-      <div v-for="tab in displayContent.tabs" :key="tab.id" class="mb-4">
-        <div v-if="tab.title" class="text-subtitle-1 font-weight-bold mb-1">
+      <div v-for="tab in displayContent.tabs" :key="tab.id" class="mb-2">
+        <div v-if="tab.title" class="text-subtitle-1 font-weight-bold mb-0">
           {{ tab.title }}
         </div>
         <pre class="tablature">{{ tab.tablature }}</pre>
@@ -112,7 +112,7 @@ const displayContent = computed<SongContent>(() => {
 
 <style scoped>
 .song-line {
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .syllables {
@@ -130,12 +130,12 @@ const displayContent = computed<SongContent>(() => {
   align-items: flex-start;
   margin-right: 0;
   min-width: unset;
-  padding: 0 1px;
+  padding: 0;
   flex-shrink: 0;
 }
 
 .syllable.is-space {
-  min-width: 0.3em;
+  min-width: 0.15em;
   flex-shrink: 0;
 }
 
@@ -185,11 +185,11 @@ const displayContent = computed<SongContent>(() => {
 
 .song-viewer.cols-2 {
   column-count: 2;
-  column-gap: 32px;
+  column-gap: 16px;
 }
 .song-viewer.cols-3 {
   column-count: 3;
-  column-gap: 24px;
+  column-gap: 12px;
 }
 .song-viewer.cols-2 > div,
 .song-viewer.cols-3 > div {
