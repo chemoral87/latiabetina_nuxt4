@@ -386,7 +386,6 @@ const animationState = ref("idle");
 const isPlaying = ref(false);
 const elapsedSeconds = ref(0);
 const timerInterval = ref<ReturnType<typeof setInterval> | null>(null);
-const timeouts = ref<ReturnType<typeof setTimeout>[]>([]);
 const countdownInterval = ref<ReturnType<typeof setInterval> | null>(null);
 const phaseStartedAt = ref(0);
 const phaseDuration = ref(0);
@@ -604,7 +603,14 @@ function startCountdown() {
   countdownInterval.value = setInterval(() => {
     if (!isPlaying.value) return;
     const elapsed = (Date.now() - phaseStartedAt.value) / 1000;
-    stepRemaining.value = Math.max(0, phaseDuration.value - elapsed);
+    const remaining = phaseDuration.value - elapsed;
+    stepRemaining.value = Math.max(0, remaining);
+
+    if (remaining <= 0) {
+      const next = getNextPhase(animationState.value);
+      animationState.value = next;
+      animateCircle();
+    }
   }, 10);
 }
 
@@ -618,8 +624,6 @@ function completeAnimation() {
   isPlaying.value = false;
   clearInterval(timerInterval.value ?? undefined);
   timerInterval.value = null;
-  timeouts.value.forEach((timeout) => clearTimeout(timeout));
-  timeouts.value = [];
   stopCountdown();
   animationState.value = "idle";
   const c = circleEl.value;
@@ -679,8 +683,6 @@ function stopAnimation() {
   timerInterval.value = null;
   elapsedSeconds.value = 0;
 
-  timeouts.value.forEach((timeout) => clearTimeout(timeout));
-  timeouts.value = [];
   stopCountdown();
 
   animationState.value = "idle";
@@ -758,12 +760,21 @@ onMounted(() => {
     document.removeEventListener("visibilitychange", onVisibility);
 });
 
-function scheduleNext(phase: string, delayMs: number) {
-  const t = setTimeout(() => {
-    animationState.value = phase;
-    animateCircle();
-  }, delayMs);
-  timeouts.value.push(t);
+function getNextPhase(state: string): string {
+  switch (state) {
+    case "initialContract":
+      return "expansion";
+    case "expansion":
+      return "immobile1";
+    case "immobile1":
+      return "contraction";
+    case "contraction":
+      return "immobile2";
+    case "immobile2":
+      return "initialContract";
+    default:
+      return "initialContract";
+  }
 }
 
 function applyCircleStyle(
@@ -820,19 +831,14 @@ function animateCircle() {
 
   if (animationState.value === "initialContract") {
     applyCircleStyle(`${dur}s`, "ease-in", "#FF9800", "scale(0.75)", "scale(1.3)");
-    scheduleNext("expansion", dur * 1000);
   } else if (animationState.value === "expansion") {
     applyCircleStyle(`${dur}s`, "ease-out", "#1565C0", "scale(3)", "scale(0.777)");
-    scheduleNext("immobile1", dur * 1000);
   } else if (animationState.value === "immobile1") {
     applyCircleStyle(`${dur}s`, "linear", "#2E7D32", "scale(3)", "scale(0.777)");
-    scheduleNext("contraction", dur * 1000);
   } else if (animationState.value === "contraction") {
     applyCircleStyle(`${dur}s`, "ease-in-out", "#C62828", "scale(1)", "scale(1)");
-    scheduleNext("immobile2", dur * 1000);
   } else if (animationState.value === "immobile2") {
     applyCircleStyle(`${dur}s`, "linear", "#2E7D32", "scale(1)", "scale(1)");
-    scheduleNext("initialContract", dur * 1000);
   }
 }
 
@@ -843,8 +849,6 @@ onBeforeUnmount(() => {
   }
   clearInterval(timerInterval.value ?? undefined);
   timerInterval.value = null;
-  timeouts.value.forEach((timeout) => clearTimeout(timeout));
-  timeouts.value = [];
   stopCountdown();
 });
 </script>
