@@ -135,7 +135,7 @@ const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
-const { ChurchMember } = useRepository()
+const { ChurchMemberTrackingLog } = useRepository()
 const notify = useNotifyStore()
 const { vrules } = useVrules()
 
@@ -190,7 +190,7 @@ async function fetchLogs() {
   if (memberId.value == null) return
   loading.value = true
   try {
-    const data = await ChurchMember.trackingLogs<unknown>(memberId.value)
+    const data = await ChurchMemberTrackingLog.index<unknown>(memberId.value)
     logs.value = Array.isArray(data) ? (data as Record<string, unknown>[]) : []
   } catch {
     logs.value = []
@@ -211,13 +211,14 @@ async function save() {
   if (memberId.value == null) return
   saving.value = true
   try {
-    const created = await ChurchMember.createTrackingLog<Record<string, unknown>>(memberId.value, {
+    const res = await ChurchMemberTrackingLog.create<Record<string, unknown>>(memberId.value, {
       contact_datetime: contactTime.value
         ? `${contactDate.value} ${contactTime.value}:00`
         : `${contactDate.value} 00:00:00`,
       medium: form.value.medium,
       description: form.value.description,
     })
+    const created = res?.data ?? res
     logs.value = [created, ...logs.value]
     form.value.medium = ""
     form.value.description = ""

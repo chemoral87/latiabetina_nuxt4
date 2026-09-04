@@ -149,6 +149,18 @@
                   append-inner-icon="mdi-message-text-outline"
                 />
               </VCol>
+              <VCol cols="12" sm="auto">
+                <VBtn
+                  id="cmm-refresh-logs-btn"
+                  color="primary"
+                  variant="outlined"
+                  :loading="loadingLogs"
+                  @click="fetchLogs"
+                >
+                  <VIcon start>mdi-reload</VIcon>
+                  Refrescar
+                </VBtn>
+              </VCol>
               <VCol
                 cols="12"
                 sm="auto"
@@ -363,7 +375,7 @@ definePageMeta({
 });
 
 const route = useRoute();
-const { ChurchMember } = useRepository();
+const { ChurchMember, ChurchMemberTrackingLog } = useRepository();
 const notify = useNotifyStore();
 const auth = useAuthStore();
 const { statusLabel, statusColor } = useChurchMemberStatus();
@@ -450,7 +462,7 @@ const backRoute = computed(() => {
   const { data: initialLogs } = await useAsyncData(
     `church-member-tracking-logs-${route.params.id}`,
     async () => {
-      return await ChurchMember.trackingLogs<{
+      return await ChurchMemberTrackingLog.index<{
         data: unknown[];
         total: number;
       }>(route.params.id as string, {
@@ -526,7 +538,7 @@ async function openContact(
 ) {
   const id = route.params.id as string;
   try {
-    const res = await ChurchMember.createTrackingLog<
+    const res = await ChurchMemberTrackingLog.create<
       Record<string, unknown>
     >(id, {
       contact_datetime: localDateTimeString(),
@@ -564,7 +576,7 @@ async function fetchTrackingLogs() {
   if (!id) return;
   loadingLogs.value = true;
   try {
-    const data = await ChurchMember.trackingLogs<Record<string, unknown>>(id, {
+    const data = await ChurchMemberTrackingLog.index<Record<string, unknown>>(id, {
       page: 1,
       itemsPerPage: 10,
       sortBy: ["contact_datetime"],
@@ -599,7 +611,7 @@ async function saveTrackingLog(payload: Record<string, unknown>) {
   if (!id || !logId) return;
   try {
     saving.value = true;
-    await ChurchMember.updateTrackingLog<Record<string, unknown>>(
+    await ChurchMemberTrackingLog.update<Record<string, unknown>>(
       id,
       logId,
       payload,
@@ -625,7 +637,7 @@ async function deleteTrackingLog(log: Record<string, unknown>) {
   if (!confirm("¿Desea eliminar esta interacción?")) return;
   try {
     saving.value = true;
-    await ChurchMember.deleteTrackingLog<Record<string, unknown>>(id, logId);
+    await ChurchMemberTrackingLog.delete<Record<string, unknown>>(id, logId);
     await fetchTrackingLogs();
   } catch (error) {
     notify.notify({

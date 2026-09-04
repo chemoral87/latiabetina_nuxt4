@@ -66,7 +66,7 @@ definePageMeta({
   middleware: ["authenticated", "permission"],
 });
 
-const { ChurchMember } = useRepository();
+const { ChurchMemberTrackingLog } = useRepository();
 const notify = useNotifyStore();
 const { highlightId } = useRowHighlight();
 
@@ -99,7 +99,7 @@ useDebouncedFilter(filterInput, filterTerm);
     "church-member-tracking-logs-index",
     async () => {
       const apiParams = buildApiParams(lastOptions.value);
-      return await ChurchMember.trackingLogsIndex<{ data: unknown[]; total: number }>(
+      return await ChurchMemberTrackingLog.logsIndex<{ data: unknown[]; total: number }>(
         apiParams,
       ).catch(() => ({ data: [] as unknown[], total: 0 }));
     },
@@ -135,7 +135,7 @@ async function fetchData(overrides: Record<string, unknown> = {}) {
     if (filterMedium.value && !params.medium) params.medium = filterMedium.value;
     if (filterDateRange.value?.[0]) params.date_from = filterDateRange.value[0];
     if (filterDateRange.value?.[1]) params.date_to = filterDateRange.value[1];
-    const res = await ChurchMember.trackingLogsIndex(params);
+    const res = await ChurchMemberTrackingLog.logsIndex(params);
     response.value = normalizeResponse(res);
     lastOptions.value = requestOptions;
   } catch (error) {

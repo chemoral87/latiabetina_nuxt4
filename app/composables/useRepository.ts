@@ -107,22 +107,6 @@ export function useRepository() {
     },
     ChurchMember: {
       ...createCommonRepository($api, "/church-member"),
-      // Bitácora de seguimiento: GET /church-member/{memberId}/tracking-logs
-      trackingLogs<T = unknown>(memberId: number | string, params?: Record<string, unknown>) {
-        return withNotify($api<T>(`/church-member/${memberId}/tracking-logs`, { params }))
-      },
-      // POST /church-member/{memberId}/tracking-logs
-      createTrackingLog<T = unknown>(memberId: number | string, payload: Record<string, unknown>) {
-        return withNotify($api<T>(`/church-member/${memberId}/tracking-logs`, { method: "POST", body: payload }))
-      },
-      // PUT /church-member/{memberId}/tracking-logs/{logId}
-      updateTrackingLog<T = unknown>(memberId: number | string, logId: number | string, payload: Record<string, unknown>) {
-        return withNotify($api<T>(`/church-member/${memberId}/tracking-logs/${logId}`, { method: "PUT", body: payload }))
-      },
-      // DELETE /church-member/{memberId}/tracking-logs/{logId}
-      deleteTrackingLog<T = unknown>(memberId: number | string, logId: number | string) {
-        return withNotify($api<T>(`/church-member/${memberId}/tracking-logs/${logId}`, { method: "DELETE" }))
-      },
       // Clasificación (estado): PUT /church-member/{memberId}/status
       updateStatus<T = unknown>(memberId: number | string, status: string, reason?: string) {
         const payload: Record<string, unknown> = { status }
@@ -157,8 +141,26 @@ export function useRepository() {
       consolidatorLogsIndex<T = unknown>(params?: Record<string, unknown>) {
         return withNotify($api<T>("/church-member/consolidator-logs", { params }))
       },
+    },
+    ChurchMemberTrackingLog: {
+      // Bitácora de seguimiento: GET /church-member/{memberId}/tracking-logs
+      index<T = unknown>(memberId: number | string, params?: Record<string, unknown>) {
+        return withNotify($api<T>(`/church-member/${memberId}/tracking-logs`, { params }))
+      },
+      // POST /church-member/{memberId}/tracking-logs
+      create<T = unknown>(memberId: number | string, payload: Record<string, unknown>) {
+        return withNotify($api<T>(`/church-member/${memberId}/tracking-logs`, { method: "POST", body: payload }))
+      },
+      // PUT /church-member/{memberId}/tracking-logs/{logId}
+      update<T = unknown>(memberId: number | string, logId: number | string, payload: Record<string, unknown>) {
+        return withNotify($api<T>(`/church-member/${memberId}/tracking-logs/${logId}`, { method: "PUT", body: payload }))
+      },
+      // DELETE /church-member/{memberId}/tracking-logs/{logId}
+      delete<T = unknown>(memberId: number | string, logId: number | string) {
+        return withNotify($api<T>(`/church-member/${memberId}/tracking-logs/${logId}`, { method: "DELETE" }))
+      },
       // GET /church-member/tracking-logs (current user's logs, paginated)
-      trackingLogsIndex<T = unknown>(params?: Record<string, unknown>) {
+      logsIndex<T = unknown>(params?: Record<string, unknown>) {
         return withNotify($api<T>("/church-member/tracking-logs", { params }))
       },
     },
