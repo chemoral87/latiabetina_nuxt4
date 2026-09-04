@@ -122,7 +122,7 @@ function normalizeResponse(res: unknown): { data: unknown[]; total: number } {
 
 function viewMember(item: unknown) {
   const log = item as Record<string, unknown>;
-  const member = log.churchMember as { id?: number | string } | undefined;
+  const member = log.church_member as { id?: number | string } | undefined;
   if (member?.id != null) navigateTo(`/church-member/${member.id}?from=tracking`);
 }
 

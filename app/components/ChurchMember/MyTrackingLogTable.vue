@@ -35,8 +35,8 @@
         </VBtn>
       </template>
 
-      <template #[`item.churchMember`]="{ item }">
-        {{ item.churchMember ? `${item.churchMember.name} ${item.churchMember.last_name}` : "N/A" }}
+      <template #[`item.church_member`]="{ item }">
+        {{ item.church_member ? `${item.church_member.name} ${item.church_member.last_name}` : "N/A" }}
       </template>
 
       <template #[`item.medium`]="{ item }">
@@ -105,7 +105,7 @@ const itemsPerPage = ref(10);
 const sortBy = ref<{ key: string; order: string }[]>([...props.initialSortBy]);
 
 const headers: Header[] = [
-  { title: "Miembro", value: "churchMember", sortable: false },
+  { title: "Miembro", value: "church_member", sortable: false },
   { title: "Medio", value: "medium", sortable: true },
   { title: "Fecha contacto", value: "contact_datetime", sortable: true },
   { title: "Descripción", value: "description", sortable: false },

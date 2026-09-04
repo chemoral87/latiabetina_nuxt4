@@ -406,11 +406,11 @@ const hasConsolidatorChanges = computed(() => {
 // below can reuse it without depending on later declarations.
 const backRoute = computed(() => {
   const from = route.query.from as string | undefined;
-  if (from === "tracking") return "/tracking";
+  if (from === "tracking") return "/church-member/tracking-logs";
   if (typeof from === "string" && from.startsWith("/")) {
-    return safeInternalRedirect(from, "/tracking");
+    return safeInternalRedirect(from, "/church-member/tracking-logs");
   }
-  return "/tracking";
+  return "/church-member/tracking-logs";
 });
 
 // Initial member data and tracking logs are loaded during SSR via useAsyncData
@@ -526,13 +526,15 @@ async function openContact(
 ) {
   const id = route.params.id as string;
   try {
-    const newLog = await ChurchMember.createTrackingLog<
+    const res = await ChurchMember.createTrackingLog<
       Record<string, unknown>
     >(id, {
       contact_datetime: localDateTimeString(),
       medium,
+      classification: medium === "presencial" ? "CONTESTA" : null,
       description: message.value.trim() || undefined,
     });
+    const newLog = res?.data ?? res;
     logsResponse.value.data.unshift(newLog);
     logsResponse.value.total += 1;
   } catch (error) {
