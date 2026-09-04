@@ -245,6 +245,25 @@
                 :items="notationColsOptions"
               />
             </VCol>
+            <VCol sm="6" cols="12">
+              <VSwitch
+                id="pit-config-piano-notation"
+                v-model="showPianoNotation"
+                hide-details
+                color="success"
+                class="mt-0 pt-0"
+                label="Notación piano"
+              />
+              <VSelect
+                id="pit-config-piano-cols"
+                v-model="pianoCols"
+                hide-details
+                label="Columnas"
+                density="compact"
+                variant="outlined"
+                :items="notationColsOptions"
+              />
+            </VCol>
             <VCol cols="12">
               <VSwitch
                 id="pit-config-ghost"
@@ -404,6 +423,14 @@ const guitarCols = computed({
 const trumpetCols = computed({
   get: () => store.trumpetCols,
   set: (v: string | number) => store.setTrumpetCols(v),
+});
+const showPianoNotation = computed({
+  get: () => store.showPianoNotation,
+  set: (v: boolean) => store.setShowPianoNotation(v),
+});
+const pianoCols = computed({
+  get: () => store.pianoCols,
+  set: (v: string | number) => store.setPianoCols(v),
 });
 </script>
 

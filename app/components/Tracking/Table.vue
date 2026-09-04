@@ -33,6 +33,14 @@
       <template #[`item.last_contacted_by`]="{ item }">
         {{ item.last_contacted_by || "—" }}
       </template>
+
+      <template #[`item.creator`]="{ item }">
+        {{ item.creator ? `${item.creator.name} ${item.creator.last_name}` : "—" }}
+      </template>
+
+      <template #[`item.assigned_by`]="{ item }">
+        {{ item.assigned_by || "—" }}
+      </template>
       
      <template #[`item.org_id`]="{ item }">
        {{ orgLabel(item.org_id) }}
@@ -123,6 +131,8 @@ const headers = computed<Header[]>(() => {
     { title: "Estado", value: "status", sortable: false, align: "center" },
     { title: "Último contacto", value: "last_contacted", sortable: true },
     { title: "Contactado por", value: "last_contacted_by", sortable: false },
+    { title: "Creado por", value: "creator", sortable: false },
+    { title: "Asignado por", value: "assigned_by", sortable: false },
     ];
     if (!singleOrg.value) {
       cols.push({ title: "Organización", value: "org_id", sortable: false });

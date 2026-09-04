@@ -27,35 +27,39 @@
         />
       </template>
 
-      <template #[`item.actions`]="{ item }">
-        <div class="d-flex flex-nowrap justify-center">
-          <VBtn
-            :id="`det-member-goto-btn-${item.id}`"
-            icon
-            class="ma-1"
-            size="small"
-            color="primary"
-            rounded="circle"
-            variant="outlined"
-            title="Ver miembro"
-            @click="navigateTo(`/church-member/${item.id}?from=${encodeURIComponent(route.fullPath)}`)"
-          >
-            <VIcon size="x-large">mdi-eye</VIcon>
-          </VBtn>
-          <VBtn
-            :id="`det-member-delete-btn-${item.id}`"
-            icon
-            class="ma-1"
-            size="small"
-            color="error"
-            rounded="circle"
-            variant="outlined"
-            title="Eliminar miembro"
-            @click="emit('delete', item)"
-          >
-            <VIcon size="x-large">mdi-delete</VIcon>
-          </VBtn>
-        </div>
+      <template #[`item.eye`]="{ item }">
+        <VBtn
+          :id="`det-member-goto-btn-${item.id}`"
+          icon
+          class="ma-1"
+          size="small"
+          color="primary"
+          rounded="circle"
+          variant="outlined"
+          title="Ver miembro"
+          @click="
+            navigateTo(
+              `/church-member/${item.id}?from=${encodeURIComponent(route.fullPath)}`,
+            )
+          "
+        >
+          <VIcon size="x-large">mdi-eye</VIcon>
+        </VBtn>
+      </template>
+      <template #[`item.action`]="{ item }">
+        <VBtn
+          :id="`det-member-delete-btn-${item.id}`"
+          icon
+          class="ma-1"
+          size="small"
+          color="error"
+          rounded="circle"
+          variant="outlined"
+          title="Eliminar miembro"
+          @click="emit('delete', item)"
+        >
+          <VIcon size="x-large">mdi-delete</VIcon>
+        </VBtn>
       </template>
 
       <template #[`item.years_old`]="{ item }">
@@ -79,10 +83,10 @@
 </template>
 
 <script setup lang="ts">
-import { useChurchMemberStatus } from "~/composables/useChurchMemberStatus"
+import { useChurchMemberStatus } from "~/composables/useChurchMemberStatus";
 
-const route = useRoute()
-const { statuses, statusBgClass } = useChurchMemberStatus()
+const route = useRoute();
+const { statuses, statusBgClass } = useChurchMemberStatus();
 
 interface Header {
   title: string;
@@ -115,6 +119,7 @@ function onStatusChange(item: Record<string, unknown>, status: string) {
 }
 
 const headers: Header[] = [
+  { title: "", value: "eye", width: "60px" },
   { title: "Nombre", value: "name" },
   { title: "Apellido Paterno", value: "last_name" },
   // { title: "Apellido Materno", value: "second_last_name" },

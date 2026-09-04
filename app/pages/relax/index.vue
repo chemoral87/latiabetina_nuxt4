@@ -637,6 +637,8 @@ function completeAnimation() {
     ic.style.transitionDuration = "0.5s";
     ic.style.transform = "scale(1)";
   }
+  const { playRelaxSuccess } = useRelaxAudio();
+  void playRelaxSuccess();
   showCompletionDialog.value = true;
 }
 

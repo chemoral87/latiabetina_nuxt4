@@ -33,7 +33,7 @@
           variant="elevated"
           @click:close="removeUser(item as UserItem)"
         >
-          {{ (item as UserItem).name }}
+          {{ (item as UserItem).name }} {{ (item as UserItem).last_name }}
         </VChip>
       </template>
 
@@ -41,7 +41,7 @@
         <VListItem v-bind="itemProps">
           <template #title>
             <VChip label size="large" color="success" variant="elevated">
-              {{ (item as UserItem).name }}
+              {{ (item as UserItem).name }} {{ (item as UserItem).last_name }} <span class="text-caption text-medium-emphasis">({{ (item as UserItem).email }})</span>
             </VChip>
           </template>
         </VListItem>
@@ -56,6 +56,8 @@ defineOptions({ inheritAttrs: false });
 interface UserItem {
   id: number;
   name: string;
+  last_name?: string;
+  email?: string;
 }
 
 const props = withDefaults(

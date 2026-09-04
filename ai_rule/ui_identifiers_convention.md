@@ -109,6 +109,8 @@ Structural containers and inline text follow the same `{view}-{purpose}` pattern
 | `church-event/calendar.vue` | `chrcev` / `eve` |
 | `consolidation/index.vue` | `cnsld` / `con` |
 | `consolidation/[id]/details.vue` | `cnsld` / `det` |
+| `church-member/consolidator-logs/index.vue` | `cml` |
+| `church-member/tracking-logs/index.vue` | `mtl` |
 | `pos/index.vue` | `pos` |
 | `pos/new.vue` | `posn` |
 | `pos/cash-close.vue` | `posc` |

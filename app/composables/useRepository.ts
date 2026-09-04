@@ -149,6 +149,18 @@ export function useRepository() {
       syncConsolidators<T = unknown>(memberId: number | string, consolidatorIds: (number | string)[]) {
         return withNotify($api<T>(`/church-member/${memberId}/consolidators`, { method: "PUT", body: { consolidator_ids: consolidatorIds } }))
       },
+      // GET /church-member/{memberId}/consolidator-logs
+      consolidatorLogs<T = unknown>(memberId: number | string) {
+        return withNotify($api<T>(`/church-member/${memberId}/consolidator-logs`))
+      },
+      // GET /church-member/consolidator-logs (all members, paginated)
+      consolidatorLogsIndex<T = unknown>(params?: Record<string, unknown>) {
+        return withNotify($api<T>("/church-member/consolidator-logs", { params }))
+      },
+      // GET /church-member/tracking-logs (current user's logs, paginated)
+      trackingLogsIndex<T = unknown>(params?: Record<string, unknown>) {
+        return withNotify($api<T>("/church-member/tracking-logs", { params }))
+      },
     },
     WhatsApp: {
       // GET /whatsapp/logs?sender=&receiver=&success=&per_page=&page=  (WhatsAppController.php:70)

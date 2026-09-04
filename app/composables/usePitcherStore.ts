@@ -44,10 +44,12 @@ export const usePitcherStore = defineStore("pitcher", () => {
   const showGuitarNotation = ref(true)
   const showUkeleleNotation = ref(true)
   const showTrumpetNotation = ref(true)
+  const showPianoNotation = ref(true)
   // Columnas (cols) de cada notación de instrumento en el tuner (persistido)
   const ukeleleCols = ref<string | number>(6)
   const guitarCols = ref<string | number>(6)
   const trumpetCols = ref<string | number>(6)
+  const pianoCols = ref<string | number>(6)
 
   // ---- mutations → setters (same clamping as aui) ----
   function setRootNote(note: string) {
@@ -114,6 +116,10 @@ export const usePitcherStore = defineStore("pitcher", () => {
     showTrumpetNotation.value = !!value
   }
 
+  function setShowPianoNotation(value: boolean) {
+    showPianoNotation.value = !!value
+  }
+
   function setUkeleleCols(value: string | number) {
     if (NOTATION_COLS_OPTIONS.includes(value)) ukeleleCols.value = value
   }
@@ -124,6 +130,10 @@ export const usePitcherStore = defineStore("pitcher", () => {
 
   function setTrumpetCols(value: string | number) {
     if (NOTATION_COLS_OPTIONS.includes(value)) trumpetCols.value = value
+  }
+
+  function setPianoCols(value: string | number) {
+    if (NOTATION_COLS_OPTIONS.includes(value)) pianoCols.value = value
   }
 
   // ---- localStorage persistence (client-only, debounced 300ms like aui) ----
@@ -149,9 +159,11 @@ export const usePitcherStore = defineStore("pitcher", () => {
           showGuitarNotation: showGuitarNotation.value,
           showUkeleleNotation: showUkeleleNotation.value,
           showTrumpetNotation: showTrumpetNotation.value,
+          showPianoNotation: showPianoNotation.value,
           ukeleleCols: ukeleleCols.value,
           guitarCols: guitarCols.value,
           trumpetCols: trumpetCols.value,
+          pianoCols: pianoCols.value,
         }),
       )
     } catch {
@@ -161,7 +173,7 @@ export const usePitcherStore = defineStore("pitcher", () => {
 
   let saveTimer: ReturnType<typeof setTimeout> | null = null
   watch(
-    [sensitivity, selectedRootNote, latinNotation, showMicrotones, ghostQuarterNote, maxHistory, totalNotes, histogramHeight, histogramMinWidth, dbCalibrationOffset, showScaleOnFretboard, scaleRingOpacity, ghostNoteOpacity, showGuitarNotation, showUkeleleNotation, showTrumpetNotation, ukeleleCols, guitarCols, trumpetCols],
+    [sensitivity, selectedRootNote, latinNotation, showMicrotones, ghostQuarterNote, maxHistory, totalNotes, histogramHeight, histogramMinWidth, dbCalibrationOffset, showScaleOnFretboard, scaleRingOpacity, ghostNoteOpacity, showGuitarNotation, showUkeleleNotation, showTrumpetNotation, showPianoNotation, ukeleleCols, guitarCols, trumpetCols, pianoCols],
     () => {
       if (!import.meta.client) return
       if (saveTimer) clearTimeout(saveTimer)
@@ -199,16 +211,19 @@ export const usePitcherStore = defineStore("pitcher", () => {
       if (typeof data.showGuitarNotation === "boolean") showGuitarNotation.value = data.showGuitarNotation
       if (typeof data.showUkeleleNotation === "boolean") showUkeleleNotation.value = data.showUkeleleNotation
       if (typeof data.showTrumpetNotation === "boolean") showTrumpetNotation.value = data.showTrumpetNotation
+      if (typeof data.showPianoNotation === "boolean") showPianoNotation.value = data.showPianoNotation
       if (data.ukeleleCols === "auto" || typeof data.ukeleleCols === "number") ukeleleCols.value = data.ukeleleCols
       if (data.guitarCols === "auto" || typeof data.guitarCols === "number") guitarCols.value = data.guitarCols
       if (data.trumpetCols === "auto" || typeof data.trumpetCols === "number") trumpetCols.value = data.trumpetCols
+      if (data.pianoCols === "auto" || typeof data.pianoCols === "number") pianoCols.value = data.pianoCols
       // Migración: versiones previas guardaban un único `notationCols` compartido
-      if (typeof data.ukeleleCols === "undefined" && typeof data.guitarCols === "undefined" && typeof data.trumpetCols === "undefined") {
+      if (typeof data.ukeleleCols === "undefined" && typeof data.guitarCols === "undefined" && typeof data.trumpetCols === "undefined" && typeof data.pianoCols === "undefined") {
         const legacy = data.notationCols
         if (legacy === "auto" || typeof legacy === "number") {
           ukeleleCols.value = legacy
           guitarCols.value = legacy
           trumpetCols.value = legacy
+          pianoCols.value = legacy
         }
       }
     } catch {
@@ -238,9 +253,11 @@ export const usePitcherStore = defineStore("pitcher", () => {
     showGuitarNotation,
     showUkeleleNotation,
     showTrumpetNotation,
+    showPianoNotation,
     ukeleleCols,
     guitarCols,
     trumpetCols,
+    pianoCols,
     loadFromStorage,
     setRootNote,
     setSensitivity,
@@ -258,9 +275,11 @@ export const usePitcherStore = defineStore("pitcher", () => {
     setShowGuitarNotation,
     setShowUkeleleNotation,
     setShowTrumpetNotation,
+    setShowPianoNotation,
     setUkeleleCols,
     setGuitarCols,
     setTrumpetCols,
+    setPianoCols,
   }
 })
 

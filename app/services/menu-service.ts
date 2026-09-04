@@ -136,6 +136,22 @@ export class MenuService {
         });
       }
 
+      if (this.hasPermission("church-member-consolidator-logs-index")) {
+        menu.push({
+          icon: "mdi-history",
+          title: "Historial Consolidadores",
+          to: "/church-member/consolidator-logs",
+        });
+      }
+
+      if (this.hasPermission("church-member-tracking-logs-index")) {
+        menu.push({
+          icon: "mdi-clock-outline",
+          title: "Mi Actividad",
+          to: "/church-member/tracking-logs",
+        });
+      }
+
       if (this.hasPermission("whatsapp-index")) {
         menu.push({
           icon: "mdi-whatsapp",

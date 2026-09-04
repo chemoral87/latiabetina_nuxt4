@@ -198,12 +198,15 @@ async function saveSheet(item: Record<string, unknown>) {
       updateRow(response, (res as Record<string, unknown>) ?? item);
     } else {
       const res = await ConsoSheet.create<Record<string, unknown>>(item);
-      prependCreated(response, (res as Record<string, unknown>) ?? item);
+      const created = (res as Record<string, unknown>) ?? item;
+      prependCreated(response, created);
+      dialog.value = false;
+      notify.notify({ success: "Consolidado creado exitosamente" });
+      navigateTo(`/consolidation/${created.id}/details`);
+      return;
     }
 
-    notify.notify({
-      success: `Consolidado ${isUpdate ? "actualizado" : "creado"} exitosamente`,
-    });
+    notify.notify({ success: "Consolidado actualizado exitosamente" });
     dialog.value = false;
   } catch (error) {
     notify.notify({

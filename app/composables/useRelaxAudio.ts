@@ -254,6 +254,113 @@ export async function playRelaxBeep(frequency = 1000, duration = 0.3): Promise<v
   await tryHtml()
 }
 
+function createSuccessWavUrl(): string {
+  const sampleRate = 44100
+  const notes = [523, 659, 784] // C5 E5 G5
+  const noteDuration = 0.15
+  const gap = 0.05
+  const totalDuration = notes.length * noteDuration + (notes.length - 1) * gap
+  const numSamples = Math.floor(sampleRate * totalDuration)
+  const buffer = new ArrayBuffer(44 + numSamples * 2)
+  const view = new DataView(buffer)
+  const writeString = (offset: number, str: string) => {
+    for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i))
+  }
+  writeString(0, 'RIFF')
+  view.setUint32(4, 36 + numSamples * 2, true)
+  writeString(8, 'WAVE')
+  writeString(12, 'fmt ')
+  view.setUint32(16, 16, true)
+  view.setUint16(20, 1, true)
+  view.setUint16(22, 1, true)
+  view.setUint32(24, sampleRate, true)
+  view.setUint32(28, sampleRate * 2, true)
+  view.setUint16(32, 2, true)
+  view.setUint16(34, 16, true)
+  writeString(36, 'data')
+  view.setUint32(40, numSamples * 2, true)
+  let offset = 44
+  for (let i = 0; i < numSamples; i++) {
+    const t = i / sampleRate
+    let sample = 0
+    for (let n = 0; n < notes.length; n++) {
+      const noteStart = n * (noteDuration + gap)
+      const noteEnd = noteStart + noteDuration
+      if (t >= noteStart && t < noteEnd) {
+        const localT = t - noteStart
+        let env = 1
+        if (localT < 0.01) env = localT / 0.01
+        else if (localT > noteDuration - 0.03) env = (noteDuration - localT) / 0.03
+        sample += Math.sin((2 * Math.PI * notes[n] * t) / sampleRate) * 0.5 * env
+        break
+      }
+    }
+    view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7fff, true)
+    offset += 2
+  }
+  const bytes = new Uint8Array(buffer)
+  let binary = ''
+  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i])
+  return 'data:audio/wav;base64,' + btoa(binary)
+}
+
+let successWavUrl: string | null = null
+
+export async function playRelaxSuccess(): Promise<void> {
+  const tryHtml = async () => {
+    try {
+      if (!successWavUrl) successWavUrl = createSuccessWavUrl()
+      const el = new Audio()
+      ;(el as unknown as Record<string, unknown>).playsInline = true
+      el.setAttribute('playsinline', '')
+      el.setAttribute('webkit-playsinline', '')
+      el.src = successWavUrl
+      el.load()
+      await el.play()
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  if (isIOS()) {
+    const ok = await tryHtml()
+    if (ok) return
+  }
+
+  const ctx = await ensureRelaxAudioRunning()
+  if (ctx) {
+    try {
+      if ((ctx.state as string) === 'suspended' || (ctx.state as string) === 'interrupted') {
+        await ctx.resume().catch(() => {})
+      }
+      const notes = [523, 659, 784] // C5 E5 G5
+      const noteDuration = 0.15
+      const gap = 0.05
+      let t = ctx.currentTime
+      for (const freq of notes) {
+        const osc = ctx.createOscillator()
+        const gain = ctx.createGain()
+        osc.connect(gain)
+        gain.connect(ctx.destination)
+        osc.frequency.value = freq
+        osc.type = 'sine'
+        gain.gain.setValueAtTime(0.0001, t)
+        gain.gain.linearRampToValueAtTime(0.7, t + 0.01)
+        gain.gain.linearRampToValueAtTime(0.0001, t + noteDuration)
+        osc.start(t)
+        osc.stop(t + noteDuration)
+        t += noteDuration + gap
+      }
+      void tryHtml()
+      return
+    } catch (e) {
+      console.warn('[relax-audio] WebAudio success chime failed, trying fallback', e)
+    }
+  }
+  await tryHtml()
+}
+
 export function closeRelaxAudio(): void {
   if (audioContext) {
     try {
@@ -269,6 +376,7 @@ export function useRelaxAudio() {
     unlockRelaxAudio,
     ensureRelaxAudioRunning,
     playRelaxBeep,
+    playRelaxSuccess,
     closeRelaxAudio,
   }
 }

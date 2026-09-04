@@ -119,6 +119,12 @@
           :frequency="lastValidFreq"
         />
       </VCol>
+      <VCol v-if="showPianoNotation" :cols="pianoCols">
+        <PitcherPianoNotation
+          v-if="lastValidFreq"
+          :frequency="lastValidFreq"
+        />
+      </VCol>
     </VRow>
 
     <div class="notation-cols-fabs">
@@ -193,6 +199,30 @@
           </VListItem>
         </VList>
       </VMenu>
+
+      <VMenu v-if="showPianoNotation" location="top end">
+        <template #activator="{ props }">
+          <VBtn
+            id="pit-piano-cols-btn"
+            v-bind="props"
+            color="primary"
+            icon="mdi-piano"
+            density="comfortable"
+            class="notation-cols-fab"
+          />
+        </template>
+        <VList id="pit-piano-cols-menu" density="compact">
+          <VListItem
+            v-for="opt in notationColsOptions"
+            :key="opt"
+            :disabled="!isColsOptionEnabled(opt)"
+            @click="pianoCols = opt"
+          >
+            <VListItemTitle>{{ opt }}</VListItemTitle>
+            <VIcon v-if="pianoCols === opt" end>mdi-check</VIcon>
+          </VListItem>
+        </VList>
+      </VMenu>
     </div>
   </VContainer>
 </template>
@@ -232,11 +262,13 @@ const {
   showGuitarNotation,
   showUkeleleNotation,
   showTrumpetNotation,
+  showPianoNotation,
   histogramMinWidth,
   histogramEffectiveHeight,
   ukeleleCols,
   guitarCols,
   trumpetCols,
+  pianoCols,
 } = storeToRefs(store);
 
 // El pentagrama comparte la misma altura que pit-hist-canvas / pit-db-meter
@@ -310,6 +342,9 @@ onMounted(() => {
   }
   if (route.query.NotTrumpet !== undefined) {
     store.setShowTrumpetNotation(route.query.NotTrumpet !== 'false');
+  }
+  if (route.query.NotPiano !== undefined) {
+    store.setShowPianoNotation(route.query.NotPiano !== 'false');
   }
   if (route.query.LatinNotation !== undefined) {
     store.setLatinNotation(route.query.LatinNotation !== 'false');
