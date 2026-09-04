@@ -138,7 +138,9 @@ watch(filterSuccess, () => fetchLogs({ page: 1 }))
 {
   const initial = await WhatsApp.logs<Record<string, unknown>>({
     page: 1,
-    per_page: 15,
+    itemsPerPage: 15,
+    'sortBy[]': 'created_at',
+    'sortDesc[]': 'true',
   }).catch(() => ({ data: [], total: 0 } as any))
   // Controller returns Laravel paginator: { data, current_page, last_page, per_page, total, ... } (WhatsAppController.php:91)
   // normalize to { data, total }
@@ -162,17 +164,16 @@ async function fetchLogs(overrides: Record<string, unknown> = {}) {
 
   const params: Record<string, unknown> = {
     page: opts.page ?? 1,
-    per_page: opts.itemsPerPage ?? 15,
+    itemsPerPage: opts.itemsPerPage ?? 15,
   }
   if (opts.receiver) params.receiver = opts.receiver
   if (opts.sender) params.sender = opts.sender
   if (opts.success !== undefined && opts.success !== null && opts.success !== '') params.success = opts.success
 
-  // Optional sort forwarding (WhatsApp logs currently orderByDesc created_at, but keep)
   const sortBy = opts.sortBy as { key: string; order: string }[] | undefined
   if (sortBy?.length) {
-    params.sortBy = sortBy[0].key
-    params.sortDesc = sortBy[0].order === 'desc'
+    params['sortBy[]'] = sortBy[0].key
+    params['sortDesc[]'] = sortBy[0].order === 'desc' ? 'true' : 'false'
   }
 
   try {

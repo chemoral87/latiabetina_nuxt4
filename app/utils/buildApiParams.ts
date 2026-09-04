@@ -17,7 +17,7 @@ export function buildApiParams(
   const sortBy = (opts.sortBy as { key: string; order: string }[]) ?? [];
   if (sortBy.length > 0) {
     params.sortBy = [sortBy[0].key];
-    params.sortDesc = [sortBy[0].order === "desc"];
+    params.sortDesc = [sortBy[0].order === "desc" ? "true" : "false"];
   }
 
   // Passthrough any additional query keys (filter, org_id, status, date_from, …)

@@ -45,6 +45,20 @@ params = { sortBy: ["name"], sortDesc: [false], page: 1 }
 `undefined` and `null` values are skipped. Never pass raw arrays expecting JSON
 encoding — the backend expects the `[]` suffix form.
 
+**IMPORTANT: Do NOT add `[]` to param keys.** `serializeParams` already appends
+`[]` for array values. Adding it manually causes double-brackets
+(`sortBy[][]=value` → `stripos()` error on the backend).
+
+```ts
+// ❌ WRONG — double brackets: sortBy%5B%5D%5B%5D=value
+params["sortBy[]"] = ["name"]
+params["sortDesc[]"] = ["true"]
+
+// ✅ CORRECT — serializeParams adds [] automatically
+params["sortBy"] = ["name"]
+params["sortDesc"] = ["true"]
+```
+
 ### `$api` opts
 
 Same shape as `ofetch`/`$fetch`: `{ method, body, params, headers, ... }`.
@@ -144,7 +158,8 @@ Every repository method wraps the promise with `withNotify`, which:
    Default generic is `unknown`.
 6. For list calls, params follow the backend contract:
    `{ page, itemsPerPage, sortBy: [...], sortDesc: [...] }` (see the index-page
-   pattern in `ai_rule/ui_vuetify2_migration.md`).
+   pattern in `ai_rule/ui_vuetify2_migration.md`). **Never** use `sortBy[]` as
+   the key — `serializeParams` adds the brackets automatically.
 7. **Do not** duplicate existing methods (`index`/`show`/`filter`/`create`/
    `update`/`delete`) in a custom repository — spread `createCommonRepository`
    and only add the extra endpoints.

@@ -57,6 +57,7 @@
           :loading="loading"
           :members="members"
           @view="viewMember"
+          @update:options="onUpdateOptions"
         />
       </VCol>
     </VRow>
@@ -82,6 +83,7 @@ const filterStatus = ref("ACTIVO");
 const filterOrgId = ref<string | number | null>(null);
 const loading = ref(false);
 const members = ref<Record<string, unknown>[]>([]);
+const sortBy = ref<{ key: string; order: string }[]>([{ key: "last_contacted", order: "desc" }]);
 
 const showOrgSelect = computed(
   () => auth.orgIdsFor("conso-sheet-index").length > 1,
@@ -96,6 +98,14 @@ const orgs = computed(
 function viewMember(item: unknown) {
   const id = (item as Record<string, unknown> | undefined)?.id;
   if (id != null) navigateTo(`/church-member/${id}?from=tracking`);
+}
+
+function onUpdateOptions(opts: Record<string, unknown>) {
+  const newSortBy = (opts.sortBy as { key: string; order: string }[]) ?? [];
+  if (newSortBy.length) {
+    sortBy.value = newSortBy;
+  }
+  fetchData();
 }
 
 // Debounced filter — shared useDebouncedFilter (300ms immediate clear)
@@ -114,6 +124,12 @@ async function fetchData() {
   if (filterStatus.value) params.status = filterStatus.value;
   if (filterTerm.value) params.filter = filterTerm.value;
   if (filterOrgId.value) params.org_id = filterOrgId.value;
+
+  if (sortBy.value.length) {
+    params["sortBy"] = sortBy.value.map((s) => s.key);
+    params["sortDesc"] = sortBy.value.map((s) => s.order === "desc" ? "true" : "false");
+  }
+
   try {
     const res = await ChurchMember.index<unknown>(params);
     members.value = normalizeMembers(res);
@@ -139,9 +155,12 @@ watch(filterTerm, fetchData);
   const { data: initialData } = await useAsyncData(
     "tracking-index",
     async () =>
-      await ChurchMember.index<unknown>({ mine: true, status: "ACTIVO" }).catch(
-        () => [] as unknown,
-      ),
+      await ChurchMember.index<unknown>({
+        mine: true,
+        status: "ACTIVO",
+        sortBy: ["last_contacted"],
+        sortDesc: ["true"],
+      }).catch(() => [] as unknown),
     { default: () => [] as unknown },
   );
 

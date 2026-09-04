@@ -137,7 +137,19 @@
           <VDivider />
           <VCardActions>
             <VRow density="comfortable" class="w-100 align-center">
-              <VCol v-if="phoneDigits" cols="12" sm="auto" class="flex-grow-1">
+              <VCol cols="12" sm="auto">
+                <VBtn
+                  id="cmm-refresh-logs-btn"
+                  color="primary"
+                  variant="elevated"
+                  :loading="loadingLogs"
+                  @click="fetchTrackingLogs"
+                >
+                  <VIcon start>mdi-reload</VIcon>
+                  Refrescar
+                </VBtn>
+              </VCol>
+              <VCol v-if="phoneDigits" sm="4" cols="12">
                 <VTextField
                   id="cmm-message-input"
                   v-model="message"
@@ -149,18 +161,7 @@
                   append-inner-icon="mdi-message-text-outline"
                 />
               </VCol>
-              <VCol cols="12" sm="auto">
-                <VBtn
-                  id="cmm-refresh-logs-btn"
-                  color="primary"
-                  variant="outlined"
-                  :loading="loadingLogs"
-                  @click="fetchLogs"
-                >
-                  <VIcon start>mdi-reload</VIcon>
-                  Refrescar
-                </VBtn>
-              </VCol>
+
               <VCol
                 cols="12"
                 sm="auto"
@@ -225,7 +226,12 @@
         </VCard>
       </VCol>
     </VRow>
-    <VRow v-if="currentConsolidators.length > 0 || auth.hasPermission('church-member-consolidator-assign')">
+    <VRow
+      v-if="
+        currentConsolidators.length > 0 ||
+        auth.hasPermission('church-member-consolidator-assign')
+      "
+    >
       <VCol cols="12">
         <VCard>
           <VCardTitle class="text-subtitle-1 font-weight-medium">
@@ -234,7 +240,9 @@
           </VCardTitle>
           <VDivider />
           <VCardText>
-            <template v-if="auth.hasPermission('church-member-consolidator-assign')">
+            <template
+              v-if="auth.hasPermission('church-member-consolidator-assign')"
+            >
               <ConsolidationConsolidatorCombobox
                 id="cmm-consolidator-combobox"
                 :org-id="member.org_id"
@@ -246,10 +254,10 @@
               <VBtn
                 v-if="hasConsolidatorChanges"
                 id="cmm-consolidator-save-btn"
+                class="mt-2"
                 color="success"
                 variant="outlined"
                 :loading="savingConsolidators"
-                class="mt-2"
                 @click="saveConsolidators"
               >
                 <VIcon start>mdi-content-save</VIcon>
@@ -261,14 +269,17 @@
                 <VChip
                   v-for="c in currentConsolidators"
                   :key="c.id"
-                  size="small"
                   class="ma-1"
+                  size="small"
                   color="primary"
                   variant="outlined"
                 >
                   <VIcon start size="small">mdi-account</VIcon>
                   {{ c.name }} {{ c.last_name }}
-                  <span v-if="c.assigned_by" class="text-caption text-medium-emphasis ms-1">
+                  <span
+                    v-if="c.assigned_by"
+                    class="text-caption text-medium-emphasis ms-1"
+                  >
                     — por {{ c.assigned_by }}
                   </span>
                 </VChip>
@@ -287,29 +298,39 @@
           </VCardTitle>
           <VDivider />
           <VCardText>
-            <VTimeline density="compact" side="end" align="start">
+            <VTimeline side="end" align="start" density="compact">
               <VTimelineItem
                 v-for="log in consolidatorLogs"
                 :key="log.id"
-                :dot-color="log.action === 'assigned' ? 'success' : 'error'"
-                :icon="log.action === 'assigned' ? 'mdi-account-plus' : 'mdi-account-minus'"
                 size="small"
+                :dot-color="log.action === 'assigned' ? 'success' : 'error'"
+                :icon="
+                  log.action === 'assigned'
+                    ? 'mdi-account-plus'
+                    : 'mdi-account-minus'
+                "
               >
                 <div class="text-body-2">
-                  <strong>{{ log.consolidator?.name }} {{ log.consolidator?.last_name }}</strong>
-                  <VChip
-                    size="x-small"
-                    :color="log.action === 'assigned' ? 'success' : 'error'"
-                    variant="flat"
-                    class="ms-1"
+                  <strong
+                    >{{ log.consolidator?.name }}
+                    {{ log.consolidator?.last_name }}</strong
                   >
-                    {{ log.action === 'assigned' ? 'Asignado' : 'Desasignado' }}
+                  <VChip
+                    class="ms-1"
+                    size="x-small"
+                    variant="flat"
+                    :color="log.action === 'assigned' ? 'success' : 'error'"
+                  >
+                    {{ log.action === "assigned" ? "Asignado" : "Desasignado" }}
                   </VChip>
                   <span class="text-medium-emphasis ms-1">
                     por {{ log.changer?.name }} {{ log.changer?.last_name }}
                   </span>
                 </div>
-                <div v-if="log.created_at" class="text-caption text-medium-emphasis">
+                <div
+                  v-if="log.created_at"
+                  class="text-caption text-medium-emphasis"
+                >
                   {{ new Date(log.created_at).toLocaleString() }}
                 </div>
               </VTimelineItem>
@@ -391,11 +412,25 @@ const logsResponse = ref<{ data: unknown[]; total: number }>({
   total: 0,
 });
 const loadingLogs = ref(false);
-const currentConsolidators = computed<{ id: number | string; name: string; last_name?: string; assigned_by?: string }[]>(() => {
-  const consolidators = (member.value.consolidators as { id: number | string; name: string; last_name?: string }[]) || [];
+const currentConsolidators = computed<
+  {
+    id: number | string;
+    name: string;
+    last_name?: string;
+    assigned_by?: string;
+  }[]
+>(() => {
+  const consolidators =
+    (member.value.consolidators as {
+      id: number | string;
+      name: string;
+      last_name?: string;
+    }[]) || [];
   return consolidators.map((c) => {
     const lastLog = consolidatorLogs.value.find(
-      (l) => (l.consolidator_id === c.id || l.consolidator?.id === c.id) && l.action === 'assigned',
+      (l) =>
+        (l.consolidator_id === c.id || l.consolidator?.id === c.id) &&
+        l.action === "assigned",
     );
     const assignedBy = lastLog?.changer
       ? `${lastLog.changer.name} ${lastLog.changer.last_name}`
@@ -404,13 +439,30 @@ const currentConsolidators = computed<{ id: number | string; name: string; last_
   });
 });
 const savingConsolidators = ref(false);
-const pendingConsolidators = ref<{ id: number | string; name: string; last_name?: string }[] | null>(null);
-const consolidatorLogs = ref<{ id: number; consolidator_id: number; action: string; consolidator?: { id: number; name: string; last_name?: string }; changer?: { id: number; name: string; last_name?: string }; created_at?: string }[]>([]);
+const pendingConsolidators = ref<
+  { id: number | string; name: string; last_name?: string }[] | null
+>(null);
+const consolidatorLogs = ref<
+  {
+    id: number;
+    consolidator_id: number;
+    action: string;
+    consolidator?: { id: number; name: string; last_name?: string };
+    changer?: { id: number; name: string; last_name?: string };
+    created_at?: string;
+  }[]
+>([]);
 
 const hasConsolidatorChanges = computed(() => {
   if (pendingConsolidators.value === null) return false;
-  const currentIds = currentConsolidators.value.map((c) => c.id).sort().join(',');
-  const pendingIds = pendingConsolidators.value.map((c) => c.id).sort().join(',');
+  const currentIds = currentConsolidators.value
+    .map((c) => c.id)
+    .sort()
+    .join(",");
+  const pendingIds = pendingConsolidators.value
+    .map((c) => c.id)
+    .sort()
+    .join(",");
   return currentIds !== pendingIds;
 });
 
@@ -418,7 +470,8 @@ const hasConsolidatorChanges = computed(() => {
 // below can reuse it without depending on later declarations.
 const backRoute = computed(() => {
   const from = route.query.from as string | undefined;
-  if (from === "tracking") return "/church-member/tracking-logs";
+  if (from === "tracking") return "/tracking";
+  if (from === "tracking-logs") return "/church-member/tracking-logs";
   if (typeof from === "string" && from.startsWith("/")) {
     return safeInternalRedirect(from, "/church-member/tracking-logs");
   }
@@ -479,16 +532,28 @@ const backRoute = computed(() => {
   const { data: initialConsolidatorLogs } = await useAsyncData(
     `church-member-consolidator-logs-${route.params.id}`,
     async () => {
-      return await ChurchMember.consolidatorLogs<{
-        id: number;
-        consolidator_id: number;
-        action: string;
-        consolidator?: { id: number; name: string; last_name?: string };
-        changer?: { id: number; name: string; last_name?: string };
-        created_at?: string;
-      }[]>(route.params.id as string).catch(() => []);
+      return await ChurchMember.consolidatorLogs<
+        {
+          id: number;
+          consolidator_id: number;
+          action: string;
+          consolidator?: { id: number; name: string; last_name?: string };
+          changer?: { id: number; name: string; last_name?: string };
+          created_at?: string;
+        }[]
+      >(route.params.id as string).catch(() => []);
     },
-    { default: () => [] as { id: number; consolidator_id: number; action: string; consolidator?: { id: number; name: string; last_name?: string }; changer?: { id: number; name: string; last_name?: string }; created_at?: string }[] },
+    {
+      default: () =>
+        [] as {
+          id: number;
+          consolidator_id: number;
+          action: string;
+          consolidator?: { id: number; name: string; last_name?: string };
+          changer?: { id: number; name: string; last_name?: string };
+          created_at?: string;
+        }[],
+    },
   );
   consolidatorLogs.value = initialConsolidatorLogs.value;
 }
@@ -538,14 +603,15 @@ async function openContact(
 ) {
   const id = route.params.id as string;
   try {
-    const res = await ChurchMemberTrackingLog.create<
-      Record<string, unknown>
-    >(id, {
-      contact_datetime: localDateTimeString(),
-      medium,
-      classification: medium === "presencial" ? "CONTESTA" : null,
-      description: message.value.trim() || undefined,
-    });
+    const res = await ChurchMemberTrackingLog.create<Record<string, unknown>>(
+      id,
+      {
+        contact_datetime: localDateTimeString(),
+        medium,
+        classification: medium === "presencial" ? "CONTESTA" : null,
+        description: message.value.trim() || undefined,
+      },
+    );
     const newLog = res?.data ?? res;
     logsResponse.value.data.unshift(newLog);
     logsResponse.value.total += 1;
@@ -576,12 +642,15 @@ async function fetchTrackingLogs() {
   if (!id) return;
   loadingLogs.value = true;
   try {
-    const data = await ChurchMemberTrackingLog.index<Record<string, unknown>>(id, {
-      page: 1,
-      itemsPerPage: 10,
-      sortBy: ["contact_datetime"],
-      sortDesc: [true],
-    });
+    const data = await ChurchMemberTrackingLog.index<Record<string, unknown>>(
+      id,
+      {
+        page: 1,
+        itemsPerPage: 10,
+        sortBy: ["contact_datetime"],
+        sortDesc: [true],
+      },
+    );
     logsResponse.value = data as { data: unknown[]; total: number };
   } catch {
     logsResponse.value = { data: [], total: 0 };
@@ -707,14 +776,16 @@ async function saveConsolidators() {
     member.value = { ...member.value, consolidators: updated.data };
     pendingConsolidators.value = null;
     // Refresh consolidator logs
-    const logs = await ChurchMember.consolidatorLogs<{
-      id: number;
-      consolidator_id: number;
-      action: string;
-      consolidator?: { id: number; name: string; last_name?: string };
-      changer?: { id: number; name: string; last_name?: string };
-      created_at?: string;
-    }[]>(id).catch(() => []);
+    const logs = await ChurchMember.consolidatorLogs<
+      {
+        id: number;
+        consolidator_id: number;
+        action: string;
+        consolidator?: { id: number; name: string; last_name?: string };
+        changer?: { id: number; name: string; last_name?: string };
+        created_at?: string;
+      }[]
+    >(id).catch(() => []);
     consolidatorLogs.value = logs;
   } catch (error) {
     notify.notify({

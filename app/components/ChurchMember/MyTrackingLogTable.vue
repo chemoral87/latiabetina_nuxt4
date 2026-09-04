@@ -25,7 +25,7 @@
           icon
           class="ma-1"
           size="small"
-          color="success"
+          color="primary"
           rounded="circle"
           title="Ver miembro"
           variant="outlined"
@@ -105,12 +105,12 @@ const itemsPerPage = ref(10);
 const sortBy = ref<{ key: string; order: string }[]>([...props.initialSortBy]);
 
 const headers: Header[] = [
+  { title: "", value: "actions", sortable: false, align: "center", width: "60px" },
   { title: "Miembro", value: "church_member", sortable: false },
   { title: "Medio", value: "medium", sortable: true },
   { title: "Fecha contacto", value: "contact_datetime", sortable: true },
   { title: "Descripción", value: "description", sortable: false },
   { title: "Creado", value: "created_at", sortable: true },
-  { title: "Acciones", value: "actions", sortable: false, align: "center", width: "100px" },
 ];
 
 const total = computed(() => props.response?.total ?? 0);

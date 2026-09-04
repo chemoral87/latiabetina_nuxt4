@@ -1,15 +1,15 @@
 <template>
   <div :id="id">
-    <VDataTable
+    <VDataTableServer
       :items="members"
       density="compact"
       :headers="headers"
       :loading="loading"
       class="elevation-1"
-      hide-default-footer
-      :items-per-page="-1"
+      :items-length="members.length"
       mobile-breakpoint="0"
       v-model:sort-by="sortBy"
+      @update:options="onUpdateOptions"
     >
       <template #[`item.name`]="{ item }">
         {{ item.name }} {{ item.last_name }}
@@ -70,7 +70,7 @@
           >
         </div>
       </template>
-    </VDataTable>
+    </VDataTableServer>
   </div>
 </template>
 
@@ -103,6 +103,7 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   (e: "view", val: unknown): void;
+  (e: "update:options", val: Record<string, unknown>): void;
 }>();
 
 const auth = useAuthStore();
@@ -110,7 +111,11 @@ const { statusLabel, statusColor } = useChurchMemberStatus()
 
 const singleOrg = computed(() => auth.hasSingleOrgFor("conso-sheet-index"));
 
-const sortBy = ref([{ key: "last_contacted", order: "asc" }]);
+const sortBy = ref([{ key: "last_contacted", order: "desc" }]);
+
+function onUpdateOptions(opts: Record<string, unknown>) {
+  emit("update:options", opts);
+}
 
 function orgLabel(id: unknown): string {
   const found = props.orgs.find((o) => String(o.id) === String(id));
