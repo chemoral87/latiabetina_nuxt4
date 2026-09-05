@@ -119,6 +119,9 @@ const loading = computed(() => props.loading ?? false);
 
 const rowProps = rowPropsFor(() => props.highlightId);
 
+const auth = useAuthStore();
+const userId = computed(() => (auth.user as Record<string, unknown> | undefined)?.id);
+
 function mediumColor(medium: string): string {
   const colors: Record<string, string> = {
     whatsapp: "green",

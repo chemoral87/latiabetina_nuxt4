@@ -361,9 +361,20 @@ table's own event.
    }
    ```
 
+   The same applies to a bare function call in `<script setup>`:
+
+   ```ts
+   // ❌ BAD — fetchData() fires once here, then again from @update:options
+   watch(filterStatus, fetchData)
+   watch(filterTerm, fetchData)
+   fetchData()  // ← VDataTableServer's @update:options will call it again
+   ```
+
 2. **If the page needs pre-loaded data for SSR**, use `useAsyncData` or
    `useFetch` with a unique key. Do not call the same fetch function that the
-   table's `@update:options` handler calls.
+   table's `@update:options` handler calls. However, **do not combine**
+   `useAsyncData` with `@update:options` pointing to the same fetch — that
+   also causes a double call (SSR fetch + client `@update:options`).
 
 3. **The `@update:options` handler** should be the single source of truth for
    table data fetching. Any manual call to the same function before the table
@@ -371,7 +382,8 @@ table's own event.
 
 4. **Checklist addition:** For pages using `VDataTableServer`, verify only one
    code path triggers the initial fetch — either the table's `@update:options`
-   or a manual call, never both.
+   or a manual call, never both. Check for bare `fetchData()` calls at the
+   bottom of `<script setup>` that conflict with `@update:options`.
 
 ---
 
@@ -486,7 +498,9 @@ prop from a `<script setup>` function.
    use return values instead (`grep -rn "next()" app/pages/` → 0 hits in
    navigation guards).
 7. Pages with `VDataTableServer` must not manually call the same fetch function
-   that `@update:options` triggers — only one initial fetch path.
+   that `@update:options` triggers — only one initial fetch path. Check for bare
+   `fetchData()` calls at the bottom of `<script setup>` that conflict with
+   `@update:options`.
 8. Never run `migrate:fresh` or `migrate:refresh` — always use `php artisan migrate`.
 9. In `<script setup>` functions, always access props via `props.xxx`, never bare
    names like `loading` — bare usage causes `ReferenceError` at runtime (template

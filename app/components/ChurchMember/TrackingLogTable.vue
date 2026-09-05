@@ -40,32 +40,34 @@
       </template>
 
       <template #[`item.actions`]="{ item }">
-        <VBtn
-          id="cmm-tlt-edit-btn"
-          icon
-          class="ma-1"
-          size="small"
-          title="Editar"
-          color="primary"
-          rounded="circle"
-          variant="outlined"
-          @click="emit('edit', item)"
-        >
-          <VIcon size="x-large">mdi-pencil</VIcon>
-        </VBtn>
-        <VBtn
-          id="cmm-tlt-delete-btn"
-          icon
-          class="ma-1"
-          size="small"
-          color="error"
-          rounded="circle"
-          title="Eliminar"
-          variant="outlined"
-          @click="emit('delete', item)"
-        >
-          <VIcon size="x-large">mdi-delete</VIcon>
-        </VBtn>
+        <template v-if="item.created_by === userId">
+          <VBtn
+            :id="`cmm-tlt-edit-btn-${item.id}`"
+            icon
+            class="ma-1"
+            size="small"
+            title="Editar"
+            color="primary"
+            rounded="circle"
+            variant="outlined"
+            @click="emit('edit', item)"
+          >
+            <VIcon size="x-large">mdi-pencil</VIcon>
+          </VBtn>
+          <VBtn
+            :id="`cmm-tlt-delete-btn-${item.id}`"
+            icon
+            class="ma-1"
+            size="small"
+            title="Eliminar"
+            color="error"
+            rounded="circle"
+            variant="outlined"
+            @click="emit('delete', item)"
+          >
+            <VIcon size="x-large">mdi-delete</VIcon>
+          </VBtn>
+        </template>
       </template>
 
       <template #no-data>
@@ -126,6 +128,9 @@ const headers = computed<Header[]>(() => [
 ])
 
 const rowProps = rowPropsFor(() => null, () => null)
+
+const auth = useAuthStore()
+const userId = computed(() => (auth.user as Record<string, unknown> | undefined)?.id)
 
 onMounted(() => {
   const opts = props.response ?? {}

@@ -126,6 +126,24 @@ function viewMember(item: unknown) {
   if (member?.id != null) navigateTo(`/church-member/${member.id}?from=tracking-logs`);
 }
 
+async function deleteTrackingLog(item: unknown) {
+  const log = item as Record<string, unknown>;
+  const memberId = (log.church_member as { id?: number | string } | undefined)?.id;
+  const logId = log.id;
+  if (!memberId || !logId) return;
+  if (!confirm("¿Desea eliminar esta interacción?")) return;
+  try {
+    await ChurchMemberTrackingLog.delete<Record<string, unknown>>(memberId, logId);
+    await fetchData();
+  } catch (error) {
+    notify.notify({
+      error:
+        (error as { response?: { data?: { message?: string } } }).response?.data
+          ?.message || "Error al eliminar la interacción",
+    });
+  }
+}
+
 async function fetchData(overrides: Record<string, unknown> = {}) {
   loading.value = true;
   try {

@@ -148,24 +148,6 @@ async function fetchData() {
 watch(filterStatus, fetchData);
 watch(filterOrgId, fetchData);
 watch(filterTerm, fetchData);
-
-// Initial list data is loaded during SSR via useAsyncData so the payload is
-// reused on the client (no double fetch, no hydration mismatch).
-{
-  const { data: initialData } = await useAsyncData(
-    "tracking-index",
-    async () =>
-      await ChurchMember.index<unknown>({
-        mine: true,
-        status: "ACTIVO",
-        sortBy: ["last_contacted"],
-        sortDesc: ["true"],
-      }).catch(() => [] as unknown),
-    { default: () => [] as unknown },
-  );
-
-  members.value = normalizeMembers(initialData.value);
-}
 </script>
 
 <style scoped></style>
