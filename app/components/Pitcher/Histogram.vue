@@ -2,7 +2,7 @@
   <div id="cmp-pitcher-histogram" ref="rootEl">
     <h5 id="pit-hist-title" class="text-center font-weight-regular">Histograma de Frecuencia</h5>
     <div class="histogram-row">
-      <div id="pit-db-meter" class="db-meter" :style="{ width: dbMeterWidth + 'px' }">
+      <div v-if="showDbMeter" id="pit-db-meter" class="db-meter" :style="{ width: dbMeterWidth + 'px' }">
         <div
           id="pit-db-track"
           class="db-meter-track"
@@ -21,7 +21,7 @@
       </div>
       <canvas id="pit-hist-canvas" ref="histogramEl" :width="canvasWidth" :height="histogramEffectiveHeight" style="display: block; background-color: black; flex: 1; min-width: 0" />
     </div>
-    <div id="pit-hist-meter" class="tuning-meter-container mt-2">
+    <div v-if="showTuningRange" id="pit-hist-meter" class="tuning-meter-container mt-2">
       <div class="tuning-meter-bar">
         <div class="tuning-meter-center"></div>
         <div
@@ -71,6 +71,9 @@ const props = withDefaults(
     dbDisplay?: string
     lastFreq?: number | null
     centsDeviation?: number | null
+    showDbMeter?: boolean
+    showTuningRange?: boolean
+    minWidth?: number
   }>(),
   {
     history: () => [],
@@ -78,6 +81,9 @@ const props = withDefaults(
     dbDisplay: "--",
     lastFreq: null,
     centsDeviation: null,
+    showDbMeter: true,
+    showTuningRange: true,
+    minWidth: 200,
   },
 )
 
@@ -130,6 +136,13 @@ watch([selectedRootNote, latinNotation, showMicrotones, maxHistory, totalNotes, 
 })
 
 watch(
+  () => props.minWidth,
+  () => {
+    updateCanvasSize()
+  },
+)
+
+watch(
   () => props.history,
   () => {
     drawHistogram()
@@ -165,7 +178,7 @@ function debouncedResize() {
 function updateCanvasSize() {
   const container = rootEl.value?.parentElement
   if (container) {
-    canvasWidth.value = Math.max(200, Math.min(container.clientWidth - 32 - dbMeterReservedWidth, 1000))
+    canvasWidth.value = Math.max(props.minWidth, Math.min(container.clientWidth - 32 - dbMeterReservedWidth, 1000))
     nextTick(() => {
       drawHistogram()
     })

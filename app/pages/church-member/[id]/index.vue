@@ -251,18 +251,20 @@
                 :consolidatorsx="currentConsolidators"
                 @model-change="onPendingConsolidatorsChange"
               />
-              <VBtn
-                v-if="hasConsolidatorChanges"
-                id="cmm-consolidator-save-btn"
-                class="mt-2"
-                color="success"
-                variant="outlined"
-                :loading="savingConsolidators"
-                @click="saveConsolidators"
-              >
-                <VIcon start>mdi-content-save</VIcon>
-                Guardar
-              </VBtn>
+              <div class="d-flex justify-end">
+                <VBtn
+                  v-if="hasConsolidatorChanges"
+                  id="cmm-consolidator-save-btn"
+                  class="mt-2"
+                  color="primary"
+                  variant="elevated"
+                  :loading="savingConsolidators"
+                  @click="saveConsolidators"
+                >
+                  <VIcon start>mdi-content-save</VIcon>
+                  Guardar
+                </VBtn>
+              </div>
             </template>
             <template v-else>
               <div class="text-body-2">
@@ -289,7 +291,7 @@
         </VCard>
       </VCol>
     </VRow>
-    <VRow v-if="consolidatorLogs.length > 0">
+    <VRow v-if="consolidatorLogs.length > 0 && auth.hasPermission('church-member-consolidator-assign')">
       <VCol cols="12">
         <VCard>
           <VCardTitle class="text-subtitle-1 font-weight-medium">

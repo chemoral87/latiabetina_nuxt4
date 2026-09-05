@@ -40,6 +40,11 @@ export const usePitcherStore = defineStore("pitcher", () => {
   const scaleRingOpacity = ref(0.5)
   // Opacidad de las notas fantasma (octavas adyacentes) en el diapasón (0-1)
   const ghostNoteOpacity = ref(0.5)
+  // Mostrar/ocultar componentes principales del tuner
+  const showStaffNotation = ref(true)
+  const showHistogram = ref(true)
+  const showDbMeter = ref(true)
+  const showTuningRange = ref(true)
   // Mostrar las notaciones (pentagrama de instrumento)
   const showGuitarNotation = ref(true)
   const showUkeleleNotation = ref(true)
@@ -81,11 +86,11 @@ export const usePitcherStore = defineStore("pitcher", () => {
   }
 
   function setHistogramHeight(value: number) {
-    histogramHeight.value = clamp(value, 300, 600)
+    histogramHeight.value = clamp(value, 150, 400)
   }
 
   function setHistogramMinWidth(value: number) {
-    histogramMinWidth.value = clamp(value, 200, 800)
+    histogramMinWidth.value = clamp(value, 50, 400)
   }
 
   function setDbCalibrationOffset(value: number) {
@@ -94,6 +99,22 @@ export const usePitcherStore = defineStore("pitcher", () => {
 
   function setShowScaleOnFretboard(value: boolean) {
     showScaleOnFretboard.value = !!value
+  }
+
+  function setShowStaffNotation(value: boolean) {
+    showStaffNotation.value = !!value
+  }
+
+  function setShowHistogram(value: boolean) {
+    showHistogram.value = !!value
+  }
+
+  function setShowDbMeter(value: boolean) {
+    showDbMeter.value = !!value
+  }
+
+  function setShowTuningRange(value: boolean) {
+    showTuningRange.value = !!value
   }
 
   function setScaleRingOpacity(value: number) {
@@ -156,6 +177,10 @@ export const usePitcherStore = defineStore("pitcher", () => {
           showScaleOnFretboard: showScaleOnFretboard.value,
           scaleRingOpacity: scaleRingOpacity.value,
           ghostNoteOpacity: ghostNoteOpacity.value,
+          showStaffNotation: showStaffNotation.value,
+          showHistogram: showHistogram.value,
+          showDbMeter: showDbMeter.value,
+          showTuningRange: showTuningRange.value,
           showGuitarNotation: showGuitarNotation.value,
           showUkeleleNotation: showUkeleleNotation.value,
           showTrumpetNotation: showTrumpetNotation.value,
@@ -173,7 +198,7 @@ export const usePitcherStore = defineStore("pitcher", () => {
 
   let saveTimer: ReturnType<typeof setTimeout> | null = null
   watch(
-    [sensitivity, selectedRootNote, latinNotation, showMicrotones, ghostQuarterNote, maxHistory, totalNotes, histogramHeight, histogramMinWidth, dbCalibrationOffset, showScaleOnFretboard, scaleRingOpacity, ghostNoteOpacity, showGuitarNotation, showUkeleleNotation, showTrumpetNotation, showPianoNotation, ukeleleCols, guitarCols, trumpetCols, pianoCols],
+    [sensitivity, selectedRootNote, latinNotation, showMicrotones, ghostQuarterNote, maxHistory, totalNotes, histogramHeight, histogramMinWidth, dbCalibrationOffset, showScaleOnFretboard, scaleRingOpacity, ghostNoteOpacity, showStaffNotation, showHistogram, showDbMeter, showTuningRange, showGuitarNotation, showUkeleleNotation, showTrumpetNotation, showPianoNotation, ukeleleCols, guitarCols, trumpetCols, pianoCols],
     () => {
       if (!import.meta.client) return
       if (saveTimer) clearTimeout(saveTimer)
@@ -206,6 +231,10 @@ export const usePitcherStore = defineStore("pitcher", () => {
       if (typeof data.histogramMinWidth === "number") histogramMinWidth.value = data.histogramMinWidth
       if (typeof data.dbCalibrationOffset === "number") dbCalibrationOffset.value = data.dbCalibrationOffset
       if (typeof data.showScaleOnFretboard === "boolean") showScaleOnFretboard.value = data.showScaleOnFretboard
+      if (typeof data.showStaffNotation === "boolean") showStaffNotation.value = data.showStaffNotation
+      if (typeof data.showHistogram === "boolean") showHistogram.value = data.showHistogram
+      if (typeof data.showDbMeter === "boolean") showDbMeter.value = data.showDbMeter
+      if (typeof data.showTuningRange === "boolean") showTuningRange.value = data.showTuningRange
       if (typeof data.scaleRingOpacity === "number") scaleRingOpacity.value = data.scaleRingOpacity
       if (typeof data.ghostNoteOpacity === "number") ghostNoteOpacity.value = data.ghostNoteOpacity
       if (typeof data.showGuitarNotation === "boolean") showGuitarNotation.value = data.showGuitarNotation
@@ -250,6 +279,10 @@ export const usePitcherStore = defineStore("pitcher", () => {
     showScaleOnFretboard,
     scaleRingOpacity,
     ghostNoteOpacity,
+    showStaffNotation,
+    showHistogram,
+    showDbMeter,
+    showTuningRange,
     showGuitarNotation,
     showUkeleleNotation,
     showTrumpetNotation,
@@ -272,6 +305,10 @@ export const usePitcherStore = defineStore("pitcher", () => {
     setShowScaleOnFretboard,
     setScaleRingOpacity,
     setGhostNoteOpacity,
+    setShowStaffNotation,
+    setShowHistogram,
+    setShowDbMeter,
+    setShowTuningRange,
     setShowGuitarNotation,
     setShowUkeleleNotation,
     setShowTrumpetNotation,

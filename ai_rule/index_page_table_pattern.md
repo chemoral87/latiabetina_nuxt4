@@ -285,6 +285,7 @@ function closeDialog() {
 
 - Local state: `page = ref(1)`, `itemsPerPage = ref(10)`,
   `sortBy = ref([...props.initialSortBy])` with prop `initialSortBy` (default `[{key:"name",order:"asc"}]` or `date desc` for consolidation). Single source is the page's `lastOptions.sortBy` passed as `:initial-sort-by="(lastOptions.sortBy as any)"` `app/pages/consolidation/index.vue:41` — table no longer hard-codes a competing default.
+- **Every `VDataTableServer` must use `mustSort`.** This prevents the sort indicator from disappearing when a user clicks a sortable header — the cycle stays ascending ↔ descending, never unsorted.
 - Props: `response`, `loading`, `search`, `highlightId`, `dialogDelete` (for
   the `v-model:dialog-delete`) plus `initialSortBy?: {key:string,order:string}[]`.
 - Computeds: `total = props.response?.total ?? 0`, `items = props.response?.data ?? []`,
@@ -473,7 +474,9 @@ function buildItems() {
    `v-model:dialog-delete` contract.
 5. Keep a single sortable column as default (`sortBy` default matches the
    initial `lastOptions` key).
-6. Do **not** use bare `fluid` on `VContainer` — use `:fluid="true"` (SSR
+6. Every `VDataTableServer` must use `mustSort` — prevents the sort indicator
+   from disappearing on click (ascending ↔ descending cycle only).
+7. Do **not** use bare `fluid` on `VContainer` — use `:fluid="true"` (SSR
    hydration, see migration guide).
 
 ## Do Not

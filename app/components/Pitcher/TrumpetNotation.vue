@@ -30,9 +30,9 @@
             id="pit-trumpet-info"
             class="d-flex align-center flex-wrap ga-4 mb-2"
           >
-            <span
+            <!-- <span
               >Escrita: <strong>{{ noteInfo.written }}</strong></span
-            >
+            > -->
             <span
               >Sonido: <strong>{{ noteInfo.sounding }}</strong></span
             >
@@ -156,6 +156,7 @@
                   :class="{
                     'glossary-row-active': row.sounding === activeSounding,
                   }"
+                  :style="isGhostRow(row) ? { backgroundColor: `rgba(33, 150, 243, ${ghostNoteOpacity})` } : undefined"
                 >
                   <td>{{ row.sounding }}</td>
                   <td>
@@ -199,7 +200,7 @@ const props = withDefaults(
 );
 
 const store = usePitcherStore();
-const { latinNotation } = storeToRefs(store);
+const { latinNotation, ghostQuarterNote, ghostNoteOpacity } = storeToRefs(store);
 
 const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 const latinNotes = [
@@ -279,6 +280,16 @@ const glossaryColumns = computed<GlossaryRow[][]>(() => {
 
 // Sonido detectado actualmente para resaltar la fila correspondiente
 const activeSounding = computed(() => noteInfo.value?.sounding ?? null);
+
+// Nota fantasma: misma nota (pitch class) en octava ±1
+function isGhostRow(row: GlossaryRow): boolean {
+  if (!ghostQuarterNote.value || !activeSounding.value) return false;
+  const activeWithoutOctave = activeSounding.value.replace(/\d+$/, "");
+  const activeOctave = parseInt(activeSounding.value.match(/\d+$/)?.[0] || "0");
+  const rowWithoutOctave = row.sounding.replace(/\d+$/, "");
+  const rowOctave = parseInt(row.sounding.match(/\d+$/)?.[0] || "0");
+  return rowWithoutOctave === activeWithoutOctave && Math.abs(rowOctave - activeOctave) === 1;
+}
 
 // Digitación estándar de la trompeta por nota escrita (clase de tono dentro de cada octava)
 const FINGERINGS: Record<number, Record<number, number[]>> = {

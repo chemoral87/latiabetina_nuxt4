@@ -12,8 +12,10 @@
         >
         Hz
       </span>
-      |
-      <span id="pit-db-display">({{ dBDisplay }} dB)</span>
+      <template v-if="showDbMeter">
+        |
+        <span id="pit-db-display">({{ dBDisplay }} dB)</span>
+      </template>
     </h4>
 
     <VRow id="pit-actions-row" class="mb-1" align="center" density="compact">
@@ -77,7 +79,7 @@
     </VRow>
 
     <VRow id="pit-display-row" density="comfortable">
-      <VCol cols="auto" class="px-0 mx-0">
+      <VCol v-if="showStaffNotation" cols="auto" class="px-0 mx-0">
         <PitcherStaffNotation
           v-if="lastValidFreq"
           :zoom="staffZoom"
@@ -89,17 +91,18 @@
         />
       </VCol>
 
-      <VCol cols="auto" class="pl-1 mx-0">
-        <div :style="{ 'min-width': histogramMinWidth + 'px' }">
-          <PitcherHistogram
-            ref="histogramComponent"
-            :history="history"
-            :last-freq="lastFreq"
-            :db-display="dBDisplay"
-            :freq-display="freqDisplay"
-            :cents-deviation="centsDeviation"
-          />
-        </div>
+      <VCol v-if="showHistogram" cols="auto" class="pl-1 mx-0">
+        <PitcherHistogram
+          ref="histogramComponent"
+          :history="history"
+          :last-freq="lastFreq"
+          :db-display="dBDisplay"
+          :freq-display="freqDisplay"
+          :cents-deviation="centsDeviation"
+          :show-db-meter="showDbMeter"
+          :show-tuning-range="showTuningRange"
+          :min-width="histogramMinWidth"
+        />
       </VCol>
       <VCol v-if="showUkeleleNotation" :cols="ukeleleCols">
         <PitcherUkeleleNotation
@@ -134,9 +137,9 @@
             id="pit-ukelele-cols-btn"
             v-bind="props"
             color="primary"
-            icon="mdi-ukulele"
+            icon="mdi-guitar-acoustic"
             density="comfortable"
-            class="notation-cols-fab"
+            class="notation-cols-fab pit-ukelele-btn"
           />
         </template>
         <VList id="pit-ukelele-cols-menu" density="compact">
@@ -259,6 +262,10 @@ const {
   sensitivity,
   latinNotation,
   maxHistory,
+  showStaffNotation,
+  showHistogram,
+  showDbMeter,
+  showTuningRange,
   showGuitarNotation,
   showUkeleleNotation,
   showTrumpetNotation,
@@ -524,5 +531,9 @@ h4 {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.pit-ukelele-btn .v-icon {
+  font-size: 18px;
 }
 </style>

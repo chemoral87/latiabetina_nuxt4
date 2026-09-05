@@ -9,6 +9,7 @@
       :items-length="members.length"
       mobile-breakpoint="0"
       v-model:sort-by="sortBy"
+      must-sort
       @update:options="onUpdateOptions"
     >
       <template #[`item.name`]="{ item }">
