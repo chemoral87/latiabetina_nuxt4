@@ -217,6 +217,7 @@
             <ChurchMemberTrackingLogTable
               id="cmm-tracking-log-table"
               :response="logsResponse"
+              :loading="loadingLogs"
               @edit="editTrackingLog"
               @delete="deleteTrackingLog"
               @sorting="onLogsUpdateOptions"

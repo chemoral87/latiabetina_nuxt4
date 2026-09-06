@@ -9,6 +9,7 @@
       density="compact"
       :headers="headers"
       :items-length="total"
+      :loading="props.loading"
       class="elevation-1 xwidth1000"
       :items-per-page-options="[10, 15, 25]"
       items-per-page-text="Filas por página"
@@ -95,9 +96,11 @@ interface Header {
 const props = withDefaults(defineProps<{
   id?: string
   response?: { total?: number; data?: unknown[] } | null
+  loading?: boolean
 }>(), {
   id: "cmp-church-member-tracking-log-table",
   response: () => ({ data: [], total: 0 }),
+  loading: false,
 })
 
 const emit = defineEmits<{

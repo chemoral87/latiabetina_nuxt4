@@ -41,6 +41,10 @@ Reference implementations: `role/index.vue`, `user/index.vue`,
   `VIcon start`.
 - Table gets `:search`, `:response`, `:loading`, `:highlight-id`, and
   `v-model:dialog-delete` plus the event handlers.
+- **Every table must receive its page's loading state and bind it to
+  `VDataTableServer` with `:loading="props.loading"`.** This keeps the table's
+  linear loading indicator synchronized with refreshes, sorting, filtering, and
+  pagination requests.
 
 ## Page script setup — the standard pattern
 
@@ -288,6 +292,10 @@ function closeDialog() {
 - **Every `VDataTableServer` must use `mustSort`.** This prevents the sort indicator from disappearing when a user clicks a sortable header — the cycle stays ascending ↔ descending, never unsorted.
 - Props: `response`, `loading`, `search`, `highlightId`, `dialogDelete` (for
   the `v-model:dialog-delete`) plus `initialSortBy?: {key:string,order:string}[]`.
+- `loading` is required behavior for every `VDataTableServer`: declare it on the
+  table component (`loading?: boolean`, default `false`), pass the page's loader
+  ref (`:loading="loading"`), and bind it on the data table
+  (`:loading="props.loading"`).
 - Computeds: `total = props.response?.total ?? 0`, `items = props.response?.data ?? []`,
   `loading = props.loading ?? false`.
 - Headers use `title`/`value`/`sortable` (`title`, NOT `text` — Vuetify 4).

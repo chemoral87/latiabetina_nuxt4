@@ -9,6 +9,7 @@
       class="elevation-1"
       mobile-breakpoint="0"
       :items-length="members.length"
+      :loading="props.loading"
       @update:options="onUpdateOptions"
     >
       <template #[`item.name`]="{ item }">
@@ -91,11 +92,13 @@ const props = withDefaults(
     id?: string;
     members?: unknown[];
     orgs?: { id: number | string; name: string }[];
+    loading?: boolean;
   }>(),
   {
     id: "cmp-tracking-table",
     members: () => [],
     orgs: () => [],
+    loading: false,
   },
 );
 

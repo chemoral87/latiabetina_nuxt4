@@ -53,8 +53,9 @@
 
       <VCol cols="12">
         <TrackingTable
-           :orgs="orgs"
-           :members="members"
+          :orgs="orgs"
+          :members="members"
+          :loading="loading"
           @view="viewMember"
           @update:options="onUpdateOptions"
         />

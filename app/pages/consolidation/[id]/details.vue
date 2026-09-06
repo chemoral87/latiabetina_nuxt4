@@ -133,10 +133,10 @@
           v-model="filterTerm"
           clearable
           hide-details
+          label="Filtro"
           density="compact"
           variant="outlined"
           placeholder="Filtro"
-          label="Filtro"
           append-inner-icon="mdi-magnify"
         />
       </VCol>
@@ -233,6 +233,7 @@ const deleteData = ref<Record<string, unknown>>({})
 const members = ref<unknown[]>([])
 const users = ref<{ id: number | string; name: string }[]>([])
 const showConfirmDialog = ref(false)
+const refreshingMembers = ref(false)
 let pendingRoute: { to: unknown } | null = null
 
 // Initial member data is loaded during SSR via useAsyncData so the payload is
@@ -257,7 +258,9 @@ sheet.value = sheetData.value as Record<string, unknown>
 originalSheet.value = JSON.parse(JSON.stringify(sheet.value))
 members.value = Array.isArray(membersData.value) ? membersData.value : (membersData.value as { data?: unknown[] })?.data || []
 
-const loading = computed(() => sheetPending.value || membersPending.value)
+const loading = computed(
+  () => sheetPending.value || membersPending.value || refreshingMembers.value,
+)
 
 onBeforeRouteLeave((to, _from) => {
   if (isDirty.value) {
@@ -311,13 +314,13 @@ async function saveSheet() {
 
 async function fetchMembers() {
   try {
-    loading.value = true
+    refreshingMembers.value = true
     const data = await ChurchMember.index<unknown>({ conso_sheet_id: sheetId.value })
     members.value = Array.isArray(data) ? data : (data as { data?: unknown[] })?.data || []
   } catch (error) {
     notify.notify({ error: "Error al cargar los miembros" })
   } finally {
-    loading.value = false
+    refreshingMembers.value = false
   }
 }
 
