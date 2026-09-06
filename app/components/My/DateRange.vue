@@ -1,6 +1,6 @@
 ﻿<template>
   <VMenu
-    id="cmp-my-date-range"
+    :id="`${id}-menu`"
     ref="dateMenuRef"
     v-model="dateMenu"
     :close-on-content-click="false"
@@ -10,7 +10,7 @@
   >
     <template #activator="{ props }">
       <VTextField
-        id="my-dater-label-tf-1"
+        :id="id"
         :model-value="dateRangeText"
         :label="label"
         :placeholder="placeholder"
@@ -117,6 +117,7 @@
 import { formatShortDateSlash, capitalizeFirst } from "~/utils/date"
 
 const props = withDefaults(defineProps<{
+  id?: string
   modelValue?: (Date | string | null)[]
   label?: string
   placeholder?: string
@@ -138,6 +139,7 @@ const props = withDefaults(defineProps<{
   firstDayOfWeek?: number | string
   gridHeight?: number | string
 }>(), {
+  id: "cmp-my-date-range",
   modelValue: () => [],
   label: "",
   placeholder: "Rango de fechas",

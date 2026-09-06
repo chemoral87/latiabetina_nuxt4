@@ -29,7 +29,7 @@
                 <div class="d-flex align-center">
                   <VIcon class="mr-1" size="small">mdi-account-plus</VIcon>
                   <span id="det-creador" class="text-caption font-weight-bold text-grey-darken-2 text-truncate">
-                    Creador: {{ (sheet.creator as Record<string, unknown> | undefined)?.name || 'N/A' }}
+                    Creador: {{ [(sheet.creator as Record<string, unknown> | undefined)?.name, (sheet.creator as Record<string, unknown> | undefined)?.last_name].filter(Boolean).join(' ') || 'N/A' }}
                   </span>
                 </div>
               </VCol>
@@ -87,7 +87,7 @@
                   rows="2"
                   auto-grow
                   hide-details
-                  density="compact"
+          
                   variant="outlined"
                   label="Comentarios"
                   :disabled="savingSheet"

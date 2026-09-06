@@ -163,6 +163,14 @@ export function useRepository() {
       logsIndex<T = unknown>(params?: Record<string, unknown>) {
         return withNotify($api<T>("/church-member/tracking-logs", { params }))
       },
+      // GET /church-member/tracking-logs/all (organization activity and totals by consolidator)
+      allLogs<T = unknown>(params?: Record<string, unknown>) {
+        return withNotify($api<T>("/church-member/tracking-logs/all", { params }))
+      },
+      // GET /church-member/tracking-logs/all/summary (count per consolidator)
+      allLogsSummary<T = unknown>(params?: Record<string, unknown>) {
+        return withNotify($api<T>("/church-member/tracking-logs/all/summary", { params }))
+      },
     },
     WhatsApp: {
       // GET /whatsapp/logs?sender=&receiver=&success=&per_page=&page=  (WhatsAppController.php:70)

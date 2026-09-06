@@ -20,7 +20,7 @@
             >
               <template #activator="{ props }">
                 <VListItem v-bind="props">
-                  <VListItemTitle>{{ item.title }} </VListItemTitle>
+                   <VListItemTitle>{{ item.title }} </VListItemTitle>
                 </VListItem>
               </template>
               <VListItem

@@ -152,6 +152,14 @@ export class MenuService {
         });
       }
 
+      if (this.hasPermission("church-member-tracking-logs-all")) {
+        menu.push({
+          icon: "mdi-chart-box-outline",
+          title: "Actividad General",
+          to: "/church-member/tracking-logs/all",
+        });
+      }
+
       if (this.hasPermission("whatsapp-index")) {
         menu.push({
           icon: "mdi-whatsapp",

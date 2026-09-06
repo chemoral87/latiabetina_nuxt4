@@ -156,6 +156,45 @@ function refreshRoles() {
 }
 ```
 
+**WARNING — `initialLoaded` breaks when table data changes dynamically.**
+
+If the page switches between different datasets (e.g. selecting different
+consolidators, toggling tabs, switching orgs), the `initialSortBy` prop
+changes → component watch fires `update:options` → `initialLoaded` gets set
+to `true` prematurely → subsequent user sorts are silently ignored.
+
+**Correct pattern for dynamic datasets:** remove `initialLoaded` entirely.
+Instead, use a request counter to discard stale responses:
+
+```ts
+let requestId = 0
+
+async function fetchData(options: Record<string, unknown> = {}) {
+  const id = ++requestId
+  loading.value = true
+  try {
+    const params = buildApiParams({ ...lastOptions.value, ...options })
+    const result = await Repository.getAll(params)
+    if (id !== requestId) return   // stale — discard
+    response.value = result
+    lastOptions.value = { ...lastOptions.value, ...options }
+  } catch (e) {
+    if (id !== requestId) return
+    notify.notify({ error: "..." })
+  } finally {
+    if (id === requestId) loading.value = false
+  }
+}
+
+function handleSorting(opts: Record<string, unknown>) {
+  fetchData(opts)   // always fetch — counter prevents stale overwrite
+}
+```
+
+Use `initialLoaded` only when the dataset never changes after mount (standard
+index pages like role, user, permission). For master-detail or tabbed views,
+use the request-counter pattern.
+
 ### 5. Save / delete handlers
 
 ```ts
@@ -495,6 +534,8 @@ function buildItems() {
   `removeWithAnimation` helper.
 - Do not watch `options` deeply to emit sorting — use `@update:options` only.
 - Do not skip the `initialLoaded` guard — the page will double-fetch on mount.
+  **Exception:** pages with dynamic datasets (master-detail, tabbed views)
+  must NOT use `initialLoaded` — use a request counter instead (see section 4).
 - Do not use `onMounted` for the initial list load — the first paint would be
   empty (see `ai_rule/nuxt4_ssr_hydration.md`).
 - Do not omit `:search="props.search"` on `VDataTableServer` when the page
