@@ -53,9 +53,8 @@
 
       <VCol cols="12">
         <TrackingTable
-          :orgs="orgs"
-          :loading="loading"
-          :members="members"
+           :orgs="orgs"
+           :members="members"
           @view="viewMember"
           @update:options="onUpdateOptions"
         />
@@ -83,7 +82,7 @@ const filterStatus = ref("ACTIVO");
 const filterOrgId = ref<string | number | null>(null);
 const loading = ref(false);
 const members = ref<Record<string, unknown>[]>([]);
-const sortBy = ref<{ key: string; order: string }[]>([{ key: "last_contacted", order: "desc" }]);
+const sortBy = ref<{ key: string; order: string }[]>([{ key: "last_contacted", order: "asc" }]);
 
 const showOrgSelect = computed(
   () => auth.orgIdsFor("conso-sheet-index").length > 1,

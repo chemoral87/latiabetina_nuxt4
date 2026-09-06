@@ -5,6 +5,7 @@
       type="file"
       accept="image/png, image/jpeg, image/bmp"
       style="display: none"
+      aria-label="Subir imagen"
       @change="onFileSelected"
     />
 

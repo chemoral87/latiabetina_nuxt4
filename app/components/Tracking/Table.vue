@@ -1,15 +1,14 @@
 <template>
   <div :id="id">
     <VDataTableServer
+      v-model:sort-by="sortBy"
+      must-sort
       :items="members"
       density="compact"
       :headers="headers"
-      :loading="loading"
       class="elevation-1"
-      :items-length="members.length"
       mobile-breakpoint="0"
-      v-model:sort-by="sortBy"
-      must-sort
+      :items-length="members.length"
       @update:options="onUpdateOptions"
     >
       <template #[`item.name`]="{ item }">
@@ -91,13 +90,11 @@ const props = withDefaults(
   defineProps<{
     id?: string;
     members?: unknown[];
-    loading?: boolean;
     orgs?: { id: number | string; name: string }[];
   }>(),
   {
     id: "cmp-tracking-table",
     members: () => [],
-    loading: false,
     orgs: () => [],
   },
 );
@@ -112,7 +109,7 @@ const { statusLabel, statusColor } = useChurchMemberStatus()
 
 const singleOrg = computed(() => auth.hasSingleOrgFor("conso-sheet-index"));
 
-const sortBy = ref([{ key: "last_contacted", order: "desc" }]);
+const sortBy = ref([{ key: "last_contacted", order: "asc" }]);
 
 function onUpdateOptions(opts: Record<string, unknown>) {
   emit("update:options", opts);

@@ -9,7 +9,7 @@
       <VIcon start size="x-small">mdi-upload</VIcon>
       Importar {{ saveFormat === 'csv' ? 'CSV' : 'JSON' }}
     </VBtn>
-    <input ref="fileInput" type="file" :accept="fileAccept" style="display: none" @change="onFileChange" />
+    <input ref="fileInput" type="file" :accept="fileAccept" style="display: none" aria-label="Importar archivo de configuración" @change="onFileChange" />
   </VCard>
 </template>
 

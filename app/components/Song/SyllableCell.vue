@@ -1,22 +1,28 @@
 <template>
   <div id="cmp-song-syllable-cell" class="syllable-cell">
     <input
+      id="cmp-syllable-chords"
       :value="chordsText"
       placeholder="Acordes"
       class="syllable-input chord-input"
       title="Acordes (separados por coma o espacio)"
+      aria-label="Acordes"
       @change="onChords"
     />
     <input
+      id="cmp-syllable-text"
       v-model="syllable.text"
       placeholder="sílaba"
       class="syllable-input text-input"
+      aria-label="Sílaba"
     />
     <input
+      id="cmp-syllable-notes"
       :value="notesText"
       placeholder="Notas"
       class="syllable-input note-input"
       title="Melodía (notas separadas por coma o espacio)"
+      aria-label="Notas"
       @change="onNotes"
     />
     <VBtn

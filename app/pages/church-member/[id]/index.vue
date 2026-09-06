@@ -216,7 +216,6 @@
           <VCardText>
             <ChurchMemberTrackingLogTable
               id="cmm-tracking-log-table"
-              :loading="loading"
               :response="logsResponse"
               @edit="editTrackingLog"
               @delete="deleteTrackingLog"
@@ -414,6 +413,11 @@ const logsResponse = ref<{ data: unknown[]; total: number }>({
   total: 0,
 });
 const loadingLogs = ref(false);
+const lastLogOptions = ref<Record<string, unknown>>({
+  page: 1,
+  itemsPerPage: 10,
+  sortBy: [{ key: "contact_datetime", order: "desc" }],
+});
 const currentConsolidators = computed<
   {
     id: number | string;
@@ -517,15 +521,11 @@ const backRoute = computed(() => {
   const { data: initialLogs } = await useAsyncData(
     `church-member-tracking-logs-${route.params.id}`,
     async () => {
+      const params = buildApiParams(lastLogOptions.value);
       return await ChurchMemberTrackingLog.index<{
         data: unknown[];
         total: number;
-      }>(route.params.id as string, {
-        page: 1,
-        itemsPerPage: 10,
-        sortBy: ["contact_datetime"],
-        sortDesc: [true],
-      }).catch(() => ({ data: [] as unknown[], total: 0 }));
+      }>(route.params.id as string, params).catch(() => ({ data: [] as unknown[], total: 0 }));
     },
     { default: () => ({ data: [] as unknown[], total: 0 }) },
   );
@@ -639,21 +639,19 @@ function localDateTimeString(date = new Date()): string {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
 }
 
-async function fetchTrackingLogs() {
+async function fetchTrackingLogs(overrides: Record<string, unknown> = {}) {
   const id = route.params.id as string;
   if (!id) return;
   loadingLogs.value = true;
   try {
+    const requestOptions = { ...lastLogOptions.value, ...overrides };
+    const params = buildApiParams(requestOptions);
     const data = await ChurchMemberTrackingLog.index<Record<string, unknown>>(
       id,
-      {
-        page: 1,
-        itemsPerPage: 10,
-        sortBy: ["contact_datetime"],
-        sortDesc: [true],
-      },
+      params,
     );
     logsResponse.value = data as { data: unknown[]; total: number };
+    lastLogOptions.value = requestOptions;
   } catch {
     logsResponse.value = { data: [], total: 0 };
   } finally {
@@ -668,7 +666,7 @@ function onLogsUpdateOptions(opts: Record<string, unknown>) {
     initialLogsLoaded = true;
     return;
   }
-  fetchTrackingLogs();
+  fetchTrackingLogs(opts);
 }
 
 function editTrackingLog(log: Record<string, unknown>) {

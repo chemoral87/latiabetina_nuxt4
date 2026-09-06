@@ -4,10 +4,10 @@
       v-model:page="page"
       v-model:sort-by="sortBy"
       v-model:items-per-page="itemsPerPage"
+      must-sort
       :items="items"
       density="compact"
       :headers="headers"
-      :loading="loading"
       :items-length="total"
       class="elevation-1 xwidth1000"
       :items-per-page-options="[10, 15, 25]"
@@ -59,9 +59,9 @@
             icon
             class="ma-1"
             size="small"
-            title="Eliminar"
             color="error"
             rounded="circle"
+            title="Eliminar"
             variant="outlined"
             @click="emit('delete', item)"
           >
@@ -95,11 +95,9 @@ interface Header {
 const props = withDefaults(defineProps<{
   id?: string
   response?: { total?: number; data?: unknown[] } | null
-  loading?: boolean
 }>(), {
   id: "cmp-church-member-tracking-log-table",
   response: () => ({ data: [], total: 0 }),
-  loading: false,
 })
 
 const emit = defineEmits<{

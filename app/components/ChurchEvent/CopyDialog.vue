@@ -65,7 +65,7 @@
               <VMenu v-model="startDateMenu" :close-on-content-click="false" transition="scale-transition" offset-y min-width="auto">
                 <template #activator="{ props: menuProps }">
                   <VTextField
-                    id="tf-churc-copyd-recurrence-start_date-1"
+                    id="eve-copydialog-start-date"
                     v-model="recurrence.start_date"
                     label="Fecha inicial"
                     prepend-inner-icon="mdi-calendar"
@@ -83,7 +83,7 @@
               <VMenu v-model="endDateMenu" :close-on-content-click="false" transition="scale-transition" offset-y min-width="auto">
                 <template #activator="{ props: menuProps }">
                   <VTextField
-                    id="tf-churc-copyd-recurrence-end_date-2"
+                    id="eve-copydialog-end-date"
                     v-model="recurrence.end_date"
                     label="Fecha final"
                     prepend-inner-icon="mdi-calendar"
@@ -99,8 +99,7 @@
             </VCol>
           </VRow>
 
-          <label class="text-caption text-grey-darken-1">Días de la semana</label>
-          <VChipGroup v-model="recurrence.days_of_week" multiple column>
+          <VChipGroup v-model="recurrence.days_of_week" multiple column aria-label="Días de la semana">
             <VChip v-for="(day, index) in weekDays" :key="day" filter variant="outlined" :value="index">
               {{ day }}
             </VChip>
