@@ -590,15 +590,6 @@ const whatsappHref = computed(() => {
     : `https://wa.me/${phoneDigits.value}`;
 });
 
-function isMobileDevice(): boolean {
-  if (typeof navigator === "undefined") return false;
-  const ua = navigator.userAgent || "";
-  if (/Android|iPhone|iPad|iPod|Mobile/i.test(ua)) return true;
-  if (typeof window !== "undefined" && navigator.maxTouchPoints > 1) {
-    return /Mac|Windows|Linux|X11|CrOS/i.test(ua) === false;
-  }
-  return false;
-}
 function isIOSDevice(): boolean {
   if (typeof navigator === "undefined") return false;
   const ua = navigator.userAgent || "";
@@ -636,14 +627,8 @@ async function openContact(
   // cayendo directo al fallback web (WhatsApp Web) aunque la app esté
   // instalada. Por eso el intento de apertura va ANTES del await, para
   // ambos casos.
-  const mobile = medium === "whatsapp" ? isMobileDevice() : false;
-  let waWindow: WindowProxy | null = null;
   if (medium === "whatsapp" && url) {
-    if (mobile) {
-      triggerMobileWhatsApp(currentMessage);
-    } else {
-      waWindow = window.open(url, "_blank", "noopener");
-    }
+    triggerWhatsApp(currentMessage);
   } else if ((medium === "sms" || medium === "llamada") && url) {
     // sms: y tel: son esquemas estándar que el SO entrega a la app de
     // Mensajes/Teléfono sin dejar entrada nueva en el historial. Se disparan
@@ -669,29 +654,15 @@ async function openContact(
         (error as { response?: { data?: { message?: string } } }).response?.data
           ?.message || "Error al registrar la interacción",
     });
-  } finally {
-    if (medium === "presencial") return;
-    if (medium === "whatsapp") {
-      if (mobile) return; // El deep link (o su fallback) ya se disparó arriba.
-      if (!url) return;
-      // Popup abierto síncrono arriba; si fue bloqueado, navegación directa.
-      if (!waWindow || waWindow.closed) {
-        window.location.href = url;
-      }
-    }
-    // sms y llamada ya se dispararon arriba, antes del await.
   }
 }
 
-// Dispara el deep link nativo de WhatsApp con una navegación de nivel
-// superior directa (sin iframe: iOS Safari bloquea silenciosamente la
-// navegación a esquemas custom como whatsapp:// hecha desde un <iframe>,
-// solo funciona como top-level navigation dentro del gesto de click). Si la
-// app está instalada, el navegador entrega la navegación a la app sin dejar
-// entrada nueva en el historial, así "atrás" desde WhatsApp regresa directo
-// a esta página, sin pasar por WhatsApp Web. Si no cambia la visibilidad de
-// la pestaña en ~1.2s asumimos que no está instalada y caemos a wa.me.
-function triggerMobileWhatsApp(currentMessage: string) {
+// Dispara el deep link nativo de WhatsApp (whatsapp://) con fallback a wa.me
+// en nueva pestaña. Funciona tanto en móvil como en escritorio cuando la app
+// de WhatsApp está instalada. Si la app no está instalada o no toma el foco
+// en ~1.2s, abre wa.me en una pestaña nueva sin navegar fuera de la página
+// actual. Se cancela el fallback si cambia la visibilidad (app abierta).
+function triggerWhatsApp(currentMessage: string) {
   const digits = phoneDigits.value;
   if (!digits) return;
   const encoded = encodeURIComponent(currentMessage);
@@ -722,12 +693,15 @@ function triggerMobileWhatsApp(currentMessage: string) {
   document.addEventListener("visibilitychange", onVis);
   window.addEventListener("blur", onHide);
 
+  // Intento de apertura síncrono con el gesto de click.
   window.location.href = appUrl;
 
+  // Fallback: si la app no está instalada, abre wa.me en pestaña nueva
+  // (sin navegar fuera de la página actual).
   fallback = window.setTimeout(() => {
     fallback = null;
     cancelFallback();
-    if (!document.hidden) window.location.href = webUrl;
+    if (!document.hidden) window.open(webUrl, "_blank", "noopener");
   }, 1200);
 }
 

@@ -19,22 +19,23 @@
       items-per-page-text="Filas por página"
       @update:options="onUpdateOptions"
     >
+      <template #[`item.details`]="{ item }">
+        <VBtn
+          :id="`con-table-view-btn-${item.id}`"
+          icon
+          class="ma-1"
+          size="small"
+          color="success"
+          rounded="circle"
+          title="Detalles"
+          variant="outlined"
+          @click="emit('view', item)"
+        >
+          <VIcon size="x-large">mdi-clipboard-list</VIcon>
+        </VBtn>
+      </template>
       <template #[`item.actions`]="{ item }">
         <div class="d-flex flex-nowrap justify-center">
-          <VBtn
-            :id="`con-table-view-btn-${item.id}`"
-            icon
-            class="ma-1"
-            size="small"
-            color="success"
-            rounded="circle"
-            title="Detalles"
-            variant="outlined"
-            @click="emit('view', item)"
-          >
-            <VIcon size="x-large">mdi-clipboard-list</VIcon>
-          </VBtn>
-
           <VBtn
             :id="`con-table-edit-btn-${item.id}`"
             icon
@@ -152,6 +153,7 @@ const singleOrg = computed(() => auth.hasSingleOrgFor("conso-sheet-index"));
 
 const headers = computed<Header[]>(() => {
   const list: Header[] = [
+    { title: "", value: "details", sortable: false, width: "40px" },
     { title: "Folio", value: "folio_number", sortable: true },
     { title: "Fecha", value: "date", sortable: true },
   ];
