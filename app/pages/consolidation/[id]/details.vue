@@ -203,7 +203,7 @@ definePageMeta({
   middleware: ["authenticated","permission"],
   permissions: ["conso-sheet-index"],
   back: "/consolidation",
-  showDrawer: false,
+  // showDrawer: false,
 })
 
 const route = useRoute()
