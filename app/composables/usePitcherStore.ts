@@ -22,6 +22,9 @@ export const usePitcherStore = defineStore("pitcher", () => {
   const selectedRootNote = ref("C")
   const latinNotation = ref(false)
   const showMicrotones = ref(true)
+  // 2 líneas intermedias por semitono (tercios). Mutuamente excluyente con
+  // showMicrotones: activar uno apaga el otro (ver setters).
+  const showTricrotones = ref(false)
   // Mostrar nota fantasma en la UI (persistido)
   const ghostQuarterNote = ref(false)
   const maxHistory = ref(400)
@@ -71,6 +74,12 @@ export const usePitcherStore = defineStore("pitcher", () => {
 
   function setShowMicrotones(value: boolean) {
     showMicrotones.value = value
+    if (value) showTricrotones.value = false
+  }
+
+  function setShowTricrotones(value: boolean) {
+    showTricrotones.value = !!value
+    if (value) showMicrotones.value = false
   }
 
   function setGhostQuarterNote(value: boolean) {
@@ -168,6 +177,7 @@ export const usePitcherStore = defineStore("pitcher", () => {
           selectedRootNote: selectedRootNote.value,
           latinNotation: latinNotation.value,
           showMicrotones: showMicrotones.value,
+          showTricrotones: showTricrotones.value,
           ghostQuarterNote: ghostQuarterNote.value,
           maxHistory: maxHistory.value,
           totalNotes: totalNotes.value,
@@ -198,7 +208,7 @@ export const usePitcherStore = defineStore("pitcher", () => {
 
   let saveTimer: ReturnType<typeof setTimeout> | null = null
   watch(
-    [sensitivity, selectedRootNote, latinNotation, showMicrotones, ghostQuarterNote, maxHistory, totalNotes, histogramHeight, histogramMinWidth, dbCalibrationOffset, showScaleOnFretboard, scaleRingOpacity, ghostNoteOpacity, showStaffNotation, showHistogram, showDbMeter, showTuningRange, showGuitarNotation, showUkeleleNotation, showTrumpetNotation, showPianoNotation, ukeleleCols, guitarCols, trumpetCols, pianoCols],
+    [sensitivity, selectedRootNote, latinNotation, showMicrotones, showTricrotones, ghostQuarterNote, maxHistory, totalNotes, histogramHeight, histogramMinWidth, dbCalibrationOffset, showScaleOnFretboard, scaleRingOpacity, ghostNoteOpacity, showStaffNotation, showHistogram, showDbMeter, showTuningRange, showGuitarNotation, showUkeleleNotation, showTrumpetNotation, showPianoNotation, ukeleleCols, guitarCols, trumpetCols, pianoCols],
     () => {
       if (!import.meta.client) return
       if (saveTimer) clearTimeout(saveTimer)
@@ -224,6 +234,7 @@ export const usePitcherStore = defineStore("pitcher", () => {
       if (typeof data.selectedRootNote === "string") selectedRootNote.value = data.selectedRootNote
       if (typeof data.latinNotation === "boolean") latinNotation.value = data.latinNotation
       if (typeof data.showMicrotones === "boolean") showMicrotones.value = data.showMicrotones
+      if (typeof data.showTricrotones === "boolean") showTricrotones.value = data.showTricrotones
       if (typeof data.ghostQuarterNote === "boolean") ghostQuarterNote.value = data.ghostQuarterNote
       if (typeof data.maxHistory === "number") maxHistory.value = data.maxHistory
       if (typeof data.totalNotes === "number") totalNotes.value = data.totalNotes
@@ -269,6 +280,7 @@ export const usePitcherStore = defineStore("pitcher", () => {
     selectedRootNote,
     latinNotation,
     showMicrotones,
+    showTricrotones,
     ghostQuarterNote,
     maxHistory,
     totalNotes,
@@ -296,6 +308,7 @@ export const usePitcherStore = defineStore("pitcher", () => {
     setSensitivity,
     setLatinNotation,
     setShowMicrotones,
+    setShowTricrotones,
     setGhostQuarterNote,
     setMaxHistory,
     setTotalNotes,

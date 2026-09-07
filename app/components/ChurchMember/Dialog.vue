@@ -143,7 +143,7 @@
                 <MyUploadimageCrop
                   v-model="item.url_image"
                   v-model:url="item.url_image_s3"
-                  :size="460"
+                  :size="550"
                   label="Foto"
                 />
                 <VAvatar

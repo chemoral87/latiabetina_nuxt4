@@ -78,6 +78,77 @@ export const NOTE_SHORT_STRINGS: string[] = ["C", "C+", "C♯", "C♯+", "D", "D
 
 export const NOTE_LATIN_STRINGS: string[] = ["Do", "Do+", "Do♯", "Do♯+", "Re", "Re+", "Re♯", "Re♯+", "Mi", "Mi+", "Fa", "Fa+", "Fa♯", "Fa♯+", "Sol", "Sol+", "Sol♯", "Sol♯+", "La", "La+", "La♯", "La♯+", "Si", "Si+"]
 
+// ── Tricrotonos: 2 líneas intermedias por semitono (tercios, 36 entradas) ────
+const SHORT_ROOTS = ["C", "C♯", "D", "D♯", "E", "F", "F♯", "G", "G♯", "A", "A♯", "B"]
+const LATIN_ROOTS = ["Do", "Do♯", "Re", "Re♯", "Mi", "Fa", "Fa♯", "Sol", "Sol♯", "La", "La♯", "Si"]
+
+export const NOTE_SHORT_STRINGS_THIRDS: string[] = SHORT_ROOTS.flatMap((r) => [r, `${r}⅓`, `${r}⅔`])
+
+export const NOTE_LATIN_STRINGS_THIRDS: string[] = LATIN_ROOTS.flatMap((r) => [r, `${r}⅓`, `${r}⅔`])
+
+// Colores raíz (12 notas reales = índices pares de COLORS; se excluye el color
+// extra de cierre de ciclo que COLORS trae al final)
+const ROOT_COLORS: string[] = COLORS.filter((_, idx) => idx % 2 === 0).slice(0, 12)
+
+function hexToHsl(hex: string): [number, number, number] {
+  const n = parseInt(hex.slice(1), 16)
+  const r = ((n >> 16) & 255) / 255
+  const g = ((n >> 8) & 255) / 255
+  const b = (n & 255) / 255
+  const max = Math.max(r, g, b)
+  const min = Math.min(r, g, b)
+  const l = (max + min) / 2
+  if (max === min) return [0, 0, l]
+  const d = max - min
+  const s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
+  let h = 0
+  if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6
+  else if (max === g) h = ((b - r) / d + 2) / 6
+  else h = ((r - g) / d + 4) / 6
+  return [h * 360, s, l]
+}
+
+function hslToHex(h: number, s: number, l: number): string {
+  h = ((h % 360) + 360) % 360 / 360
+  if (s === 0) {
+    const v = Math.round(l * 255).toString(16).padStart(2, "0")
+    return `#${v}${v}${v}`.toUpperCase()
+  }
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s
+  const p = 2 * l - q
+  const f = (t: number): number => {
+    if (t < 0) t += 1
+    if (t > 1) t -= 1
+    if (t < 1 / 6) return p + (q - p) * 6 * t
+    if (t < 1 / 2) return q
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6
+    return p
+  }
+  const to = (t: number): string => Math.round(f(t) * 255).toString(16).padStart(2, "0")
+  return `#${to(h + 1 / 3)}${to(h)}${to(h - 1 / 3)}`.toUpperCase()
+}
+
+/** Interpola en HSL entre cada nota raíz y la siguiente (camino corto de tono).
+ *  Devuelve 12 * subdivisions colores. */
+export function buildSubdividedPalette(rootColors: string[], subdivisions: number): string[] {
+  const out: string[] = []
+  const n = rootColors.length
+  for (let s = 0; s < n; s++) {
+    const [h1, s1, l1] = hexToHsl(rootColors[s]!)
+    const [h2raw, s2, l2] = hexToHsl(rootColors[(s + 1) % n]!)
+    let dh = h2raw - h1
+    if (dh > 180) dh -= 360
+    if (dh < -180) dh += 360
+    for (let k = 0; k < subdivisions; k++) {
+      const t = k / subdivisions
+      out.push(hslToHex(h1 + dh * t, s1 + (s2 - s1) * t, l1 + (l2 - l1) * t))
+    }
+  }
+  return out
+}
+
+export const COLORS_THIRDS: string[] = buildSubdividedPalette(ROOT_COLORS, 3)
+
 export const MAJOR_STEPS: number[] = [0, 2, 4, 5, 7, 9, 11]
 export const MIN_MIDI = 47
 export const TOLERANCE_HZ = 1.95
@@ -101,9 +172,13 @@ export const LINE_BASE = 130
 // ── Default export for auto-import compatibility ──────────────────────────────
 export default {
   COLORS,
+  COLORS_THIRDS,
+  buildSubdividedPalette,
   COLOR_NEEDS_WHITE_TEXT,
   NOTE_SHORT_STRINGS,
+  NOTE_SHORT_STRINGS_THIRDS,
   NOTE_LATIN_STRINGS,
+  NOTE_LATIN_STRINGS_THIRDS,
   MAJOR_STEPS,
   MIN_MIDI,
   TOLERANCE_HZ,

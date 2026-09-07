@@ -54,7 +54,9 @@ import {
   MAJOR_STEPS,
   MIN_MIDI,
   NOTE_LATIN_STRINGS,
+  NOTE_LATIN_STRINGS_THIRDS,
   NOTE_SHORT_STRINGS,
+  NOTE_SHORT_STRINGS_THIRDS,
   TEXT_WIDTH,
   TOLERANCE_HZ,
 } from "~/constants/pitcher"
@@ -88,7 +90,7 @@ const props = withDefaults(
 )
 
 const store = usePitcherStore()
-const { selectedRootNote, latinNotation, showMicrotones, maxHistory, totalNotes, histogramEffectiveHeight } = storeToRefs(store)
+const { selectedRootNote, latinNotation, showMicrotones, showTricrotones, maxHistory, totalNotes, histogramEffectiveHeight } = storeToRefs(store)
 
 const rootEl = ref<HTMLElement | null>(null)
 const histogramEl = ref<HTMLCanvasElement | null>(null)
@@ -131,7 +133,7 @@ const tuningAccuracyClass = computed(() => {
   return "tuning-poor"
 })
 
-watch([selectedRootNote, latinNotation, showMicrotones, maxHistory, totalNotes, histogramEffectiveHeight], () => {
+watch([selectedRootNote, latinNotation, showMicrotones, showTricrotones, maxHistory, totalNotes, histogramEffectiveHeight], () => {
   drawHistogram()
 })
 
@@ -301,48 +303,74 @@ function drawNoteLines() {
   const width = canvas.width
   const scaleNoteIndices = getMajorScaleNotes(selectedRootNote.value)
 
-  let currentNoteInfo: { type: string; name: string; base: string; freq: number } | null = null
+  // Subdivisiones por semitono: 1 = solo notas reales, 2 = microtonos, 3 = tricrotonos.
+  // Los switches son mutuamente excluyentes (el store apaga uno al activar el otro);
+  // si ambos llegaran activos (estado legacy), tricrotonos manda.
+  const subdivisions = showTricrotones.value ? 3 : (showMicrotones.value ? 2 : 1)
+  const totalSteps = totalNotes.value * subdivisions
+  const noteStrings = subdivisions === 3
+    ? (latinNotation.value ? NOTE_LATIN_STRINGS_THIRDS : NOTE_SHORT_STRINGS_THIRDS)
+    : (latinNotation.value ? NOTE_LATIN_STRINGS : NOTE_SHORT_STRINGS)
+  const pxPerStep = height / totalSteps
+  // Anti-colisión de etiquetas en modo denso: con poco espacio vertical se
+  // omiten etiquetas intermedias (primero la 2ª de tercio, luego todas).
+  const labelSecondThird = pxPerStep >= 8
+  const labelAnyIntermediate = pxPerStep >= 5
+
+  const noteNameAt = (midi: number): { name: string; base: string; subPos: number; noteIndex: number } => {
+    const rounded = Math.round(midi * subdivisions) / subdivisions
+    const noteIndex = ((Math.floor(rounded + 1e-6) % 12) + 12) % 12
+    const subPos = ((Math.round(rounded * subdivisions) % subdivisions) + subdivisions) % subdivisions
+    const fullIndex = subdivisions === 3 ? noteIndex * 3 + subPos : noteIndex * 2 + subPos
+    const name = noteStrings[fullIndex]!
+    return { name, base: name.replace(/[+⅓⅔]/g, ""), subPos, noteIndex }
+  }
+
+  let currentNoteInfo: { subPos: number; base: string; freq: number } | null = null
   if (props.history.length > 0 && props.history[0].freq) {
     const currentMidi = freqToMidi(props.history[0].freq)
-    const roundedMidi = Math.round(currentMidi * 2) / 2
+    const { base, subPos } = noteNameAt(Math.round(currentMidi * subdivisions) / subdivisions)
     currentNoteInfo = {
-      type: roundedMidi % 1 === 0.5 ? "halfstep" : "natural",
-      name: getNoteName(roundedMidi),
-      base: getNoteName(roundedMidi).replace(/\+/g, ""),
+      subPos,
+      base,
       freq: props.history[0].freq,
     }
   }
 
-  for (let i = 0; i <= totalNotes.value * 2; i++) {
-    const y = height - (i / (totalNotes.value * 2)) * height
-    const midi = MIN_MIDI + i / 2
-    const noteIndex = Math.floor(midi) % 12
-    const isHalfStep = i % 2 === 1
-    const noteStrings = latinNotation.value ? NOTE_LATIN_STRINGS : NOTE_SHORT_STRINGS
-    const noteName = isHalfStep ? noteStrings[noteIndex * 2 + 1] : noteStrings[noteIndex * 2]
-    const noteBase = noteName.replace(/\+/g, "")
+  for (let i = 0; i <= totalSteps; i++) {
+    const y = height - (i / totalSteps) * height
+    const midi = MIN_MIDI + i / subdivisions
+    const noteIndex = ((Math.floor(midi + 1e-6) % 12) + 12) % 12
+    // Posición dentro del "hueco": 0 = nota real, 1..subdivisions-1 = intermedias
+    const subPos = i % subdivisions
+    const isRealSemitone = subPos === 0
+    const fullIndex = subdivisions === 3 ? noteIndex * 3 + subPos : noteIndex * 2 + subPos
+    const noteName = noteStrings[fullIndex]!
+    const noteBase = noteName.replace(/[+⅓⅔]/g, "")
     const isInScale = scaleNoteIndices.includes(noteIndex)
 
     const style = {
-      stroke: isHalfStep ? "green" : "gray",
-      fill: isHalfStep ? "green" : "gray",
+      stroke: isRealSemitone ? "gray" : "green",
+      fill: isRealSemitone ? "gray" : "green",
       lineWidth: 1,
     }
 
     if (currentNoteInfo) {
       const freqDistance = Math.abs(currentNoteInfo.freq - midiToFreq(midi))
       const isExactNote = freqDistance <= TOLERANCE_HZ / 2
-      const isSameNoteType = isHalfStep === (currentNoteInfo.type === "halfstep")
+      const isSameSubPos = subPos === currentNoteInfo.subPos
       const isSameNoteFamily = noteBase === currentNoteInfo.base
 
-      if (isSameNoteFamily && isSameNoteType) {
-        if (isHalfStep) {
+      if (isSameNoteFamily && isSameSubPos) {
+        if (isRealSemitone) {
+          style.stroke = style.fill = isInScale ? "red" : "orange"
+        } else if (subPos === 1) {
           style.stroke = style.fill = "yellow"
         } else {
-          style.stroke = style.fill = isInScale ? "red" : "orange"
+          style.stroke = style.fill = "#00E5FF"
         }
         style.lineWidth = isExactNote ? 2.5 : 2
-      } else if (isInScale && !isHalfStep) {
+      } else if (isInScale && isRealSemitone) {
         style.stroke = style.fill = "white"
       }
     }
@@ -351,14 +379,23 @@ function drawNoteLines() {
     ctx.fillStyle = style.fill
     ctx.lineWidth = style.lineWidth
 
-    if ((showMicrotones.value && isHalfStep) || !isHalfStep) {
-      ctx.beginPath()
-      ctx.moveTo(5, y)
-      ctx.lineTo(width - TEXT_WIDTH - 3, y)
-      ctx.stroke()
+    // El filtrado por showMicrotones ya va implícito en `subdivisions`:
+    // con subdivisions=1 nunca hay intermedias que filtrar.
+    ctx.beginPath()
+    ctx.moveTo(5, y)
+    ctx.lineTo(width - TEXT_WIDTH - 3, y)
+    ctx.stroke()
 
-      ctx.font = isHalfStep ? `bold ${style.lineWidth > 1 ? 11 : 10}px sans-serif` : `bold ${style.lineWidth > 1 ? 13 : 12}px sans-serif`
-      ctx.fillText(noteName, width - TEXT_WIDTH + (isHalfStep ? 15 : 0), y + 3)
+    const showLabel = isRealSemitone || (labelAnyIntermediate && (subPos === 1 || (subPos === 2 && labelSecondThird)))
+    if (showLabel) {
+      const fontSize = isRealSemitone
+        ? (style.lineWidth > 1 ? 13 : 12)
+        : subdivisions === 3
+          ? (style.lineWidth > 1 ? 10 : 9)
+          : (style.lineWidth > 1 ? 11 : 10)
+      ctx.font = `bold ${fontSize}px sans-serif`
+      const xOffset = isRealSemitone ? 0 : subdivisions === 3 ? 10 : 15
+      ctx.fillText(noteName, width - TEXT_WIDTH + xOffset, y + 3)
     }
   }
 

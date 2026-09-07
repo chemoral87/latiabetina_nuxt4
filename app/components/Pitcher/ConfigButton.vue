@@ -145,9 +145,18 @@
                     hide-details
                     color="success"
                     class="mt-0 pt-0"
-                    :label="
-                      latinNotation ? 'Mostrar microtonos' : 'Show microtones'
-                    "
+                    label="Mostrar microtonos"
+                  />
+                </VCol>
+                <VCol sm="6" cols="12">
+                  <VSwitch
+                    id="pit-config-tricrotones"
+                    v-model="showTricrotones"
+                    inset
+                    hide-details
+                    color="success"
+                    class="mt-0 pt-0"
+                    label="Mostrar tricrotonos"
                   />
                 </VCol>
                 <VCol sm="6" cols="12">
@@ -534,6 +543,10 @@ const latinNotation = computed({
 const showMicrotones = computed({
   get: () => store.showMicrotones,
   set: (v: boolean) => store.setShowMicrotones(v),
+});
+const showTricrotones = computed({
+  get: () => store.showTricrotones,
+  set: (v: boolean) => store.setShowTricrotones(v),
 });
 const ghostQuarterNote = computed({
   get: () => store.ghostQuarterNote,
