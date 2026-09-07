@@ -1,5 +1,5 @@
 <template>
-  <VContainer :fluid="true">
+  <VContainer class="" :fluid="true">
     <VRow>
       <!-- Filter -->
       <VCol md="2" cols="12">

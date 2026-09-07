@@ -1,5 +1,5 @@
 <template>
-  <VContainer class="pa-4" style="max-width: 1000px">
+  <VContainer class="" :fluid="true" style="max-width: 1000px">
     <h4 id="pit-header" class="text-left mb-1">
       Master de Acordes
       <span>

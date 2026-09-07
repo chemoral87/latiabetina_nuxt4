@@ -1,5 +1,5 @@
 <template>
-  <VContainer fluid class="pa-0">
+  <VContainer :fluid="true">
     <div v-if="eventAuditorium && eventAuditorium.id">
       <div
         ref="headerBar"

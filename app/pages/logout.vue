@@ -1,5 +1,5 @@
 <template>
-  <VContainer :fluid="true" class="fill-height">
+  <VContainer class="fill-height" :fluid="true">
     <VRow align="center" justify="center">
       <VCol cols="auto">
         <VCard id="logout-card" flat class="pa-8 text-center" border>

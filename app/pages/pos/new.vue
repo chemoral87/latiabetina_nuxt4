@@ -1,5 +1,5 @@
 <template>
-  <VContainer fluid>
+  <VContainer class="" :fluid="true">
     <VRow justify="center">
       <VCol md="8" cols="12">
         <VCard id="posn-main-card" class="pa-4" variant="outlined">

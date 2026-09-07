@@ -1,5 +1,5 @@
 <template>
-  <VContainer :fluid="true">
+  <VContainer :fluid="true" class="page-tracking-logs-all">
     <VRow density="comfortable">
       <VCol md="4" sm="6" cols="12">
         <MyDateMonthPicker
@@ -124,6 +124,7 @@ definePageMeta({
   icon: "mdi-chart-box-outline",
   permission: "church-member-tracking-logs-all",
   middleware: ["authenticated", "permission"],
+  color: "orange-lighten-4",
 });
 
 interface ActivityLog {
@@ -268,3 +269,5 @@ watch(selectedMonth, () => {
   }
 }
 </script>
+
+<style scoped></style>

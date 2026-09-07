@@ -1,5 +1,5 @@
 <template>
-  <VContainer>
+  <VContainer class="" :fluid="true">
     <VRow align="center" justify="center">
       <VCol cols="12" md="5" lg="6" class="text-center">
         <VProgressCircular indeterminate color="primary" size="64" />

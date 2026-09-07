@@ -1,6 +1,6 @@
 <template>
   <ClientOnly>
-    <VContainer>
+    <VContainer class="" :fluid="true">
     <VRow density="comfortable">
       <VCol md="5" cols="12">
         <VCard id="acc-index-card-1" flat border class="mb-3 pa-4">

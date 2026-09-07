@@ -1,5 +1,5 @@
 <template>
-  <VContainer :fluid="true">
+  <VContainer class="" :fluid="true">
     <VRow justify="center">
       <VCol md="10" cols="12">
         <!-- JSON import / export toolbar for new song -->

@@ -1,5 +1,5 @@
 <template>
-  <VContainer :fluid="true" class="pa-6">
+  <VContainer class="" :fluid="true">
     <!-- Page header -->
     <VRow class="mb-4">
       <VCol cols="12">

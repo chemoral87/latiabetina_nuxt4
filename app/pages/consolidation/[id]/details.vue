@@ -1,5 +1,5 @@
 <template>
-  <VContainer fluid>
+  <VContainer class="page-consolidation-details" :fluid="true">
     <VRow density="comfortable">
       <VCol cols="12">
         <VCard id="con-detai-card-1" class="mb-3" variant="outlined">
@@ -127,45 +127,55 @@
         </VCard>
       </VCol>
 
-      <VCol md="4" cols="12">
-        <VTextField
-          id="con-detai-filterterm-tf-2"
-          v-model="filterTerm"
-          clearable
-          hide-details
-          label="Filtro"
-          density="compact"
-          variant="outlined"
-          placeholder="Filtro"
-          append-inner-icon="mdi-magnify"
-        />
-      </VCol>
-      <VCol md="4" cols="12">
-        <VBtn id="cnsld-new-member-btn" class="mr-1" color="success" @click="newMember">
-          <VIcon start>mdi-plus</VIcon>
-          Nuevo Miembro
-        </VBtn>
-        <VBtn id="cnsld-refresh-btn" color="primary" :loading="loading" @click="fetchMembers">
-          <VIcon start>mdi-reload</VIcon>
-          Refrescar
-        </VBtn>
-      </VCol>
-
       <VCol cols="12">
-        <ConsolidationMemberTable
-          id="det-members-dt"
-          :loading="loading"
-          :members="filteredMembers"
-          @delete="deleteMemberPrompt"
-          @status-change="onInlineStatusChange"
-        />
-      </VCol>
-
-      <VCol cols="12" class="d-flex justify-end">
-        <VBtn id="cnsld-back-btn" color="primary" variant="outlined" @click="navigateTo('/consolidation')">
-          <VIcon start>mdi-arrow-left</VIcon>
-          Volver
-        </VBtn>
+        <VCard id="con-detai-card-2" class="mb-3" variant="outlined">
+          <VCardText>
+            <VRow density="comfortable">
+              <VCol md="4" cols="12">
+                <VTextField
+                  id="con-detai-filterterm-tf-2"
+                  v-model="filterTerm"
+                  clearable
+                  hide-details
+                  label="Filtro"
+                  density="compact"
+                  variant="outlined"
+                  placeholder="Filtro"
+                  append-inner-icon="mdi-magnify"
+                />
+              </VCol>
+              <VCol md="4" cols="12">
+                <VBtn id="cnsld-new-member-btn" class="mr-1" color="success" @click="newMember">
+                  <VIcon start>mdi-plus</VIcon>
+                  Nuevo Miembro
+                </VBtn>
+                <VBtn id="cnsld-refresh-btn" color="primary" :loading="loading" @click="fetchMembers">
+                  <VIcon start>mdi-reload</VIcon>
+                  Refrescar
+                </VBtn>
+              </VCol>
+            </VRow>
+            <VRow>
+              <VCol cols="12">
+                <ConsolidationMemberTable
+                  id="det-members-dt"
+                  :loading="loading"
+                  :members="filteredMembers"
+                  @delete="deleteMemberPrompt"
+                  @status-change="onInlineStatusChange"
+                />
+              </VCol>
+            </VRow>
+            <VRow>
+              <VCol cols="12" class="d-flex justify-end">
+                <VBtn id="cnsld-back-btn" color="primary" variant="outlined" @click="navigateTo('/consolidation')">
+                  <VIcon start>mdi-arrow-left</VIcon>
+                  Volver
+                </VBtn>
+              </VCol>
+            </VRow>
+          </VCardText>
+        </VCard>
       </VCol>
     </VRow>
 
@@ -203,7 +213,7 @@ definePageMeta({
   middleware: ["authenticated","permission"],
   permissions: ["conso-sheet-index"],
   back: "/consolidation",
-  // showDrawer: false,
+  color: "yellow-lighten-4",
 })
 
 const route = useRoute()
@@ -472,4 +482,17 @@ function confirmAbort() {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+#con-detai-card-1,
+#con-detai-card-2 {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background-color: #FFFFFF !important;
+}
+#con-detai-card-1 :deep(.v-card-text),
+#con-detai-card-2 :deep(.v-card-text) {
+  padding: 0;
+  margin: 0;
+}
+</style>

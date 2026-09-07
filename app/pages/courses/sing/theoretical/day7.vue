@@ -41,7 +41,7 @@
                   <strong>equivale a un "relajante muscular automático"</strong>. Además regula el
                   flujo de aire y conecta el apoyo con la emisión.
                 </p>
-                <VAlert type="info" class="pa-1" variant="text" density="compact">
+                <VAlert type="info" class="" variant="text" density="compact">
                   <span class="text-caption">Si los labios se "apagan", suelta un poquito más de aire del apoyo.</span>
                 </VAlert>
               </VCard>

@@ -1,5 +1,5 @@
 <template>
-  <VContainer :fluid="true" class="cash-close-page px-4 pt-4 pb-16">
+  <VContainer class="cash-close-page px-4 pt-4 pb-16" :fluid="true">
     <!-- Header -->
     <div class="d-flex align-center mb-4">
       <VIcon start color="primary" class="mr-2">mdi-cash-register</VIcon>

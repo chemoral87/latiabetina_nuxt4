@@ -5,7 +5,12 @@
 > consistent: filter debounce, SSR initial load, one loader function, delete
 > confirmation, and row highlight after save.
 
-## Architecture
+Reference implementations: `role/index.vue`, `user/index.vue`,
+`permission/index.vue`, `organization/index.vue`, `auditorium-event/index.vue`.
+
+---
+
+## 1. Architecture
 
 A list page is split in three parts:
 
@@ -15,12 +20,11 @@ app/components/<Module>/Table.vue   table: VDataTableServer, headers, action col
 app/components/<Module>/Dialog.vue  create/edit dialog (optional, shown with v-if)
 ```
 
-Reference implementations: `role/index.vue`, `user/index.vue`,
-`permission/index.vue`, `organization/index.vue`, `auditorium-event/index.vue`.
+---
 
-## Page template layout (`index.vue`)
+## 2. Page Template Layout
 
-```
+```vue
 <VContainer :fluid="true">
   <VRow>
     <VCol cols="12" md="2">            filter VTextField (filterInput)
@@ -31,6 +35,8 @@ Reference implementations: `role/index.vue`, `user/index.vue`,
 </VContainer>
 ```
 
+- **Every page must use `<VContainer class="pa-1" :fluid="true">`** — see
+  `ai_rule/vcontainer_convention.md`.
 - Filter input: `id="{view}-index-filter"`, `v-model="filterInput"`,
   `append-inner-icon="mdi-magnify"`, `variant="outlined"`, `density="compact"`,
   `clearable`, `hide-details`. (No `tf-` / `-1` suffix — see
@@ -46,7 +52,9 @@ Reference implementations: `role/index.vue`, `user/index.vue`,
   linear loading indicator synchronized with refreshes, sorting, filtering, and
   pagination requests.
 
-## Page script setup — the standard pattern
+---
+
+## 3. Page Script Setup (standard skeleton)
 
 All pages share this exact skeleton:
 
@@ -65,7 +73,9 @@ const { highlightId, prependCreated, updateRow } = useRowHighlight()
 const lastOptions = ref<Record<string, unknown> | null>(null)
 ```
 
-### 1. SSR initial load — top-level await (dynamic single-source sorting)
+---
+
+## 4. SSR Initial Load (top-level await, lastOptions, buildApiParams)
 
 **Rule: never hard-code `sortBy`/`sortDesc` twice.** `lastOptions` is the single source of truth (Vuetify 4 format). `buildApiParams()` converts it to backend format for every fetch, including the SSR initial load. Changing the default sort requires editing **only** `lastOptions` — the table and the initial fetch follow automatically.
 
@@ -90,8 +100,14 @@ const lastOptions = ref<Record<string, unknown>>({
 - **Dynamic & shared:** `lastOptions` → `buildApiParams()` from `app/utils/buildApiParams.ts:8` → `apiParams` (Vuetify `[{key,order}]` → backend `["name"]`/`[false]` + passthrough `filter`/`org_id`/`status`/`date_from` etc.). The consolidation module (`date desc`) already uses this pattern `app/pages/consolidation/index.vue:62,136` and `app/components/Consolidation/Table.vue:113-142` with `initialSortBy` prop. Do not duplicate `buildApiParams` per page.
 - **No duplication:** do not write `sortBy: ["name"]` and `sortBy: [{key:"name",order:"asc"}]` in two places — the second is derived. Changing default requires editing only `lastOptions`.
 - The repository must be destructured **before** this block (temporal dead zone).
+- Do not use `onMounted` for the initial list load — the first paint would be
+  empty (see `ai_rule/nuxt4_ssr_hydration.md`).
+- Use `useAsyncData` with a scoped key only when SSR serialization is required
+  (see `ai_rule/nuxt4_ssr_hydration.md`).
 
-### 2. Debounced filter (300ms) — shared `useDebouncedFilter`
+---
+
+## 5. Debounced Filter
 
 ```ts
 // Shared — app/composables/useDebouncedFilter.ts:8 (auto-imported, no import needed)
@@ -108,7 +124,9 @@ useDebouncedFilter(filterInput, filterRole)            // 300ms default
 
 Clear immediately when the input empties; never debounce the clear. Do not duplicate the inline `watch`/`debounceTimer`/`setTimeout` per page — use the shared composable (handles cleanup on unmount).
 
-### 3. Single loader function (via shared `buildApiParams`)
+---
+
+## 6. Single Loader Function
 
 ```ts
 import { buildApiParams } from "~/utils/buildApiParams"
@@ -136,7 +154,11 @@ async function loadRoles(opts: Record<string, unknown>) {
 
 Shared `app/utils/buildApiParams.ts:8` converts Vuetify 4 `sortBy` → backend `sortBy[]` / `sortDesc[]` and passes through any extra keys (`filter`, `org_id`, `status` …) skipping empty values. Loader only wraps with `loading` and merges `filter` if the table's `opts` doesn't already carry it.
 
-### 4. Suppress mount-time duplicate with `initialLoaded`
+---
+
+## 7. Suppress Mount-time Duplicate
+
+### Standard: `initialLoaded` flag
 
 ```ts
 let initialLoaded = false
@@ -155,6 +177,8 @@ function refreshRoles() {
   }
 }
 ```
+
+### Dynamic datasets: request counter pattern
 
 **WARNING — `initialLoaded` breaks when table data changes dynamically.**
 
@@ -195,7 +219,11 @@ Use `initialLoaded` only when the dataset never changes after mount (standard
 index pages like role, user, permission). For master-detail or tabbed views,
 use the request-counter pattern.
 
-### 5. Save / delete handlers
+---
+
+## 8. Save / Delete Handlers
+
+### New / Edit
 
 ```ts
 function newX() {
@@ -210,6 +238,8 @@ function editX(item: Record<string, unknown>) {
   roleDialog.value = true
 }
 ```
+
+### Save
 
 ```ts
 async function saveX(item: Record<string, unknown>) {
@@ -239,6 +269,8 @@ async function saveX(item: Record<string, unknown>) {
 - Tables that re-fetch after save (`permission/index.vue`,
   `auditorium-event/index.vue`) call `await refreshX()` then `flash(id)` instead.
 
+### Delete (with `removeWithAnimation`)
+
 ```ts
 async function deleteX(item: Record<string, unknown>) {
   try {
@@ -259,7 +291,7 @@ for the CSS collapse animation, then drops the row locally and decrements the
 total. Do **not** re-fetch the whole list after delete and do **not** splice
 manually — use the shared helper.
 
-### Row removal animation (delete)
+### Row removal animation (delete) — flow and details
 
 - Page owns the `removingId` ref from `useRowHighlight()` and passes it to the
   table as `:removing-id="removingId"`.
@@ -287,7 +319,9 @@ manually — use the shared helper.
 - Pages that re-fetch after save/delete (`permission/index.vue`,
   `auditorium-event/index.vue`) run `removeWithAnimation` before the refetch.
 
-### 6. closeDialog
+---
+
+## 9. closeDialog
 
 ```ts
 function closeDialog() {
@@ -297,7 +331,11 @@ function closeDialog() {
 }
 ```
 
-## Table component pattern (`<Module>/Table.vue`)
+---
+
+## 10. Table Component Pattern
+
+### VDataTableServer setup
 
 ```vue
 <div id="cmp-role-table">                       <!-- root component id -->
@@ -329,15 +367,21 @@ function closeDialog() {
 - Local state: `page = ref(1)`, `itemsPerPage = ref(10)`,
   `sortBy = ref([...props.initialSortBy])` with prop `initialSortBy` (default `[{key:"name",order:"asc"}]` or `date desc` for consolidation). Single source is the page's `lastOptions.sortBy` passed as `:initial-sort-by="(lastOptions.sortBy as any)"` `app/pages/consolidation/index.vue:41` — table no longer hard-codes a competing default.
 - **Every `VDataTableServer` must use `mustSort`.** This prevents the sort indicator from disappearing when a user clicks a sortable header — the cycle stays ascending ↔ descending, never unsorted.
-- Props: `response`, `loading`, `search`, `highlightId`, `dialogDelete` (for
-  the `v-model:dialog-delete`) plus `initialSortBy?: {key:string,order:string}[]`.
+- Headers use `title`/`value`/`sortable` (`title`, NOT `text` — Vuetify 4).
+- Computeds: `total = props.response?.total ?? 0`, `items = props.response?.data ?? []`,
+  `loading = props.loading ?? false`.
+
+### Props
+
+```ts
+response, loading, search, highlightId, dialogDelete (for the v-model:dialog-delete)
+plus initialSortBy?: {key:string,order:string}[]
+```
+
 - `loading` is required behavior for every `VDataTableServer`: declare it on the
   table component (`loading?: boolean`, default `false`), pass the page's loader
   ref (`:loading="loading"`), and bind it on the data table
   (`:loading="props.loading"`).
-- Computeds: `total = props.response?.total ?? 0`, `items = props.response?.data ?? []`,
-  `loading = props.loading ?? false`.
-- Headers use `title`/`value`/`sortable` (`title`, NOT `text` — Vuetify 4).
 
 ### Emits + `onUpdateOptions`
 
@@ -410,26 +454,16 @@ function confirmDelete(item: unknown) {
 The table owns the confirmation; the page only listens for `@delete`. The
 `v-model:dialog-delete` prop mirrors the page's `roleDialogDelete` ref.
 
-## Differences between the reference pages (keep the common core)
+---
 
-| Aspect | role / user / permission / organization / auditorium | auditorium-event |
-|---|---|---|
-| Initial load | plain top-level await | `useAsyncData("auditorium-event-index", ...)` |
-| Filter | single `VTextField` + `filter` param | `MyDateRange` + `OrganizationSelect` (org_id param) |
-| Table wrapper | `<div id="cmp-x-table">` root | no wrapper root |
-| `:search` prop | present on `VDataTableServer` | not used (date-range filter) |
-| Delete dialog | inside `Table.vue` (DialogDelete) | at page level, `DialogDelete` + `dialogDelete` data |
-| Loader signature | `loadX(opts)` | `getAuditoriumEvents(overrides)` merged over `options` ref |
-| Org filter dupe | no org filter | suppress `filterOrgId` entirely when 1-org; `prevent-auto-select` on `OrganizationSelect` |
-
-### Suppress OrganizationSelect auto-select duplicate request
+## 11. OrganizationSelect Auto-select Prevention
 
 Pages with an `OrganizationSelect` (auditorium-event, auditorium) must send a
 single initial fetch **without** `org_id`. The backend resolves the correct org
 from the auth token context — `org_id` is only needed when the user has 2+ orgs
 and manually selects a different one.
 
-**Fix:**
+### Fix
 
 1. **Initial fetch without `org_id`** — the backend resolves the org for 1-org
    users from the auth token context.
@@ -443,6 +477,8 @@ and manually selects a different one.
 `prevent-auto-select` (suppress the mount-time emit) are **independent**: hiding
 must still happen even when `preventAutoSelect` is set (see `Select.vue`
 `buildItems`).
+
+### Page-level code
 
 ```ts
 const auth = useAuthStore()
@@ -476,7 +512,7 @@ async function indexAuditoriums(overrides: Record<string, unknown> = {}) {
 }
 ```
 
-**Template:**
+### Template
 
 ```vue
 <OrganizationSelect
@@ -487,8 +523,9 @@ async function indexAuditoriums(overrides: Record<string, unknown> = {}) {
 />
 ```
 
-**In `app/components/Organization/Select.vue`, use `v-if` not `v-show`, and
-decouple hiding from auto-select:**
+### OrganizationSelect internals (`app/components/Organization/Select.vue`)
+
+Use `v-if` not `v-show`, and decouple hiding from auto-select:
 
 ```vue
 <VSelect v-if="showSelect" v-model="selected" ... />
@@ -510,7 +547,10 @@ function buildItems() {
 }
 ```
 
-**Rules for new pages:**
+---
+
+## 12. Rules for New Pages
+
 1. Follow the **role/user/permission/organization** core (top-level await +
    `initialLoaded` + one loader + `updateRow`/`prependCreated` + local delete).
 2. Use `useAsyncData` with a scoped key only when SSR serialization is required
@@ -523,8 +563,24 @@ function buildItems() {
    initial `lastOptions` key).
 6. Every `VDataTableServer` must use `mustSort` — prevents the sort indicator
    from disappearing on click (ascending ↔ descending cycle only).
-7. Do **not** use bare `fluid` on `VContainer` — use `:fluid="true"` (SSR
-   hydration, see migration guide).
+7. **Every page must use `<VContainer class="pa-1" :fluid="true">`** — see
+   `ai_rule/vcontainer_convention.md`.
+
+---
+
+## Differences Between Reference Pages (keep the common core)
+
+| Aspect | role / user / permission / organization / auditorium | auditorium-event |
+|---|---|---|
+| Initial load | plain top-level await | `useAsyncData("auditorium-event-index", ...)` |
+| Filter | single `VTextField` + `filter` param | `MyDateRange` + `OrganizationSelect` (org_id param) |
+| Table wrapper | `<div id="cmp-x-table">` root | no wrapper root |
+| `:search` prop | present on `VDataTableServer` | not used (date-range filter) |
+| Delete dialog | inside `Table.vue` (DialogDelete) | at page level, `DialogDelete` + `dialogDelete` data |
+| Loader signature | `loadX(opts)` | `getAuditoriumEvents(overrides)` merged over `options` ref |
+| Org filter dupe | no org filter | suppress `filterOrgId` entirely when 1-org; `prevent-auto-select` on `OrganizationSelect` |
+
+---
 
 ## Do Not
 
@@ -535,11 +591,11 @@ function buildItems() {
 - Do not watch `options` deeply to emit sorting — use `@update:options` only.
 - Do not skip the `initialLoaded` guard — the page will double-fetch on mount.
   **Exception:** pages with dynamic datasets (master-detail, tabbed views)
-  must NOT use `initialLoaded` — use a request counter instead (see section 4).
+  must NOT use `initialLoaded` — use a request counter instead (see section 7).
 - Do not use `onMounted` for the initial list load — the first paint would be
   empty (see `ai_rule/nuxt4_ssr_hydration.md`).
 - Do not omit `:search="props.search"` on `VDataTableServer` when the page
   passes a search prop — filter changes silently never reach `useOptions`.
 - Do not let `OrganizationSelect` auto-select trigger a duplicate request —
   use `prevent-auto-select`, suppress `filterOrgId` when 1-org (`singleOrg.value`),
-  and only include `org_id` from overrides in the loader (see above).
+  and only include `org_id` from overrides in the loader (see section 11).

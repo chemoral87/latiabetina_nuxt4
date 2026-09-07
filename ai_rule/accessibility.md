@@ -1,4 +1,4 @@
-# Accessibility Form Fields
+# Accessibility Rules
 
 ## Native Form Inputs
 
@@ -57,11 +57,11 @@ A `<label>` element without a `for` attribute must wrap the form control it desc
 <label>Días de la semana</label>
 <VChipGroup>...</VChipGroup>
 
-<!-- CORRECT — label has for attribute or chip group gets aria-labelledby -->
+<!-- CORRECT -->
 <VChipGroup aria-label="Días de la semana">...</VChipGroup>
 ```
 
-## Summary of rules
+## Summary
 
 | Rule | Applies to | Action |
 |------|-----------|--------|

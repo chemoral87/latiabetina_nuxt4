@@ -1,5 +1,5 @@
 <template>
-  <VContainer>
+  <VContainer :fluid="true">
     <VRow density="comfortable">
       <VCol cols="12" md="8" class="mx-auto">
         <VCard id="rev-main-card">

@@ -1,5 +1,5 @@
 <template>
-  <VContainer fluid>
+  <VContainer class="" :fluid="true">
     <VRow density="comfortable" align="center">
       <VCol md="4" sm="6" cols="12">
         <VTextField

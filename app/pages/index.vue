@@ -1,5 +1,5 @@
 <template>
-  <VContainer :fluid="true" />
+  <VContainer class="" :fluid="true" />
 </template>
 
 <script setup lang="ts">

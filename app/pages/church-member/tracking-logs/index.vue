@@ -1,5 +1,5 @@
 <template>
-  <VContainer :fluid="true">
+  <VContainer :fluid="true" class="page-tracking-logs">
     <VRow density="comfortable">
       <VCol md="3" sm="4" cols="12">
         <VTextField
@@ -64,6 +64,7 @@ definePageMeta({
   icon: "mdi-account-search",
   permission: "church-member-tracking-logs-index",
   middleware: ["authenticated", "permission"],
+  color: "cyan-lighten-4",
 });
 
 const { ChurchMemberTrackingLog } = useRepository();

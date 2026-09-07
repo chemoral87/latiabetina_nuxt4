@@ -2,18 +2,18 @@
   <VContainer :fluid="true">
     <VRow density="comfortable">
       <!-- Organization filter -->
-      <VCol cols="12" md="3">
+      <VCol md="3" cols="12">
         <VSelect
           id="roldst-org-sel"
           v-model="selectedOrganization"
-          :items="organizationOptions"
-          item-title="name"
-          item-value="id"
-          label="Organización"
           clearable
-          variant="outlined"
+          item-value="id"
           density="compact"
           hide-details
+          item-title="name"
+          variant="outlined"
+          label="Organización"
+          :items="organizationOptions"
         />
       </VCol>
 
@@ -30,12 +30,12 @@
           <VCardText class="pt-0">
             <VDataTable
               id="roldst-profiles-dt-1"
-              :headers="headers"
-              :items="filteredProfiles"
-              :items-per-page="10"
-              class="elevation-0"
-              no-data-text="No hay perfiles asignados a este rol"
               density="compact"
+              :headers="headers"
+              class="elevation-0"
+              :items-per-page="10"
+              :items="filteredProfiles"
+              no-data-text="No hay perfiles asignados a este rol"
             >
               <template #[`item.user`]="{ item }">
                 {{ userName((item as Record<string, unknown>).user as Record<string, unknown>) }}

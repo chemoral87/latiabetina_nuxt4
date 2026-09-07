@@ -77,7 +77,7 @@
       </VList>
     </VNavigationDrawer>
 
-    <VAppBar id="lay-app-bar" app fixed elevation="2">
+    <VAppBar id="lay-app-bar" app fixed elevation="2" :color="routeColor">
       <VAppBarNavIcon
         v-if="showDrawer"
         id="lay-nav-icon"
@@ -151,7 +151,7 @@
       </ClientOnly>
     </VAppBar>
 
-    <VMain>
+    <VMain :style="pageStyle">
       <VProgressLinear
         v-if="isLoading"
         id="lay-progress"
@@ -211,6 +211,22 @@ const title = computed(() => (route.meta?.title as string) || "Latiabetina");
 const showDrawer = computed(() => route.meta?.showDrawer ?? true);
 const backRoute = computed(() => route.meta?.back as string | undefined);
 const icon = computed(() => route.meta?.icon as string | undefined);
+const routeColor = computed(() => (route.meta?.color as string) || "blue-lighten-5");
+const pageBg = computed(() => {
+  const c = route.meta?.color as string | undefined;
+  if (!c) return "#E8EAF6";
+  const colors: Record<string, string> = {
+    "yellow-lighten-4": "#FFFDE7",
+    "purple-lighten-4": "#F3E5F5",
+    "orange-lighten-4": "#FFF3E0",
+    "cyan-lighten-4": "#E0F7FA",
+    "blue-lighten-4": "#E3F2FD",
+    "blue-lighten-5": "#E8EAF6",
+    "green-lighten-4": "#E8F5E9",
+  };
+  return colors[c];
+});
+const pageStyle = computed(() => pageBg.value ? { backgroundColor: pageBg.value, minHeight: "100vh" } : undefined);
 const userName = computed(() => {
   const u = auth.user;
   if (!u) return "";

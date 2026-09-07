@@ -1,5 +1,5 @@
 <template>
-  <VContainer :fluid="true" class="breathing-container">
+  <VContainer class="breathing-container" :fluid="true">
     <!-- Header -->
     <VRow justify="center" density="comfortable">
       <VCol cols="12" class="py-1">
@@ -184,7 +184,7 @@
 
       <!-- Controles de configuración -->
       <VCol cols="12" md="5">
-        <VCard id="rel-config-card" class="pa-1" rounded="lg" elevation="2">
+        <VCard id="rel-config-card" class="" rounded="lg" elevation="2">
           <VCardTitle class="text-subtitle-1 py-2 my-0">
             <VIcon start size="small" color="primary">mdi-cog-outline</VIcon>
             Configuración

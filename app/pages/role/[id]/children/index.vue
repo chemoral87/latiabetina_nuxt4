@@ -97,7 +97,6 @@
 </template>
 
 <script setup lang="ts">
-
 definePageMeta({
   title: "Permisos del Rol",
   middleware: "authenticated",
@@ -156,8 +155,12 @@ async function createAndAddPermission() {
     currentPermissions.map((p) => (p.name as string).toLowerCase()),
   );
 
-  const toCreate = uniqueNames.filter((n) => !currentNamesLower.has(n.toLowerCase()));
-  const alreadyAssigned = uniqueNames.filter((n) => currentNamesLower.has(n.toLowerCase()));
+  const toCreate = uniqueNames.filter(
+    (n) => !currentNamesLower.has(n.toLowerCase()),
+  );
+  const alreadyAssigned = uniqueNames.filter((n) =>
+    currentNamesLower.has(n.toLowerCase()),
+  );
 
   if (alreadyAssigned.length > 0) {
     notify.notify({
@@ -170,7 +173,9 @@ async function createAndAddPermission() {
   try {
     // Backend supports comma-separated `name` or `names` array; send as `name` joined
     const body =
-      toCreate.length === 1 ? { name: toCreate[0] } : { name: toCreate.join(", ") };
+      toCreate.length === 1
+        ? { name: toCreate[0] }
+        : { name: toCreate.join(", ") };
     const res = await $api<{
       permission: Record<string, unknown>;
       permissions: Record<string, unknown>[];

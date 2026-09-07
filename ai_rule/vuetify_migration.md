@@ -2,7 +2,9 @@
 
 > **Identifiers:** All interactive elements must include an `id` per `ai_rule/ui_identifiers_convention.md`.
 
-## Component Props
+---
+
+## 1. Component Props
 
 | Vuetify 2 | Vuetify 3/4 |
 |-----------|-------------|
@@ -20,7 +22,133 @@
 
 > **Note:** `VRow`'s `dense` prop is deprecated. The warning suggests `density="comfortable"` (not `"compact"`), though `VRow` does not officially expose a `density` prop — the deprecation is handled by the framework's prop validation.
 
-## Grid System
+### VSwitch
+
+```diff
+-<v-switch v-model="combinedView" hide-details dense inset class="mt-0 pt-0" />
++<VSwitch v-model="combinedView" hide-details density="compact" inset class="mt-0 pt-0" />
+```
+
+- `dense` → `density="compact"` (also applies to VTextField, VSelect, etc.)
+
+### VAvatar
+
+```diff
+-<v-avatar color="primary" size="52" class="mr-3">
+-  <span class="white--text text-h6">{{ initials }}</span>
+-</v-avatar>
++<VAvatar color="primary" size="52" class="mr-3">
++  <span class="text-white text-h6">{{ initials }}</span>
++</VAvatar>
+```
+
+- `white--text` → `text-white`
+
+### VProgressCircular
+
+```diff
+-<v-progress-circular indeterminate color="primary" size="64"></v-progress-circular>
++<VProgressCircular indeterminate color="primary" size="64" />
+```
+
+- Self-closing tag is valid in Vue 3
+
+### VIcon Props (removed `left` / `right` / `small`)
+
+Vuetify 2's `left` and `right` props on `v-icon` were removed. Use `start` (margin-inline-end) or `end` (margin-inline-start) instead:
+
+```diff
+-<VIcon left size="small">mdi-account</VIcon>
++<VIcon start size="small">mdi-account</VIcon>
+```
+
+```diff
+-<VIcon right>mdi-arrow-right</VIcon>
++<VIcon end>mdi-arrow-right</VIcon>
+```
+
+The `small` prop on `VIcon` was also removed. Use `size="small"` instead:
+
+```diff
+-<VIcon start small color="primary">mdi-domain</VIcon>
++<VIcon start size="small" color="primary">mdi-domain</VIcon>
+```
+
+Alternatively, use spacing classes: `class="mr-1"` or `class="me-1"` for left, `class="ml-1"` or `class="ms-1"` for right.
+
+### VChip Props
+
+Vuetify 3/4's `VChip` retains the `label` prop (removes border-radius). No migration needed.
+
+The `dark` prop was **removed** from VChip (and all other components) in Vuetify 3/4:
+
+```diff
+-<v-chip small color="primary" dark label>{{ role }}</v-chip>
++<VChip size="small" color="primary" variant="elevated" label>{{ role }}</VChip>
+```
+
+In Vuetify 3/4, text color is automatically applied based on the component's `color` — white text on dark backgrounds (primary, secondary, error, etc.), dark text on light backgrounds (outlined, default). Just remove `dark`.
+
+Always specify `variant="elevated"` on solid-background chips (default variant in Vuetify 2 was elevated with shadow). Without an explicit `variant`, Vuetify 3/4 chips may render as `variant="flat"` depending on context, losing the expected shadow and visual depth.
+
+### VRow Props (dense → density)
+
+Vuetify 4 **deprecates** the `dense` boolean prop on `VRow`. Use `density="comfortable"` instead:
+
+```diff
+-<VRow dense>
++<VRow density="comfortable">
+```
+
+Note: `VRow` uses `density="comfortable"` (not `"compact"`) to match the reduced gap of the old `dense` prop. However, `VRow` does **not officially expose** a `density` prop in the standard Vuetify 3/4 API — the deprecation warning and replacement are handled by the framework's prop validation system.
+
+### VContainer fluid (SSR Hydration)
+
+```diff
+-<v-container fluid>
++<VContainer :fluid="true">
+```
+
+Bare `fluid` attribute in Vuetify 3/4 can cause SSR hydration mismatches (server skips the `v-container--fluid` class). Always use `:fluid="true"` (bound boolean prop) to ensure consistency.
+
+### Dividers
+
+```diff
+-<v-divider></v-divider>
++<VDivider></VDivider>
+```
+
+### VCard flat / outlined
+
+Vuetify 3/4 replaces the `outlined` boolean prop with the unified `variant` prop system. The old `v-card flat outlined` can be migrated in two ways:
+
+| Approach | Code | Effect |
+|----------|------|--------|
+| CSS border | `<VCard flat border>` | Adds a thin CSS `border`, keeps default background |
+| Outlined variant | `<VCard variant="outlined">` | Uses the outlined style (border + transparent background) |
+
+```diff
+-<v-card flat outlined>
++<VCard flat border>
+```
+
+- `flat` still works in Vuetify 3/4 — removes elevation/shadow
+
+### Text Color Classes
+
+Vuetify 2's `text--primary` (high-emphasis dark text) is **not** the same as Vuetify 3/4's `text-primary`:
+
+| Vuetify 2 | Vuetify 3/4 | Effect |
+|-----------|-------------|--------|
+| `text--primary` | `text-grey-darken-4` | Dark text (near-black), safe on any background |
+| `text--secondary` | `text-grey-darken-1` | Medium emphasis |
+| `text-primary` (V3/4) | `text-primary` | Theme primary color (often blue) — low contrast on yellow/light backgrounds |
+
+Use `text-grey-darken-4` instead of `text-primary` when you need dark readable text on colored backgrounds.
+
+---
+
+## 2. Grid System
 
 Vuetify 3/4 removed `v-layout` and `v-flex`. Use `VRow` / `VCol` instead:
 
@@ -36,7 +164,9 @@ Vuetify 3/4 removed `v-layout` and `v-flex`. Use `VRow` / `VCol` instead:
 +</VRow>
 ```
 
-## Text Fields
+---
+
+## 3. Text Fields
 
 ```diff
 -<v-text-field outlined dense label="Email" :append-icon="showed ? 'mdi-eye' : 'mdi-eye-off'" @click:append="showed = !shown" />
@@ -46,10 +176,14 @@ Vuetify 3/4 removed `v-layout` and `v-flex`. Use `VRow` / `VCol` instead:
 Key changes:
 - `outlined` → `variant="outlined"`
 - `dense` → `density="compact"`
-- `append-icon` → `append-inner-icon`  
+- `append-icon` → `append-inner-icon`
 - `@click:append` → `@click:append-inner`
 
-## Buttons
+---
+
+## 4. Buttons
+
+### Basic Button Props
 
 ```diff
 -<v-btn outlined block large class="text-none">
@@ -61,7 +195,101 @@ Key changes:
 +<VBtn id="login-submit" type="submit" color="primary" block size="large" class="text-none">Ingresar</VBtn>
 ```
 
-## VCardActions (prefer div over VCardActions)
+### VBtn Variants
+
+Vuetify 3/4 adds explicit `variant` prop:
+
+| Variant | Visual |
+|---------|--------|
+| `elevated` | Solid bg with shadow (default) |
+| `flat` | Solid bg, no shadow |
+| `tonal` | Muted bg of the color |
+| `outlined` | Border only, transparent |
+| `text` | No bg, no border |
+
+```diff
+-<VBtn color="primary">Guardar</VBtn>
++<VBtn color="primary" variant="elevated">Guardar</VBtn>
+```
+
+### VBtn Spacing Between Adjacent Buttons
+
+Add `class="mr-4"` to each button except the last in a group to maintain consistent spacing:
+
+```diff
++<VBtn id="org-refresh-btn" color="primary" class="mr-4" @click="refresh">
++  Refrescar
++</VBtn>
++<VBtn id="org-new-btn" color="success" @click="newOrganization()">
++  Nueva Organización
++</VBtn>
+```
+
+> **Exception — table action columns:** buttons inside a table's
+> `item.actions` slot use `class="ma-1"` on **every** button (uniform 4px
+> margin on all sides), not `mr-4`. See `index_page_table_pattern.md` →
+> Action column.
+
+### VBtn icon (circular vs square)
+
+Vuetify 2 `v-btn--fab` creates a **circular** icon button. Vuetify 3/4's `icon` prop creates a **square** button by default:
+
+```diff
+-<VBtn title="Editar" color="primary" variant="outlined" size="small" icon>
++<VBtn title="Editar" color="primary" variant="outlined" size="small" icon rounded="circle">
+```
+
+The `rounded="circle"` prop applies `border-radius: 50%` for a perfectly circular button that matches the V2 `fab` look.
+
+This is especially common for the layout's back button, which was `outlined fab` in Vuetify 2:
+
+```diff
+-<v-btn outlined fab small elevation="0" @click="backHandler">
+-  <v-icon>mdi-arrow-left</v-icon>
+-</v-btn>
++<VBtn icon variant="outlined" rounded="circle" size="small" @click="handleBack">
++  <VIcon>mdi-arrow-left</VIcon>
++</VBtn>
+```
+
+### VIcon Size Inside VBtn icon
+
+Inside a `VBtn` with `icon` prop, `--v-icon-size-multiplier` is `1`. The default VIcon size prop value is `'default'` (not absent), so even omitting `size` gives class `v-icon--size-default` (`1.5em`). To maximize icon size inside a small icon button:
+
+```diff
+-<VIcon>mdi-pencil</VIcon>
++<VIcon size="x-large">mdi-pencil</VIcon>
+```
+
+Predefined VIcon sizes (relative to parent font):
+- default: `1.5em`
+- large: `1.75em`
+- x-large: `2em`
+
+**Rule:** Always use `size="x-large"` for icons inside `VBtn` with `icon` prop — in table action columns (`AuditoriumEvent/Table.vue`, `User/Table.vue`, `Role/Table.vue`, etc.), the user profile actions, and the layout back button. `size="large"` (`1.75em`) is noticeably smaller and produces inconsistent icon sizing across tables.
+
+### VBtn Props (Fab/Icon) — Vuetify 2 pattern
+
+```diff
+-<v-btn class="ml-3" small fab color="blue white--text" id="btn-layout-account">
+-  <v-icon>mdi-account</v-icon>
+-</v-btn>
++<VBtn id="lay-account-btn" class="ml-3" size="small" color="blue" variant="flat" icon>
++  <VIcon color="white">mdi-account</VIcon>
++</VBtn>
+```
+
+Key differences:
+- `fab` is replaced by `icon` prop
+- Vuetify 3/4 `icon` defaults to `variant="text"` (no background) — add `variant="flat"` or `variant="elevated"` for a solid background
+- `color="blue white--text"` → `color="blue"` + `VIcon color="white"`
+- `small` → `size="small"`
+
+---
+
+## 5. VCard / VCardActions
+
+### VCardActions (prefer div over VCardActions)
 
 `VCardActions` is **still supported** in Vuetify 3/4, but it applies default styles (gap, padding, button overrides) that can distort `VBtn` appearance. Use a plain `div` with flex utilities for cleaner button rendering:
 
@@ -93,14 +321,9 @@ Key changes:
 - `mr-2` → `mr-4` for wider button spacing
 - VBtn renders with normal button styling (no VCardActions overrides)
 
-## Dividers
+---
 
-```diff
--<v-divider></v-divider>
-+<VDivider></VDivider>
-```
-
-## List Items
+## 6. List Items
 
 Vuetify 3/4 removed `VListItemContent`, `VListItemAction`, and `VListItemIcon`. Use the `prepend-icon` prop or `#prepend` slot instead:
 
@@ -129,7 +352,9 @@ For more complex prepend content, use the `#prepend` slot:
 +</template>
 ```
 
-## Component Tag Naming
+---
+
+## 7. Component Tag Naming (PascalCase)
 
 Vuetify 3/4 recommends **PascalCase** over kebab-case (auto-imported):
 
@@ -147,47 +372,9 @@ Vuetify 3/4 recommends **PascalCase** over kebab-case (auto-imported):
 | `<v-list>` | `<VList>` |
 | `<v-list-item>` | `<VListItem>` |
 
-## Nuxt Layout
+---
 
-Nuxt 4 changed layouts from `<Nuxt />` to `<slot />`:
-
-```diff
--<Nuxt />
-+<slot />
-```
-
-Layout root containers must include layout-scoped identifiers:
-
-```diff
--<VAppBar elevation="2" fixed app>
--  <VAppBarNavIcon @click.stop="drawer = !drawer" />
--  <VToolbarTitle>{{ title }}</VToolbarTitle>
-+<VAppBar id="layout-app-bar" elevation="2" fixed app>
-+  <VAppBarNavIcon id="layout-nav-icon" @click.stop="drawer = !drawer" />
-+  <VToolbarTitle id="layout-title">{{ title }}</VToolbarTitle>
-```
-
-## Options API → Composition API
-
-```diff
--<script>
--export default {
--  data() {
--    return { email: "", password: "" }
--  },
--  methods: {
--    submitLogin() { ... }
--  }
--}
--</script>
-+<script setup lang="ts">
-+const email = ref("")
-+const password = ref("")
-+function submitLogin() { ... }
-+</script>
-```
-
-## Routing (Nuxt 4)
+## 8. Routing (Nuxt 4)
 
 ```diff
 -this.$router.push("/login")
@@ -199,7 +386,9 @@ Layout root containers must include layout-scoped identifiers:
 +route.query.redirect
 ```
 
-## Page Meta
+---
+
+## 9. Page Meta (definePageMeta, icon, color)
 
 ```diff
 -export default {
@@ -286,352 +475,31 @@ Add an `icon` property to `definePageMeta` to display an icon next to the page t
 
 This is the **static** icon — used for top-level index pages. For detail/child pages, set `route.meta.icon` dynamically after the async data loads (see [Dynamic NavBar Title](#dynamic-navbar-title-eventbusemitsetnavbar--avoid-dry-with-a-helper)).
 
-## VBtn Variants
-
-Vuetify 3/4 adds explicit `variant` prop:
-
-| Variant | Visual |
-|---------|--------|
-| `elevated` | Solid bg with shadow (default) |
-| `flat` | Solid bg, no shadow |
-| `tonal` | Muted bg of the color |
-| `outlined` | Border only, transparent |
-| `text` | No bg, no border |
+### Options API → Composition API
 
 ```diff
--<VBtn color="primary">Guardar</VBtn>
-+<VBtn color="primary" variant="elevated">Guardar</VBtn>
-```
-
-## VBtn Spacing Between Adjacent Buttons
-
-Add `class="mr-4"` to each button except the last in a group to maintain consistent spacing:
-
-```diff
-+<VBtn id="org-refresh-btn" color="primary" class="mr-4" @click="refresh">
-+  Refrescar
-+</VBtn>
-+<VBtn id="org-new-btn" color="success" @click="newOrganization()">
-+  Nueva Organización
-+</VBtn>
-```
-
-> **Exception — table action columns:** buttons inside a table's
-> `item.actions` slot use `class="ma-1"` on **every** button (uniform 4px
-> margin on all sides), not `mr-4`. See `index_page_table_pattern.md` →
-> Action column.
-
-## VBtn icon (circular vs square)
-
-Vuetify 2 `v-btn--fab` creates a **circular** icon button. Vuetify 3/4's `icon` prop creates a **square** button by default:
-
-```diff
--<VBtn title="Editar" color="primary" variant="outlined" size="small" icon>
-+<VBtn title="Editar" color="primary" variant="outlined" size="small" icon rounded="circle">
-```
-
-The `rounded="circle"` prop applies `border-radius: 50%` for a perfectly circular button that matches the V2 `fab` look.
-
-This is especially common for the layout's back button, which was `outlined fab` in Vuetify 2:
-
-```diff
--<v-btn outlined fab small elevation="0" @click="backHandler">
--  <v-icon>mdi-arrow-left</v-icon>
--</v-btn>
-+<VBtn icon variant="outlined" rounded="circle" size="small" @click="handleBack">
-+  <VIcon>mdi-arrow-left</VIcon>
-+</VBtn>
-```
-
-### VIcon Size Inside VBtn icon
-
-Inside a `VBtn` with `icon` prop, `--v-icon-size-multiplier` is `1`. The default VIcon size prop value is `'default'` (not absent), so even omitting `size` gives class `v-icon--size-default` (`1.5em`). To maximize icon size inside a small icon button:
-
-```diff
--<VIcon>mdi-pencil</VIcon>
-+<VIcon size="x-large">mdi-pencil</VIcon>
-```
-
-Predefined VIcon sizes (relative to parent font):
-- default: `1.5em`
-- large: `1.75em`
-- x-large: `2em`
-
-**Rule:** Always use `size="x-large"` for icons inside `VBtn` with `icon` prop — in table action columns (`AuditoriumEvent/Table.vue`, `User/Table.vue`, `Role/Table.vue`, etc.), the user profile actions, and the layout back button. `size="large"` (`1.75em`) is noticeably smaller and produces inconsistent icon sizing across tables.
-
-## VBtn Props (Fab/Icon) — Vuetify 2 pattern
-
-```diff
--<v-btn class="ml-3" small fab color="blue white--text" id="btn-layout-account">
--  <v-icon>mdi-account</v-icon>
--</v-btn>
-+<VBtn id="lay-account-btn" class="ml-3" size="small" color="blue" variant="flat" icon>
-+  <VIcon color="white">mdi-account</VIcon>
-+</VBtn>
-```
-
-Key differences:
-- `fab` is replaced by `icon` prop
-- Vuetify 3/4 `icon` defaults to `variant="text"` (no background) — add `variant="flat"` or `variant="elevated"` for a solid background
-- `color="blue white--text"` → `color="blue"` + `VIcon color="white"`
-- `small` → `size="small"`
-
-## VContainer fluid (SSR Hydration)
-
-```diff
--<v-container fluid>
-+<VContainer :fluid="true">
-```
-
-Bare `fluid` attribute in Vuetify 3/4 can cause SSR hydration mismatches (server skips the `v-container--fluid` class). Always use `:fluid="true"` (bound boolean prop) to ensure consistency.
-
-## Text Color Classes
-
-Vuetify 2's `text--primary` (high-emphasis dark text) is **not** the same as Vuetify 3/4's `text-primary`:
-
-| Vuetify 2 | Vuetify 3/4 | Effect |
-|-----------|-------------|--------|
-| `text--primary` | `text-grey-darken-4` | Dark text (near-black), safe on any background |
-| `text--secondary` | `text-grey-darken-1` | Medium emphasis |
-| `text-primary` (V3/4) | `text-primary` | Theme primary color (often blue) — low contrast on yellow/light backgrounds |
-
-Use `text-grey-darken-4` instead of `text-primary` when you need dark readable text on colored backgrounds.
-
-## VCard flat / outlined
-
-Vuetify 3/4 replaces the `outlined` boolean prop with the unified `variant` prop system. The old `v-card flat outlined` can be migrated in two ways:
-
-| Approach | Code | Effect |
-|----------|------|--------|
-| CSS border | `<VCard flat border>` | Adds a thin CSS `border`, keeps default background |
-| Outlined variant | `<VCard variant="outlined">` | Uses the outlined style (border + transparent background) |
-
-```diff
--<v-card flat outlined>
-+<VCard flat border>
-```
-
-- `flat` still works in Vuetify 3/4 — removes elevation/shadow
-
-## VSwitch
-
-```diff
--<v-switch v-model="combinedView" hide-details dense inset class="mt-0 pt-0" />
-+<VSwitch v-model="combinedView" hide-details density="compact" inset class="mt-0 pt-0" />
-```
-
-- `dense` → `density="compact"` (also applies to VTextField, VSelect, etc.)
-
-## VAvatar
-
-```diff
--<v-avatar color="primary" size="52" class="mr-3">
--  <span class="white--text text-h6">{{ initials }}</span>
--</v-avatar>
-+<VAvatar color="primary" size="52" class="mr-3">
-+  <span class="text-white text-h6">{{ initials }}</span>
-+</VAvatar>
-```
-
-- `white--text` → `text-white`
-
-## VProgressCircular
-
-```diff
--<v-progress-circular indeterminate color="primary" size="64"></v-progress-circular>
-+<VProgressCircular indeterminate color="primary" size="64" />
-```
-
-- Self-closing tag is valid in Vue 3
-
-## VIcon Props (removed `left` / `right` / `small`)
-
-Vuetify 2's `left` and `right` props on `v-icon` were removed. Use `start` (margin-inline-end) or `end` (margin-inline-start) instead:
-
-```diff
--<VIcon left size="small">mdi-account</VIcon>
-+<VIcon start size="small">mdi-account</VIcon>
-```
-
-```diff
--<VIcon right>mdi-arrow-right</VIcon>
-+<VIcon end>mdi-arrow-right</VIcon>
-```
-
-The `small` prop on `VIcon` was also removed. Use `size="small"` instead:
-
-```diff
--<VIcon start small color="primary">mdi-domain</VIcon>
-+<VIcon start size="small" color="primary">mdi-domain</VIcon>
-```
-
-Alternatively, use spacing classes: `class="mr-1"` or `class="me-1"` for left, `class="ml-1"` or `class="ms-1"` for right.
-
-## VChip Props
-
-Vuetify 3/4's `VChip` retains the `label` prop (removes border-radius). No migration needed.
-
-The `dark` prop was **removed** from VChip (and all other components) in Vuetify 3/4:
-
-```diff
--<v-chip small color="primary" dark label>{{ role }}</v-chip>
-+<VChip size="small" color="primary" variant="elevated" label>{{ role }}</VChip>
-```
-
-In Vuetify 3/4, text color is automatically applied based on the component's `color` — white text on dark backgrounds (primary, secondary, error, etc.), dark text on light backgrounds (outlined, default). Just remove `dark`.
-
-Always specify `variant="elevated"` on solid-background chips (default variant in Vuetify 2 was elevated with shadow). Without an explicit `variant`, Vuetify 3/4 chips may render as `variant="flat"` depending on context, losing the expected shadow and visual depth.
-
-## VRow Props (dense → density)
-
-Vuetify 4 **deprecates** the `dense` boolean prop on `VRow`. Use `density="comfortable"` instead:
-
-```diff
--<VRow dense>
-+<VRow density="comfortable">
-```
-
-Note: `VRow` uses `density="comfortable"` (not `"compact"`) to match the reduced gap of the old `dense` prop. However, `VRow` does **not officially expose** a `density` prop in the standard Vuetify 3/4 API — the deprecation warning and replacement are handled by the framework's prop validation system.
-
-## Vuetify 2–Only Utility Classes
-
-These Vuetify 2 utility classes were removed in Vuetify 3/4:
-
-| Class | Vuetify 3/4 Replacement |
-|-------|-------------------------|
-| `fill-height` | Same class — **still works** in Vuetify 3/4 (`height: 100%`). Do NOT use `min-height: 100vh` — `100vh` doesn't account for the fixed VAppBar (64px padding on VMain), creating a vertical scrollbar. |
-| `text-none` (text-transform) | Remove — Vuetify 3/4 buttons have no text-transform by default, or use inline `style` |
-| `text-decoration-none` | `style="text-decoration: none"` (not a Vuetify utility) |
-
-```diff
--<VRow align="center" justify="center" class="fill-height">
-+<VRow align="center" justify="center" class="fill-height">
-```
-
-```diff
--<VBtn id="login-submit" type="submit" color="primary" block size="large" class="text-none">Ingresar</VBtn>
-+<VBtn id="login-submit" type="submit" color="primary" block size="large">Ingresar</VBtn>
-```
-
-```diff
--<a href="#" class="text-decoration-none text-primary" @click.prevent="...">
-+<a href="#" class="text-primary" style="text-decoration: none" @click.prevent="...">
-```
-
-## Autofill CSS Fix
-
-Vuetify 2 classes (`.v-text-field--outlined`, `.v-label`) were renamed in Vuetify 3/4 (`.v-field--variant-outlined`, `.v-field-label`):
-
-```diff
--:deep(.v-text-field--outlined) input:-webkit-autofill ~ .v-label,
--:deep(.v-text-field--outlined) input:-webkit-autofill:focus ~ .v-label {
-+:deep(.v-field--variant-outlined) input:-webkit-autofill ~ .v-field-label,
-+:deep(.v-field--variant-outlined) input:-webkit-autofill:focus ~ .v-field-label {
-   transform: translateY(-24px) scale(0.75);
-   top: 0px;
-   background: white;
-   padding: 0 4px;
- }
-```
-
-## SCSS Style Overrides (avoid conflicting with Vuetify classes)
-
-Do **not** redefine Vuetify utility class names in scoped styles. For example, `logout.vue` defined:
-
-```css
-.fill-height {
-  height: 100vh;
-}
-```
-
-This overrides Vuetify's `.fill-height` (`height: 100%`) and creates a scrollbar with fixed VAppBar. Remove custom definitions of Vuetify utility class names.
-
-## Absent/Unsupported Components
-
-| Component | Status | Replacement |
-|-----------|--------|-------------|
-| `v-skeleton-loader` | Migrated | `VSkeletonLoader` (same name, PascalCase, fully supported) |
-| `v-select` `menu-icon` prop | Removed | Use `append-inner-icon` prop or `#append-inner` slot instead |
-
-## Striped Row Color Override
-
-Vuetify 4 applies stripes via `v-table--striped-odd` class on the `<table>` wrapper using `background-image: linear-gradient(...)`. The Vuetify 2/3 class `v-data-table__tr--striped` does not exist.
-
-```diff
--:deep(.v-data-table__tr--striped) {
--  background-color: #f5fbff !important;
+-<script>
+-export default {
+-  data() {
+-    return { email: "", password: "" }
+-  },
+-  methods: {
+-    submitLogin() { ... }
+-  }
 -}
-+:deep(.v-table--striped-odd > .v-table__wrapper > table > tbody > tr:nth-child(odd)) {
-+  background-image: none !important;
-+  background-color: #f5fbff !important;
-+}
+-</script>
++<script setup lang="ts">
++const email = ref("")
++const password = ref("")
++function submitLogin() { ... }
++</script>
 ```
 
-## Components Directory (Nuxt 4)
+---
 
-Nuxt 4 scans `app/components/` for auto-imported components, **not** the root `components/` directory. All other user directories are also under `app/`:
+## 10. VDataTable / VDataTableServer
 
-```
-app/components/   ← ✅ scanned
-app/composables/  ← ✅ scanned
-app/pages/        ← ✅ scanned
-app/layouts/      ← ✅ scanned
-app/middleware/    ← ✅ scanned
-components/       ← ❌ NOT scanned (Nuxt 4)
-```
-
-If components are placed at root `components/`, the build will **not** emit any error but the component will fail to resolve at runtime:
-
-```
-[Vue warn]: Failed to resolve component: OrganizationTable
-```
-
-## Data Loading for Auth-Protected APIs
-
-`useAsyncData` runs during SSR, but auth tokens from `localStorage` are **not available** on the server. For pages that require an auth token:
-
-```diff
--const { data: initialResponse, error: initialError } = await useAsyncData("key", () =>
--  apiIndex(options.value)
--)
--if (initialResponse.value) response.value = initialResponse.value
-+onMounted(async () => {
-+  await loadData()
-+})
-```
-
-This ensures the API call runs client-side where `localStorage.getItem("auth.token")` is available.
-
-Vuetify 3's VDataTable `@update:options` does **not** fire on mount — it only fires on user interaction (sort, paginate). Do not rely on it for the initial data load.
-
-**Vuetify 4 differs:** `@update:options` fires **immediately on mount** (`immediate: true` in `useOptions`), so the initial `emit("sorting")` in `onUpdateOptions` works as the data load trigger via `@update:options`.
-
-## Filter Debounce Pattern
-
-All index/list pages must use a consistent debounced filter pattern with **300ms** delay:
-
-```ts
-// Debounced filter
-let debounceTimer: ReturnType<typeof setTimeout> | null = null
-
-watch(filterInput, (val) => {
-  if (debounceTimer) clearTimeout(debounceTimer)
-  if (!val) {
-    filterRole.value = ""
-    return
-  }
-  debounceTimer = setTimeout(() => {
-    filterRole.value = val
-  }, 300)
-})
-```
-
-Rules:
-- Always use `300` (not 500) as the debounce delay — inconsistent timing across pages causes confusing UX.
-- Always clear `filter*` immediately when `filterInput` becomes empty (no debounce on clear).
-- The `filterInput` ref is bound to the `VTextField`; the `filter*` ref drives the actual API call via the `search` prop on `VDataTableServer` / `VDataTable`.
-
-## VDataTable Headers (`text` → `title`)
+### VDataTable Headers (`text` → `title`)
 
 Vuetify 4 changed the header property from `text` to `title`. Using `text` causes the header cell to render with no text:
 
@@ -644,7 +512,7 @@ Vuetify 4 changed the header property from `text` to `title`. Using `text` cause
 
 Both `key` and `value` are accepted for the data field identifier (fallback chain: `key` → `value`). The `title` property is the only one that controls the visible header label.
 
-## VDataTable Header Text Color
+### VDataTable Header Text Color
 
 Vuetify 4's VDataTable uses CSS layers and may not properly inherit the theme text color for header `<th>` elements. The header text can appear white (invisible) on a light background:
 
@@ -668,7 +536,7 @@ Vuetify 4's VDataTable uses CSS layers and may not properly inherit the theme te
 
 This explicitly sets the header text to dark (87% opacity black) in the light theme.
 
-## VDataTable (v-model:options) — Vuetify 3 pattern
+### VDataTable (v-model:options) — Vuetify 3 pattern
 
 Vuetify 3's `VDataTable` changed from `:options.sync` to `v-model:options`:
 
@@ -691,9 +559,9 @@ Vuetify 3's `VDataTable` changed from `:options.sync` to `v-model:options`:
 +}
 ```
 
-> **Note:** Vuetify 4 removed `v-model:options` from `VDataTable`. Use `VDataTableServer` instead (see next section).
+> **Note:** Vuetify 4 removed `v-model:options` from `VDataTable`. Use `VDataTableServer` instead (see below).
 
-## VDataTableServer (Vuetify 4 Server-Side)
+### VDataTableServer (Vuetify 4 Server-Side)
 
 Vuetify 4 removed `v-model:options` from `VDataTable`. For server-side pagination/sorting, use `VDataTableServer` with individual `v-model:page`, `v-model:items-per-page`, and `v-model:sort-by` bindings:
 
@@ -861,137 +729,22 @@ function refresh() {
 }
 ```
 
-## Momentary Row Highlight After Edit (`row-props` + `highlight-id`)
-
-Vuetify 4's `VDataTable` / `VDataTableServer` has **no `item-class` prop**. To
-apply a class (or any attribute) to a specific row, use **`row-props`**: a
-function `({ item, index, internalItem }) => attrs` whose returned object is
-merged onto each `<tr>`. This powers the "flash the edited row" pattern used by
-the **Role**, **User**, **Organization**, **Permission**, **Auditorium** and
-**AuditoriumEvent** tables.
-
-> **Why animate `td` and not `tr`:** Vuetify 4 paints `striped="odd"` via
-> `background-image` on the `<tr>`, which would cover a `background-color`
-> animation applied to the `<tr>`. Animating the row's `<td>` cells keeps the
-> flash visible on every row.
-
-### Table component (e.g. `Role/Table.vue`)
-
-1. Add a `highlightId` prop.
-2. Bind `:row-props="rowProps"` on `VDataTableServer`.
-3. Build `rowProps` with the shared **`rowPropsFor`** factory (same file as
-   `useRowHighlight`) — it returns the `row-highlight` class only for the
-   matching row and reads the **current** `highlightId` on every Vuetify row
-   render (passing a plain value captured at setup time would not be reactive):
-
-```vue
-<VDataTableServer ... :row-props="rowProps" />
-```
-
-```ts
-import { rowPropsFor } from "~/composables/useRowHighlight"
-
-const props = defineProps<{
-  // ...
-  highlightId?: number | null
-}>()
-
-const rowProps = rowPropsFor(() => props.highlightId)
-```
-
-No scoped CSS in the component — the animation lives **once** in
-`app/assets/css/global.css` (already loaded via `css: ['@/assets/css/global.css']`):
-
-```css
-/* Momentary row flash after edit — driven by row-props + highlight-id in table components */
-.row-highlight td {
-  animation: row-highlight-flash 1.4s ease-out;
-}
-
-@keyframes row-highlight-flash {
-  0% {
-    background-color: rgba(var(--v-theme-success), 0.35);
-  }
-  100% {
-    background-color: transparent;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .row-highlight td {
-    animation: none;
-  }
-}
-```
-
-### Parent page (e.g. `role/index.vue`)
-
-Use the shared helpers in **`app/composables/useRowHighlight.ts`**:
-`useRowHighlight()` on the page side and `rowPropsFor(...)` on the table side.
-`useRowHighlight()` owns the `highlightId` ref, the **resettable** timer, the
-`null` → `nextTick` re-set (so the animation re-triggers even when the
-**same** row is edited twice in a row), and the `onUnmounted` timer cleanup:
-
-```ts
-import { useRowHighlight } from "~/composables/useRowHighlight"
-
-const { highlightId, flash } = useRowHighlight()
-```
-
-Import it **explicitly** (per the Form Validation section — do not rely on Nuxt
-auto-import for newly created composables). Then call `flash(id)` after a
-successful create/update and pass `:highlight-id` to the table component:
-
-```vue
-<RoleTable ... :highlight-id="highlightId" />
-```
-
-```ts
-// Update branch — after data[idx] = updated
-const updatedId = updated.id
-if (updatedId != null) {
-  flash(updatedId as number)
-}
-```
-
-### Rules
-
-1. Vuetify 4 uses **`row-props`**, not `item-class` (does not exist).
-2. Animate `td` cells, not the `tr` — the striped `background-image` on the
-   `tr` would hide a `tr` `background-color` flash on odd rows.
-3. Keep the CSS **global** (single definition in `app/assets/css/global.css`).
-   Do **not** add scoped `:deep(.row-highlight td)` copies per component.
-4. Use the shared helpers in `app/composables/useRowHighlight.ts` —
-   `useRowHighlight()` on the page side and `rowPropsFor(...)` on the table
-   side. Do **not** copy the ref/timer/`nextTick` helper into pages or the
-   inline `rowProps` function into table components. Import them **explicitly**.
-5. `flash()` clears the id and re-sets it on `nextTick` — otherwise a fast
-   re-edit of the same row silently no-ops (the class never leaves the DOM, so
-   the animation never restarts).
-6. The timer (1600ms) must be ≥ the CSS animation (1.4s); the animation
-   settles on its own, JS just removes the class for hygiene.
-7. The highlight is **id-driven** — if the row is not rendered (different
-   page/filter after a re-sort), it is a harmless no-op.
-8. Tables that re-fetch after save (e.g. `permission/index.vue`,
-   `auditorium/index.vue`, `auditorium-event/index.vue`) must flash **after**
-   the reload so the refreshed row receives the class.
-
-## Initial Data Load (asyncData Replacement)
+### Initial Data Load (asyncData Replacement)
 
 Replaces AUI's `async asyncData()` hook. Loads the initial page data **before the component renders** (component suspends during the await), then suppresses the mount-time `@update:options` to avoid a duplicate request.
 
-### Problem
+#### Problem
 
 Vuetify 4's `VDataTableServer` fires `@update:options` **immediately on mount**. If you do a top-level await for initial data AND let `@update:options` fire, you get **2 API calls** on page load (one wasted).
 
-### Solution
+#### Solution
 
 1. **Top-level await** — load initial data with backend-compatible params (`sortBy: ["name"]`, `sortDesc: [false]`)
 2. **`lastOptions` in Vuetify 4 format** — store `[{ key: "name", order: "asc" }]` so `loadRoles()` conversion works on refresh
 3. **`initialLoaded` flag** — suppress the first (mount-time) `@update:options` call
 4. **`handleSorting` wrapper** — checks the flag, then delegates to the actual loader
 
-### Reference implementation (`role/index.vue`)
+#### Reference implementation (`role/index.vue`)
 
 ```ts
 const response = ref({ data: [], total: 0 })
@@ -1060,7 +813,7 @@ function handleSorting(opts: Record<string, unknown>) {
 }
 ```
 
-### Template wiring
+#### Template wiring
 
 ```vue
 <!-- Parent page passes :search and @sorting to handleSorting -->
@@ -1072,7 +825,7 @@ function handleSorting(opts: Record<string, unknown>) {
 />
 ```
 
-### CRITICAL: Repository must be declared BEFORE the await
+#### CRITICAL: Repository must be declared BEFORE the await
 
 ```diff
  const lastOptions = ref<Record<string, unknown> | null>(null)
@@ -1085,7 +838,7 @@ function handleSorting(opts: Record<string, unknown>) {
 
 `const` is in the **temporal dead zone** — accessing it before the declaration throws `ReferenceError`. Always declare `const { Repository } = useRepository()` **before** the top-level await block.
 
-### Comparison: AUI asyncData vs Nuxt 4 pattern
+#### Comparison: AUI asyncData vs Nuxt 4 pattern
 
 | AUI Nuxt 2 (`asyncData`) | Nuxt 4 (`<script setup>`) |
 |---|---|
@@ -1095,7 +848,7 @@ function handleSorting(opts: Record<string, unknown>) {
 | Single fetch, no duplicate | Top-level await + `initialLoaded` flag to prevent duplicate |
 | Error: `error({ statusCode: ... })` | `.catch(() => fallbackData)` |
 
-### Rules
+#### Rules
 
 1. Use **backend-compatible params** (`sortBy: ["name"]`, `sortDesc: [false]`) for the API call
 2. Store **Vuetify 4 format** (`[{ key: "name", order: "asc" }]`) in `lastOptions` so refresh/sort work
@@ -1103,108 +856,124 @@ function handleSorting(opts: Record<string, unknown>) {
 4. The `refreshRoles()` / `refresh()` function calls `loadRoles(lastOptions.value)` / `indexOrganizations(lastOptions.value)` directly, bypassing the `initialLoaded` flag
 5. This pattern only applies to **index pages** with `VDataTableServer` — detail pages without a table need only the top-level await (no flag)
 
-## Dynamic NavBar Title (`eventBus.$emit("setNavBar")`) — avoid DRY with a helper
+### Momentary Row Highlight After Edit (`row-props` + `highlight-id`)
 
-The AUI app used a global event bus to update the VAppBar title dynamically:
+Vuetify 4's `VDataTable` / `VDataTableServer` has **no `item-class` prop**. To
+apply a class (or any attribute) to a specific row, use **`row-props`**: a
+function `({ item, index, internalItem }) => attrs` whose returned object is
+merged onto each `<tr>`. This powers the "flash the edited row" pattern used by
+the **Role**, **User**, **Organization**, **Permission**, **Auditorium** and
+**AuditoriumEvent** tables.
 
-```js
-mounted() {
-  const eventBus = this.$eventBus || this.$nuxt
-  eventBus.$emit("setNavBar", { title: `...`, icon: "...", back: `/...`, showDrawer: false })
-},
+> **Why animate `td` and not `tr`:** Vuetify 4 paints `striped="odd"` via
+> `background-image` on the `<tr>`, which would cover a `background-color`
+> animation applied to the `<tr>`. Animating the row's `<td>` cells keeps the
+> flash visible on every row.
+
+#### Table component (e.g. `Role/Table.vue`)
+
+1. Add a `highlightId` prop.
+2. Bind `:row-props="rowProps"` on `VDataTableServer`.
+3. Build `rowProps` with the shared **`rowPropsFor`** factory (same file as
+   `useRowHighlight`) — it returns the `row-highlight` class only for the
+   matching row and reads the **current** `highlightId` on every Vuetify row
+   render (passing a plain value captured at setup time would not be reactive):
+
+```vue
+<VDataTableServer ... :row-props="rowProps" />
 ```
 
-In Nuxt 4, the layout reads `route.meta` properties (`title`, `icon`, `back`, `showDrawer`).
-Set them directly after the async data loads.
-
-### Helper function (avoid repeating 4 assignments)
-
-Every detail page sets the same 4 `route.meta` properties. Instead of repeating:
-
 ```ts
-route.meta.title = `...`
-route.meta.icon = "..."
-route.meta.back = "/..."
-route.meta.showDrawer = false
+import { rowPropsFor } from "~/composables/useRowHighlight"
+
+const props = defineProps<{
+  // ...
+  highlightId?: number | null
+}>()
+
+const rowProps = rowPropsFor(() => props.highlightId)
 ```
 
-Create a reusable helper:
+No scoped CSS in the component — the animation lives **once** in
+`app/assets/css/global.css` (already loaded via `css: ['@/assets/css/global.css']`):
 
-```ts
-function setNavBar({ title, icon, back, showDrawer = false }: {
-  title?: string
-  icon?: string
-  back?: string
-  showDrawer?: boolean
-}) {
-  const route = useRoute()
-  if (title !== undefined) route.meta.title = title
-  if (icon !== undefined) route.meta.icon = icon
-  if (back !== undefined) route.meta.back = back
-  if (showDrawer !== undefined) route.meta.showDrawer = showDrawer
-}
-```
-
-Then each detail page calls a single line:
-
-```ts
-// Simple detail page
-if (mRole.value.name) {
-  setNavBar({
-    title: `Rol ${mRole.value.name}`,
-    icon: "mdi-redhat",
-    back: "/role",
-  })
+```css
+/* Momentary row flash after edit — driven by row-props + highlight-id in table components */
+.row-highlight td {
+  animation: row-highlight-flash 1.4s ease-out;
 }
 
-// Nested sub-pages (parallel fetches)
-onMounted(async () => {
-  const [userRes, profileRes] = await Promise.all([
-    User.show(userId).catch(() => null),
-    Profile.show(profileId).catch(() => null),
-  ])
-  // ... assign to refs ...
-
-  if (mUser.value.name) {
-    setNavBar({
-      title: `Perfil de: ${mUser.value.name} ${mUser.value.last_name ?? ''}`.trim(),
-      icon: "mdi-account",
-      back: `/user/${userId}/profile`,
-    })
+@keyframes row-highlight-flash {
+  0% {
+    background-color: rgba(var(--v-theme-success), 0.35);
   }
-})
+  100% {
+    background-color: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row-highlight td {
+    animation: none;
+  }
+}
 ```
 
-### Migration diff
+#### Parent page (e.g. `role/index.vue`)
 
-```diff
--mounted() {
--  const eventBus = this.$eventBus || this.$nuxt
--  eventBus.$emit("setNavBar", {
--    title: `Perfilx: ${this.mUser.name} ${this.mUser.last_name}`,
--    icon: "mdi-account",
--    back: `/user`,
--    showDrawer: false,
--  })
--},
-+if (mUser.value.name) {
-+  setNavBar({
-+    title: `Perfil de: ${mUser.value.name} ${mUser.value.last_name ?? ''}`.trim(),
-+    icon: "mdi-account",
-+    back: "/user",
-+  })
-+}
+Use the shared helpers in **`app/composables/useRowHighlight.ts`**:
+`useRowHighlight()` on the page side and `rowPropsFor(...)` on the table side.
+`useRowHighlight()` owns the `highlightId` ref, the **resettable** timer, the
+`null` → `nextTick` re-set (so the animation re-triggers even when the
+**same** row is edited twice in a row), and the `onUnmounted` timer cleanup:
+
+```ts
+import { useRowHighlight } from "~/composables/useRowHighlight"
+
+const { highlightId, flash } = useRowHighlight()
 ```
 
-### Rules
+Import it **explicitly** (per the Form Validation section — do not rely on Nuxt
+auto-import for newly created composables). Then call `flash(id)` after a
+successful create/update and pass `:highlight-id` to the table component:
 
-- `route.meta` is reactive — changes reflect immediately in the layout's `computed` properties.
-- The static `definePageMeta({ title })` is replaced dynamically after the API call — keep the fallback static title.
-- Guard with `if (entity.value.name)` to avoid `"undefined undefined"` if the API fails.
-- Use `.trim()` to avoid trailing whitespace when last_name is absent.
-- `showDrawer` defaults to `false` in the helper — only pass it when you need `true` (main pages with the navigation drawer).
+```vue
+<RoleTable ... :highlight-id="highlightId" />
+```
 
-## Form Validation (Client + Server)
+```ts
+// Update branch — after data[idx] = updated
+const updatedId = updated.id
+if (updatedId != null) {
+  flash(updatedId as number)
+}
+```
+
+#### Rules
+
+1. Vuetify 4 uses **`row-props`**, not `item-class` (does not exist).
+2. Animate `td` cells, not the `tr` — the striped `background-image` on the
+   `tr` would hide a `tr` `background-color` flash on odd rows.
+3. Keep the CSS **global** (single definition in `app/assets/css/global.css`).
+   Do **not** add scoped `:deep(.row-highlight td)` copies per component.
+4. Use the shared helpers in `app/composables/useRowHighlight.ts` —
+   `useRowHighlight()` on the page side and `rowPropsFor(...)` on the table
+   side. Do **not** copy the ref/timer/`nextTick` helper into pages or the
+   inline `rowProps` function into table components. Import them **explicitly**.
+5. `flash()` clears the id and re-sets it on `nextTick` — otherwise a fast
+   re-edit of the same row silently no-ops (the class never leaves the DOM, so
+   the animation never restarts).
+6. The timer (1600ms) must be ≥ the CSS animation (1.4s); the animation
+   settles on its own, JS just removes the class for hygiene.
+7. The highlight is **id-driven** — if the row is not rendered (different
+   page/filter after a re-sort), it is a harmless no-op.
+8. Tables that re-fetch after save (e.g. `permission/index.vue`,
+   `auditorium/index.vue`, `auditorium-event/index.vue`) must flash **after**
+   the reload so the refreshed row receives the class.
+
+---
+
+## 11. Form Validation (Client + Server)
 
 ### Client-side rules — `useVrules` composable
 
@@ -1287,7 +1056,9 @@ that is otherwise mandatory) must carry the `required` attribute. A global rule 
   `Organization/Select.vue` and `Auditorium/Select.vue` via `v-bind="$attrs"`,
   `My/DatePicker.vue` via the `required` prop + `:required="required"`.
 
-## Prevent Double-Submit on Dialog Save Buttons
+---
+
+## 12. Double-Submit Prevention
 
 **Problem:** Vuetify 3/4's `VBtn loading` prop does **NOT** disable clicks. In `VBtn.js`, `isDisabled` only includes `props.disabled` — `loading` only sets `tabindex="-1"` and `aria-busy`. So `:loading` alone never blocks a double-click on "Guardar"; two rapid clicks fire the save handler twice (two API calls).
 
@@ -1362,7 +1133,9 @@ Always pair `:loading` with `:disabled` — the button must be truly unclickable
 3. Reset `saving` via `watch(() => props.loading)` so a **failed** save re-enables the button for retry (the parent closes the dialog on success, so remount handles that case).
 4. Keep the parent's table `loading` separate from the dialog `saving` (see `permission/index.vue` / `role/index.vue` for the reference implementation).
 
-## Never Disable the Save/Guardar Button
+---
+
+## 13. Never Disable Save Button
 
 **Rule:** The dialog's Save/Guardar button must **never** be `:disabled` based on form state. Remove AUI's `:disabled="!isFormValid"` (or any `isFormValid`-style computed gating the button). The button stays clickable; validation feedback is shown via the field `:rules` when the user clicks Save.
 
@@ -1390,7 +1163,9 @@ Rules:
 3. Drop the now-unused `isFormValid` computed (dead code).
 4. Only `:disabled="saving"` (in-flight guard) is allowed, per the double-submit section above.
 
-## VCombobox / VAutocomplete `#selection` Slot (Vuetify 3/4 Proxy Quirks)
+---
+
+## 14. VCombobox/VAutocomplete `#selection` Slot Quirks
 
 Vuetify 3/4's slot proxy system can break simple `typeof` checks and interpolation inside `#selection` slots. The same slot proxy also affects `selected` and `item.raw` access.
 
@@ -1505,3 +1280,270 @@ Notes:
 | `selected` always `undefined` | VCombobox can't match model values to empty `items` | Populate `items` from props |
 | Chips disappear after search | API result overwrites `items`, removing selected items | Merge selected items back into search results |
 | Parent-added chips don't appear / combobox flickers | `:key` remount rebuilds the whole combobox | Additive watch on the items prop (merge by id, no remount) |
+
+---
+
+## 15. SCSS/CSS Overrides
+
+### Autofill CSS Fix
+
+Vuetify 2 classes (`.v-text-field--outlined`, `.v-label`) were renamed in Vuetify 3/4 (`.v-field--variant-outlined`, `.v-field-label`):
+
+```diff
+-:deep(.v-text-field--outlined) input:-webkit-autofill ~ .v-label,
+-:deep(.v-text-field--outlined) input:-webkit-autofill:focus ~ .v-label {
++:deep(.v-field--variant-outlined) input:-webkit-autofill ~ .v-field-label,
++:deep(.v-field--variant-outlined) input:-webkit-autofill:focus ~ .v-field-label {
+   transform: translateY(-24px) scale(0.75);
+   top: 0px;
+   background: white;
+   padding: 0 4px;
+ }
+```
+
+### SCSS Style Overrides (avoid conflicting with Vuetify classes)
+
+Do **not** redefine Vuetify utility class names in scoped styles. For example, `logout.vue` defined:
+
+```css
+.fill-height {
+  height: 100vh;
+}
+```
+
+This overrides Vuetify's `.fill-height` (`height: 100%`) and creates a scrollbar with fixed VAppBar. Remove custom definitions of Vuetify utility class names.
+
+### Striped Row Color Override
+
+Vuetify 4 applies stripes via `v-table--striped-odd` class on the `<table>` wrapper using `background-image: linear-gradient(...)`. The Vuetify 2/3 class `v-data-table__tr--striped` does not exist.
+
+```diff
+-:deep(.v-data-table__tr--striped) {
+-  background-color: #f5fbff !important;
+-}
++:deep(.v-table--striped-odd > .v-table__wrapper > table > tbody > tr:nth-child(odd)) {
++  background-image: none !important;
++  background-color: #f5fbff !important;
++}
+```
+
+### Vuetify 2–Only Utility Classes
+
+These Vuetify 2 utility classes were removed in Vuetify 3/4:
+
+| Class | Vuetify 3/4 Replacement |
+|-------|-------------------------|
+| `fill-height` | Same class — **still works** in Vuetify 3/4 (`height: 100%`). Do NOT use `min-height: 100vh` — `100vh` doesn't account for the fixed VAppBar (64px padding on VMain), creating a vertical scrollbar. |
+| `text-none` (text-transform) | Remove — Vuetify 3/4 buttons have no text-transform by default, or use inline `style` |
+| `text-decoration-none` | `style="text-decoration: none"` (not a Vuetify utility) |
+
+```diff
+-<VRow align="center" justify="center" class="fill-height">
++<VRow align="center" justify="center" class="fill-height">
+```
+
+```diff
+-<VBtn id="login-submit" type="submit" color="primary" block size="large" class="text-none">Ingresar</VBtn>
++<VBtn id="login-submit" type="submit" color="primary" block size="large">Ingresar</VBtn>
+```
+
+```diff
+-<a href="#" class="text-decoration-none text-primary" @click.prevent="...">
++<a href="#" class="text-primary" style="text-decoration: none" @click.prevent="...">
+```
+
+---
+
+## 16. Nuxt 4 Specifics
+
+### Components Directory
+
+Nuxt 4 scans `app/components/` for auto-imported components, **not** the root `components/` directory. All other user directories are also under `app/`:
+
+```
+app/components/   ← ✅ scanned
+app/composables/  ← ✅ scanned
+app/pages/        ← ✅ scanned
+app/layouts/      ← ✅ scanned
+app/middleware/    ← ✅ scanned
+components/       ← ❌ NOT scanned (Nuxt 4)
+```
+
+If components are placed at root `components/`, the build will **not** emit any error but the component will fail to resolve at runtime:
+
+```
+[Vue warn]: Failed to resolve component: OrganizationTable
+```
+
+### Layout: `<slot />` instead of `<Nuxt />`
+
+Nuxt 4 changed layouts from `<Nuxt />` to `<slot />`:
+
+```diff
+-<Nuxt />
++<slot />
+```
+
+Layout root containers must include layout-scoped identifiers:
+
+```diff
+-<VAppBar elevation="2" fixed app>
+-  <VAppBarNavIcon @click.stop="drawer = !drawer" />
+-  <VToolbarTitle>{{ title }}</VToolbarTitle>
++<VAppBar id="layout-app-bar" elevation="2" fixed app>
++  <VAppBarNavIcon id="layout-nav-icon" @click.stop="drawer = !drawer" />
++  <VToolbarTitle id="layout-title">{{ title }}</VToolbarTitle>
+```
+
+### Dynamic NavBar Title (`eventBus.$emit("setNavBar")`) — avoid DRY with a helper
+
+The AUI app used a global event bus to update the VAppBar title dynamically:
+
+```js
+mounted() {
+  const eventBus = this.$eventBus || this.$nuxt
+  eventBus.$emit("setNavBar", { title: `...`, icon: "...", back: `/...`, showDrawer: false })
+},
+```
+
+In Nuxt 4, the layout reads `route.meta` properties (`title`, `icon`, `back`, `showDrawer`).
+Set them directly after the async data loads.
+
+#### Helper function (avoid repeating 4 assignments)
+
+Every detail page sets the same 4 `route.meta` properties. Instead of repeating:
+
+```ts
+route.meta.title = `...`
+route.meta.icon = "..."
+route.meta.back = "/..."
+route.meta.showDrawer = false
+```
+
+Create a reusable helper:
+
+```ts
+function setNavBar({ title, icon, back, showDrawer = false }: {
+  title?: string
+  icon?: string
+  back?: string
+  showDrawer?: boolean
+}) {
+  const route = useRoute()
+  if (title !== undefined) route.meta.title = title
+  if (icon !== undefined) route.meta.icon = icon
+  if (back !== undefined) route.meta.back = back
+  if (showDrawer !== undefined) route.meta.showDrawer = showDrawer
+}
+```
+
+Then each detail page calls a single line:
+
+```ts
+// Simple detail page
+if (mRole.value.name) {
+  setNavBar({
+    title: `Rol ${mRole.value.name}`,
+    icon: "mdi-redhat",
+    back: "/role",
+  })
+}
+
+// Nested sub-pages (parallel fetches)
+onMounted(async () => {
+  const [userRes, profileRes] = await Promise.all([
+    User.show(userId).catch(() => null),
+    Profile.show(profileId).catch(() => null),
+  ])
+  // ... assign to refs ...
+
+  if (mUser.value.name) {
+    setNavBar({
+      title: `Perfil de: ${mUser.value.name} ${mUser.value.last_name ?? ''}`.trim(),
+      icon: "mdi-account",
+      back: `/user/${userId}/profile`,
+    })
+  }
+})
+```
+
+#### Migration diff
+
+```diff
+-mounted() {
+-  const eventBus = this.$eventBus || this.$nuxt
+-  eventBus.$emit("setNavBar", {
+-    title: `Perfilx: ${this.mUser.name} ${this.mUser.last_name}`,
+-    icon: "mdi-account",
+-    back: `/user`,
+-    showDrawer: false,
+-  })
+-},
++if (mUser.value.name) {
++  setNavBar({
++    title: `Perfil de: ${mUser.value.name} ${mUser.value.last_name ?? ''}`.trim(),
++    icon: "mdi-account",
++    back: "/user",
++  })
++}
+```
+
+#### Rules
+
+- `route.meta` is reactive — changes reflect immediately in the layout's `computed` properties.
+- The static `definePageMeta({ title })` is replaced dynamically after the API call — keep the fallback static title.
+- Guard with `if (entity.value.name)` to avoid `"undefined undefined"` if the API fails.
+- Use `.trim()` to avoid trailing whitespace when last_name is absent.
+- `showDrawer` defaults to `false` in the helper — only pass it when you need `true` (main pages with the navigation drawer).
+
+### Data Loading for Auth-Protected APIs
+
+`useAsyncData` runs during SSR, but auth tokens from `localStorage` are **not available** on the server. For pages that require an auth token:
+
+```diff
+-const { data: initialResponse, error: initialError } = await useAsyncData("key", () =>
+-  apiIndex(options.value)
+-)
+-if (initialResponse.value) response.value = initialResponse.value
++onMounted(async () => {
++  await loadData()
++})
+```
+
+This ensures the API call runs client-side where `localStorage.getItem("auth.token")` is available.
+
+Vuetify 3's VDataTable `@update:options` does **not** fire on mount — it only fires on user interaction (sort, paginate). Do not rely on it for the initial data load.
+
+**Vuetify 4 differs:** `@update:options` fires **immediately on mount** (`immediate: true` in `useOptions`), so the initial `emit("sorting")` in `onUpdateOptions` works as the data load trigger via `@update:options`.
+
+### Filter Debounce Pattern
+
+All index/list pages must use a consistent debounced filter pattern with **300ms** delay:
+
+```ts
+// Debounced filter
+let debounceTimer: ReturnType<typeof setTimeout> | null = null
+
+watch(filterInput, (val) => {
+  if (debounceTimer) clearTimeout(debounceTimer)
+  if (!val) {
+    filterRole.value = ""
+    return
+  }
+  debounceTimer = setTimeout(() => {
+    filterRole.value = val
+  }, 300)
+})
+```
+
+Rules:
+- Always use `300` (not 500) as the debounce delay — inconsistent timing across pages causes confusing UX.
+- Always clear `filter*` immediately when `filterInput` becomes empty (no debounce on clear).
+- The `filterInput` ref is bound to the `VTextField`; the `filter*` ref drives the actual API call via the `search` prop on `VDataTableServer` / `VDataTable`.
+
+### Absent/Unsupported Components
+
+| Component | Status | Replacement |
+|-----------|--------|-------------|
+| `v-skeleton-loader` | Migrated | `VSkeletonLoader` (same name, PascalCase, fully supported) |
+| `v-select` `menu-icon` prop | Removed | Use `append-inner-icon` prop or `#append-inner` slot instead |

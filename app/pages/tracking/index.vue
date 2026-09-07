@@ -1,5 +1,5 @@
 <template>
-  <VContainer :fluid="true">
+  <VContainer :fluid="true" class="page-tracking">
     <VRow density="comfortable">
       <VCol v-if="showOrgSelect" lg="2" md="3" sm="4" cols="6">
         <OrganizationSelect
@@ -70,6 +70,7 @@ definePageMeta({
   icon: "mdi-account-search",
   permission: "conso-sheet-index",
   middleware: ["authenticated", "permission"],
+  color: "purple-lighten-4",
 });
 
 const { ChurchMember } = useRepository();

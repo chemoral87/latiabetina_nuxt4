@@ -1,5 +1,5 @@
 <template>
-  <VContainer class="pa-4" style="max-width: 900px">
+  <VContainer class="" :fluid="true" style="max-width: 900px">
     <h2 class="text-h5 mb-4">Curso de Ukelele</h2>
 
     <VAlert v-if="error" type="error" density="compact" variant="outlined" class="mb-4">

@@ -58,7 +58,7 @@
                 <div class="py-4">
                   <p class="text-body-1 font-weight-medium mb-3">{{ step.title }}</p>
                   <p class="text-body-2 text-grey-darken-2 mb-2">{{ step.description }}</p>
-                  <VAlert v-if="step.tip" type="info" class="pa-1" variant="text" density="compact">
+                  <VAlert v-if="step.tip" type="info" class="" variant="text" density="compact">
                     <span class="text-caption">{{ step.tip }}</span>
                   </VAlert>
                 </div>

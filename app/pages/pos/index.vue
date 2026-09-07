@@ -1,5 +1,5 @@
 <template>
-  <VContainer id="pos-page" :fluid="true" class="pos-page px-2 pt-2" :style="{ paddingBottom: footerHeight + 'px' }">
+  <VContainer id="pos-page" class="pos-page px-2 pt-2" :fluid="true" :style="{ paddingBottom: footerHeight + 'px' }">
     <!-- Loading -->
     <div v-if="productsStore.loading" id="pos-loading" class="text-center py-10">
       <VProgressCircular indeterminate color="primary" size="48" />

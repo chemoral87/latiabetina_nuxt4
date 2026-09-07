@@ -1,5 +1,5 @@
 <template>
-  <VContainer :fluid="true">
+  <VContainer class="" :fluid="true">
     <VCard id="dashboard-card" flat border class="pa-4">
       <span class="text-h6">Bienvenidos</span>
       <VRow>

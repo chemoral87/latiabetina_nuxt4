@@ -1,5 +1,5 @@
 <template>
-  <VContainer :fluid="true">
+  <VContainer class="" :fluid="true">
     <VRow density="comfortable">
       <!-- Filtro de busqueda -->
       <VCol md="2" cols="12">

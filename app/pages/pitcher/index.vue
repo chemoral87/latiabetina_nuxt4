@@ -1,5 +1,5 @@
 <template>
-  <VContainer fluid class="pa-2">
+  <VContainer class="" :fluid="true">
     <h4 id="pit-header" class="text-left my-0">
       Tuner
       <span>

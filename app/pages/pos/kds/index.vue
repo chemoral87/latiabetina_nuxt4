@@ -1,5 +1,5 @@
 <template>
-  <VContainer id="pos-kds-page" fluid class="kds-page pa-3">
+  <VContainer id="pos-kds-page" class="kds-page" :fluid="true">
     <PosKdsOrdersBoard
       :active-orders="activeOrders"
       :done-map="doneMap"

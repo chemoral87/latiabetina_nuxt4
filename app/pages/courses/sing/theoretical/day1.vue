@@ -27,7 +27,7 @@
                   </div>
                 </div>
                 <p class="text-body-2 text-grey-darken-3 mb-2">{{ part.inVoice }}</p>
-                <VAlert class="pa-1" variant="text" density="compact" :type="part.type">
+                <VAlert class="" variant="text" density="compact" :type="part.type">
                   <span class="text-caption">{{ part.tip }}</span>
                 </VAlert>
               </VCard>
@@ -71,7 +71,7 @@
                   <span class="font-weight-medium">{{ attr.name }}</span>
                 </div>
                 <p class="text-body-2 text-grey-darken-1 mb-2">{{ attr.description }}</p>
-                <VAlert class="pa-1" variant="text" density="compact" :type="attr.type">
+                <VAlert class="" variant="text" density="compact" :type="attr.type">
                   <span class="text-caption">{{ attr.tip }}</span>
                 </VAlert>
               </VCard>
