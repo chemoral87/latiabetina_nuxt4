@@ -232,6 +232,7 @@ const transposition = computed(() => (tuning.value === "Bb" ? 2 : 0));
 interface GlossaryRow {
   written: string;
   sounding: string;
+  soundingMidi: number;
   fingering: number[];
   label: string;
 }
@@ -259,6 +260,7 @@ const glossaryRows = computed<GlossaryRow[]>(() => {
           ((soundingMidi % 12) + 12) % 12,
           Math.floor(soundingMidi / 12) - 1,
         ),
+        soundingMidi,
         fingering,
         label: fingering.length === 0 ? "Abierta" : fingering.join("-"),
       });
@@ -281,14 +283,17 @@ const glossaryColumns = computed<GlossaryRow[][]>(() => {
 // Sonido detectado actualmente para resaltar la fila correspondiente
 const activeSounding = computed(() => noteInfo.value?.sounding ?? null);
 
-// Nota fantasma: misma nota (pitch class) en octava ±1
+// Nota fantasma: misma nota (pitch class) en octava ±1 (MIDI ±12).
+// Se compara por MIDI y no por texto para que funcione igual con
+// notación latina (Sol3) o inglesa (G3) y con alteraciones (#).
+const activeMidi = computed(() => {
+  if (!props.frequency) return -1;
+  return Math.round(freqToMidi(props.frequency));
+});
+
 function isGhostRow(row: GlossaryRow): boolean {
-  if (!ghostQuarterNote.value || !activeSounding.value) return false;
-  const activeWithoutOctave = activeSounding.value.replace(/\d+$/, "");
-  const activeOctave = parseInt(activeSounding.value.match(/\d+$/)?.[0] || "0");
-  const rowWithoutOctave = row.sounding.replace(/\d+$/, "");
-  const rowOctave = parseInt(row.sounding.match(/\d+$/)?.[0] || "0");
-  return rowWithoutOctave === activeWithoutOctave && Math.abs(rowOctave - activeOctave) === 1;
+  if (!ghostQuarterNote.value || activeMidi.value < 0) return false;
+  return Math.abs(row.soundingMidi - activeMidi.value) === 12;
 }
 
 // Digitación estándar de la trompeta por nota escrita (clase de tono dentro de cada octava)
@@ -396,11 +401,14 @@ function isValvePressed(valve: number): boolean {
   border: 1px solid rgba(0, 0, 0, 0.12);
 }
 
+/* Activa: sólida y con texto blanco para que destaque sobre las ghost,
+   que usan ghostNoteOpacity (tenues y configurables). */
 .glossary-row-active {
-  background-color: rgba(33, 150, 243, 0.25) !important;
+  background-color: #1976d2 !important;
 }
 
 .glossary-row-active td {
   font-weight: 700;
+  color: #ffffff;
 }
 </style>

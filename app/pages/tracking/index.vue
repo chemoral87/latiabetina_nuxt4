@@ -66,7 +66,7 @@
 
 <script setup lang="ts">
 definePageMeta({
-  title: "Tracking",
+  title: "Seguimiento",
   icon: "mdi-account-search",
   permission: "conso-sheet-index",
   middleware: ["authenticated", "permission"],
@@ -83,7 +83,9 @@ const filterStatus = ref("ACTIVO");
 const filterOrgId = ref<string | number | null>(null);
 const loading = ref(false);
 const members = ref<Record<string, unknown>[]>([]);
-const sortBy = ref<{ key: string; order: string }[]>([{ key: "last_contacted", order: "asc" }]);
+const sortBy = ref<{ key: string; order: string }[]>([
+  { key: "last_contacted", order: "asc" },
+]);
 
 const showOrgSelect = computed(
   () => auth.orgIdsFor("conso-sheet-index").length > 1,
@@ -127,7 +129,9 @@ async function fetchData() {
 
   if (sortBy.value.length) {
     params["sortBy"] = sortBy.value.map((s) => s.key);
-    params["sortDesc"] = sortBy.value.map((s) => s.order === "desc" ? "true" : "false");
+    params["sortDesc"] = sortBy.value.map((s) =>
+      s.order === "desc" ? "true" : "false",
+    );
   }
 
   try {

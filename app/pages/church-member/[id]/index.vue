@@ -605,6 +605,14 @@ async function openContact(
   url?: string | null,
 ) {
   const id = route.params.id as string;
+  // On mobile, window.open must run synchronously inside the click handler.
+  // After `await` the user activation is lost and the WhatsApp popup is blocked,
+  // while tel:/sms: via location.href still work. So open WhatsApp upfront.
+  const currentMessage = message.value.trim();
+  let waWindow: WindowProxy | null = null;
+  if (medium === "whatsapp" && url) {
+    waWindow = window.open(url, "_blank", "noopener");
+  }
   try {
     const res = await ChurchMemberTrackingLog.create<Record<string, unknown>>(
       id,
@@ -612,7 +620,7 @@ async function openContact(
         contact_datetime: localDateTimeString(),
         medium,
         classification: medium === "presencial" ? "CONTESTA" : null,
-        description: message.value.trim() || undefined,
+        description: currentMessage || undefined,
       },
     );
     const newLog = res?.data ?? res;
@@ -628,7 +636,11 @@ async function openContact(
     if (medium === "presencial") return;
     if (!url) return;
     if (medium === "whatsapp") {
-      window.open(url, "_blank", "noopener");
+      // Popup opened synchronously above; if it was blocked, fall back to
+      // direct navigation which is not treated as a popup.
+      if (!waWindow || waWindow.closed) {
+        window.location.href = url;
+      }
     } else {
       window.location.href = url;
     }

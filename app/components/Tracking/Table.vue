@@ -6,10 +6,10 @@
       :items="members"
       density="compact"
       :headers="headers"
-      class="elevation-1"
       mobile-breakpoint="0"
-      :items-length="members.length"
       :loading="props.loading"
+      class="elevation-1 xwidth1000"
+      :items-length="members.length"
       @update:options="onUpdateOptions"
     >
       <template #[`item.name`]="{ item }">
@@ -26,26 +26,27 @@
         </VChip>
       </template>
 
-     <template #[`item.last_contacted`]="{ item }">
-       {{ formatShortDateTime12h(String(item.last_contacted ?? "")) || "—" }}
-     </template>
-    
-      
+      <template #[`item.last_contacted`]="{ item }">
+        {{ formatShortDateTime12h(String(item.last_contacted ?? "")) || "—" }}
+      </template>
+
       <template #[`item.last_contacted_by`]="{ item }">
         {{ item.last_contacted_by || "—" }}
       </template>
 
       <template #[`item.creator`]="{ item }">
-        {{ item.creator ? `${item.creator.name} ${item.creator.last_name}` : "—" }}
+        {{
+          item.creator ? `${item.creator.name} ${item.creator.last_name}` : "—"
+        }}
       </template>
 
       <template #[`item.assigned_by`]="{ item }">
         {{ item.assigned_by || "—" }}
       </template>
-      
-     <template #[`item.org_id`]="{ item }">
-       {{ orgLabel(item.org_id) }}
-     </template>
+
+      <template #[`item.org_id`]="{ item }">
+        {{ orgLabel(item.org_id) }}
+      </template>
 
       <template #[`item.actions`]="{ item }">
         <VBtn
@@ -76,8 +77,8 @@
 </template>
 
 <script setup lang="ts">
-import { formatShortDateTime12h } from "~/utils/date"
-import { useChurchMemberStatus } from "~/composables/useChurchMemberStatus"
+import { formatShortDateTime12h } from "~/utils/date";
+import { useChurchMemberStatus } from "~/composables/useChurchMemberStatus";
 
 interface Header {
   title: string;
@@ -108,7 +109,7 @@ const emit = defineEmits<{
 }>();
 
 const auth = useAuthStore();
-const { statusLabel, statusColor } = useChurchMemberStatus()
+const { statusLabel, statusColor } = useChurchMemberStatus();
 
 const singleOrg = computed(() => auth.hasSingleOrgFor("conso-sheet-index"));
 
@@ -139,12 +140,12 @@ const headers = computed<Header[]>(() => {
     { title: "Contactado por", value: "last_contacted_by", sortable: false },
     { title: "Creado por", value: "creator", sortable: false },
     { title: "Asignado por", value: "assigned_by", sortable: false },
-    ];
-    if (!singleOrg.value) {
-      cols.push({ title: "Organización", value: "org_id", sortable: false });
-    }
-    return cols;
-  });
+  ];
+  if (!singleOrg.value) {
+    cols.push({ title: "Organización", value: "org_id", sortable: false });
+  }
+  return cols;
+});
 </script>
 
 <style scoped></style>
