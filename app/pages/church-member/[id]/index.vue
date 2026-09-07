@@ -589,12 +589,35 @@ const whatsappHref = computed(() => {
     ? `https://wa.me/${phoneDigits.value}?text=${msg}`
     : `https://wa.me/${phoneDigits.value}`;
 });
+
+function isMobileDevice(): boolean {
+  if (typeof navigator === "undefined") return false;
+  const ua = navigator.userAgent || "";
+  if (/Android|iPhone|iPad|iPod|Mobile/i.test(ua)) return true;
+  if (typeof window !== "undefined" && navigator.maxTouchPoints > 1) {
+    return /Mac|Windows|Linux|X11|CrOS/i.test(ua) === false;
+  }
+  return false;
+}
+function isIOSDevice(): boolean {
+  if (typeof navigator === "undefined") return false;
+  const ua = navigator.userAgent || "";
+  // iPadOS 13+ se identifica como Macintosh pero con soporte táctil.
+  return (
+    /iPad|iPhone|iPod/i.test(ua) ||
+    (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1)
+  );
+}
 const smsHref = computed(() => {
   if (!phoneDigits.value) return null;
   const msg = encodeURIComponent(message.value.trim());
-  return msg
-    ? `sms:${phoneDigits.value}?body=${msg}`
-    : `sms:${phoneDigits.value}`;
+  if (!msg) return `sms:${phoneDigits.value}`;
+  // El esquema sms: no está estandarizado: iOS requiere "&" antes de "body"
+  // para precargar el texto, mientras que Android (y el resto) usan "?" como
+  // separador normal de query string. Usar el separador equivocado hace que
+  // la app de Mensajes abra sin el texto prellenado.
+  const separator = isIOSDevice() ? "&" : "?";
+  return `sms:${phoneDigits.value}${separator}body=${msg}`;
 });
 const telHref = computed(() =>
   phoneDigits.value ? `tel:${phoneDigits.value}` : null,
@@ -605,13 +628,27 @@ async function openContact(
   url?: string | null,
 ) {
   const id = route.params.id as string;
-  // On mobile, window.open must run synchronously inside the click handler.
-  // After `await` the user activation is lost and the WhatsApp popup is blocked,
-  // while tel:/sms: via location.href still work. So open WhatsApp upfront.
   const currentMessage = message.value.trim();
+  // Todo lo que dispara una navegación (popup de escritorio, deep link a la
+  // app en móvil) debe ejecutarse SÍNCRONO dentro del gesto de click. En
+  // cuanto pasamos por un await, el navegador (sobre todo iOS Safari) ya
+  // perdió la "user activation" y bloquea/ignora el intento de abrir la app,
+  // cayendo directo al fallback web (WhatsApp Web) aunque la app esté
+  // instalada. Por eso el intento de apertura va ANTES del await, para
+  // ambos casos.
+  const mobile = medium === "whatsapp" ? isMobileDevice() : false;
   let waWindow: WindowProxy | null = null;
   if (medium === "whatsapp" && url) {
-    waWindow = window.open(url, "_blank", "noopener");
+    if (mobile) {
+      triggerMobileWhatsApp(currentMessage);
+    } else {
+      waWindow = window.open(url, "_blank", "noopener");
+    }
+  } else if ((medium === "sms" || medium === "llamada") && url) {
+    // sms: y tel: son esquemas estándar que el SO entrega a la app de
+    // Mensajes/Teléfono sin dejar entrada nueva en el historial. Se disparan
+    // aquí, síncrono con el click, por la misma razón que WhatsApp arriba.
+    window.location.href = url;
   }
   try {
     const res = await ChurchMemberTrackingLog.create<Record<string, unknown>>(
@@ -634,17 +671,64 @@ async function openContact(
     });
   } finally {
     if (medium === "presencial") return;
-    if (!url) return;
     if (medium === "whatsapp") {
-      // Popup opened synchronously above; if it was blocked, fall back to
-      // direct navigation which is not treated as a popup.
+      if (mobile) return; // El deep link (o su fallback) ya se disparó arriba.
+      if (!url) return;
+      // Popup abierto síncrono arriba; si fue bloqueado, navegación directa.
       if (!waWindow || waWindow.closed) {
         window.location.href = url;
       }
-    } else {
-      window.location.href = url;
     }
+    // sms y llamada ya se dispararon arriba, antes del await.
   }
+}
+
+// Dispara el deep link nativo de WhatsApp con una navegación de nivel
+// superior directa (sin iframe: iOS Safari bloquea silenciosamente la
+// navegación a esquemas custom como whatsapp:// hecha desde un <iframe>,
+// solo funciona como top-level navigation dentro del gesto de click). Si la
+// app está instalada, el navegador entrega la navegación a la app sin dejar
+// entrada nueva en el historial, así "atrás" desde WhatsApp regresa directo
+// a esta página, sin pasar por WhatsApp Web. Si no cambia la visibilidad de
+// la pestaña en ~1.2s asumimos que no está instalada y caemos a wa.me.
+function triggerMobileWhatsApp(currentMessage: string) {
+  const digits = phoneDigits.value;
+  if (!digits) return;
+  const encoded = encodeURIComponent(currentMessage);
+  const appUrl = encoded
+    ? `whatsapp://send?phone=${digits}&text=${encoded}`
+    : `whatsapp://send?phone=${digits}`;
+  const webUrl = encoded
+    ? `https://wa.me/${digits}?text=${encoded}`
+    : `https://wa.me/${digits}`;
+
+  let fallback: ReturnType<typeof window.setTimeout> | null = null;
+  function cancelFallback() {
+    if (fallback !== null) {
+      window.clearTimeout(fallback);
+      fallback = null;
+    }
+    window.removeEventListener("pagehide", onHide);
+    document.removeEventListener("visibilitychange", onVis);
+    window.removeEventListener("blur", onHide);
+  }
+  function onHide() {
+    cancelFallback();
+  }
+  function onVis() {
+    if (document.hidden) cancelFallback();
+  }
+  window.addEventListener("pagehide", onHide);
+  document.addEventListener("visibilitychange", onVis);
+  window.addEventListener("blur", onHide);
+
+  window.location.href = appUrl;
+
+  fallback = window.setTimeout(() => {
+    fallback = null;
+    cancelFallback();
+    if (!document.hidden) window.location.href = webUrl;
+  }, 1200);
 }
 
 function localDateTimeString(date = new Date()): string {
