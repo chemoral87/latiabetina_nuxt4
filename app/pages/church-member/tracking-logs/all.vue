@@ -1,118 +1,60 @@
 <template>
   <VContainer :fluid="true" class="page-tracking-logs-all">
-    <VRow density="comfortable">
-      <VCol md="4" sm="6" cols="12">
-        <MyDateMonthPicker
-          id="atl-month-picker"
-          v-model="selectedMonth"
-          label="Mes"
-        />
-      </VCol>
-      <VCol cols="auto" class="d-flex align-center">
-        <VBtn id="atl-refresh-btn" color="primary" :loading="loading" @click="refreshActivity">
-          <VIcon start>mdi-reload</VIcon>
-          Refrescar
-        </VBtn>
-      </VCol>
+    <VSheet color="white" rounded>
+      <VRow density="comfortable">
+        <VCol md="4" sm="6" cols="12">
+          <MyDateMonthPicker
+            id="atl-month-picker"
+            v-model="selectedMonth"
+            label="Mes"
+          />
+        </VCol>
+        <VCol cols="auto" class="d-flex align-center">
+          <VBtn id="atl-refresh-btn" color="primary" :loading="loading" @click="refreshActivity">
+            <VIcon start>mdi-reload</VIcon>
+            Refrescar
+          </VBtn>
+        </VCol>
 
-      <VCol cols="12">
-        <VCard id="atl-summary-card" class="mt-2">
-          <VCardTitle class="d-flex align-center pa-4">
-            <VIcon start color="primary">mdi-account-group</VIcon>
-            Resumen por consolidador
-            <VSpacer />
-            <VChip v-if="summary.length" size="small" color="primary" variant="tonal">
-              {{ summary.length }} consolidadores
-            </VChip>
-          </VCardTitle>
-          <VDataTable
-            id="atl-summary"
+        <VCol cols="12">
+          <ChurchMemberConsolidatorSummaryTable
             :items="summary"
-            density="compact"
-            class="elevation-1"
-            hide-default-footer
-            :headers="summaryHeaders"
-            :items-length="summary.length"
-          >
-            <template #[`item.actions`]="{ item }">
-              <VBtn
-                :id="`atl-consolidator-btn-${item.created_by}`"
-                icon
-                class="ma-1"
-                size="small"
-                rounded="circle"
-                title="Ver actividad"
-                :color="selectedConsolidator?.created_by === item.created_by ? 'primary' : undefined"
-                :variant="selectedConsolidator?.created_by === item.created_by ? 'flat' : 'outlined'"
-                @click="selectConsolidator(item)"
-              >
-                <VIcon size="x-large">mdi-eye</VIcon>
-              </VBtn>
-            </template>
-            <template #[`item.creator`]="{ item }">
-              <span class="font-weight-medium">{{ consolidatorName(item.creator) }}</span>
-              <span v-if="item.creator?.email" class="text-grey"> ({{ item.creator.email }})</span>
-            </template>
-            <template #[`item.total`]="{ item }">
-              <VChip size="small" color="primary" variant="tonal">
-                {{ item.total }}
-              </VChip>
-            </template>
-            <template #[`item.distinct_members`]="{ item }">
-              <span class="font-weight-medium">{{ item.distinct_members ?? 0 }}</span>
-            </template>
-            <template #[`item.active_members`]="{ item }">
-              <VChip size="small" color="green" variant="tonal">
-                {{ item.active_members ?? 0 }}
-              </VChip>
-            </template>
-            <template #[`item.inactive_members`]="{ item }">
-              <VChip size="small" variant="tonal" color="orange-darken-3">
-                {{ item.inactive_members ?? 0 }}
-              </VChip>
-            </template>
-            <template #no-data>
-              <div class="text-center text-grey pa-6">
-                <VIcon size="48" color="grey-lighten-1">mdi-information-outline</VIcon>
-                <p class="mt-2">Sin actividad en el rango seleccionado</p>
-              </div>
-            </template>
-          </VDataTable>
-        </VCard>
-      </VCol>
+            :selected-id="selectedConsolidator?.created_by"
+            @select="selectConsolidator"
+          />
+        </VCol>
+      </VRow>
+    </VSheet>
 
-      <VCol v-if="selectedConsolidator" cols="12">
-        <VCard class="mt-4">
-          <VCardTitle class="d-flex align-center pa-4">
-            <VBtn
-              id="atl-back-btn"
-              icon
-              class="mr-2"
-              size="small"
-              variant="text"
-              @click="clearSelection"
-            >
-              <VIcon>mdi-close</VIcon>
-            </VBtn>
-            <VIcon start color="primary">mdi-account</VIcon>
-            {{ consolidatorName(selectedConsolidator.creator) }}
-            <VSpacer />
-            <VChip size="small" color="primary" variant="tonal">
-              {{ selectedConsolidator.total }} registros
-            </VChip>
-          </VCardTitle>
-          <VDivider />
-          <VCardText>
-            <ChurchMemberAllTrackingLogTable
-              :loading="detailLoading"
-              :response="detailResponse"
-              :initial-sort-by="detailOptions.sortBy as { key: string; order: string }[]"
-              @sorting="handleDetailSorting"
-            />
-          </VCardText>
-        </VCard>
-      </VCol>
-    </VRow>
+    <VSheet v-if="selectedConsolidator" color="white" rounded class="mt-4">
+      <div class="d-flex align-center pa-4">
+        <VBtn
+          id="atl-back-btn"
+          icon
+          class="mr-2"
+          size="small"
+          variant="text"
+          @click="clearSelection"
+        >
+          <VIcon>mdi-close</VIcon>
+        </VBtn>
+        <VIcon start color="primary">mdi-account</VIcon>
+        {{ consolidatorName(selectedConsolidator.creator) }}
+        <VSpacer />
+        <VChip size="small" color="primary" variant="tonal">
+          {{ selectedConsolidator.total }} registros
+        </VChip>
+      </div>
+      <VDivider />
+      <div class="pa-4">
+        <ChurchMemberAllTrackingLogTable
+          :loading="detailLoading"
+          :response="detailResponse"
+          :initial-sort-by="detailOptions.sortBy as { key: string; order: string }[]"
+          @sorting="handleDetailSorting"
+        />
+      </div>
+    </VSheet>
   </VContainer>
 </template>
 
@@ -150,15 +92,6 @@ interface SummaryItem {
   inactive_members: number;
   creator?: Person;
 }
-
-const summaryHeaders = [
-  { title: "", key: "actions", sortable: false, align: "center" as const, width: "60px" },
-  { title: "Consolidador", key: "creator", sortable: false },
-  { title: "Actividad", key: "total", align: "center" as const, sortable: false },
-  { title: "Miembros", key: "distinct_members", align: "center" as const, sortable: false },
-  { title: "Activos", key: "active_members", align: "center" as const, sortable: false },
-  { title: "Inactivos", key: "inactive_members", align: "center" as const, sortable: false },
-];
 
 const route = useRoute();
 const { ChurchMemberTrackingLog } = useRepository();

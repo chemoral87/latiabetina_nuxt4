@@ -85,7 +85,7 @@ const response = ref<{ data: unknown[]; total: number }>({
 const lastOptions = ref<Record<string, unknown>>({
   page: 1,
   itemsPerPage: 10,
-  sortBy: [{ key: "contact_datetime", order: "desc" }],
+  sortBy: [{ key: "created_at", order: "desc" }],
 });
 
 const mediumOptions = [

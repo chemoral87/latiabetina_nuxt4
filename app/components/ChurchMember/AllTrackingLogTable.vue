@@ -22,7 +22,9 @@
         {{ formatShortDateTime12h(String(item.contact_datetime ?? "")) || "—" }}
       </template>
       <template #[`item.medium`]='{ item }'>
-        {{ mediumLabel(String(item.medium ?? "")) }}
+        <VChip size="small" variant="tonal" :color="mediumColor(item.medium)">
+          {{ mediumLabel(String(item.medium ?? "")) }}
+        </VChip>
       </template>
       <template #no-data>
         <div class="text-center pa-4 text-grey">Sin interacciones registradas</div>
@@ -85,7 +87,23 @@ function memberName(member?: Person) {
   return [member?.name, member?.last_name].filter(Boolean).join(" ") || "N/A";
 }
 
-function mediumLabel(medium: string) {
-  return ({ whatsapp: "WhatsApp", llamada: "Llamada", presencial: "Presencial", sms: "SMS" } as Record<string, string>)[medium] || medium;
+function mediumLabel(medium: unknown): string {
+  const labels: Record<string, string> = {
+    whatsapp: "WhatsApp",
+    sms: "Mensaje",
+    llamada: "Llamada",
+    presencial: "Presencial",
+  }
+  return labels[String(medium)] || String(medium ?? "—")
+}
+
+function mediumColor(medium: unknown): string {
+  const colors: Record<string, string> = {
+    whatsapp: "green",
+    sms: "teal",
+    llamada: "primary",
+    presencial: "deep-orange",
+  }
+  return colors[String(medium)] ?? "grey"
 }
 </script>
