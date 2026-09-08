@@ -16,6 +16,20 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   devServer: { host: '0.0.0.0', port: 3003 },
+  // Project lives on a mapped network drive (Z:\). Chokidar's native OS
+  // file-system events are unreliable over SMB/network shares, which can
+  // leave Vite's dev-server module cache out of sync with the file on disk
+  // (surfaces as bogus SFC parse errors on a cold module request, e.g. from
+  // a second browser). Polling forces Vite to actually stat files instead
+  // of waiting for a change event that may never arrive.
+  vite: {
+    server: {
+      watch: {
+        usePolling: true,
+        interval: 300,
+      },
+    },
+  },
   modules: ['vuetify-nuxt-module', '@pinia/nuxt'],
   app: {
     head: {

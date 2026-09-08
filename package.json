@@ -1,11 +1,12 @@
 {
   "name": "latiabetina_nuxt4",
-  "version": "1.0.116",
+  "version": "1.0.117",
   "type": "module",
   "private": true,
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
+    "start": "rimraf node_modules/.vite .nuxt && npm run dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "lint": "eslint app",
@@ -34,6 +35,7 @@
     "@babel/eslint-parser": "^8.0.1",
     "@babel/preset-typescript": "^8.0.1",
     "eslint": "^9.39.5",
+    "rimraf": "^6.0.1",
     "eslint-plugin-vue": "^10.10.0",
     "husky": "^9.1.7",
     "typescript": "^7.0.2",
