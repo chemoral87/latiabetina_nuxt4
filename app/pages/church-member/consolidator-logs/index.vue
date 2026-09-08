@@ -1,6 +1,7 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VRow density="comfortable">
+    <VSheet color="white" rounded>
+      <VRow density="comfortable">
       <VCol md="2" sm="4" cols="12">
         <VTextField
           id="cml-index-filter"
@@ -48,6 +49,7 @@
         />
       </VCol>
     </VRow>
+    </VSheet>
   </VContainer>
 </template>
 

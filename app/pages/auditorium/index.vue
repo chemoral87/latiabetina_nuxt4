@@ -1,6 +1,7 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VRow density="comfortable">
+    <VSheet color="white" rounded>
+      <VRow density="comfortable">
       <VCol md="2" cols="12">
         <VTextField
           id="aud-index-filterauditorium-tf-1"
@@ -59,6 +60,7 @@
         />
       </VCol>
     </VRow>
+    </VSheet>
 
     <AuditoriumDialog
       v-if="auditoriumDialog"

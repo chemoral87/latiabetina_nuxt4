@@ -12,6 +12,7 @@
           permission="song-update"
           @close="close"
           @save="saveSong"
+          @save-and-continue="saveSongAndContinue"
         />
       </VCol>
     </VRow>
@@ -70,6 +71,25 @@ async function saveSong(item: Record<string, unknown>) {
     saving.value = true
     await Song.update(payload.id as number, payload)
     navigateTo(`/song/${payload.id}`)
+  } catch (error) {
+    notify.notify({
+      error:
+        (error as { response?: { data?: { message?: string } } }).response?.data
+          ?.message || "Error al actualizar la canción",
+    })
+  } finally {
+    saving.value = false
+  }
+}
+
+async function saveSongAndContinue(item: Record<string, unknown>) {
+  const payload = { ...item }
+  delete payload.org_id
+
+  try {
+    saving.value = true
+    await Song.update(payload.id as number, payload)
+    notify.notify({ success: "Canción guardada" })
   } catch (error) {
     notify.notify({
       error:

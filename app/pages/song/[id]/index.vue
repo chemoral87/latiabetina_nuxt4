@@ -1,27 +1,48 @@
 <template>
   <VContainer class="pa-2" :fluid="true">
     <VRow dense justify="center">
-      <VCol md="10" cols="12">
+      <VCol cols="12">
         <div v-if="loadingItem" class="text-center pa-5">
           <VProgressCircular indeterminate color="primary" />
         </div>
 
         <VCard v-else id="cmp-song-viewer-card">
           <VCardTitle class="d-flex align-start flex-column py-2">
-            <div style="width: 100%" class="d-flex align-center justify-space-between">
+            <div
+              style="width: 100%"
+              class="d-flex align-center justify-space-between"
+            >
               <div>
                 <div class="text-h6">{{ song.title || "Sin título" }}</div>
-                <div v-if="song.artist" class="text-subtitle-1 text-grey">{{ song.artist }}</div>
+                <div v-if="song.artist" class="text-subtitle-1 text-grey">
+                  {{ song.artist }}
+                </div>
               </div>
               <div class="text-right d-flex align-center">
-                <VChip v-if="song.key" class="mr-2" size="small" color="primary" variant="outlined">{{ song.key }}</VChip>
-                <VChip v-if="song.tempo" class="mr-2" size="small" variant="outlined">{{ song.tempo }}</VChip>
+                <VChip
+                  v-if="song.key"
+                  class="mr-2"
+                  size="small"
+                  color="primary"
+                  variant="outlined"
+                  >{{ song.key }}</VChip
+                >
+                <VChip
+                  v-if="song.tempo"
+                  class="mr-2"
+                  size="small"
+                  variant="outlined"
+                  >{{ song.tempo }}</VChip
+                >
               </div>
             </div>
           </VCardTitle>
 
           <VCardText class="py-2">
-            <div style="gap: 6px" class="d-flex justify-end align-center flex-wrap mb-1 print-hide">
+            <div
+              style="gap: 6px"
+              class="d-flex justify-end align-center flex-wrap mb-1 print-hide"
+            >
               <div class="d-flex align-center">
                 <VBtn
                   id="song-view-columns-1-btn"
@@ -75,18 +96,37 @@
                 size="small"
                 variant="outlined"
                 :color="expandRepeats ? 'primary' : 'grey'"
-                :title="expandRepeats ? 'Mostrar ×' : 'Repetir texto con acordes'"
+                :title="
+                  expandRepeats ? 'Mostrar ×' : 'Repetir texto con acordes'
+                "
                 @click="expandRepeats = !expandRepeats"
               >
-                <VIcon start size="small">{{ expandRepeats ? 'mdi-collapse-all' : 'mdi-repeat' }}</VIcon>
-                {{ expandRepeats ? 'Colapsar repeticiones' : 'Expandir repeticiones' }}
+                <VIcon start size="small">{{
+                  expandRepeats ? "mdi-collapse-all" : "mdi-repeat"
+                }}</VIcon>
+                {{
+                  expandRepeats
+                    ? "Colapsar repeticiones"
+                    : "Expandir repeticiones"
+                }}
               </VBtn>
             </div>
-            <SongViewer :columns="columns" :content="song.content as any" :expand-repeats="expandRepeats" />
+            <SongViewer
+              :columns="columns"
+              :content="song.content as any"
+              :expand-repeats="expandRepeats"
+            />
           </VCardText>
 
           <div class="d-flex justify-end px-3 pb-2 pt-1">
-            <VBtn id="song-view-back-btn" text class="mr-5" variant="text" color="primary" @click="navigateTo('/song')">
+            <VBtn
+              id="song-view-back-btn"
+              text
+              class="mr-5"
+              variant="text"
+              color="primary"
+              @click="navigateTo('/song')"
+            >
               Volver
             </VBtn>
             <VBtn
@@ -106,47 +146,47 @@
 </template>
 
 <script setup lang="ts">
-import { normalizeContent } from "~/types/song"
+import { normalizeContent } from "~/types/song";
 
 definePageMeta({
   title: "Canción",
   icon: "mdi-music-note-eighth",
   middleware: ["authenticated"],
-})
+});
 
-const route = useRoute()
-const { Song } = useRepository()
+const route = useRoute();
+const { Song } = useRepository();
 
-const loadingItem = ref(true)
-const song = ref<Record<string, unknown>>({})
-const expandRepeats = ref(true)
-const columns = ref<1 | 2 | 3>(1)
+const loadingItem = ref(true);
+const song = ref<Record<string, unknown>>({});
+const expandRepeats = ref(true);
+const columns = ref<1 | 2 | 3>(1);
 
 // Initial load (asyncData equivalent)
 {
   try {
     const dbItem = await Song.show<Record<string, unknown>>(
       route.params.id as string,
-    )
-    song.value = dbItem as Record<string, unknown>
-    song.value.content = normalizeContent(song.value.content)
+    );
+    song.value = dbItem as Record<string, unknown>;
+    song.value.content = normalizeContent(song.value.content);
   } catch (e) {
-    throw createError({ statusCode: 404, message: "Canción no encontrada" })
+    throw createError({ statusCode: 404, message: "Canción no encontrada" });
   } finally {
-    loadingItem.value = false
+    loadingItem.value = false;
   }
 }
 
 function printSong() {
-  window.print()
+  window.print();
 }
 
 onMounted(() => {
-  const title = (song.value.title as string) || ""
-  route.meta.title = title ? `Canción - ${title}` : "Canción"
-  route.meta.icon = "mdi-music-note-eighth"
-  route.meta.back = "/song"
-})
+  const title = (song.value.title as string) || "";
+  route.meta.title = title ? `Canción - ${title}` : "Canción";
+  route.meta.icon = "mdi-music-note-eighth";
+  route.meta.back = "/song";
+});
 </script>
 
 <style scoped>
@@ -163,7 +203,8 @@ onMounted(() => {
     border: none !important;
   }
   :deep(.song-viewer) {
-    font-family: "Consolas", "SFMono-Regular", "Monaco", "Courier New", monospace;
+    font-family:
+      "Consolas", "SFMono-Regular", "Monaco", "Courier New", monospace;
     font-variant-ligatures: none;
   }
 }

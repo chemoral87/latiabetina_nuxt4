@@ -1,6 +1,7 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VRow>
+    <VSheet color="white" rounded>
+      <VRow>
       <!-- Filter -->
       <VCol cols="12" md="3">
         <VTextField
@@ -43,6 +44,7 @@
         />
       </VCol>
     </VRow>
+    </VSheet>
   </VContainer>
 </template>
 

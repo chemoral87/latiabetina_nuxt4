@@ -6,8 +6,8 @@
           <VCardTitle
             class="text-subtitle-1 font-weight-medium d-flex align-center"
           >
-            <VIcon start size="large" color="primary">mdi-account</VIcon>
-            <span class="text-subtitle-2 member-name">{{ fullName }}</span>
+            <VIcon start size="small" color="primary">mdi-account</VIcon>
+            <span class="text-subtitle-2 member-name">{{ member.name }}</span>
             <VSpacer />
             <VChip size="small" :color="statusColor(member.status)">
               {{ statusLabel(member.status) }}
@@ -29,6 +29,13 @@
             <VRow density="compact">
               <VCol cols="7">
                 <VRow density="compact">
+                  <VCol sm="6" cols="12" class="text-body-2">
+                    <VIcon start size="small" color="grey-darken-1"
+                      >mdi-account</VIcon
+                    >
+                    <span class="font-weight-medium">Nombre completo:</span>
+                    {{ fullName }}
+                  </VCol>
                   <VCol sm="6" cols="12" class="text-body-2">
                     <VIcon start size="small" color="grey-darken-1"
                       >mdi-phone</VIcon
@@ -216,8 +223,8 @@
           <VCardText>
             <ChurchMemberTrackingLogTable
               id="cmm-tracking-log-table"
-              :response="logsResponse"
               :loading="loadingLogs"
+              :response="logsResponse"
               @edit="editTrackingLog"
               @delete="deleteTrackingLog"
               @sorting="onLogsUpdateOptions"
@@ -291,7 +298,12 @@
         </VCard>
       </VCol>
     </VRow>
-    <VRow v-if="consolidatorLogs.length > 0 && auth.hasPermission('church-member-consolidator-assign')">
+    <VRow
+      v-if="
+        consolidatorLogs.length > 0 &&
+        auth.hasPermission('church-member-consolidator-assign')
+      "
+    >
       <VCol cols="12">
         <VCard>
           <VCardTitle class="text-subtitle-1 font-weight-medium">
@@ -394,7 +406,6 @@ definePageMeta({
   icon: "mdi-account",
   permission: "conso-sheet-index",
   middleware: ["authenticated", "permission"],
-  showDrawer: false,
 });
 
 const route = useRoute();
@@ -526,7 +537,10 @@ const backRoute = computed(() => {
       return await ChurchMemberTrackingLog.index<{
         data: unknown[];
         total: number;
-      }>(route.params.id as string, params).catch(() => ({ data: [] as unknown[], total: 0 }));
+      }>(route.params.id as string, params).catch(() => ({
+        data: [] as unknown[],
+        total: 0,
+      }));
     },
     { default: () => ({ data: [] as unknown[], total: 0 }) },
   );

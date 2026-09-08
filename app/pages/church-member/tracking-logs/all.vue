@@ -174,7 +174,7 @@ const detailResponse = ref<{ data: ActivityLog[]; total: number }>({ data: [], t
 const detailOptions = ref<Record<string, unknown>>({
   page: 1,
   itemsPerPage: 10,
-  sortBy: [{ key: "contact_datetime", order: "desc" }],
+  sortBy: [{ key: "created_at", order: "desc" }],
 });
 let detailRequestId = 0;
 
@@ -224,7 +224,7 @@ function consolidatorName(creator?: Person) {
 
 function selectConsolidator(consolidator: SummaryItem) {
   selectedConsolidator.value = consolidator;
-  detailOptions.value = { page: 1, itemsPerPage: 10, sortBy: [{ key: "contact_datetime", order: "desc" }] };
+  detailOptions.value = { page: 1, itemsPerPage: 10, sortBy: [{ key: "created_at", order: "desc" }] };
   fetchDetail({ page: 1 });
 }
 

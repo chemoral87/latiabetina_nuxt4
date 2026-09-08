@@ -1,6 +1,7 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VRow>
+    <VSheet color="white" rounded>
+      <VRow>
       <!-- Filter -->
       <VCol md="2" cols="12">
         <VTextField
@@ -50,6 +51,7 @@
         />
       </VCol>
     </VRow>
+    </VSheet>
 
     <!-- Create/Edit dialog -->
     <PermissionDialog

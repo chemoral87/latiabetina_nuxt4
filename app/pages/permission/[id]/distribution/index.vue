@@ -1,6 +1,7 @@
 <template>
   <VContainer :fluid="true">
-    <VRow density="comfortable">
+    <VSheet color="white" rounded>
+      <VRow density="comfortable">
       <!-- Organization filter -->
       <VCol cols="12" md="3">
         <VSelect
@@ -57,6 +58,7 @@
         </VCard>
       </VCol>
     </VRow>
+    </VSheet>
   </VContainer>
 </template>
 

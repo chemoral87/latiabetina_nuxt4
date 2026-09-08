@@ -1,66 +1,68 @@
 <template>
   <VContainer :fluid="true" class="page-tracking">
-    <VRow density="comfortable">
-      <VCol v-if="showOrgSelect" lg="2" md="3" sm="4" cols="6">
-        <OrganizationSelect
-          v-model="filterOrgId"
-          clearable
-          hide-details
-          density="compact"
-          variant="outlined"
-          prevent-auto-select
-          permission="conso-sheet-index"
-        />
-      </VCol>
+    <VSheet rounded color="white">
+      <VRow density="comfortable">
+        <VCol v-if="showOrgSelect" lg="2" md="3" sm="4" cols="6">
+          <OrganizationSelect
+            v-model="filterOrgId"
+            clearable
+            hide-details
+            density="compact"
+            variant="outlined"
+            prevent-auto-select
+            permission="conso-sheet-index"
+          />
+        </VCol>
 
-      <VCol md="2" sm="4" cols="6">
-        <VSelect
-          id="seg-index-status"
-          v-model="filterStatus"
-          clearable
-          hide-details
-          label="Estado"
-          density="compact"
-          variant="outlined"
-          :items="statusOptions"
-        />
-      </VCol>
+        <VCol md="2" sm="4" cols="6">
+          <VSelect
+            id="seg-index-status"
+            v-model="filterStatus"
+            clearable
+            hide-details
+            label="Estado"
+            density="compact"
+            variant="outlined"
+            :items="statusOptions"
+          />
+        </VCol>
 
-      <VCol md="2" sm="4" cols="6">
-        <VTextField
-          id="seg-index-filter"
-          v-model="filterInput"
-          clearable
-          hide-details
-          density="compact"
-          variant="outlined"
-          placeholder="Filtro"
-          append-inner-icon="mdi-magnify"
-        />
-      </VCol>
+        <VCol md="2" sm="4" cols="6">
+          <VTextField
+            id="seg-index-filter"
+            v-model="filterInput"
+            clearable
+            hide-details
+            density="compact"
+            variant="outlined"
+            placeholder="Filtro"
+            append-inner-icon="mdi-magnify"
+          />
+        </VCol>
 
-      <VCol cols="auto" class="d-flex align-center">
-        <VBtn
-          id="seg-refresh-btn"
-          color="primary"
-          :loading="loading"
-          @click="fetchData"
-        >
-          <VIcon start>mdi-reload</VIcon>
-          Refrescar
-        </VBtn>
-      </VCol>
+        <VCol cols="auto" class="d-flex align-center">
+          <VBtn
+            id="seg-refresh-btn"
+            color="primary"
+            :loading="loading"
+            @click="fetchData"
+          >
+            <VIcon start>mdi-reload</VIcon>
+            Refrescar
+          </VBtn>
+        </VCol>
 
-      <VCol cols="12">
-        <TrackingTable
-          :orgs="orgs"
-          :members="members"
-          :loading="loading"
-          @view="viewMember"
-          @update:options="onUpdateOptions"
-        />
-      </VCol>
-    </VRow>
+        <VCol cols="12">
+          <TrackingTable
+            :orgs="orgs"
+            :loading="loading"
+            :members="members"
+            @view="viewMember"
+            @update:options="onUpdateOptions"
+          />
+        </VCol>
+      </VRow>
+    </VSheet>
   </VContainer>
 </template>
 

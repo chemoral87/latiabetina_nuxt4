@@ -1,6 +1,7 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VRow density="comfortable">
+    <VSheet color="white" rounded>
+      <VRow density="comfortable">
       <VCol md="4" cols="12">
         <VTextField
           id="song-filter"
@@ -46,6 +47,7 @@
         />
       </VCol>
     </VRow>
+    </VSheet>
 
     <DialogDelete
       v-if="songDialogDelete"

@@ -1,6 +1,7 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VRow>
+    <VSheet color="white" rounded>
+      <VRow>
       <VCol md="2" sm="6" cols="12">
         <VTextField
           id="org-index-filterorganization-tf-1"
@@ -47,6 +48,7 @@
         />
       </VCol>
     </VRow>
+    </VSheet>
 
     <OrganizationFormDialog
       v-if="organizationFormDialog"

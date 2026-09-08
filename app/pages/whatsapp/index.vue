@@ -1,6 +1,7 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VRow align="center" density="comfortable">
+    <VSheet color="white" rounded>
+      <VRow align="center" density="comfortable">
       <VCol md="3" sm="6" cols="12">
         <VTextField
           id="wa-logs-filter-receiver"
@@ -75,6 +76,7 @@
         />
       </VCol>
     </VRow>
+    </VSheet>
   </VContainer>
 </template>
 

@@ -42,6 +42,7 @@
           :song="importedSong as Record<string, unknown>"
           @close="close"
           @save="saveSong"
+          @save-and-continue="saveSongAndContinue"
         />
       </VCol>
     </VRow>
@@ -153,6 +154,31 @@ async function saveSong(item: Record<string, unknown>) {
       | { id?: number | string }
       | undefined
     navigateTo(created?.id ? `/song/${created.id}` : "/song")
+  } catch (error) {
+    notify.notify({
+      error:
+        (error as { response?: { data?: { message?: string } } }).response?.data
+          ?.message || "Error al crear la canción",
+    })
+  } finally {
+    saving.value = false
+  }
+}
+
+async function saveSongAndContinue(item: Record<string, unknown>) {
+  const payload = { ...item }
+  payload.org_id = null
+
+  try {
+    saving.value = true
+    const res = await Song.create<Record<string, unknown>>(payload)
+    const created = (res as Record<string, unknown>)?.data as
+      | { id?: number | string }
+      | undefined
+    if (created?.id) {
+      navigateTo(`/song/${created.id}/edit`)
+    }
+    notify.notify({ success: "Canción guardada" })
   } catch (error) {
     notify.notify({
       error:

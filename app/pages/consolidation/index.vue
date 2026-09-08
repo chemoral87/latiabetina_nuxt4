@@ -1,56 +1,54 @@
 <template>
   <VContainer :fluid="true" class="page-consolidation">
-    <VCard variant="outlined" class="mb-3">
-      <VCardText>
-        <VRow density="comfortable">
-          <VCol md="2" sm="4" cols="12">
-            <VTextField
-              id="cnsld-index-filter"
-              v-model="filterInput"
-              clearable
-              hide-details
-              density="compact"
-              variant="outlined"
-              placeholder="Filtro"
-              label="Filtro"
-              append-inner-icon="mdi-magnify"
-            />
-          </VCol>
-          <VCol cols="auto" class="d-flex align-center">
-            <VBtn
-              id="cnsld-refresh-btn"
-              class="mr-4"
-              color="primary"
-              :loading="loading"
-              @click="fetchData"
-            >
-              <VIcon start>mdi-reload</VIcon>
-              Refrescar
-            </VBtn>
-            <VBtn id="cnsld-new-btn" color="success" @click="newSheet">
-              <VIcon start>mdi-plus</VIcon>
-              Nuevo
-            </VBtn>
-          </VCol>
-          <VCol cols="12">
-            <ConsolidationTable
-              v-model:dialog-delete="dialogDelete"
-              :loading="loading"
-              :deleting="deleting"
-              :response="response"
-              :search="filterTerm"
-              :removing-id="removingId"
-              :highlight-id="highlightId"
-              :initial-sort-by="lastOptions.sortBy as any"
-              @edit="editSheet"
-              @view="viewSheet"
-              @delete="deleteSheet"
-              @sorting="handleSorting"
-            />
-          </VCol>
-        </VRow>
-      </VCardText>
-    </VCard>
+    <VSheet color="white" rounded>
+      <VRow density="comfortable">
+        <VCol md="2" sm="4" cols="12">
+          <VTextField
+            id="cnsld-index-filter"
+            v-model="filterInput"
+            clearable
+            hide-details
+            density="compact"
+            variant="outlined"
+            placeholder="Filtro"
+            label="Filtro"
+            append-inner-icon="mdi-magnify"
+          />
+        </VCol>
+        <VCol cols="auto" class="d-flex align-center">
+          <VBtn
+            id="cnsld-refresh-btn"
+            class="mr-4"
+            color="primary"
+            :loading="loading"
+            @click="fetchData"
+          >
+            <VIcon start>mdi-reload</VIcon>
+            Refrescar
+          </VBtn>
+          <VBtn id="cnsld-new-btn" color="success" @click="newSheet">
+            <VIcon start>mdi-plus</VIcon>
+            Nuevo
+          </VBtn>
+        </VCol>
+        <VCol cols="12">
+          <ConsolidationTable
+            v-model:dialog-delete="dialogDelete"
+            :loading="loading"
+            :deleting="deleting"
+            :response="response"
+            :search="filterTerm"
+            :removing-id="removingId"
+            :highlight-id="highlightId"
+            :initial-sort-by="lastOptions.sortBy as any"
+            @edit="editSheet"
+            @view="viewSheet"
+            @delete="deleteSheet"
+            @sorting="handleSorting"
+          />
+        </VCol>
+      </VRow>
+    </VSheet>
 
     <ConsolidationDialog
       v-if="dialog"
@@ -240,15 +238,4 @@ function handleSorting(opts: Record<string, unknown>) {
 }
 </script>
 
-<style scoped>
-.page-consolidation :deep(.v-card) {
-  margin: 0;
-  padding: 0;
-  border: none;
-}
-.page-consolidation :deep(.v-card-text) {
-  padding: 0;
-  margin: 0;
-  background-color: #FFFFFF;
-}
-</style>
+<style scoped></style>

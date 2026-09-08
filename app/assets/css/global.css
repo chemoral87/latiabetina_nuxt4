@@ -8,6 +8,11 @@
   padding: 8px !important;
 }
 
+/* v-container: top padding for VSheet inside the container */
+.v-container > .v-sheet {
+  padding-top: 8px !important;
+}
+
 /* Red asterisk after the label of any required Vuetify input.
    Vuetify forwards an unrecognized `required` attribute straight onto the
    native <input>/<textarea> inside `.v-input`, so `:has()` can reach up

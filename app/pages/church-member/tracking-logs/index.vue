@@ -1,57 +1,59 @@
 <template>
   <VContainer :fluid="true" class="page-tracking-logs">
-    <VRow density="comfortable">
-      <VCol md="3" sm="4" cols="12">
-        <VTextField
-          id="mtl-index-filter"
-          v-model="filterInput"
-          clearable
-          hide-details
-          density="compact"
-          variant="outlined"
-          placeholder="Filtro"
-          label="Filtro"
-          append-inner-icon="mdi-magnify"
-        />
-      </VCol>
-      <VCol md="2" sm="4" cols="6">
-        <VSelect
-          id="mtl-index-medium"
-          v-model="filterMedium"
-          clearable
-          hide-details
-          label="Medio"
-          density="compact"
-          variant="outlined"
-          :items="mediumOptions"
-        />
-      </VCol>
-      <VCol md="3" sm="4" cols="12">
-        <MyDateRange v-model="filterDateRange" variant="outlined" />
-      </VCol>
-      <VCol cols="auto" class="d-flex align-center">
-        <VBtn
-          id="mtl-refresh-btn"
-          color="primary"
-          :loading="loading"
-          @click="fetchData"
-        >
-          <VIcon start>mdi-reload</VIcon>
-          Refrescar
-        </VBtn>
-      </VCol>
-      <VCol cols="12">
-        <ChurchMemberMyTrackingLogTable
-          :loading="loading"
-          :response="response"
-          :search="filterTerm"
-          :highlight-id="highlightId"
-          :initial-sort-by="lastOptions.sortBy as any"
-          @view="viewMember"
-          @sorting="handleSorting"
-        />
-      </VCol>
-    </VRow>
+    <VSheet rounded color="white">
+      <VRow density="comfortable">
+        <VCol md="3" sm="4" cols="12">
+          <VTextField
+            id="mtl-index-filter"
+            v-model="filterInput"
+            clearable
+            hide-details
+            label="Filtro"
+            density="compact"
+            variant="outlined"
+            placeholder="Filtro"
+            append-inner-icon="mdi-magnify"
+          />
+        </VCol>
+        <VCol md="2" sm="4" cols="6">
+          <VSelect
+            id="mtl-index-medium"
+            v-model="filterMedium"
+            clearable
+            hide-details
+            label="Medio"
+            density="compact"
+            variant="outlined"
+            :items="mediumOptions"
+          />
+        </VCol>
+        <VCol md="3" sm="4" cols="12">
+          <MyDateRange v-model="filterDateRange" variant="outlined" />
+        </VCol>
+        <VCol cols="auto" class="d-flex align-center">
+          <VBtn
+            id="mtl-refresh-btn"
+            color="primary"
+            :loading="loading"
+            @click="fetchData"
+          >
+            <VIcon start>mdi-reload</VIcon>
+            Refrescar
+          </VBtn>
+        </VCol>
+        <VCol cols="12">
+          <ChurchMemberMyTrackingLogTable
+            :loading="loading"
+            :response="response"
+            :search="filterTerm"
+            :highlight-id="highlightId"
+            :initial-sort-by="lastOptions.sortBy as any"
+            @view="viewMember"
+            @sorting="handleSorting"
+          />
+        </VCol>
+      </VRow>
+    </VSheet>
   </VContainer>
 </template>
 
@@ -100,9 +102,10 @@ useDebouncedFilter(filterInput, filterTerm);
     "church-member-tracking-logs-index",
     async () => {
       const apiParams = buildApiParams(lastOptions.value);
-      return await ChurchMemberTrackingLog.logsIndex<{ data: unknown[]; total: number }>(
-        apiParams,
-      ).catch(() => ({ data: [] as unknown[], total: 0 }));
+      return await ChurchMemberTrackingLog.logsIndex<{
+        data: unknown[];
+        total: number;
+      }>(apiParams).catch(() => ({ data: [] as unknown[], total: 0 }));
     },
     { default: () => ({ data: [] as unknown[], total: 0 }) },
   );
@@ -124,17 +127,22 @@ function normalizeResponse(res: unknown): { data: unknown[]; total: number } {
 function viewMember(item: unknown) {
   const log = item as Record<string, unknown>;
   const member = log.church_member as { id?: number | string } | undefined;
-  if (member?.id != null) navigateTo(`/church-member/${member.id}?from=tracking-logs`);
+  if (member?.id != null)
+    navigateTo(`/church-member/${member.id}?from=tracking-logs`);
 }
 
 async function deleteTrackingLog(item: unknown) {
   const log = item as Record<string, unknown>;
-  const memberId = (log.church_member as { id?: number | string } | undefined)?.id;
+  const memberId = (log.church_member as { id?: number | string } | undefined)
+    ?.id;
   const logId = log.id;
   if (!memberId || !logId) return;
   if (!confirm("¿Desea eliminar esta interacción?")) return;
   try {
-    await ChurchMemberTrackingLog.delete<Record<string, unknown>>(memberId, logId);
+    await ChurchMemberTrackingLog.delete<Record<string, unknown>>(
+      memberId,
+      logId,
+    );
     await fetchData();
   } catch (error) {
     notify.notify({
@@ -151,7 +159,8 @@ async function fetchData(overrides: Record<string, unknown> = {}) {
     const requestOptions = { ...lastOptions.value, ...overrides };
     const params = buildApiParams(requestOptions);
     if (filterTerm.value && !params.filter) params.filter = filterTerm.value;
-    if (filterMedium.value && !params.medium) params.medium = filterMedium.value;
+    if (filterMedium.value && !params.medium)
+      params.medium = filterMedium.value;
     if (filterDateRange.value?.[0]) params.date_from = filterDateRange.value[0];
     if (filterDateRange.value?.[1]) params.date_to = filterDateRange.value[1];
     const res = await ChurchMemberTrackingLog.logsIndex(params);

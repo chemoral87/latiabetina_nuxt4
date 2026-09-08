@@ -1,6 +1,7 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VRow density="comfortable">
+    <VSheet color="white" rounded>
+      <VRow density="comfortable">
       <!-- Filtro de busqueda -->
       <VCol md="2" cols="12">
         <VTextField
@@ -74,6 +75,7 @@
         />
       </VCol>
     </VRow>
+    </VSheet>
 
     <!-- Dialogo de copiar evento en varias fechas -->
     <ChurchEventCopyDialog

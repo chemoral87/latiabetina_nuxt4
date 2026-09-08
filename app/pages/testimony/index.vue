@@ -1,6 +1,7 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VRow density="comfortable" align="center">
+    <VSheet color="white" rounded>
+      <VRow density="comfortable" align="center">
       <VCol md="4" sm="6" cols="12">
         <VTextField
           id="tes-index-filtertestimony-tf-1"
@@ -92,6 +93,7 @@
         />
       </VCol>
     </VRow>
+    </VSheet>
 
     <TestimonyDialog
       v-if="testimonyDialog"

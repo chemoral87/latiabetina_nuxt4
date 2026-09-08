@@ -1,6 +1,7 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VRow>
+    <VSheet color="white" rounded>
+      <VRow>
       <VCol cols="12" sm="6" md="2">
         <VTextField id="usr-index-filteruser-tf-1" v-model="filterInput" append-inner-icon="mdi-magnify" variant="outlined" density="compact" clearable hide-details placeholder="Filtro" />
       </VCol>
@@ -20,6 +21,7 @@
         <UserTable v-model:dialog-delete="dialogDeleteUser" :search="filterUser" :response="response" :loading="loading" :highlight-id="highlightId" :removing-id="removingId" :initial-sort-by="(lastOptions.sortBy as any)" @sorting="handleSorting" @edit="editUser" @edit-profiles="editProfiles" @delete="deleteUser" />
       </VCol>
     </VRow>
+    </VSheet>
 
     <UserDialog v-if="userDialog" :userx="userx" :loading="saving" @close="closeDialog" @save="saveUser" />
   </VContainer>

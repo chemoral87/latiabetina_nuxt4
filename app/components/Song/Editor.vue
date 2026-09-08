@@ -88,16 +88,48 @@
         <div>Pega la letra o agrega una sección para empezar.</div>
       </div>
 
-      <div v-for="section in content.sections" :key="section.id" class="section-editor mb-3">
+      <div v-for="(section, si) in content.sections" :key="section.id" class="section-editor mb-3" :class="{ 'section-odd': si % 2 === 0 }">
         <div style="gap: 8px" class="d-flex align-center mb-2">
           <VTextField :id="`song-section-name-${section.id}`" v-model="section.name" hide-details label="Sección" density="compact" variant="outlined" class="flex-grow-1" :disabled="disabled" />
           <VTextField :id="`song-section-times-${section.id}`" v-model.number="section.times" :min="1" :max="10" hide-details label="Veces" type="number" density="compact" variant="outlined" :disabled="disabled" style="max-width: 90px" title="Veces que se repite la sección" @update:model-value="(v: unknown) => { const n = Number(v); section.times = !Number.isFinite(n) || n < 1 ? 1 : Math.floor(n); }" />
-          <VBtn :id="`song-section-add-line-btn-${section.id}`" size="small" variant="text" title="Agregar línea" @click="addLine(section)">
-            <VIcon>mdi-plus</VIcon>
-          </VBtn>
-          <VBtn :id="`song-section-remove-btn-${section.id}`" size="small" color="error" variant="text" title="Eliminar sección" @click="removeSection(section.id)">
-            <VIcon>mdi-delete</VIcon>
-          </VBtn>
+          <VMenu
+            :id="`song-section-menu-${section.id}`"
+            :model-value="openDropdown === `section-${section.id}`"
+            @update:model-value="(v: boolean) => openDropdown = v ? `section-${section.id}` : null"
+          >
+            <template #activator="{ props }">
+              <VBtn v-bind="props" size="small" variant="text" title="Herramientas de sección" :disabled="disabled">
+                <VIcon>mdi-dots-vertical</VIcon>
+              </VBtn>
+            </template>
+            <VList density="compact">
+              <VListItem @click="addLine(section); openDropdown = null">
+                <template #prepend><VIcon size="small">mdi-plus</VIcon></template>
+                <VListItemTitle>Agregar línea</VListItemTitle>
+              </VListItem>
+              <VListItem @click="duplicateSection(si); openDropdown = null">
+                <template #prepend><VIcon size="small">mdi-content-duplicate</VIcon></template>
+                <VListItemTitle>Duplicar sección</VListItemTitle>
+              </VListItem>
+              <VDivider />
+              <VListItem @click="confirmDeleteSectionId = section.id; openDropdown = null">
+                <template #prepend><VIcon size="small" color="error">mdi-delete</VIcon></template>
+                <VListItemTitle class="text-error">Eliminar sección</VListItemTitle>
+              </VListItem>
+            </VList>
+          </VMenu>
+          <VSelect
+            :id="`song-section-order-${section.id}`"
+            :model-value="si"
+            :items="content.sections.map((s, i) => ({ title: i === 0 ? 'Inicio' : `Después de ${s.name}`, value: i }))"
+            density="compact"
+            variant="outlined"
+            hide-details
+            style="max-width: 200px"
+            placeholder="Mover a..."
+            :disabled="disabled"
+            @update:model-value="(v: number) => moveSection(si, v)"
+          />
         </div>
 
         <div v-for="(line, li) in section.lines" :key="line.id" class="line-editor mb-2">
@@ -127,40 +159,72 @@
             </VBtn>
           </div>
           <div style="gap: 4px" class="d-flex align-center flex-wrap mt-1">
-            <template v-if="getActiveSyllableInLine(line)">
-              <VBtn :id="`song-syllable-insert-left-${line.id}`" text size="x-small" variant="text" color="primary" :disabled="disabled" title="Agregar sílaba antes de la celda seleccionada" @click.stop="addSyllableBefore(line, getActiveSyllableInLine(line)!)">
-                <VIcon size="small">mdi-plus</VIcon>
-                <VIcon size="10">mdi-arrow-left</VIcon>
-              </VBtn>
-              <VBtn :id="`song-syllable-insert-right-${line.id}`" text size="x-small" variant="text" color="primary" :disabled="disabled" title="Agregar sílaba después de la celda seleccionada" @click.stop="addSyllableAfter(line, getActiveSyllableInLine(line)!)">
-                <VIcon size="small">mdi-plus</VIcon>
-                <VIcon size="10">mdi-arrow-right</VIcon>
-              </VBtn>
-              <VBtn :id="`song-syllable-remove-${line.id}`" text color="error" size="x-small" variant="text" :disabled="disabled" title="Quitar sílaba seleccionada" @click="removeSyllable(line, getActiveSyllableInLine(line)!); clearActiveSyllable();">
-                <VIcon size="small">mdi-minus</VIcon>
-              </VBtn>
-              <VDivider vertical class="mx-1" style="height: 16px; align-self: center" />
-            </template>
-            <template v-else>
-              <VBtn text disabled size="x-small" variant="text" title="Selecciona una sílaba"><VIcon size="small">mdi-plus</VIcon><VIcon size="10">mdi-arrow-left</VIcon></VBtn>
-              <VBtn text disabled size="x-small" variant="text" title="Selecciona una sílaba"><VIcon size="small">mdi-plus</VIcon><VIcon size="10">mdi-arrow-right</VIcon></VBtn>
-              <VBtn text disabled size="x-small" variant="text" title="Selecciona una sílaba"><VIcon size="small">mdi-minus</VIcon></VBtn>
-              <VDivider vertical class="mx-1" style="height: 16px; align-self: center" />
-            </template>
-            <VBtn :id="`song-line-split-btn-${line.id}`" text size="x-small" variant="text" color="primary" @click="splitLineSyllables(line)">Dividir sílabas</VBtn>
-            <VBtn :id="`song-line-merge-btn-${line.id}`" text size="x-small" variant="text" color="primary" @click="mergeLine(line)">Unir</VBtn>
-            <VBtn :id="`song-line-notes-btn-${line.id}`" text size="x-small" variant="text" :color="isNotesRowVisible(line) ? 'primary' : undefined" @click="toggleNotes(line)">{{ isNotesRowVisible(line) ? "Ocultar notas" : "Notas" }}</VBtn>
-            <VBtn :id="`song-line-duplicate-btn-${line.id}`" text size="x-small" variant="text" color="primary" title="Duplicar línea" @click="duplicateLine(section, li)">
-              <VIcon start size="small">mdi-content-duplicate</VIcon>
-              Duplicar
+            <VBtn size="x-small" variant="text" color="primary" title="Agregar sílaba a la izquierda" :disabled="disabled || !getActiveSyllableInLine(line)" @click="addSyllableBefore(line, getActiveSyllableInLine(line)!)">
+              <VIcon start size="small">mdi-plus</VIcon>
+              Sílaba izquierda
             </VBtn>
-            <VBtn :id="`song-line-up-btn-${line.id}`" text size="x-small" variant="text" title="Mover arriba" :disabled="li === 0 || disabled" @click="moveLine(section, li, -1)">
-              <VIcon size="small">mdi-arrow-up</VIcon>
+            <VBtn size="x-small" variant="text" color="primary" title="Agregar sílaba a la derecha" :disabled="disabled || !getActiveSyllableInLine(line)" @click="addSyllableAfter(line, getActiveSyllableInLine(line)!)">
+              <VIcon start size="small">mdi-plus</VIcon>
+              Sílaba derecha
             </VBtn>
-            <VBtn :id="`song-line-down-btn-${line.id}`" text size="x-small" variant="text" title="Mover abajo" :disabled="li === section.lines.length - 1 || disabled" @click="moveLine(section, li, 1)">
-              <VIcon size="small">mdi-arrow-down</VIcon>
-            </VBtn>
-            <VBtn :id="`song-line-remove-btn-${line.id}`" text color="error" size="x-small" variant="text" @click="removeLine(section, li)">Eliminar línea</VBtn>
+            <VMenu
+              :id="`song-line-menu-${line.id}`"
+              :model-value="openDropdown === `line-${line.id}`"
+              @update:model-value="(v: boolean) => openDropdown = v ? `line-${line.id}` : null"
+            >
+              <template #activator="{ props }">
+                <VBtn v-bind="props" size="x-small" variant="text" color="primary" title="Herramientas de línea" :disabled="disabled">
+                  <VIcon start size="small">mdi-dots-vertical</VIcon>
+                  Herramientas
+                </VBtn>
+              </template>
+              <VList density="compact">
+                <VListItem :disabled="!getActiveSyllableInLine(line)" @click="removeSyllable(line, getActiveSyllableInLine(line)!); clearActiveSyllable(); openDropdown = null">
+                  <template #prepend><VIcon size="small" color="error">mdi-minus</VIcon></template>
+                  <VListItemTitle class="text-error">Quitar sílaba</VListItemTitle>
+                </VListItem>
+                <VDivider />
+                <VListItem @click="splitLineSyllables(line); openDropdown = null">
+                  <template #prepend><VIcon size="small">mdi-set-center</VIcon></template>
+                  <VListItemTitle>Dividir sílabas</VListItemTitle>
+                </VListItem>
+                <VListItem :disabled="disabled || line.syllables.length < 2" @click="breakLine(section, li); openDropdown = null">
+                  <template #prepend><VIcon size="small">mdi-format-page-break</VIcon></template>
+                  <VListItemTitle>Romper línea</VListItemTitle>
+                </VListItem>
+                <VDivider />
+                <VListItem :disabled="disabled || li === 0" @click="pasteLineUp(section, li); openDropdown = null">
+                  <template #prepend><VIcon size="small">mdi-content-paste</VIcon></template>
+                  <VListItemTitle>Pegar línea arriba</VListItemTitle>
+                </VListItem>
+                <VListItem :disabled="disabled || li === section.lines.length - 1" @click="pasteLineDown(section, li); openDropdown = null">
+                  <template #prepend><VIcon size="small">mdi-content-paste</VIcon></template>
+                  <VListItemTitle>Pegar línea abajo</VListItemTitle>
+                </VListItem>
+                <VDivider />
+                <VListItem @click="toggleNotes(line); openDropdown = null">
+                  <template #prepend><VIcon size="small" :color="isNotesRowVisible(line) ? 'primary' : undefined">mdi-music-note</VIcon></template>
+                  <VListItemTitle>{{ isNotesRowVisible(line) ? "Ocultar notas" : "Notas" }}</VListItemTitle>
+                </VListItem>
+                <VListItem @click="duplicateLine(section, li); openDropdown = null">
+                  <template #prepend><VIcon size="small">mdi-content-duplicate</VIcon></template>
+                  <VListItemTitle>Duplicar línea</VListItemTitle>
+                </VListItem>
+                <VListItem :disabled="li === 0 || disabled" @click="moveLine(section, li, -1); openDropdown = null">
+                  <template #prepend><VIcon size="small">mdi-arrow-up</VIcon></template>
+                  <VListItemTitle>Mover arriba</VListItemTitle>
+                </VListItem>
+                <VListItem :disabled="li === section.lines.length - 1 || disabled" @click="moveLine(section, li, 1); openDropdown = null">
+                  <template #prepend><VIcon size="small">mdi-arrow-down</VIcon></template>
+                  <VListItemTitle>Mover abajo</VListItemTitle>
+                </VListItem>
+                <VDivider />
+                <VListItem @click="removeLine(section, li); openDropdown = null">
+                  <template #prepend><VIcon size="small" color="error">mdi-delete</VIcon></template>
+                  <VListItemTitle class="text-error">Eliminar línea</VListItemTitle>
+                </VListItem>
+              </VList>
+            </VMenu>
           </div>
         </div>
       </div>
@@ -180,6 +244,10 @@
 
     <div class="d-flex justify-end px-4 pb-4">
       <VBtn id="song-editor-cancel-btn" class="mr-4" variant="text" color="primary" :disabled="disabled" @click="close">Cancelar</VBtn>
+      <VBtn id="song-editor-save-continue-btn" color="primary" variant="outlined" class="mr-2" :loading="saving || loading" :disabled="saving || loading" @click="saveAndContinue">
+        <VIcon start>mdi-content-save-plus</VIcon>
+        Guardar y continuar
+      </VBtn>
       <VBtn id="song-editor-save-btn" color="primary" variant="elevated" :loading="saving || loading" :disabled="saving || loading" @click="save">
         <VIcon start>mdi-content-save</VIcon>
         Guardar
@@ -188,6 +256,18 @@
 
     <SongPasteDialog v-if="pasteDialog" @apply="applyPasted" @close="pasteDialog = false" />
     <SongEditorHistoryFab :can-redo="canRedo" :can-undo="canUndo" @redo="redo" @undo="undo" />
+
+    <VDialog :model-value="!!confirmDeleteSectionId" @update:model-value="(v: boolean) => { if (!v) confirmDeleteSectionId = null }" max-width="400">
+      <VCard>
+        <VCardTitle class="text-h6">Eliminar sección</VCardTitle>
+        <VCardText>¿Estás seguro de que quieres eliminar esta sección? Esta acción no se puede deshacer.</VCardText>
+        <VCardActions>
+          <VSpacer />
+          <VBtn variant="text" @click="confirmDeleteSectionId = null">Cancelar</VBtn>
+          <VBtn color="error" variant="elevated" @click="removeSection(confirmDeleteSectionId!); confirmDeleteSectionId = null">Eliminar</VBtn>
+        </VCardActions>
+      </VCard>
+    </VDialog>
   </VCard>
 </template>
 
@@ -225,6 +305,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: "close"): void
   (e: "save", val: Record<string, unknown>): void
+  (e: "save-and-continue", val: Record<string, unknown>): void
 }>()
 
 const { vrules } = useVrules()
@@ -257,6 +338,9 @@ const {
 } = useSongEditorNavigation(content)
 
 const { isNotesRowVisible, toggleNotes } = useSongEditorNotes()
+
+const openDropdown = ref<string | null>(null)
+const confirmDeleteSectionId = ref<string | null>(null)
 
 const {
   canUndo,
@@ -333,6 +417,26 @@ function removeSection(sectionId: string) {
   const idx = content.value.sections.findIndex((s) => s.id === sectionId)
   if (idx !== -1) content.value.sections.splice(idx, 1)
 }
+function moveSection(fromIndex: number, toIndex: number) {
+  if (fromIndex === toIndex || toIndex < 0 || toIndex >= content.value.sections.length) return
+  const [moved] = content.value.sections.splice(fromIndex, 1)
+  if (moved) content.value.sections.splice(toIndex, 0, moved)
+}
+function duplicateSection(index: number) {
+  const section = content.value.sections[index]
+  if (!section) return
+  const cloned: SongSection = {
+    id: uid("sec"),
+    name: section.name,
+    times: section.times,
+    lines: section.lines.map((line) => ({
+      id: uid("ln"),
+      times: (line as SongLine).times ?? 1,
+      syllables: line.syllables.map((s) => ({ id: uid("sy"), text: s.text, chords: [...(s.chords || [])], notes: [...(s.notes || [])] })),
+    })),
+  }
+  content.value.sections.splice(index + 1, 0, cloned)
+}
 function addLine(section: SongSection) {
   section.lines.push(newLine())
 }
@@ -354,6 +458,45 @@ function moveLine(section: SongSection, index: number, direction: number) {
   if (newIndex < 0 || newIndex >= section.lines.length) return
   const [moved] = section.lines.splice(index, 1)
   if (moved) section.lines.splice(newIndex, 0, moved)
+}
+function breakLine(section: SongSection, index: number) {
+  const line = section.lines[index] as SongLine | undefined
+  if (!line || line.syllables.length < 2) return
+  const activeId = activeSyllableId.value
+  let breakAt = Math.ceil(line.syllables.length / 2)
+  if (activeId) {
+    const idx = line.syllables.findIndex((s) => s.id === activeId)
+    if (idx > 0 && idx < line.syllables.length) breakAt = idx
+  }
+  if (breakAt <= 0 || breakAt >= line.syllables.length) return
+  const removed = line.syllables.splice(breakAt)
+  const newLineItem = newLine(removed.map((s) => newSyllable(s.text)))
+  for (let i = 0; i < removed.length; i++) {
+    newLineItem.syllables[i]!.chords = [...(removed[i]!.chords || [])]
+    newLineItem.syllables[i]!.notes = [...(removed[i]!.notes || [])]
+  }
+  section.lines.splice(index + 1, 0, newLineItem)
+  clearActiveSyllable()
+}
+function parseLineFromText(text: string): SongLine {
+  const trimmed = text.trim()
+  if (!trimmed) return newLine()
+  const syllables = trimmed.split(/\s+/).map((w) => newSyllable(w))
+  return newLine(syllables)
+}
+function pasteLineUp(section: SongSection, index: number) {
+  if (index === 0) return
+  const currentLine = section.lines[index] as SongLine
+  const prevLine = section.lines[index - 1] as SongLine
+  prevLine.syllables.push(...currentLine.syllables)
+  section.lines.splice(index, 1)
+}
+function pasteLineDown(section: SongSection, index: number) {
+  if (index >= section.lines.length - 1) return
+  const currentLine = section.lines[index] as SongLine
+  const nextLine = section.lines[index + 1] as SongLine
+  nextLine.syllables.push(...currentLine.syllables)
+  section.lines.splice(index, 1)
 }
 
 // Syllable helpers
@@ -496,6 +639,19 @@ async function save() {
   if (isEditMode.value) delete payload.org_id
   emit("save", payload)
 }
+async function saveAndContinue() {
+  if (saving.value || props.loading) return
+  const form = formRef.value
+  const { valid } = form ? await form.validate() : { valid: true }
+  if (!valid) return
+  if (saving.value || props.loading) return
+  saving.value = true
+  const payload: Record<string, unknown> = { ...item.value }
+  payload.content = JSON.parse(JSON.stringify(content.value))
+  payload.org_id = null
+  if (isEditMode.value) delete payload.org_id
+  emit("save-and-continue", payload)
+}
 
 defineExpose({ exportJson, triggerImportJson, getSong: () => item.value })
 </script>
@@ -504,6 +660,9 @@ defineExpose({ exportJson, triggerImportJson, getSong: () => item.value })
 .section-editor {
   padding: 16px;
   border-radius: 4px;
+}
+.section-odd {
+  background-color: rgba(var(--v-border-color), 0.06);
 }
 .tab-input :deep(textarea) {
   font-family: "Consolas", "Monaco", monospace;

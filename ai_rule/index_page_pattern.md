@@ -26,17 +26,22 @@ app/components/<Module>/Dialog.vue  create/edit dialog (optional, shown with v-i
 
 ```vue
 <VContainer :fluid="true">
-  <VRow>
-    <VCol cols="12" md="2">            filter VTextField (filterInput)
-    <VCol cols="auto">                 Refrescar + Nuevo buttons
-    <VCol cols="12">                   <ModuleTable />   (filters + table)
-  </VRow>
+  <VSheet color="white" rounded>
+    <VRow>
+      <VCol cols="12" md="2">            filter VTextField (filterInput)
+      <VCol cols="auto">                 Refrescar + Nuevo buttons
+      <VCol cols="12">                   <ModuleTable />   (filters + table)
+    </VRow>
+  </VSheet>
   <ModuleDialog v-if="dialog" ... />   create/edit dialog
 </VContainer>
 ```
 
-- **Every page must use `<VContainer class="pa-1" :fluid="true">`** — see
+- **Every page must use `<VContainer :fluid="true">`** — see
   `ai_rule/vcontainer_convention.md`.
+- **Wrap filters and table in `<VSheet color="white" rounded>`** — provides a
+  white background section with rounded corners. No padding/margin on the VSheet;
+  spacing is handled by the VRow/VCol grid.
 - Filter input: `id="{view}-index-filter"`, `v-model="filterInput"`,
   `append-inner-icon="mdi-magnify"`, `variant="outlined"`, `density="compact"`,
   `clearable`, `hide-details`. (No `tf-` / `-1` suffix — see
@@ -563,8 +568,10 @@ function buildItems() {
    initial `lastOptions` key).
 6. Every `VDataTableServer` must use `mustSort` — prevents the sort indicator
    from disappearing on click (ascending ↔ descending cycle only).
-7. **Every page must use `<VContainer class="pa-1" :fluid="true">`** — see
+7. **Every page must use `<VContainer :fluid="true">`** — see
    `ai_rule/vcontainer_convention.md`.
+8. **Wrap filters and table in `<VSheet color="white" rounded>`** — standard
+   white section for all index pages. No padding/margin on VSheet.
 
 ---
 

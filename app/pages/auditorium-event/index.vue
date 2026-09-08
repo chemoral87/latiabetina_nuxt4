@@ -1,60 +1,68 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VRow density="comfortable">
-      <VCol md="3" cols="12">
-        <MyDateRange v-model="filterAuditoriumEvent" variant="outlined" />
-      </VCol>
-      <VCol cols="auto" class="d-flex align-center">
-        <VBtn
-          id="auev-refresh-btn"
-          class="mr-1"
-          color="primary"
-          :loading="loading"
-          @click="getAuditoriumEvents()"
-        >
-          <VIcon start>mdi-reload</VIcon>
-          Refrescar
-        </VBtn>
-        <VBtn
-          v-if="auth.hasPermission('auditorium-event-create')"
-          id="auev-new-btn"
-          class="mr-1"
-          color="success"
-          @click="newAuditoriumEvent()"
-        >
-          <VIcon start>mdi-plus</VIcon>
-          Nuevo
-        </VBtn>
-      </VCol>
-      <VCol v-if="!orgFilterHidden" lg="2" cols="4">
-        <OrganizationSelect
-          v-model="filterOrgId"
-          v-model:hidden="orgFilterHidden"
-          hide-one
-          clearable
-          hide-details
-          density="compact"
-          variant="outlined"
-          prevent-auto-select
-          permission="auditorium-event-index"
-        />
-      </VCol>
-      <VCol cols="12">
-        <AuditoriumEventTable
-          :loading="loading"
-          :options="options"
-          :response="response"
-          :removing-id="removingId"
-          :highlight-id="highlightId"
-          :initial-sort-by="(options.sortBy as any) ?? (initialOptions.sortBy as any)"
-          @sorting="handleSorting"
-          @edit="editAuditoriumEvent"
-          @mark="markAuditoriumEvent"
-          @download="downloadAuditoriumEvent"
-          @delete="beforeDeleteAuditoriumEvent"
-        />
-      </VCol>
-    </VRow>
+    <VSheet rounded color="white">
+      <VRow density="comfortable">
+        <VCol md="3" cols="12">
+          <MyDateRange
+            v-model="filterAuditoriumEvent"
+            label="Filtro"
+            variant="outlined"
+          />
+        </VCol>
+        <VCol cols="auto" class="d-flex align-center">
+          <VBtn
+            id="auev-refresh-btn"
+            class="mr-1"
+            color="primary"
+            :loading="loading"
+            @click="getAuditoriumEvents()"
+          >
+            <VIcon start>mdi-reload</VIcon>
+            Refrescar
+          </VBtn>
+          <VBtn
+            v-if="auth.hasPermission('auditorium-event-create')"
+            id="auev-new-btn"
+            class="mr-1"
+            color="success"
+            @click="newAuditoriumEvent()"
+          >
+            <VIcon start>mdi-plus</VIcon>
+            Nuevo
+          </VBtn>
+        </VCol>
+        <VCol v-if="!orgFilterHidden" lg="2" cols="4">
+          <OrganizationSelect
+            v-model="filterOrgId"
+            v-model:hidden="orgFilterHidden"
+            hide-one
+            clearable
+            hide-details
+            density="compact"
+            variant="outlined"
+            prevent-auto-select
+            permission="auditorium-event-index"
+          />
+        </VCol>
+        <VCol cols="12">
+          <AuditoriumEventTable
+            :loading="loading"
+            :options="options"
+            :response="response"
+            :removing-id="removingId"
+            :highlight-id="highlightId"
+            :initial-sort-by="
+              (options.sortBy as any) ?? (initialOptions.sortBy as any)
+            "
+            @sorting="handleSorting"
+            @edit="editAuditoriumEvent"
+            @mark="markAuditoriumEvent"
+            @download="downloadAuditoriumEvent"
+            @delete="beforeDeleteAuditoriumEvent"
+          />
+        </VCol>
+      </VRow>
+    </VSheet>
 
     <AuditoriumEventDialog
       v-if="auditoriumEventDialog"
@@ -102,8 +110,14 @@ const auditoriumEventDialog = ref(false);
 const auditoriumEventDialogDelete = ref(false);
 const dialogDelete = ref<Record<string, unknown>>({});
 const auth = useAuthStore();
-const { highlightId, flash, prependCreated, updateRow, removingId, removeWithAnimation } =
-  useRowHighlight();
+const {
+  highlightId,
+  flash,
+  prependCreated,
+  updateRow,
+  removingId,
+  removeWithAnimation,
+} = useRowHighlight();
 
 const effectiveOrgId = computed(() => {
   const orgPermission = auth.permissionsOrg["auditorium-index"] ?? [];
