@@ -1,14 +1,14 @@
 <template>
   <VContainer :fluid="true">
-    <VRow>
-      <!-- Existing permissions -->
-      <VCol cols="12">
-        <VCard id="rol-permissions-card" variant="outlined">
-          <VCardTitle class="text-subtitle-1 font-weight-medium pb-2">
-            <VIcon start size="small" color="primary">mdi-key-variant</VIcon>
-            Permisos del rol
-          </VCardTitle>
-          <VCardText>
+    <VSheet color="white" rounded>
+      <VRow>
+        <!-- Existing permissions -->
+        <VCol cols="12">
+          <div class="pa-4">
+            <div class="d-flex align-center mb-2">
+              <VIcon start size="small" color="primary">mdi-key-variant</VIcon>
+              <span class="text-subtitle-1 font-weight-medium">Permisos del rol</span>
+            </div>
             <PermissionCombobox
               density="compact"
               label="Buscar y asignar permisos"
@@ -17,20 +17,18 @@
               "
               @model-change="setPermissions"
             />
-          </VCardText>
-        </VCard>
-      </VCol>
+          </div>
+        </VCol>
 
-      <!-- Create new permission on the fly -->
-      <VCol cols="12">
-        <VCard id="rol-new-permission-card" variant="outlined">
-          <VCardTitle class="text-subtitle-1 font-weight-medium pb-2">
-            <VIcon start size="small" color="success"
-              >mdi-plus-circle-outline</VIcon
-            >
-            Crear nuevo permiso
-          </VCardTitle>
-          <VCardText class="pb-2">
+        <!-- Create new permission on the fly -->
+        <VCol cols="12">
+          <div class="px-4 pb-4">
+            <div class="d-flex align-center mb-2">
+              <VIcon start size="small" color="success"
+                >mdi-plus-circle-outline</VIcon
+              >
+              <span class="text-subtitle-1 font-weight-medium">Crear nuevo permiso</span>
+            </div>
             <VRow align="center" density="comfortable">
               <VCol cols="12">
                 <VTextField
@@ -62,37 +60,34 @@
                 </VBtn>
               </VCol>
             </VRow>
-          </VCardText>
-        </VCard>
-      </VCol>
+          </div>
+        </VCol>
+      </VRow>
 
       <!-- Actions -->
-      <VCol cols="12">
-        <VCard id="roldtl-actions-card" variant="outlined">
-          <VCardText class="d-flex justify-end pa-4">
-            <VBtn
-              id="roldtl-cancel-btn"
-              class="mr-4"
-              color="primary"
-              variant="outlined"
-              @click="navigateTo('/role')"
-            >
-              <VIcon start>mdi-close</VIcon>
-              Cancelar
-            </VBtn>
-            <VBtn
-              id="roldtl-save-btn"
-              color="primary"
-              variant="elevated"
-              @click="saveRolePermissions()"
-            >
-              <VIcon start>mdi-content-save</VIcon>
-              Guardar
-            </VBtn>
-          </VCardText>
-        </VCard>
-      </VCol>
-    </VRow>
+      <VDivider />
+      <div class="d-flex justify-end pa-4">
+        <VBtn
+          id="roldtl-cancel-btn"
+          class="mr-4"
+          color="primary"
+          variant="outlined"
+          @click="navigateTo('/role')"
+        >
+          <VIcon start>mdi-close</VIcon>
+          Cancelar
+        </VBtn>
+        <VBtn
+          id="roldtl-save-btn"
+          color="primary"
+          variant="elevated"
+          @click="saveRolePermissions()"
+        >
+          <VIcon start>mdi-content-save</VIcon>
+          Guardar
+        </VBtn>
+      </div>
+    </VSheet>
   </VContainer>
 </template>
 
