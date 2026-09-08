@@ -83,13 +83,13 @@ export function useAuditoriumEventStats(sections: Ref<Section[]>) {
     return count
   })
 
-  const percentajeTotalSeats = computed(() => {
+  const percentageTotalSeats = computed(() => {
     if (totalSeats.value === 0) return 0
     return ((totalSeatsWithStatus.value / totalSeats.value) * 100).toFixed(1)
   })
 
   const percentageColor = computed(() => {
-    const percentage = parseFloat(String(percentajeTotalSeats.value))
+    const percentage = parseFloat(String(percentageTotalSeats.value))
     if (percentage >= 0 && percentage <= 60) return "#4CAF50"
     if (percentage >= 61 && percentage <= 90) return "#FF9800"
     if (percentage >= 91) return "#F44336"
@@ -107,7 +107,7 @@ export function useAuditoriumEventStats(sections: Ref<Section[]>) {
     statusBreakdown,
     totalSeats,
     totalSeatsWithStatus,
-    percentajeTotalSeats,
+    percentageTotalSeats,
     percentageColor,
     getStatusPercentage,
   }

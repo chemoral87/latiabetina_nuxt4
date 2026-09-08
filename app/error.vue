@@ -32,6 +32,13 @@
 </template>
 
 <script setup lang="ts">
+interface NuxtError {
+  statusCode: number
+  message: string
+  data?: { permission?: string; [key: string]: unknown }
+  response?: { status: number; data?: Record<string, unknown> }
+}
+
 const ERROR_MESSAGES: Record<number, string> = {
   403: "No tiene los suficientes permisos para ver esta página, verifique con el Administrador del sistema.",
   404: "Esta página no pudo ser encontrada.",
@@ -41,12 +48,9 @@ const ERROR_MESSAGES: Record<number, string> = {
 
 const AXIOS_GENERIC_403 = "Request failed with status code 403"
 
-const props = defineProps({
-  error: {
-    type: [Object, String] as PropType<unknown>,
-    default: null,
-  },
-})
+const props = defineProps<{
+  error: NuxtError | string | null
+}>()
 
 const auth = useAuthStore()
 const iconColor = ref("orange")
@@ -54,11 +58,10 @@ const isRedirecting = ref(false)
 const isReady = ref(false)
 
 const statusCode = computed(() => {
-  const err = props.error as Record<string, unknown> | null
-  const code = err?.statusCode as number | undefined
-  if (code) return code
-  const resp = err?.response as Record<string, unknown> | null
-  return resp?.status as number | undefined
+  if (!props.error || typeof props.error === "string") return undefined
+  const err = props.error
+  if (err.statusCode) return err.statusCode
+  return err.response?.status
 })
 
 const authenticated = computed(() => auth.loggedIn)
@@ -91,9 +94,8 @@ const errorDetail = computed(() => {
   if (message === "This page could not be found") return ""
 
   if (code === 403) {
-    // Read the required permission directly from error.data (structured, no regex needed)
-    const err = props.error as Record<string, unknown> | null
-    const permissionData = err?.data as { permission?: string } | undefined
+    if (typeof props.error === "string") return ""
+    const permissionData = props.error?.data as { permission?: string } | undefined
     if (permissionData?.permission) {
       return `Se requiere el permiso: ${permissionData.permission}`
     }
@@ -107,9 +109,10 @@ const showDetail = computed(() => !!errorDetail.value)
 
 function extractErrorMessage() {
   if (typeof props.error === "string") return props.error
-  const err = props.error as Record<string, unknown> | null
-  if (err?.message) return err.message as string
-  const resp = err?.response as Record<string, unknown> | null
+  if (!props.error) return ""
+  const err = props.error as Record<string, unknown>
+  if (err.message) return err.message as string
+  const resp = err.response as Record<string, unknown> | null
   if (resp?.data) return (resp.data as Record<string, unknown>)?.message as string || ""
   return ""
 }

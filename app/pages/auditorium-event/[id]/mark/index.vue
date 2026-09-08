@@ -25,7 +25,7 @@
           >{{ totalSeatsWithStatus }}/{{ totalSeats }}</span
         >
         <span class="text-subtitle-2 ml-1" :style="{ color: percentageColor }"
-          >{{ percentajeTotalSeats }}%</span
+          >{{ percentageTotalSeats }}%</span
         >
 
         <AuditoriumEventMarkStatsPanel :sections="sections" />
@@ -80,7 +80,7 @@ const { eventAuditorium, sections, loadingSeats, handleSetEventSeat } =
   useAuditoriumEventMark(String(route.params.id));
 
 const stats = useAuditoriumEventStats(sections);
-const { totalSeats, totalSeatsWithStatus, percentajeTotalSeats, percentageColor } =
+const { totalSeats, totalSeatsWithStatus, percentageTotalSeats, percentageColor } =
   stats;
 const stageCategories = STAGE_CATEGORIES;
 

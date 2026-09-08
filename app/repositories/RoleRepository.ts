@@ -1,5 +1,5 @@
 import { createCommonRepository } from "./factory/createCommonRepository"
-import type { ApiFn } from "./factory/createCommonRepository"
+import type { ApiFn } from "./factory/types"
 
 export interface RoleItem {
   id: number

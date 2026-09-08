@@ -1,6 +1,5 @@
 import { withNotify } from "./withNotify"
-
-export type ApiFn = <T = unknown>(path: string, opts?: Record<string, unknown>) => Promise<T>
+import type { ApiFn } from "./types"
 
 export function createCommonRepository(api: ApiFn, resource: string) {
   return {

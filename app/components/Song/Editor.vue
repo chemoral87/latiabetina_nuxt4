@@ -279,9 +279,6 @@ import { useSongEditorNavigation } from "~/composables/useSongEditorNavigation"
 import { useSongEditorNotes } from "~/composables/useSongEditorNotes"
 import {
   defaultSong,
-  exportSongToJson,
-  importSongFromJson,
-  normalizeContent,
   newLine,
   newSection,
   newSyllable,
@@ -293,6 +290,11 @@ import {
   type SongSyllable,
   type SongTab,
 } from "~/types/song"
+import {
+  exportSongToJson,
+  importSongFromJson,
+  normalizeContent,
+} from "~/utils/songSerializer"
 import { parsePastedLyrics } from "~/utils/songParser"
 import { splitLine, uid } from "~/utils/syllables"
 

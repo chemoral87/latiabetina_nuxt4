@@ -1,47 +1,49 @@
 <template>
   <VContainer>
-    <div class="text-h6 mb-2">
-      {{ profile.organization_name }} ({{ profile.organization_short_code }})
-    </div>
-    <VRow>
-      <VCol md="6" cols="12">
-        <RoleCombobox
-          :roles="profile.roles as Record<string, unknown>[]"
-          @model-change="setRoles"
-        />
-      </VCol>
-      <VCol md="6" cols="12">
-        <PermissionCombobox
-          label="Permisos Directos"
-          :permissionsx="
-            profile.direct_permissions as Record<string, unknown>[]
-          "
-          @model-change="setDirectPermissions"
-        />
-      </VCol>
+    <VSheet color="white" rounded class="pa-6">
+      <div class="text-h6 mb-2">
+        {{ profile.organization_name }} ({{ profile.organization_short_code }})
+      </div>
+      <VRow>
+        <VCol md="6" cols="12">
+          <RoleCombobox
+            :roles="profile.roles as Record<string, unknown>[]"
+            @model-change="setRoles"
+          />
+        </VCol>
+        <VCol md="6" cols="12">
+          <PermissionCombobox
+            label="Permisos Directos"
+            :permissionsx="
+              profile.direct_permissions as Record<string, unknown>[]
+            "
+            @model-change="setDirectPermissions"
+          />
+        </VCol>
 
-      <VCol cols="12" class="d-flex justify-end">
-        <VBtn
-          id="useprf-cancel-btn"
-          class="mr-4"
-          color="primary"
-          variant="outlined"
-          @click="back()"
-        >
-          <VIcon start>mdi-close</VIcon>
-          Cancelar
-        </VBtn>
-        <VBtn
-          id="useprf-save-btn"
-          color="primary"
-          variant="elevated"
-          @click="saveProfileRolesPermissions()"
-        >
-          <VIcon start>mdi-content-save</VIcon>
-          Guardar
-        </VBtn>
-      </VCol>
-    </VRow>
+        <VCol cols="12" class="d-flex justify-end">
+          <VBtn
+            id="useprf-cancel-btn"
+            class="mr-4"
+            color="primary"
+            variant="outlined"
+            @click="back()"
+          >
+            <VIcon start>mdi-close</VIcon>
+            Cancelar
+          </VBtn>
+          <VBtn
+            id="useprf-save-btn"
+            color="primary"
+            variant="elevated"
+            @click="saveProfileRolesPermissions()"
+          >
+            <VIcon start>mdi-content-save</VIcon>
+            Guardar
+          </VBtn>
+        </VCol>
+      </VRow>
+    </VSheet>
   </VContainer>
 </template>
 

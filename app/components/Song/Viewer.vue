@@ -61,7 +61,8 @@
 </template>
 
 <script setup lang="ts">
-import { normalizeContent, type SongContent } from "~/types/song";
+import { type SongContent } from "~/types/song";
+import { normalizeContent } from "~/utils/songSerializer";
 import { uid } from "~/utils/syllables";
 
 const props = withDefaults(

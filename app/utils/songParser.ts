@@ -3,11 +3,13 @@ import {
   newSection,
   newSyllable,
   newTab,
-  type SongContent,
-  type SongLine,
-  type SongSection,
-  type SongSyllable,
-  type SongTab,
+} from "~/types/song"
+import type {
+  SongContent,
+  SongLine,
+  SongSection,
+  SongSyllable,
+  SongTab,
 } from "~/types/song"
 import { isChordLine, splitLine } from "~/utils/syllables"
 

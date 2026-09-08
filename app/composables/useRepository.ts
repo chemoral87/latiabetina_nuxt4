@@ -1,194 +1,38 @@
 import { createCommonRepository } from "~/repositories/factory/createCommonRepository"
-import { createParentRepository } from "~/repositories/factory/createParentRepository"
 import { createRoleRepository } from "~/repositories/RoleRepository"
-import { withNotify } from "~/repositories/factory/withNotify"
+import { createOrganizationRepository } from "~/repositories/OrganizationRepository"
+import { createSaleRepository } from "~/repositories/SaleRepository"
+import { createProductRepository } from "~/repositories/ProductRepository"
+import { createTestimonyRepository } from "~/repositories/TestimonyRepository"
+import { createChurchEventRepository } from "~/repositories/ChurchEventRepository"
+import { createChurchMemberRepository, createChurchMemberTrackingLogRepository } from "~/repositories/ChurchMemberRepository"
+import { createPermissionRepository } from "~/repositories/PermissionRepository"
+import { createConsoSheetRepository } from "~/repositories/ConsoSheetRepository"
+import { createSongRepository } from "~/repositories/SongRepository"
+import { createProfileRepository } from "~/repositories/ProfileRepository"
+import { createWhatsAppRepository } from "~/repositories/WhatsAppRepository"
 
 export function useRepository() {
   const { $api } = useApi()
 
-  const Profile = {
-    ...createParentRepository($api, "/profile"),
-    favorite<T = unknown>(parentId: number | string, id: number | string) {
-      return $api<T>(`/profile/${parentId}/${id}/favorite`, { method: "POST" })
-    },
-  }
-
-  const OrganizationConfig = {
-    index<T = unknown>(orgId: string | number) {
-      return $api<T>(`/organization/${orgId}/config`)
-    },
-    create<T = unknown>(orgId: string | number, payload: Record<string, unknown>) {
-      return $api<T>(`/organization/${orgId}/config`, { method: "POST", body: payload })
-    },
-  }
-
-  const Sale = {
-    ...createCommonRepository($api, "/sale"),
-    // Daily summary for cash close: GET /sale/daily?date=YYYY-MM-DD&org_id=X
-    daily<T = unknown>(date: string, orgId: number | string | null = null) {
-      const params: Record<string, unknown> = { date }
-      if (orgId) params.org_id = orgId
-      return withNotify($api<T>("/sale/daily", { params }))
-    },
-    // KDS kitchen display: all sales with preparation items (GET /sale/kds)
-    kds<T = unknown>() {
-      return withNotify($api<T>("/sale/kds"))
-    },
-    // Mark a sale as completed (delivered) from the KDS: completes all pending items (PATCH /sale/{sale}/complete)
-    complete<T = unknown>(saleId: number | string) {
-      return withNotify($api<T>(`/sale/${saleId}/complete`, { method: "PATCH" }))
-    },
-    updateItem<T = unknown>(saleId: number | string, itemId: number | string, status: string) {
-      return withNotify($api<T>(`/sale/${saleId}/item/${itemId}`, { method: "PATCH", body: { status } }))
-    },
-  }
-
-  const Product = {
-    ...createCommonRepository($api, "/product"),
-    // POS catalog: GET /product/pos (optionally filtered by org)
-    pos<T = unknown>(orgId: number | string | null = null) {
-      const params: Record<string, unknown> = orgId ? { org_id: orgId } : {}
-      return withNotify($api<T>("/product/pos", { params }))
-    },
-    // Persist card drag order: POST /product/reorder with { ids }
-    reorder<T = unknown>(ids: (number | string)[]) {
-      return withNotify($api<T>("/product/reorder", { method: "POST", body: { ids } }))
-    },
-  }
-
-  const Testimony = {
-    ...createCommonRepository($api, "/testimony"),
-    updateStatus<T = unknown>(id: number | string, status: string) {
-      return withNotify($api<T>(`/testimony/${id}/status`, { method: "PUT", body: { status } }))
-    },
-  }
-
-  const ChurchEvent = {
-    ...createCommonRepository($api, "/church-event"),
-    copy<T = unknown>(id: number | string, payload: Record<string, unknown>) {
-      return withNotify($api<T>(`/church-event/${id}/copy`, { method: "POST", body: payload }))
-    },
-    calendar<T = unknown>(params: Record<string, unknown>) {
-      return withNotify($api<T>("/church-event/calendar", { params }))
-    },
-  }
-
-  const Song = {
-    ...createCommonRepository($api, "/song"),
-  }
-
   return {
-    Organization: createCommonRepository($api, "/organization"),
-    OrganizationConfig,
+    Organization: createOrganizationRepository($api),
     Auditorium: createCommonRepository($api, "/auditorium"),
     AuditoriumEvent: createCommonRepository($api, "/auditorium-event"),
     AuditoriumEventSeat: createCommonRepository($api, "/auditorium-event-seat"),
     AuditoriumEventSeatLog: createCommonRepository($api, "/auditorium-event-seat-log"),
     User: createCommonRepository($api, "/user"),
     Role: createRoleRepository($api, "/role"),
-    Permission: {
-      ...createCommonRepository($api, "/permission"),
-      distribution<T = unknown>(id: number | string) {
-        return $api<T>(`/permission/${id}/distribution`)
-      },
-    },
-    Profile,
-    Testimony,
-    ChurchEvent,
-    Song,
-    Sale,
-    Product,
-    ConsoSheet: {
-      ...createCommonRepository($api, "/conso-sheet"),
-      // Users who have conso-sheet-index permission in the sheet's org: GET /conso-sheet/consolidators
-      consolidators<T = unknown>(params: Record<string, unknown>) {
-        return withNotify($api<T>("/conso-sheet/consolidators", { params }))
-      },
-    },
-    ChurchMember: {
-      ...createCommonRepository($api, "/church-member"),
-      // Clasificación (estado): PUT /church-member/{memberId}/status
-      updateStatus<T = unknown>(memberId: number | string, status: string, reason?: string) {
-        const payload: Record<string, unknown> = { status }
-        if (reason) payload.reason = reason
-        return withNotify($api<T>(`/church-member/${memberId}/status`, { method: "PUT", body: payload }))
-      },
-      // Historial de cambios de estado: GET /church-member/{memberId}/status-logs
-      statusLogs<T = unknown>(memberId: number | string) {
-        return withNotify($api<T>(`/church-member/${memberId}/status-logs`))
-      },
-      // Medallas: GET /church-member/{memberId}/medals
-      medals<T = unknown>(memberId: number | string) {
-        return withNotify($api<T>(`/church-member/${memberId}/medals`))
-      },
-      // POST /church-member/{memberId}/medals
-      createMedal<T = unknown>(memberId: number | string, payload: Record<string, unknown>) {
-        return withNotify($api<T>(`/church-member/${memberId}/medals`, { method: "POST", body: payload }))
-      },
-      // Consolidadores: GET /church-member/{memberId}/consolidators
-      consolidators<T = unknown>(memberId: number | string) {
-        return withNotify($api<T>(`/church-member/${memberId}/consolidators`))
-      },
-      // PUT /church-member/{memberId}/consolidators
-      syncConsolidators<T = unknown>(memberId: number | string, consolidatorIds: (number | string)[]) {
-        return withNotify($api<T>(`/church-member/${memberId}/consolidators`, { method: "PUT", body: { consolidator_ids: consolidatorIds } }))
-      },
-      // GET /church-member/{memberId}/consolidator-logs
-      consolidatorLogs<T = unknown>(memberId: number | string) {
-        return withNotify($api<T>(`/church-member/${memberId}/consolidator-logs`))
-      },
-      // GET /church-member/consolidator-logs (all members, paginated)
-      consolidatorLogsIndex<T = unknown>(params?: Record<string, unknown>) {
-        return withNotify($api<T>("/church-member/consolidator-logs", { params }))
-      },
-    },
-    ChurchMemberTrackingLog: {
-      // Bitácora de seguimiento: GET /church-member/{memberId}/tracking-logs
-      index<T = unknown>(memberId: number | string, params?: Record<string, unknown>) {
-        return withNotify($api<T>(`/church-member/${memberId}/tracking-logs`, { params }))
-      },
-      // POST /church-member/{memberId}/tracking-logs
-      create<T = unknown>(memberId: number | string, payload: Record<string, unknown>) {
-        return withNotify($api<T>(`/church-member/${memberId}/tracking-logs`, { method: "POST", body: payload }))
-      },
-      // PUT /church-member/{memberId}/tracking-logs/{logId}
-      update<T = unknown>(memberId: number | string, logId: number | string, payload: Record<string, unknown>) {
-        return withNotify($api<T>(`/church-member/${memberId}/tracking-logs/${logId}`, { method: "PUT", body: payload }))
-      },
-      // DELETE /church-member/{memberId}/tracking-logs/{logId}
-      delete<T = unknown>(memberId: number | string, logId: number | string) {
-        return withNotify($api<T>(`/church-member/${memberId}/tracking-logs/${logId}`, { method: "DELETE" }))
-      },
-      // GET /church-member/tracking-logs (current user's logs, paginated)
-      logsIndex<T = unknown>(params?: Record<string, unknown>) {
-        return withNotify($api<T>("/church-member/tracking-logs", { params }))
-      },
-      // GET /church-member/tracking-logs/all (organization activity and totals by consolidator)
-      allLogs<T = unknown>(params?: Record<string, unknown>) {
-        return withNotify($api<T>("/church-member/tracking-logs/all", { params }))
-      },
-      // GET /church-member/tracking-logs/all/summary (count per consolidator)
-      allLogsSummary<T = unknown>(params?: Record<string, unknown>) {
-        return withNotify($api<T>("/church-member/tracking-logs/all/summary", { params }))
-      },
-    },
-    WhatsApp: {
-      // GET /whatsapp/logs?sender=&receiver=&success=&per_page=&page=  (WhatsAppController.php:70)
-      logs<T = unknown>(params?: Record<string, unknown>) {
-        return withNotify($api<T>("/whatsapp/logs", { params }))
-      },
-      // GET /whatsapp/status  (WhatsAppController.php:21)
-      status<T = unknown>() {
-        return withNotify($api<T>("/whatsapp/status"))
-      },
-      // POST /whatsapp/send  (WhatsAppController.php:35) -> dispatches SendWhatsAppMessageJob.php:34
-      send<T = unknown>(payload: Record<string, unknown>) {
-        return withNotify($api<T>("/whatsapp/send", { method: "POST", body: payload }))
-      },
-      // POST /whatsapp/logs/{id}/resend  (WhatsAppController.php:94)
-      resend<T = unknown>(id: number | string) {
-        return withNotify($api<T>(`/whatsapp/logs/${id}/resend`, { method: "POST" }))
-      },
-    },
+    Permission: createPermissionRepository($api),
+    Profile: createProfileRepository($api),
+    Testimony: createTestimonyRepository($api),
+    ChurchEvent: createChurchEventRepository($api),
+    Song: createSongRepository($api),
+    Sale: createSaleRepository($api),
+    Product: createProductRepository($api),
+    ConsoSheet: createConsoSheetRepository($api),
+    ChurchMember: createChurchMemberRepository($api),
+    ChurchMemberTrackingLog: createChurchMemberTrackingLogRepository($api),
+    WhatsApp: createWhatsAppRepository($api),
   }
 }

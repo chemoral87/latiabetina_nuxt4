@@ -146,7 +146,7 @@
 </template>
 
 <script setup lang="ts">
-import { normalizeContent } from "~/types/song";
+import { normalizeContent } from "~/utils/songSerializer";
 
 definePageMeta({
   title: "Canción",

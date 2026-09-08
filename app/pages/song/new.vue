@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { exportSongToJson, importSongFromJson, normalizeContent } from "~/types/song"
+import { exportSongToJson, importSongFromJson, normalizeContent } from "~/utils/songSerializer"
 
 definePageMeta({
   title: "Nueva canción",
