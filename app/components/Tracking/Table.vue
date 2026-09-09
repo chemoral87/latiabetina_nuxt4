@@ -16,8 +16,8 @@
         {{ item.name }} {{ item.last_name }}
       </template>
 
-      <template #[`item.cellphone`]="{ item }">
-        {{ item.cellphone || "—" }}
+      <template #[`item.years_old`]="{ item }">
+        {{ item.years_old ?? "—" }}
       </template>
 
       <template #[`item.status`]="{ item }">
@@ -27,11 +27,12 @@
       </template>
 
       <template #[`item.last_contacted`]="{ item }">
-        {{ formatShortDateTime12h(String(item.last_contacted ?? "")) || "—" }}
-      </template>
-
-      <template #[`item.last_contacted_by`]="{ item }">
-        {{ item.last_contacted_by || "—" }}
+        <div>
+          <div>{{ formatShortDateTime12h(String(item.last_contacted ?? "")) || "—" }}</div>
+          <div v-if="item.last_contacted_by" class="text-caption text-medium-emphasis">
+            {{ item.last_contacted_by }}
+          </div>
+        </div>
       </template>
 
       <template #[`item.creator`]="{ item }">
@@ -40,8 +41,13 @@
         }}
       </template>
 
-      <template #[`item.assigned_by`]="{ item }">
-        {{ item.assigned_by || "—" }}
+      <template #[`item.consolidators`]="{ item }">
+        <template v-if="Array.isArray(item.consolidators) && item.consolidators.length">
+          <div v-for="c in item.consolidators" :key="c.id">
+            {{ c.name }} {{ c.last_name }}
+          </div>
+        </template>
+        <span v-else>—</span>
       </template>
 
       <template #[`item.org_id`]="{ item }">
@@ -134,12 +140,11 @@ const headers = computed<Header[]>(() => {
       width: "60px",
     },
     { title: "Nombre", value: "name" },
-    { title: "Teléfono", value: "cellphone" },
+    { title: "Edad", value: "years_old", sortable: false },
     { title: "Estado", value: "status", sortable: false, align: "center" },
     { title: "Último contacto", value: "last_contacted", sortable: true },
-    { title: "Contactado por", value: "last_contacted_by", sortable: false },
     { title: "Creado por", value: "creator", sortable: false },
-    { title: "Asignado por", value: "assigned_by", sortable: false },
+    { title: "Consolidadores", value: "consolidators", sortable: false },
   ];
   if (!singleOrg.value) {
     cols.push({ title: "Organización", value: "org_id", sortable: false });
