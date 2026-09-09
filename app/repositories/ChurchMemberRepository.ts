@@ -19,6 +19,12 @@ export function createChurchMemberRepository(api: ApiFn) {
     createMedal<T = unknown>(memberId: number | string, payload: Record<string, unknown>) {
       return withNotify(api<T>(`/church-member/${memberId}/medals`, { method: "POST", body: payload }))
     },
+    deleteMedal<T = unknown>(memberId: number | string, medalId: number | string) {
+      return withNotify(api<T>(`/church-member/${memberId}/medals/${medalId}`, { method: "DELETE" }))
+    },
+    medalLogs<T = unknown>(memberId: number | string) {
+      return withNotify(api<T>(`/church-member/${memberId}/medal-logs`))
+    },
     consolidators<T = unknown>(memberId: number | string) {
       return withNotify(api<T>(`/church-member/${memberId}/consolidators`))
     },

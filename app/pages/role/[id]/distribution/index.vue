@@ -1,6 +1,6 @@
 <template>
   <VContainer :fluid="true">
-    <VSheet color="white" rounded>
+    <VSheet rounded color="white">
       <VRow density="comfortable">
       <!-- Organization filter -->
       <VCol md="3" cols="12">
@@ -8,9 +8,9 @@
           id="roldst-org-sel"
           v-model="selectedOrganization"
           clearable
+          hide-details
           item-value="id"
           density="compact"
-          hide-details
           item-title="name"
           variant="outlined"
           label="Organización"
@@ -20,15 +20,15 @@
 
       <!-- Profiles with the role -->
       <VCol cols="12">
-        <VCard id="roldst-profiles-card" variant="outlined">
-          <VCardTitle class="text-subtitle-1 font-weight-medium pb-2">
+        <VSheet id="roldst-profiles-card" rounded class="pa-4" variant="outlined">
+          <div class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center">
             <VIcon start size="small" color="primary">mdi-shield-key-outline</VIcon>
             Perfiles con el rol {{ role.name }}
             <VSpacer />
             <VChip id="rdi-count-chip" color="info" size="small" variant="elevated">{{ filteredProfiles.length }} perfiles</VChip>
-          </VCardTitle>
+          </div>
 
-          <VCardText class="pt-0">
+          <div class="pt-0">
             <VDataTable
               id="roldst-profiles-dt-1"
               density="compact"
@@ -61,20 +61,18 @@
                 </VBtn>
               </template>
             </VDataTable>
-          </VCardText>
-        </VCard>
+          </div>
+        </VSheet>
       </VCol>
 
       <!-- Actions -->
       <VCol cols="12">
-        <VCard id="roldst-actions-card" variant="outlined">
-          <VCardText class="d-flex justify-end pa-4">
-            <VBtn id="roldst-back-btn" color="primary" variant="outlined" @click="navigateTo('/role')">
-              <VIcon start>mdi-arrow-left</VIcon>
-              Volver
-            </VBtn>
-          </VCardText>
-        </VCard>
+        <VSheet id="roldst-actions-card" rounded variant="outlined" class="pa-4 d-flex justify-end">
+          <VBtn id="roldst-back-btn" color="primary" variant="outlined" @click="navigateTo('/role')">
+            <VIcon start>mdi-arrow-left</VIcon>
+            Volver
+          </VBtn>
+        </VSheet>
       </VCol>
     </VRow>
     </VSheet>

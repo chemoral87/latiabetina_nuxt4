@@ -2,19 +2,16 @@
   <VContainer :fluid="true">
     <VRow>
       <VCol cols="12">
-        <VCard>
-          <VCardTitle
-            class="text-subtitle-1 font-weight-medium d-flex align-center"
-          >
+        <VSheet rounded class="pa-2" color="white">
+          <div class="text-subtitle-1 font-weight-medium d-flex align-center">
             <VIcon start size="small" color="primary">mdi-account</VIcon>
             <span class="text-subtitle-2 member-name">{{ member.name }}</span>
             <VSpacer />
-            <VChip size="small" :color="statusColor(member.status)">
+            <VChip :color="statusColor(member.status)">
               {{ statusLabel(member.status) }}
             </VChip>
             <VBtn
               id="cmm-status-edit-btn"
-              size="x-small"
               variant="text"
               color="primary"
               rounded="circle"
@@ -22,10 +19,87 @@
               title="Cambiar estado"
               @click="statusDialog = true"
             />
-          </VCardTitle>
+          </div>
           <VDivider />
 
-          <VCardText>
+          <div>
+            <VRow v-if="medals.length > 0" density="compact">
+              <VCol cols="12" class="d-flex flex-wrap align-center">
+                <VIcon class="mr-1" size="small" color="primary"
+                  >mdi-medal-outline</VIcon
+                >
+                <template v-for="medal in medals" :key="medal.id">
+                  <VTooltip location="top">
+                    <template #activator="{ props: tp }">
+                      <VChip
+                        v-bind="tp"
+                        class="ma-1"
+                        size="x-small"
+                        variant="tonal"
+                        :color="medalColor(medal.medal)"
+                      >
+                        <VIcon start size="x-small">{{
+                          medalIcon(medal.medal)
+                        }}</VIcon>
+                        {{ medalLabel(medal.medal) }}
+                        <template #append>
+                          <VBtn
+                            :id="'medal-info-' + medal.id"
+                            icon
+                            color="grey"
+                            size="x-small"
+                            variant="text"
+                          >
+                            <VIcon size="x-small">mdi-help-circle-outline</VIcon>
+                          </VBtn>
+                          <VIcon
+                            class="ms-1"
+                            color="error"
+                            size="x-small"
+                            style="font-weight: 700"
+                            @click.stop="confirmDeleteMedal(medal)"
+                          >mdi-close</VIcon>
+                        </template>
+                      </VChip>
+                    </template>
+                    <span>{{ medalLabel(medal.medal) }} {{ medalDetail(medal) }}</span>
+                  </VTooltip>
+                  <VMenu location="top" :activator="'#medal-info-' + medal.id">
+                    <VCard class="pa-2" max-width="220">
+                      <div class="text-caption">
+                        {{ medalLabel(medal.medal) }} {{ medalDetail(medal) }}
+                      </div>
+                    </VCard>
+                  </VMenu>
+                </template>
+                <VBtn
+                  id="cmm-medal-add-btn"
+                  icon
+                  class="ml-1"
+                  size="x-small"
+                  variant="text"
+                  color="primary"
+                  title="Agregar medalla"
+                  @click="medalDialog = true"
+                >
+                  <VIcon size="small">mdi-plus</VIcon>
+                </VBtn>
+              </VCol>
+            </VRow>
+            <VRow v-else density="compact">
+              <VCol cols="12" class="d-flex align-center">
+                <VBtn
+                  id="cmm-medal-add-btn"
+                  size="x-small"
+                  variant="text"
+                  color="primary"
+                  prepend-icon="mdi-medal-outline"
+                  @click="medalDialog = true"
+                >
+                  Agregar medalla
+                </VBtn>
+              </VCol>
+            </VRow>
             <VRow density="compact">
               <VCol cols="7">
                 <VRow density="compact">
@@ -127,22 +201,22 @@
                 </VBtn>
               </VCol>
             </VRow>
-          </VCardText>
+          </div>
 
           <VDivider />
-        </VCard>
+        </VSheet>
       </VCol>
     </VRow>
 
     <VRow>
       <VCol cols="12">
-        <VCard>
-          <VCardTitle class="text-subtitle-1 font-weight-medium">
+        <VSheet rounded class="pa-2" color="white">
+          <div class="text-subtitle-1 font-weight-medium">
             <VIcon start color="primary">mdi-history</VIcon>
             Interacciones
-          </VCardTitle>
+          </div>
           <VDivider />
-          <VCardActions>
+          <div>
             <VRow density="comfortable" class="w-100 align-center">
               <VCol cols="12" sm="auto">
                 <VBtn
@@ -219,8 +293,8 @@
                 </VBtn>
               </VCol>
             </VRow>
-          </VCardActions>
-          <VCardText>
+          </div>
+          <div>
             <ChurchMemberTrackingLogTable
               id="cmm-tracking-log-table"
               :loading="loadingLogs"
@@ -229,8 +303,8 @@
               @delete="deleteTrackingLog"
               @sorting="onLogsUpdateOptions"
             />
-          </VCardText>
-        </VCard>
+          </div>
+        </VSheet>
       </VCol>
     </VRow>
     <VRow
@@ -240,13 +314,13 @@
       "
     >
       <VCol cols="12">
-        <VCard>
-          <VCardTitle class="text-subtitle-1 font-weight-medium">
+        <VSheet rounded class="pa-2" color="white">
+          <div class="text-subtitle-1 font-weight-medium">
             <VIcon start color="primary">mdi-account-multiple</VIcon>
             Consolidadores
-          </VCardTitle>
+          </div>
           <VDivider />
-          <VCardText>
+          <div>
             <template
               v-if="auth.hasPermission('church-member-consolidator-assign')"
             >
@@ -294,8 +368,8 @@
                 </VChip>
               </div>
             </template>
-          </VCardText>
-        </VCard>
+          </div>
+        </VSheet>
       </VCol>
     </VRow>
     <VRow
@@ -305,13 +379,13 @@
       "
     >
       <VCol cols="12">
-        <VCard>
-          <VCardTitle class="text-subtitle-1 font-weight-medium">
+        <VSheet rounded class="pa-4" color="white">
+          <div class="text-subtitle-1 font-weight-medium">
             <VIcon start color="primary">mdi-history</VIcon>
             Historial de Consolidadores
-          </VCardTitle>
+          </div>
           <VDivider />
-          <VCardText>
+          <div>
             <VTimeline side="end" align="start" density="compact">
               <VTimelineItem
                 v-for="log in consolidatorLogs"
@@ -349,8 +423,8 @@
                 </div>
               </VTimelineItem>
             </VTimeline>
-          </VCardText>
-        </VCard>
+          </div>
+        </VSheet>
       </VCol>
     </VRow>
     <VRow>
@@ -393,6 +467,32 @@
       @save="saveTrackingLog"
       @close="trackingLogDialog = false"
     />
+
+    <ChurchMemberMedalDialog
+      v-if="medalDialog"
+      id="cmm-medal-dlg"
+      :member="member"
+      @saved="onMedalSaved"
+      @close="medalDialog = false"
+    />
+
+    <VDialog v-model="medalDeleteDialog" max-width="400">
+      <VCard>
+        <VCardTitle class="text-subtitle-1 font-weight-medium">
+          <VIcon start color="warning">mdi-alert-outline</VIcon>
+          Confirmar eliminación
+        </VCardTitle>
+        <VCardText>
+          ¿Desea remover la medalla
+          <strong v-if="medalToDelete">{{ medalLabel(medalToDelete.medal) }}</strong>?
+        </VCardText>
+        <VCardActions>
+          <VSpacer />
+          <VBtn variant="text" @click="medalDeleteDialog = false">Cancelar</VBtn>
+          <VBtn color="error" variant="flat" @click="removeMedal">Eliminar</VBtn>
+        </VCardActions>
+      </VCard>
+    </VDialog>
   </VContainer>
 </template>
 
@@ -471,6 +571,29 @@ const consolidatorLogs = ref<
   }[]
 >([]);
 
+const medalDialog = ref(false);
+const medalDeleteDialog = ref(false);
+const medalToDelete = ref<{ id: number; medal: string } | null>(null);
+const medals = ref<
+  {
+    id: number;
+    medal: string;
+    description: Record<string, unknown> | string | null;
+    creator?: { id: number; name: string; last_name?: string };
+    created_at?: string;
+  }[]
+>([]);
+const medalLogs = ref<
+  {
+    id: number;
+    medal: string;
+    description: Record<string, unknown> | null;
+    action: string;
+    changer?: { id: number; name: string; last_name?: string };
+    created_at?: string;
+  }[]
+>([]);
+
 const hasConsolidatorChanges = computed(() => {
   if (pendingConsolidators.value === null) return false;
   const currentIds = currentConsolidators.value
@@ -483,6 +606,68 @@ const hasConsolidatorChanges = computed(() => {
     .join(",");
   return currentIds !== pendingIds;
 });
+
+const medalOptions = [
+  { title: "Bautizo", value: "bautizo" },
+  { title: "EDIN", value: "edin" },
+  { title: "Servicio", value: "servicio" },
+];
+const medalColors: Record<string, string> = {
+  bautizo: "blue",
+  edin: "green",
+  servicio: "orange",
+};
+const medalIcons: Record<string, string> = {
+  bautizo: "mdi-water",
+  edin: "mdi-school",
+  servicio: "mdi-hand-heart",
+};
+const monthNames: Record<string, string> = {
+  "01": "Ene",
+  "02": "Feb",
+  "03": "Mar",
+  "04": "Abr",
+  "05": "May",
+  "06": "Jun",
+  "07": "Jul",
+  "08": "Ago",
+  "09": "Sep",
+  "10": "Oct",
+  "11": "Nov",
+  "12": "Dic",
+};
+
+function medalLabel(medal: unknown): string {
+  const found = medalOptions.find((m) => m.value === medal);
+  return found ? found.title : String(medal ?? "");
+}
+function medalColor(medal: unknown): string {
+  return medalColors[String(medal)] ?? "grey";
+}
+function medalIcon(medal: unknown): string {
+  return medalIcons[String(medal)] ?? "mdi-medal";
+}
+function medalMonthLabel(month: unknown): string {
+  return monthNames[String(month)] ?? String(month);
+}
+function medalDetail(medal: { medal: string; description: Record<string, unknown> | string | null }): string {
+  const d = medal.description;
+  if (!d) return medalLabel(medal.medal);
+  if (typeof d === "string") return d;
+  if (medal.medal === "bautizo" && (d.month || d.year))
+    return `${medalMonthLabel(d.month)} ${d.year ?? ""}`.trim();
+  if (medal.medal === "edin") {
+    const level = d.level != null ? `Nivel ${d.level}` : "";
+    const date = (d.month || d.year) ? `${medalMonthLabel(d.month)} ${d.year ?? ""}`.trim() : "";
+    return [level, date].filter(Boolean).join(" ") || medalLabel(medal.medal);
+  }
+  if (medal.medal === "servicio") {
+    const area = d.area != null ? String(d.area) : "";
+    const date = (d.month || d.year) ? `${medalMonthLabel(d.month)} ${d.year ?? ""}`.trim() : "";
+    return [area, date].filter(Boolean).join(" ") || medalLabel(medal.medal);
+  }
+  return medalLabel(medal.medal);
+}
 
 // Resolved early (before the member fetch) so the "not found / no access" redirect
 // below can reuse it without depending on later declarations.
@@ -573,6 +758,60 @@ const backRoute = computed(() => {
     },
   );
   consolidatorLogs.value = initialConsolidatorLogs.value;
+
+  const { data: initialMedals } = await useAsyncData(
+    `church-member-medals-${route.params.id}`,
+    async () => {
+      return await ChurchMember.medals<
+        {
+          id: number;
+          medal: string;
+          description: Record<string, unknown> | string | null;
+          creator?: { id: number; name: string; last_name?: string };
+          created_at?: string;
+        }[]
+      >(route.params.id as string).catch(() => []);
+    },
+    {
+      default: () =>
+        [] as {
+          id: number;
+          medal: string;
+          description: Record<string, unknown> | string | null;
+          creator?: { id: number; name: string; last_name?: string };
+          created_at?: string;
+        }[],
+    },
+  );
+  medals.value = initialMedals.value;
+
+  const { data: initialMedalLogs } = await useAsyncData(
+    `church-member-medal-logs-${route.params.id}`,
+    async () => {
+      return await ChurchMember.medalLogs<
+        {
+          id: number;
+          medal: string;
+          description: Record<string, unknown> | null;
+          action: string;
+          changer?: { id: number; name: string; last_name?: string };
+          created_at?: string;
+        }[]
+      >(route.params.id as string).catch(() => []);
+    },
+    {
+      default: () =>
+        [] as {
+          id: number;
+          medal: string;
+          description: Record<string, unknown> | null;
+          action: string;
+          changer?: { id: number; name: string; last_name?: string };
+          created_at?: string;
+        }[],
+    },
+  );
+  medalLogs.value = initialMedalLogs.value;
 }
 
 const loading = ref(false);
@@ -880,6 +1119,41 @@ async function saveConsolidators() {
     });
   } finally {
     savingConsolidators.value = false;
+  }
+}
+
+async function onMedalSaved() {
+  const id = route.params.id as string;
+  if (!id) return;
+  try {
+    const [updatedMedals, updatedLogs] = await Promise.all([
+      ChurchMember.medals<typeof medals.value>(id).catch(() => []),
+      ChurchMember.medalLogs<typeof medalLogs.value>(id).catch(() => []),
+    ]);
+    medals.value = updatedMedals;
+    medalLogs.value = updatedLogs;
+  } catch {
+    // errors already surfaced by withNotify
+  }
+}
+
+function confirmDeleteMedal(medal: { id: number; medal: string }) {
+  medalToDelete.value = medal;
+  medalDeleteDialog.value = true;
+}
+async function removeMedal() {
+  const id = route.params.id as string;
+  const medal = medalToDelete.value;
+  if (!id || !medal) return;
+  medalDeleteDialog.value = false;
+  try {
+    await ChurchMember.deleteMedal(id, medal.id);
+    notify.notify({ success: "Medalla removida exitosamente" });
+    await onMedalSaved();
+  } catch {
+    // withNotify already surfaced the error
+  } finally {
+    medalToDelete.value = null;
   }
 }
 </script>
