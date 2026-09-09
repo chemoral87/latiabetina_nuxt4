@@ -21,7 +21,7 @@
       </template>
 
       <template #[`item.status`]="{ item }">
-        <VChip size="small" :color="statusColor(item.status)">
+        <VChip size="small" variant="elevated" :color="statusColor(item.status)">
           {{ statusLabel(item.status) }}
         </VChip>
       </template>

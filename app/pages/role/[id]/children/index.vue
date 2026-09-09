@@ -41,8 +41,8 @@
                   label="Nombre del permiso"
                   :loading="creatingPermission"
                   :disabled="creatingPermission"
-                  placeholder="ej. product-create o song-update, song-delete"
-                  hint="Separa varios permisos con comas"
+                  placeholder="ej. product-create song-update, song-delete"
+                  hint="Separa varios permisos con comas o espacios"
                   persistent-hint
                   @keyup.enter="createAndAddPermission"
                 />
@@ -130,9 +130,9 @@ async function createAndAddPermission() {
   const raw = (newPermissionName.value || "").trim();
   if (!raw) return;
 
-  // Support comma-separated bulk creation: "song-update, song-delete"
+  // Support comma or space-separated bulk creation: "song-update, song-delete" or "song-update song-delete"
   const names = raw
-    .split(",")
+    .split(/[\s,]+/)
     .map((s) => s.trim())
     .filter(Boolean);
   // Deduplicate case-insensitive within input

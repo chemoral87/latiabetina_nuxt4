@@ -1,11 +1,11 @@
 <template>
   <VDialog id="eve-copyd-dlg-1" :model-value="true" persistent max-width="560px">
     <VCard rounded="lg">
-      <VCardTitle class="d-flex align-center">
-        <VIcon class="mr-2">mdi-content-copy</VIcon>
-        <span class="text-h5">Copiar Evento</span>
+      <VCardTitle class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center">
+        <VIcon start size="small" color="primary">mdi-content-copy</VIcon>
+        Copiar Evento
         <VSpacer />
-        <VBtn id="eve-copydialog-close-btn" icon :disabled="loading" @click="close">
+        <VBtn id="eve-copydialog-close-btn" icon size="x-small" :disabled="loading" @click="close">
           <VIcon>mdi-close</VIcon>
         </VBtn>
       </VCardTitle>

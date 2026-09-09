@@ -7,7 +7,7 @@
             <VIcon start size="small" color="primary">mdi-account</VIcon>
             <span class="text-subtitle-2 member-name">{{ member.name }}</span>
             <VSpacer />
-            <VChip :color="statusColor(member.status)">
+            <VChip variant="elevated" :color="statusColor(member.status)">
               {{ statusLabel(member.status) }}
             </VChip>
             <VBtn
@@ -50,7 +50,9 @@
                             size="x-small"
                             variant="text"
                           >
-                            <VIcon size="x-small">mdi-help-circle-outline</VIcon>
+                            <VIcon size="x-small"
+                              >mdi-help-circle-outline</VIcon
+                            >
                           </VBtn>
                           <VIcon
                             class="ms-1"
@@ -58,11 +60,15 @@
                             size="x-small"
                             style="font-weight: 700"
                             @click.stop="confirmDeleteMedal(medal)"
-                          >mdi-close</VIcon>
+                            >mdi-close</VIcon
+                          >
                         </template>
                       </VChip>
                     </template>
-                    <span>{{ medalLabel(medal.medal) }} {{ medalDetail(medal) }}</span>
+                    <span
+                      >{{ medalLabel(medal.medal) }}
+                      {{ medalDetail(medal) }}</span
+                    >
                   </VTooltip>
                   <VMenu location="top" :activator="'#medal-info-' + medal.id">
                     <VCard class="pa-2" max-width="220">
@@ -484,12 +490,19 @@
         </VCardTitle>
         <VCardText>
           ¿Desea remover la medalla
-          <strong v-if="medalToDelete">{{ medalLabel(medalToDelete.medal) }}</strong>?
+          <strong v-if="medalToDelete">{{
+            medalLabel(medalToDelete.medal)
+          }}</strong
+          >?
         </VCardText>
         <VCardActions>
           <VSpacer />
-          <VBtn variant="text" @click="medalDeleteDialog = false">Cancelar</VBtn>
-          <VBtn color="error" variant="flat" @click="removeMedal">Eliminar</VBtn>
+          <VBtn variant="text" @click="medalDeleteDialog = false"
+            >Cancelar</VBtn
+          >
+          <VBtn color="error" variant="flat" @click="removeMedal"
+            >Eliminar</VBtn
+          >
         </VCardActions>
       </VCard>
     </VDialog>
@@ -650,7 +663,10 @@ function medalIcon(medal: unknown): string {
 function medalMonthLabel(month: unknown): string {
   return monthNames[String(month)] ?? String(month);
 }
-function medalDetail(medal: { medal: string; description: Record<string, unknown> | string | null }): string {
+function medalDetail(medal: {
+  medal: string;
+  description: Record<string, unknown> | string | null;
+}): string {
   const d = medal.description;
   if (!d) return medalLabel(medal.medal);
   if (typeof d === "string") return d;
@@ -658,12 +674,18 @@ function medalDetail(medal: { medal: string; description: Record<string, unknown
     return `${medalMonthLabel(d.month)} ${d.year ?? ""}`.trim();
   if (medal.medal === "edin") {
     const level = d.level != null ? `Nivel ${d.level}` : "";
-    const date = (d.month || d.year) ? `${medalMonthLabel(d.month)} ${d.year ?? ""}`.trim() : "";
+    const date =
+      d.month || d.year
+        ? `${medalMonthLabel(d.month)} ${d.year ?? ""}`.trim()
+        : "";
     return [level, date].filter(Boolean).join(" ") || medalLabel(medal.medal);
   }
   if (medal.medal === "servicio") {
     const area = d.area != null ? String(d.area) : "";
-    const date = (d.month || d.year) ? `${medalMonthLabel(d.month)} ${d.year ?? ""}`.trim() : "";
+    const date =
+      d.month || d.year
+        ? `${medalMonthLabel(d.month)} ${d.year ?? ""}`.trim()
+        : "";
     return [area, date].filter(Boolean).join(" ") || medalLabel(medal.medal);
   }
   return medalLabel(medal.medal);

@@ -16,7 +16,8 @@
       @update:options="onUpdateOptions"
     >
       <template #[`item.medium`]="{ item }">
-        <VChip size="small" variant="tonal" :color="mediumColor(item.medium)">
+        <VChip size="small" variant="flat" :color="mediumColor(item.medium)">
+          <VIcon start size="small">{{ mediumIcon(item.medium) }}</VIcon>
           {{ mediumLabel(item.medium) }}
         </VChip>
       </template>
@@ -30,7 +31,7 @@
       </template>
 
       <template #[`item.classification`]="{ item }">
-        <VChip v-if="item.classification" size="small" variant="tonal" :color="classificationColor(item.classification)">
+        <VChip v-if="item.classification" size="small" variant="flat" :color="classificationColor(item.classification)">
           {{ item.classification }}
         </VChip>
       </template>
@@ -48,9 +49,9 @@
             class="ma-1"
             size="small"
             title="Editar"
+            variant="flat"
             color="primary"
             rounded="circle"
-            variant="outlined"
             @click="emit('edit', item)"
           >
             <VIcon size="x-large">mdi-pencil</VIcon>
@@ -61,9 +62,9 @@
             class="ma-1"
             size="small"
             color="error"
+            variant="flat"
             rounded="circle"
             title="Eliminar"
-            variant="outlined"
             @click="emit('delete', item)"
           >
             <VIcon size="x-large">mdi-delete</VIcon>
@@ -165,6 +166,16 @@ function mediumColor(medium: unknown): string {
     presencial: "deep-orange",
   }
   return colors[String(medium)] ?? "grey"
+}
+
+function mediumIcon(medium: unknown): string {
+  const icons: Record<string, string> = {
+    whatsapp: "mdi-whatsapp",
+    llamada: "mdi-phone",
+    presencial: "mdi-account-group",
+    sms: "mdi-message-text",
+  }
+  return icons[String(medium)] ?? "mdi-help"
 }
 
 function classificationColor(classification: unknown): string {

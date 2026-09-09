@@ -22,7 +22,8 @@
         {{ formatShortDateTime12h(String(item.contact_datetime ?? "")) || "—" }}
       </template>
       <template #[`item.medium`]='{ item }'>
-        <VChip size="small" variant="tonal" :color="mediumColor(item.medium)">
+        <VChip size="small" variant="flat" :color="mediumColor(item.medium)">
+          <VIcon start size="small">{{ mediumIcon(String(item.medium ?? "")) }}</VIcon>
           {{ mediumLabel(String(item.medium ?? "")) }}
         </VChip>
       </template>
@@ -105,5 +106,15 @@ function mediumColor(medium: unknown): string {
     presencial: "deep-orange",
   }
   return colors[String(medium)] ?? "grey"
+}
+
+function mediumIcon(medium: unknown): string {
+  const icons: Record<string, string> = {
+    whatsapp: "mdi-whatsapp",
+    llamada: "mdi-phone",
+    presencial: "mdi-account-group",
+    sms: "mdi-message-text",
+  }
+  return icons[String(medium)] ?? "mdi-help"
 }
 </script>
