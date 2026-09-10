@@ -504,17 +504,19 @@
     </VRow>
 
     <VRow class="mt-2">
-      <VCol cols="12" class="d-flex justify-end">
-        <VBtn
-          id="cmm-back-btn"
-          size="small"
-          color="primary"
-          variant="outlined"
-          @click="goBack"
-        >
-          <VIcon start size="small">mdi-arrow-left</VIcon>
-          Volver
-        </VBtn>
+      <VCol cols="12">
+        <VSheet rounded color="white" class="pa-2 pa-sm-3 d-flex justify-end">
+          <VBtn
+            id="cmm-back-btn"
+            size="small"
+            color="primary"
+            variant="outlined"
+            @click="goBack"
+          >
+            <VIcon start size="small">mdi-arrow-left</VIcon>
+            Volver
+          </VBtn>
+        </VSheet>
       </VCol>
     </VRow>
 
