@@ -34,11 +34,11 @@
                       <VChip
                         v-bind="tp"
                         class="ma-1"
-                        size="x-small"
+                        size="small"
                         variant="tonal"
                         :color="medalColor(medal.medal)"
                       >
-                        <VIcon start size="x-small">{{
+                        <VIcon start size="small">{{
                           medalIcon(medal.medal)
                         }}</VIcon>
                         {{ medalLabel(medal.medal) }}
@@ -47,17 +47,14 @@
                             :id="'medal-info-' + medal.id"
                             icon
                             color="grey"
-                            size="x-small"
+                            size="small"
                             variant="text"
                           >
-                            <VIcon size="x-small"
-                              >mdi-help-circle-outline</VIcon
-                            >
+                            <VIcon size="small">mdi-help-circle-outline</VIcon>
                           </VBtn>
                           <VIcon
-                            class="ms-1"
+                            size="small"
                             color="error"
-                            size="x-small"
                             style="font-weight: 700"
                             @click.stop="confirmDeleteMedal(medal)"
                             >mdi-close</VIcon
