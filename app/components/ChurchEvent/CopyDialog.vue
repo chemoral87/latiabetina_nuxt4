@@ -18,10 +18,9 @@
         <VBtnToggle
           v-model="mode"
           mandatory
-          density="comfortable"
+          density="compact"
           rounded="pill"
-          class="mode-toggle mb-4"
-        >
+          class="mode-toggle mb-4">
           <VBtn id="eve-copydialog-mode-dates-btn" value="dates" size="small" rounded="pill">POR CALENDARIO</VBtn>
           <VBtn id="eve-copydialog-mode-recurrence-btn" value="recurrence" size="small" rounded="pill">POR RANGO Y DÍAS</VBtn>
         </VBtnToggle>

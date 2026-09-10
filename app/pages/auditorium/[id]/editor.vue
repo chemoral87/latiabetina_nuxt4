@@ -24,7 +24,7 @@
       <!-- Panel de Control - Segundo en mobile -->
       <VCol cols="12" :md="3" :order="mdAndUp ? 1 : 2">
         <!-- Botones de Acción -->
-        <VRow density="compact" density="comfortable" class="mb-3">
+        <VRow density="compact" class="mb-3">
           <VCol cols="6" md="12">
             <VBtn id="audid-add-section-btn" color="primary" block :size="mobile ? 'small' : undefined" class="mb-md-2" @click="addSection(false)">
               <VIcon :start="mdAndUp" :size="mobile ? 'small' : undefined">mdi-plus</VIcon>
@@ -89,7 +89,7 @@
             </div>
 
             <VCardText v-if="openSections[sIdx] && !section.isLabel" class="pa-2 pt-0">
-              <VRow density="compact" density="comfortable" class="mb-2">
+              <VRow density="compact" class="mb-2">
                 <VCol cols="6">
                   <VBtn id="audid-subsection-add-btn" :size="xs ? 'x-small' : mobile ? 'small' : undefined" block color="secondary" @click="addSubsection(sIdx, false)">
                     <VIcon :start="smAndUp" size="small">mdi-plus</VIcon>
@@ -116,7 +116,7 @@
 
                 <template v-if="!sub.isLabel">
                   <!-- Definir filas y columnas -->
-                  <VRow density="compact" density="comfortable" class="mb-2">
+                  <VRow density="compact" class="mb-2">
                     <VCol cols="4" sm="3">
                       <VTextField id="audid-sub-rows-tf" v-model.number="sub.tempRows" label="Filas" type="text" density="compact" hide-details />
                     </VCol>
@@ -131,7 +131,7 @@
                   <!-- Agregar asiento individual por fila -->
                   <VDivider class="my-2" />
                   <div class="text-caption mb-1">Agregar asiento individual:</div>
-                  <VRow density="compact" density="comfortable">
+                  <VRow density="compact">
                     <VCol cols="12" sm="6">
                       <VSelect id="audid-sub-row-sel" v-model="selectedRow[`${sIdx}-${subIdx}`]" :items="getRowOptions(sub)" label="Seleccionar fila" density="compact" hide-details />
                     </VCol>

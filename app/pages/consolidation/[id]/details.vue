@@ -1,6 +1,6 @@
 <template>
   <VContainer class="page-consolidation-details" :fluid="true">
-    <VRow density="compact" density="comfortable">
+    <VRow density="compact">
       <VCol cols="12">
         <VCard id="con-detai-card-1" class="mb-3" variant="outlined">
           <VCardTitle class="text-subtitle-1 font-weight-bold d-flex align-center">
@@ -8,7 +8,7 @@
             Consolidado #{{ sheet.folio_number }}
           </VCardTitle>
           <VCardText>
-            <VRow density="compact" align="center" density="comfortable">
+            <VRow  align="center" density="compact">
               <VCol md="2" cols="12">
                 <div class="d-flex align-center">
                   <VIcon class="mr-1" size="small">mdi-calendar</VIcon>
@@ -130,7 +130,7 @@
       <VCol cols="12">
         <VCard id="con-detai-card-2" class="mb-3" variant="outlined">
           <VCardText>
-            <VRow density="compact" density="comfortable">
+            <VRow density="compact">
               <VCol md="4" cols="12">
                 <VTextField
                   id="con-detai-filterterm-tf-2"

@@ -32,7 +32,7 @@
         <CoursesSection icon="mdi-tent" title="Eleva el Paladar Blando">
           <div class="text-center py-3 mb-2">
             <VBtnToggle v-model="palateMode" mandatory class="mb-3" color="primary" variant="outlined"
-              density="comfortable">
+              density="compact">
               <VBtn id="btn-singp12-palate-half" value="half" :prepend-icon="palateMode === 'half' ? 'mdi-check' : ''">
                 Medio bostezo
               </VBtn>

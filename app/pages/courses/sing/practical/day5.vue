@@ -41,7 +41,7 @@
         <!-- SECCION 2: Simulador de staccato/legato -->
         <CoursesSection title="Modos de Articulación" icon="mdi-music-note-half-dotted">
           <div class="text-center my-3">
-            <VBtnToggle v-model="mode" mandatory color="primary" variant="outlined" density="comfortable">
+            <VBtnToggle v-model="mode" mandatory color="primary" variant="outlined" density="compact">
               <VBtn id="btn-singp5-mode-staccato" value="staccato" :prepend-icon="mode === 'staccato' ? 'mdi-check' : ''">
                 Staccato
               </VBtn>

@@ -34,7 +34,7 @@
 
             <div class="mt-2">
               <VBtnToggle v-model="mode" mandatory class="mb-3" color="primary" variant="outlined"
-                density="comfortable">
+                density="compact">
                 <VBtn id="btn-singp2-mode-tsss" value="tsss" :prepend-icon="mode === 'tsss' ? 'mdi-check' : ''">
                   Tsss
                 </VBtn>

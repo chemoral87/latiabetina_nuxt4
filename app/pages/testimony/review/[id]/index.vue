@@ -1,6 +1,6 @@
 <template>
   <VContainer :fluid="true">
-    <VRow density="compact" density="comfortable">
+    <VRow density="compact">
       <VCol cols="12" md="8" class="mx-auto">
         <VCard id="rev-main-card">
           <VCardTitle class="d-flex flex-column align-start">

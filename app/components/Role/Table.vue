@@ -21,11 +21,11 @@
       <template #[`item.permissions`]="{ item }">
         <div v-if="hasPermissions(item as Record<string, unknown>)" class="d-flex flex-wrap ga-1">
           <VChip
-            v-for="permission in (item as Record<string, unknown>).permissions as Record<string, unknown>[]"
+            v-for="permission in sortedPermissions((item as Record<string, unknown>).permissions as Record<string, unknown>[])"
             :key="permission.id as number"
-            color="primary"
+            :color="permissionColors[permission.name as string] ?? 'primary'"
             size="small"
-            variant="elevated"
+            variant="flat"
           >
             {{ permission.name as string }}
           </VChip>
@@ -107,6 +107,7 @@
 
 <script setup lang="ts">
 import { rowPropsFor } from "~/composables/useRowHighlight"
+import { buildPermissionColorMap, sortPermissionsForDisplay } from "~/utils/permissionChipColor"
 
 interface Header {
   title: string
@@ -152,6 +153,14 @@ const total = computed(() => props.response?.total ?? 0)
 const items = computed(() => props.response?.data ?? [])
 const loading = computed(() => props.loading ?? false)
 
+const permissionColors = computed(() => {
+  const allNames = items.value.flatMap((item) => {
+    const perms = (item as Record<string, unknown>).permissions as Record<string, unknown>[] | undefined
+    return (perms ?? []).map((p) => p.name as string)
+  })
+  return buildPermissionColorMap(allNames)
+})
+
 const rowProps = rowPropsFor(() => props.highlightId, () => props.removingId)
 
 function onUpdateOptions(val: Record<string, unknown>) {
@@ -160,6 +169,10 @@ function onUpdateOptions(val: Record<string, unknown>) {
 
 function hasPermissions(item: Record<string, unknown>): boolean {
   return !!(item.permissions && Array.isArray(item.permissions) && (item.permissions as unknown[]).length > 0)
+}
+
+function sortedPermissions(permissions: Record<string, unknown>[]) {
+  return sortPermissionsForDisplay(permissions as { name: string }[])
 }
 
 function confirmDelete(item: unknown) {

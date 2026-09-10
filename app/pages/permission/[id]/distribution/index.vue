@@ -1,7 +1,7 @@
 <template>
   <VContainer :fluid="true">
     <VSheet color="white" rounded>
-      <VRow density="compact" density="comfortable">
+      <VRow density="compact">
       <!-- Organization filter -->
       <VCol cols="12" md="3">
         <VSelect

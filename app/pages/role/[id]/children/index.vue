@@ -29,7 +29,7 @@
               >
               <span class="text-subtitle-1 font-weight-medium">Crear nuevo permiso</span>
             </div>
-            <VRow density="compact" align="center" density="comfortable">
+            <VRow density="compact" align="center">
               <VCol cols="12">
                 <VTextField
                   id="rol-index-newpermissionname-tf-1"

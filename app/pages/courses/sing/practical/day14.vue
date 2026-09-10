@@ -54,14 +54,14 @@
           </p>
           <div class="text-center mb-3">
             <VBtnToggle v-model="selectedRoot" mandatory class="mb-2" color="primary" variant="outlined"
-              density="comfortable">
+              density="compact">
               <VBtn v-for="root in roots" id="btn-singp14-root" :key="root" :value="root">
                 {{ root }}
               </VBtn>
             </VBtnToggle>
             <div>
               <VBtnToggle v-model="selectedType" mandatory class="mb-2" color="primary" variant="outlined"
-                density="comfortable">
+                density="compact">
                 <VBtn id="btn-singp14-type-maj" value="major">
                   <span class="font-weight-bold">Mayor</span>
                 </VBtn>

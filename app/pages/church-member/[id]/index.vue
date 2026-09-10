@@ -31,7 +31,7 @@
             <VRow density="compact"
               v-if="medals.length> 0"
               id="cmm-medals-row"
-              density="compact">
+              >
               <VCol cols="12" class="d-flex flex-wrap align-center">
                 <VIcon size="small" color="primary">mdi-medal-outline</VIcon>
                 <template v-for="medal in medals" :key="medal.id">
@@ -283,7 +283,6 @@
           <div>
             <VRow density="compact"
               id="cmm-logs-controls-row"
-              density="comfortable"
               class="w-100 align-center">
               <VCol cols="12" sm="auto">
                 <VBtn

@@ -24,29 +24,26 @@
         <VBtn
           id="pit-reset-btn"
           color="primary"
-          density="comfortable"
-          @click="resetHistory"
-        >
+          density="compact"
+          @click="resetHistory">
           <VIcon start size="small">mdi-restart</VIcon>
           <span>Reiniciar</span>
         </VBtn>
         <VBtn
           id="pit-calibrate-btn"
           color="warning"
-          density="comfortable"
+          density="compact"
           :loading="noiseCalibrating"
           :disabled="!isMicActive || noiseCalibrating"
-          @click="calibrateNoise"
-        >
+          @click="calibrateNoise">
           <VIcon start size="small">mdi-tune</VIcon>
           <span>Calibrar Ruido</span>
         </VBtn>
         <VBtn
           id="pit-mic-btn"
-          density="comfortable"
+          density="compact"
           :color="isMicActive ? 'error' : 'success'"
-          @click="toggleMic"
-        >
+          @click="toggleMic">
           <VIcon start size="small">{{
             isMicActive ? "mdi-microphone-off" : "mdi-microphone"
           }}</VIcon>
@@ -138,7 +135,7 @@
             v-bind="props"
             color="primary"
             icon="mdi-guitar-acoustic"
-            density="comfortable"
+            density="compact"
             class="notation-cols-fab pit-ukelele-btn"
           />
         </template>
@@ -161,7 +158,7 @@
             id="pit-guitar-cols-btn"
             v-bind="props"
             color="primary"
-            density="comfortable"
+            density="compact"
             class="notation-cols-fab"
             icon="mdi-guitar-acoustic"
           />
@@ -186,7 +183,7 @@
             v-bind="props"
             color="primary"
             icon="mdi-trumpet"
-            density="comfortable"
+            density="compact"
             class="notation-cols-fab"
           />
         </template>
@@ -210,7 +207,7 @@
             v-bind="props"
             color="primary"
             icon="mdi-piano"
-            density="comfortable"
+            density="compact"
             class="notation-cols-fab"
           />
         </template>

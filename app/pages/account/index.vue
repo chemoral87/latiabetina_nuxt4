@@ -113,8 +113,13 @@
               <template v-else>
                 <div v-if="!hasPermissions" class="text-grey text-body-2">Sin permisos asignados</div>
                 <VRow density="compact">
-                  <VCol v-for="(orgIds, perm) in sortedPermissionsOrg" :key="perm" sm="6" cols="12">
-                    <div style="gap: 4px" class="d-flex align-center flex-wrap">
+                  <VCol v-for="(colEntries, colIdx) in sortedPermissionsOrgCols" :key="colIdx" sm="6" cols="12">
+                    <div
+                      v-for="[perm, orgIds] in colEntries"
+                      :key="perm"
+                      style="gap: 4px"
+                      class="d-flex align-center flex-wrap mb-1"
+                    >
                       <VChip :id="'chip-acc-permission-' + perm" label class="mr-1" size="small" color="secondary" variant="elevated">{{ perm }}</VChip>
                       <VChip v-for="oid in orgIds" :id="'chip-acc-permission-org-' + oid" :key="oid" size="x-small" color="secondary" variant="outlined">
                         {{ getOrgNameById(oid) }}
@@ -207,6 +212,8 @@
 </template>
 
 <script setup lang="ts">
+import { comparePermissionNames, sortPermissionNamesForDisplay } from "~/utils/permissionChipColor"
+
 definePageMeta({
   title: "Perfil",
   icon: "mdi-account-circle",
@@ -225,13 +232,23 @@ const sortedRolesOrg = computed(() =>
   Object.fromEntries(Object.entries(roles_org.value).sort(([a], [b]) => a.localeCompare(b)))
 )
 const sortedPermissionsOrg = computed(() =>
-  Object.fromEntries(Object.entries(permissions_org.value).sort(([a], [b]) => a.localeCompare(b)))
+  Object.fromEntries(Object.entries(permissions_org.value).sort(([a], [b]) => comparePermissionNames(a, b)))
 )
+
+/**
+ * Split sorted permissions into two column halves so the grid reads
+ * top-to-bottom down column 1, then top-to-bottom down column 2 (`1 3 / 2 4`).
+ */
+const sortedPermissionsOrgCols = computed(() => {
+  const entries = Object.entries(sortedPermissionsOrg.value)
+  const mid = Math.ceil(entries.length / 2)
+  return [entries.slice(0, mid), entries.slice(mid)]
+})
 const sortedRolesPermissions = computed(() =>
   Object.fromEntries(
     Object.entries(roles_permissions.value)
       .sort(([a], [b]) => a.localeCompare(b))
-      .map(([role, perms]) => [role, [...perms].sort((a, b) => a.localeCompare(b))])
+      .map(([role, perms]) => [role, sortPermissionNamesForDisplay(perms)])
   )
 )
 
@@ -245,10 +262,11 @@ const orgGroups = computed(() =>
       .filter(([, orgIds]) => orgIds.includes(org.id))
       .map(([role]) => role)
       .sort((a, b) => a.localeCompare(b))
-    const perms = Object.entries(permissions_org.value)
-      .filter(([, orgIds]) => orgIds.includes(org.id))
-      .map(([perm]) => perm)
-      .sort((a, b) => a.localeCompare(b))
+    const perms = sortPermissionNamesForDisplay(
+      Object.entries(permissions_org.value)
+        .filter(([, orgIds]) => orgIds.includes(org.id))
+        .map(([perm]) => perm)
+    )
     return { org, roles, perms }
   })
 )
