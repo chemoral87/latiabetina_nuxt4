@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div id="cmp-testimony-table">
     <VDataTableServer
       id="tes-table-localitems-dt-1"
@@ -17,8 +17,7 @@
       :search="props.search"
       items-per-page-text="Filas por página"
       :items-per-page-options="[10, 15, 30]"
-      @update:options="onUpdateOptions"
-    >
+      @update:options="onUpdateOptions">
       <template #[`item.review`]="{ item }">
         <VBtn
           id="tes-table-show-btn"

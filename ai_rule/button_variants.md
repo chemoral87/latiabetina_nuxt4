@@ -119,6 +119,31 @@
 - Apply the same pattern across all pages and dialogs
 - Reference: `dialog_convention.md` for dialog-specific layout
 
+### 5. Size Exceptions
+
+- All buttons use default size unless explicitly needed
+- Exception: Inline toggle buttons (show/hide) use `size="x-small"` to reduce visual noise
+- Icon-only buttons in compact layouts may use `size="small"` or `size="x-small"`
+
+---
+
+## Examples
+
+### Toggle Button (Compact Inline)
+
+```vue
+<!-- Toggle button: small to avoid dominating the layout -->
+<VBtn
+  size="x-small"
+  variant="text"
+  color="primary"
+  :prepend-icon="isOpen ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+  @click="isOpen = !isOpen"
+>
+  {{ isOpen ? "Ocultar" : "Ver más" }}
+</VBtn>
+```
+
 ---
 
 ## Audit Summary
@@ -159,3 +184,11 @@
 - `VChip` with `variant="elevated"` is acceptable for status badges and labels (not action buttons)
 - `VBtn` with `variant="flat"` + `color="error"` is correct for destructive actions
 - Icon-only buttons use `variant="outlined"` as secondary/tertiary actions
+- Icon-only buttons in compact layouts (cards, toolbars) may use `size="small"` or `size="x-small"`
+
+### Fixed Violations
+
+| File | Before | After | Reason |
+|------|--------|-------|--------|
+| `Pos/KdsOrdersBoard.vue:19` | `variant="elevated"` | `variant="outlined"` | Recargar is secondary action |
+| `Song/Editor.vue:267` | `variant="elevated"` + `color="error"` | `variant="flat"` + `color="error"` | Delete is destructive action |

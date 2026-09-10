@@ -1,7 +1,7 @@
 <template>
   <VContainer class="" :fluid="true">
     <VSheet color="white" rounded>
-      <VRow align="center" density="comfortable">
+      <VRow density="compact" align="center">
       <VCol md="3" sm="6" cols="12">
         <VTextField
           id="wa-logs-filter-receiver"
@@ -42,6 +42,7 @@
         <VBtn
           id="wa-logs-refresh"
           color="primary"
+          variant="outlined"
           :loading="loading"
           @click="fetchLogs()"
         >
@@ -62,8 +63,7 @@
           closable
           variant="tonal"
           density="compact"
-          :type="botStatusAlert"
-        >
+          :type="botStatusAlert">
           <span class="text-caption">Bot: {{ botStatusText }}</span>
         </VAlert>
       </VCol>
@@ -221,7 +221,6 @@ async function onResend(item: Record<string, unknown>) {
   if (!confirm(`¿Reenviar mensaje #${id} a ${receiver}?\n"${preview}"`)) return
   try {
     await WhatsApp.resend<{ message: string }>(id as number | string)
-    notify.notify({ success: `Reenvío #${id} encolado` })
     // refrescar tras 1s para ver nuevo log
     setTimeout(() => fetchLogs(), 1200)
   } catch (e: unknown) {

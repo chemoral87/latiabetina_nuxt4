@@ -10,7 +10,7 @@
             A lo largo de las Escrituras, vemos que la música y los instrumentos musicales juegan un papel fundamental en la adoración a Dios. No son simples acompañamientos decorativos, sino canales a través de los cuales expresamos júbilo, gratitud y reverencia al Creador.
           </p>
 
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol cols="12" md="4" class="d-flex">
               <VCard id="card-cours-ukele-theol-day1-lighten-5-1" variant="outlined" class="pa-4 bg-grey-lighten-5 w-100 d-flex flex-column justify-space-between">
                 <div>
@@ -63,7 +63,7 @@
               <VIcon color="primary" class="mr-2">mdi-image-multiple</VIcon>
               Instrumentos mencionados en las Escrituras
             </h3>
-            <VRow density="comfortable" justify="center">
+            <VRow density="compact" justify="center">
               <VCol cols="6" sm="4" md="2" v-for="instrumento in instrumentos" :key="instrumento.nombre" class="d-flex">
                 <VCard
                   variant="outlined"
@@ -91,7 +91,7 @@
             Frecuentemente se clasifica la música en categorías como "cristiana" o "secular". Sin embargo, desde una perspectiva estrictamente técnica y bíblica, <strong>la música en sí misma no tiene religión</strong>.
           </p>
 
-          <VRow density="comfortable" class="mb-4">
+          <VRow density="compact" class="mb-4">
             <VCol cols="12" md="6">
               <VCard flat class="pa-2">
                 <h3 class="text-subtitle-1 font-weight-bold text-primary mb-2">La neutralidad del sonido</h3>
@@ -149,7 +149,7 @@
             Desarrollar una habilidad musical requiere perseverancia, práctica y paciencia. En la Biblia, la disciplina y la excelencia técnica no se oponen a la espiritualidad, sino que caminan de la mano para servir a Dios con lo mejor de nosotros.
           </p>
 
-          <VRow density="comfortable" class="align-center mb-4">
+          <VRow density="compact" class="align-center mb-4">
             <VCol cols="12" md="8">
               <h3 class="text-subtitle-1 font-weight-bold text-primary mb-2">David tocando el arpa para Saúl</h3>
               <p class="text-body-2 text-grey-darken-3 mb-3">

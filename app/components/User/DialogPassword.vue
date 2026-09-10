@@ -11,7 +11,7 @@
       </VCardTitle>
 
       <VCardText class="py-1">
-        <VRow density="comfortable">
+        <VRow density="compact">
           <VCol cols="12">
             <VTextField id="usr-dialo-item-password-tf-1"
               v-model="item.password"

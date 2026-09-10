@@ -12,9 +12,9 @@
             Toca cada cuerda y ajusta el clavijero de tu instrumento hasta que suene idéntico al tono del afinador.
           </p>
 
-          <VRow density="comfortable" class="mb-4 align-center">
+          <VRow density="compact" class="mb-4 align-center">
             <VCol cols="12" md="8">
-              <VRow density="comfortable">
+              <VRow density="compact">
                 <VCol v-for="(string, index) in tuningStrings" :key="string.number" cols="6" sm="3">
                   <VCard variant="outlined" :color="activeStringIndex === index ? 'grey-lighten-4' : 'transparent'"
                     class="pa-3 text-center fill-height d-flex flex-column justify-space-between align-center border-transition"
@@ -98,7 +98,7 @@
               {{ currentQuestion.question }}
             </p>
 
-            <VRow density="comfortable" class="mb-4">
+            <VRow density="compact" class="mb-4">
               <VCol v-for="(option, idx) in currentQuestion.options" :key="idx" cols="12" sm="6">
                 <VBtn id="btn-uked1-quiz-option" block variant="outlined" :disabled="isAnswered" :color="getOptionColor(idx)"
                   class="quiz-option-btn py-6 text-left justify-start" @click="checkAnswer(idx)">
@@ -198,7 +198,7 @@
 
           <!-- Active game -->
           <div v-else>
-            <VRow no-gutters class="align-stretch">
+            <VRow density="compact" no-gutters class="align-stretch">
 
               <!-- LEFT: Latin column -->
               <VCol cols="5">
@@ -276,7 +276,7 @@
             colocan tus dedos. <strong>Fórmula: 1 Tono = 2 Semitonos</strong>.
           </p>
 
-          <VRow density="comfortable" class="align-center">
+          <VRow density="compact" class="align-center">
             <!-- Column 1: Scale selector and explanations -->
             <VCol cols="12" md="7" class="pr-md-4">
               <!-- Scale Step Visualizer (Horizontal Buttons) -->
@@ -319,7 +319,7 @@
 
                 <VDivider class="mb-3" />
 
-                <VRow density="comfortable">
+                <VRow density="compact">
                   <VCol cols="4">
                     <div class="text-caption text-grey">Frecuencia</div>
                     <div class="text-body-1 font-weight-bold text-grey-darken-4">{{ selectedNote.frequency }}
@@ -345,7 +345,7 @@
                 <div class="text-caption font-weight-bold text-grey-darken-2 mb-2 text-center">
                   Posición de las manos
                 </div>
-                <VRow density="comfortable" class="align-center text-center">
+                <VRow density="compact" class="align-center text-center">
                   <!-- Left hand: fretting hand -->
                   <VCol cols="6">
                     <svg viewBox="0 0 846.1 869.7" width="150" height="120" preserveAspectRatio="none"

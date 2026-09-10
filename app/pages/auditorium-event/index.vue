@@ -1,7 +1,7 @@
 <template>
   <VContainer class="" :fluid="true">
     <VSheet rounded color="white">
-      <VRow density="comfortable">
+      <VRow density="compact">
         <VCol md="3" cols="12">
           <MyDateRange
             v-model="filterAuditoriumEvent"
@@ -14,6 +14,7 @@
             id="auev-refresh-btn"
             class="mr-1"
             color="primary"
+            variant="outlined"
             :loading="loading"
             @click="getAuditoriumEvents()"
           >

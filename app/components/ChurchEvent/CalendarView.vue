@@ -1,10 +1,8 @@
-﻿<template>
-  <VRow
+<template>
+  <VRow density="compact"
     id="cmp-church-event-calendar-view"
     class="mb-2"
-    justify="center"
-    density="comfortable"
-  >
+    justify="center">
     <VCol cols="12">
       <VCard id="eve-calen-card-1" elevation="1">
         <div

@@ -1,7 +1,7 @@
 <template>
   <VContainer class="" :fluid="true">
     <VSheet color="white" rounded>
-      <VRow>
+      <VRow density="compact">
       <!-- Filter -->
       <VCol cols="12" md="3">
         <VTextField
@@ -18,7 +18,7 @@
 
       <!-- Action buttons -->
       <VCol cols="auto" class="d-flex align-center">
-        <VBtn id="poss-refresh-btn" color="primary" :loading="loading" class="mr-4" @click="refreshSales">
+        <VBtn id="poss-refresh-btn" variant="outlined" color="primary" :loading="loading" class="mr-4" @click="refreshSales">
           <VIcon start>mdi-reload</VIcon>
           Refrescar
         </VBtn>

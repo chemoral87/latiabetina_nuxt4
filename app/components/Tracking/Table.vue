@@ -10,8 +10,7 @@
       :loading="props.loading"
       class="elevation-1 xwidth1000"
       :items-length="members.length"
-      @update:options="onUpdateOptions"
-    >
+      @update:options="onUpdateOptions">
       <template #[`item.name`]="{ item }">
         {{ item.name }} {{ item.last_name }}
       </template>

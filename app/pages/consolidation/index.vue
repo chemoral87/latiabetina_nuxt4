@@ -1,7 +1,7 @@
 <template>
   <VContainer :fluid="true" class="page-consolidation">
     <VSheet color="white" rounded>
-      <VRow density="comfortable">
+      <VRow density="compact">
         <VCol md="2" sm="4" cols="12">
           <VTextField
             id="cnsld-index-filter"
@@ -20,6 +20,7 @@
             id="cnsld-refresh-btn"
             class="mr-4"
             color="primary"
+            variant="outlined"
             :loading="loading"
             @click="fetchData"
           >
@@ -176,7 +177,6 @@ async function deleteSheet(item: unknown) {
     await ConsoSheet.delete(s.id as number);
     dialogDelete.value = false;
     await removeWithAnimation(response, s.id as number);
-    notify.notify({ success: "Consolidado eliminado exitosamente" });
   } catch (error) {
     notify.notify({
       error:
@@ -204,12 +204,10 @@ async function saveSheet(item: Record<string, unknown>) {
       const created = (res as Record<string, unknown>) ?? item;
       prependCreated(response, created);
       dialog.value = false;
-      notify.notify({ success: "Consolidado creado exitosamente" });
       navigateTo(`/consolidation/${created.id}/details`);
       return;
     }
 
-    notify.notify({ success: "Consolidado actualizado exitosamente" });
     dialog.value = false;
   } catch (error) {
     notify.notify({

@@ -1,7 +1,7 @@
 <template>
   <VContainer class="" :fluid="true">
     <VSheet color="white" rounded>
-      <VRow>
+      <VRow density="compact">
       <VCol md="2" sm="6" cols="12">
         <VTextField
           id="org-index-filterorganization-tf-1"
@@ -20,6 +20,7 @@
           id="org-refresh-btn"
           class="mr-4"
           color="primary"
+          variant="outlined"
           :loading="loading"
           @click="refresh"
         >

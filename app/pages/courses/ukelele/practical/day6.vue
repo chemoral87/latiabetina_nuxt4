@@ -32,7 +32,7 @@
             </VBtn>
           </div>
 
-          <VRow density="comfortable" class="align-start">
+          <VRow density="compact" class="align-start">
             <!-- Column 1: Chord diagram -->
             <VCol cols="12" md="5" class="d-flex justify-center">
               <VCard id="card-cours-ukele-pract-day6-1" variant="outlined" class="pa-4 w-100" max-width="320">
@@ -153,7 +153,7 @@
                   </VChip>
                 </div>
 
-                <VRow density="comfortable" class="mb-2">
+                <VRow density="compact" class="mb-2">
                   <VCol v-for="(note, idx) in selectedChord.notes" :key="idx" cols="3">
                     <VCard variant="outlined" class="pa-2 text-center fill-height d-flex flex-column align-center"
                       style="cursor: pointer;" @click="playTone(note.frequency, 1.0)">
@@ -222,7 +222,7 @@
               {{ currentQuestion.question }}
             </p>
 
-            <VRow density="comfortable" class="mb-4">
+            <VRow density="compact" class="mb-4">
               <VCol v-for="(option, idx) in currentQuestion.options" :key="idx" cols="12" sm="6">
               <VBtn id="btn-uked6-quiz-option" block variant="outlined" :disabled="isAnswered" :color="getOptionColor(idx)"
                 class="quiz-option-btn py-6 text-left justify-start" @click="checkAnswer(idx)">

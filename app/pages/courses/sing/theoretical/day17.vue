@@ -12,7 +12,7 @@
             nivel: <strong>frases largas, dinámica constante y reproyección</strong>. El aire es tu
             combustible: cuanto mejor lo administres, más largas y estables tus frases.
           </p>
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol md="4" cols="12">
               <VCard variant="outlined" class="pa-3 mb-3 text-center fill-height">
                 <VIcon size="36" class="mb-1" color="primary">mdi-timer-outline</VIcon>

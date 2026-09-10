@@ -1,7 +1,7 @@
 <template>
   <VContainer class="" :fluid="true">
     <VSheet color="white" rounded>
-      <VRow density="comfortable">
+      <VRow density="compact">
       <VCol md="4" cols="12">
         <VTextField
           id="song-filter"
@@ -21,6 +21,7 @@
           id="song-refresh-btn"
           class="mr-1"
           color="primary"
+          variant="outlined"
           :loading="loading"
           @click="refreshSongs"
         >

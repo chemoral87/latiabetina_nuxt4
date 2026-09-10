@@ -46,7 +46,7 @@
           </div>
 
           <VAlert density="compact" variant="outlined"
-            :type="lastResult ? (lastResult >= 20 ? 'success' : 'info') : 'info'">
+            :type="lastResult ? (lastResult>= 20 ? 'success' : 'info') : 'info'">
             <template v-if="lastResult !== null">
               Tu marca: <strong>{{ lastResult }} s</strong>.
               {{ lastResult >= 20 ? '¡Excelente apoyo!' : lastResult >= 12 ? '¡Buen progreso, sigue!' : 'Consejo: exhala más lento y con menos aire por segundo.' }}
@@ -64,7 +64,7 @@
             Usa el contador para mantener la cadencia:
           </p>
 
-          <VRow density="comfortable" class="align-center mb-2">
+          <VRow density="compact" class="align-center mb-2">
             <VCol md="4" cols="12" class="text-center">
               <div class="text-h4 font-weight-bold text-primary font-mono">{{ inhaleRatio }}</div>
               <div class="text-caption text-grey-darken-2">Inspirar (s)</div>
@@ -119,7 +119,7 @@
             </div>
             <p class="text-subtitle-1 font-weight-bold text-grey-darken-4 mb-4">{{ currentQuestion.question }}</p>
 
-            <VRow class="mb-4" density="comfortable">
+            <VRow density="compact" class="mb-4">
               <VCol v-for="(option, idx) in currentQuestion.options" :key="idx" sm="6" cols="12">
                 <VBtn id="btn-singp2-quiz-option" block variant="outlined" :disabled="answered"
                   :color="getOptionColor(idx)" class="py-4 text-left justify-start" @click="checkAnswer(idx)">

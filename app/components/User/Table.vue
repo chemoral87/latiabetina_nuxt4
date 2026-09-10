@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div id="cmp-user-table">
     <VDataTableServer
       id="usr-table-items-dt-1"
@@ -18,8 +18,7 @@
       initial-sort-order="asc"
       :items-per-page-options="[10, 15, 30]"
       items-per-page-text="Filas por página"
-      @update:options="onUpdateOptions"
-    >
+      @update:options="onUpdateOptions">
       <template #[`item.roles`]="{ item }">
         <VChip
           v-for="it in (item as Record<string, unknown>).roles as Record<

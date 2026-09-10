@@ -6,7 +6,7 @@
     </VCardTitle>
 
     <VCardText>
-      <VRow class="mb-2" density="comfortable">
+      <VRow density="compact" class="mb-2">
         <VCol cols="auto">
           <VSelect id="pit-ukele-strings" v-model="stringCount" hide-details label="Cuerdas" density="compact" variant="outlined" style="max-width: 150px" :items="stringCountOptions" />
         </VCol>

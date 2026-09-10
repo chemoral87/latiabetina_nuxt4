@@ -13,7 +13,7 @@
             Cuanto más alta la frecuencia, más <strong>aguda</strong> la nota; cuanto más baja, más
             <strong>grave</strong>.
           </p>
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol md="4" cols="12">
               <VCard variant="outlined" class="pa-3 mb-3 text-center fill-height">
                 <VIcon size="36" class="mb-1" color="green">mdi-music-note</VIcon>

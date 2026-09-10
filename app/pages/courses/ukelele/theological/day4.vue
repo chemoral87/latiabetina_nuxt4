@@ -14,7 +14,7 @@
             a algo más grande: <strong>glorificar a Dios con una sola voz y un solo corazón</strong>.
           </p>
 
-          <VRow density="comfortable" class="mb-3">
+          <VRow density="compact" class="mb-3">
             <VCol cols="12" md="6" class="d-flex">
               <VCard id="card-cours-ukele-theol-day4-lighten-5-1" variant="outlined" class="pa-4 bg-grey-lighten-5 w-100 d-flex flex-column justify-space-between">
                 <div>
@@ -48,7 +48,7 @@
             </VCol>
           </VRow>
 
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol cols="12" md="4">
               <VCard id="card-cours-ukele-theol-day4-3" variant="outlined" class="pa-3 text-center fill-height" style="border-radius:10px;">
                 <VIcon color="primary" class="mb-1">mdi-text-box-outline</VIcon>
@@ -95,7 +95,7 @@
             del templo, la gloria de Dios descendió y llenó el lugar (2 Cr 5:13-14).
           </p>
 
-          <VRow density="comfortable" class="mb-3">
+          <VRow density="compact" class="mb-3">
             <VCol cols="12" md="6" class="d-flex">
               <VCard id="card-cours-ukele-theol-day4-orange-6" variant="outlined" class="pa-4 bg-orange-lighten-5 w-100 d-flex flex-column justify-space-between">
                 <div>
@@ -128,7 +128,7 @@
             </VCol>
           </VRow>
 
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol cols="12" md="4">
               <VCard id="card-cours-ukele-theol-day4-8" variant="outlined" class="pa-3 text-center fill-height" style="border-radius:10px;">
                 <VIcon color="deep-orange" class="mb-1">mdi-account-group</VIcon>

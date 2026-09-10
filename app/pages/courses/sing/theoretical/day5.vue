@@ -13,7 +13,7 @@
             Existen tres tipos de ataque que debes conocer y dominar.
           </p>
 
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol v-for="attack in attacks" :key="attack.name" md="4" cols="12">
               <VCard variant="outlined" class="pa-3 mb-3 fill-height">
                 <VIcon size="32" class="mb-1" :color="attack.color">{{ attack.icon }}</VIcon>
@@ -75,7 +75,7 @@
 
         <!-- SECCION 3: Errores comunes -->
         <CoursesSection icon="mdi-alert-outline" title="Errores Comunes al Atacar">
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol md="6" cols="12">
               <VCard class="pa-3 mb-3" variant="outlined">
                 <div class="d-flex align-center mb-2">

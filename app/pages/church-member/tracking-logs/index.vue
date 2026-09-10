@@ -1,7 +1,7 @@
 <template>
   <VContainer :fluid="true" class="page-tracking-logs">
     <VSheet rounded color="white">
-      <VRow density="comfortable">
+      <VRow density="compact">
         <VCol md="3" sm="4" cols="12">
           <VTextField
             id="mtl-index-filter"
@@ -34,6 +34,7 @@
           <VBtn
             id="mtl-refresh-btn"
             color="primary"
+            variant="outlined"
             :loading="loading"
             @click="fetchData"
           >

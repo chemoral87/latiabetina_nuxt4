@@ -13,7 +13,7 @@
             a guardar: no uniformidad de caracteres, sino convergencia en el mismo Señor.
             Pablo describe este llamado con dos textos que se complementan.
           </p>
-          <VRow density="comfortable" class="mb-3">
+          <VRow density="compact" class="mb-3">
             <VCol cols="12" md="6" class="d-flex">
               <VCard id="card-cours-ukele-theol-day5-lighten-5-1" variant="outlined" class="pa-4 bg-grey-lighten-5 w-100 d-flex flex-column justify-space-between">
                 <div>
@@ -63,7 +63,7 @@
             verdad, pueden generar una unidad más profunda que la que existía antes.
             <strong>El perdón es la resolución armónica del Evangelio.</strong>
           </p>
-          <VRow density="comfortable" class="mb-3">
+          <VRow density="compact" class="mb-3">
             <VCol cols="12" md="6">
               <VCard id="card-cours-ukele-theol-day5-3" variant="outlined" class="pa-4 fill-height" style="border-radius:10px;">
                 <div class="d-flex align-center mb-2">
@@ -103,7 +103,7 @@
               <VIcon color="primary" class="mr-2">mdi-music-clef-treble</VIcon>
               <span class="text-subtitle-2 font-weight-bold text-primary">Las "notas" de Colosenses 3 — la tonalidad del amor</span>
             </div>
-            <VRow density="comfortable">
+            <VRow density="compact">
               <VCol v-for="note in colossians" :key="note.label" cols="12" sm="6" md="4">
                 <div class="d-flex align-start pa-2">
                   <VIcon :color="note.color" size="small" class="mr-2 mt-1 flex-shrink-0">{{ note.icon }}</VIcon>

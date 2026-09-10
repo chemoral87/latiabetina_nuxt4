@@ -1,6 +1,6 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VRow justify="center">
+    <VRow density="compact" justify="center">
       <VCol cols="12" md="8">
         <ChurchEventForm
           :loading="saving"

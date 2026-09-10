@@ -32,7 +32,7 @@
 
         <VCardText class="config-body">
           <!-- General / Global Section -->
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol cols="12">
               <h3 id="pit-config-general-title" class="text-center py-0 my-0">
                 General
@@ -83,7 +83,7 @@
           <VDivider class="my-4" />
 
           <!-- Histograma Section -->
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol cols="12">
               <h3 id="pit-config-histogram-title" class="text-center py-0 my-0">
                 Histograma
@@ -103,7 +103,7 @@
           </VRow>
           <VExpandTransition>
             <div v-if="showHistogram">
-              <VRow class="mt-2" density="comfortable">
+              <VRow density="compact" class="mt-2">
                 <VCol sm="6" cols="12">
                   <VSwitch
                     id="pit-config-staff-notation"
@@ -242,7 +242,7 @@
           <VDivider class="my-4" />
 
           <!-- Notaciones de instrumento -->
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol cols="12">
               <h3 id="pit-config-notations-title" class="text-center py-0 my-0">
                 Notaciones
@@ -298,7 +298,7 @@
           <VExpandTransition>
             <div v-if="showScaleOnFretboard">
               <VDivider class="my-4" />
-              <VRow density="comfortable">
+              <VRow density="compact">
                 <VCol cols="12">
                   <div class="text-subtitle-2 text-medium-emphasis">
                     Escala en diapasón
@@ -330,7 +330,7 @@
           <VExpandTransition>
             <div v-if="showGuitarNotation">
               <VDivider class="my-4" />
-              <VRow density="comfortable">
+              <VRow density="compact">
                 <VCol cols="12">
                   <div class="text-subtitle-2 text-medium-emphasis">
                     Notación guitarra
@@ -364,7 +364,7 @@
           <VExpandTransition>
             <div v-if="showUkeleleNotation">
               <VDivider class="my-4" />
-              <VRow density="comfortable">
+              <VRow density="compact">
                 <VCol cols="12">
                   <div class="text-subtitle-2 text-medium-emphasis">
                     Notación ukelele
@@ -398,7 +398,7 @@
           <VExpandTransition>
             <div v-if="showTrumpetNotation">
               <VDivider class="my-4" />
-              <VRow density="comfortable">
+              <VRow density="compact">
                 <VCol cols="12">
                   <div class="text-subtitle-2 text-medium-emphasis">
                     Notación trompeta
@@ -421,7 +421,7 @@
           <VExpandTransition>
             <div v-if="showPianoNotation">
               <VDivider class="my-4" />
-              <VRow density="comfortable">
+              <VRow density="compact">
                 <VCol cols="12">
                   <div class="text-subtitle-2 text-medium-emphasis">
                     Notación piano
@@ -445,7 +445,7 @@
           <VDivider class="my-4" />
 
           <!-- Micrófono Section -->
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol cols="12">
               <h3 id="pit-config-mic-title" class="text-center py-0 my-0">
                 Micrófono
@@ -471,7 +471,7 @@
             </VCol>
           </VRow>
           <VDivider class="my-4" />
-          <VRow density="comfortable">
+          <VRow density="compact">
             <!-- Medidor Section -->
             <VCol cols="12">
               <h3 id="pit-config-meter-title" class="text-center py-0 my-0">

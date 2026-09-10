@@ -60,7 +60,7 @@
         </template>
 
         <template v-else>
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol cols="12" sm="6">
               <VMenu v-model="startDateMenu" :close-on-content-click="false" transition="scale-transition" offset-y min-width="auto">
                 <template #activator="{ props: menuProps }">

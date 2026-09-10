@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <VDialog id="aud-dialo-dialog-dlg-1" v-model="dialog" persistent max-width="600px">
     <VCard>
       <VCardTitle class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center">
@@ -13,7 +13,7 @@
       <VCardText>
         <VForm ref="eventForm">
           <VContainer>
-            <VRow>
+            <VRow density="compact">
               <VCol v-if="!orgSelectHidden" md="6" cols="12">
                 <OrganizationSelect id="cmp-organization-select" v-model="localEvent.org_id" v-model:hidden="orgSelectHidden" hide-one
                   required density="compact" variant="outlined" label="Organización"

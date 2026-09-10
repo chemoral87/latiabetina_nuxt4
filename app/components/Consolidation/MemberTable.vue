@@ -9,8 +9,7 @@
       hide-default-footer
       :items-per-page="-1"
       mobile-breakpoint="0"
-      class="elevation-1 xwidth1100"
-    >
+      class="elevation-1 xwidth1100">
       <template #[`item.status`]="{ item }">
         <VSelect
           :id="`det-member-status-${item.id}`"

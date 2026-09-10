@@ -1,6 +1,6 @@
 <template>
   <VContainer fluid>
-    <VRow justify="center">
+    <VRow density="compact" justify="center">
       <VCol cols="12" md="8">
         <div v-if="loadingItem" class="text-center pa-5">
           <VProgressCircular indeterminate color="primary" />

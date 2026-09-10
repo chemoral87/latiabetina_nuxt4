@@ -15,8 +15,7 @@
     class="elevation-1 xwidth900"
     :items-per-page-options="[10, 15, 30]"
     items-per-page-text="Filas por página"
-    @update:options="onUpdateOptions"
-  >
+    @update:options="onUpdateOptions">
     <template #[`item.event_date`]="{ item }">
       {{ formatShortDate(item.event_date) }}
     </template>

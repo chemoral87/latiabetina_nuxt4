@@ -28,8 +28,7 @@
         <VTable
           v-else-if="seatTransitions.length"
           id="aud-history-table"
-          density="compact"
-        >
+          density="compact">
           <thead>
             <tr>
               <th colspan="2" style="padding: 6px 16px 4px">
@@ -47,8 +46,7 @@
                     label="Filtrar por estado"
                     class="history-filter-select"
                     :items="historyFilterOptions"
-                    style="max-width: 220px; font-size: 11px"
-                  >
+                    style="max-width: 220px; font-size: 11px">
                     <template #selection="{ item }">
                       <VIcon
                         x-small

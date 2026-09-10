@@ -16,7 +16,7 @@
         </div>
 
         <VForm ref="formRef" @submit.prevent="save">
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol sm="5" cols="12">
               <MyDatePicker
                 id="con-track-date"
@@ -222,7 +222,6 @@ async function save() {
     logs.value = [created, ...logs.value]
     form.value.medium = ""
     form.value.description = ""
-    notify.notify({ success: "Registro de seguimiento agregado exitosamente" })
   } catch {
     // withNotify already surfaced the error
   } finally {

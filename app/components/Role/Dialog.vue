@@ -12,7 +12,7 @@
 
       <VCardText class="py-1">
         <VForm ref="formRef" @submit.prevent="save">
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol cols="12">
               <VTextField
                 id="rol-dialo-item-name-tf-1"

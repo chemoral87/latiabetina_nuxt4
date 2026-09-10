@@ -33,7 +33,7 @@
               <VBtn id="btn-singp17-mode-chsss" value="chsss">Chsss</VBtn>
             </VBtnToggle>
           </div>
-          <VAlert density="compact" variant="outlined" :type="bestMark >= metaSeconds ? 'success' : 'info'">
+          <VAlert density="compact" variant="outlined" :type="bestMark>= metaSeconds ? 'success' : 'info'">
             Tu mejor marca: <strong>{{ bestMark }} s</strong>.
             {{ bestMark >= metaSeconds ? '¡Has superado la meta de 40 s!' : `Vas por la meta de ${metaSeconds} s.` }}
           </VAlert>

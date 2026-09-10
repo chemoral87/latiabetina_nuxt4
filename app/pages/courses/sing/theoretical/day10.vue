@@ -12,7 +12,7 @@
             Cantar "adelante" (en la máscara) y "arriba" (en el paladar) da brillo y proyección sin
             esfuerzo. Cantar "atrás" o "abajo" da oscuridad, pero en exceso pierde claridad.
           </p>
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol md="6" cols="12">
               <VCard class="pa-3 mb-3" variant="outlined">
                 <div class="d-flex align-center mb-2">
@@ -70,7 +70,7 @@
             La <strong>proyección</strong> eficiente = <em>resonancias superpuestas</em> + apoyo.
             Un mismo volumen puede sonar enorme si la colocación es frontal y el aire está apoyado.
           </p>
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol md="6" cols="12">
               <VCard class="pa-3 mb-3" variant="outlined">
                 <div class="text-subtitle-1 font-weight-bold text-grey-darken-3 mb-2">Consejos de proyección</div>

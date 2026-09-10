@@ -12,7 +12,7 @@
 
       <VForm ref="formRef" @submit.prevent="saveProfile">
         <VCardText class="py-1">
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol cols="12">
               <VTextField id="usp-dialo-filterprofile-tf-1"
                 v-model="filterProfile"

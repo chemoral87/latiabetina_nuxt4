@@ -1,7 +1,7 @@
 <template>
   <VContainer :fluid="true">
     <VSheet color="white" rounded>
-      <VRow>
+      <VRow density="compact">
         <!-- Existing permissions -->
         <VCol cols="12">
           <div class="pa-4">
@@ -29,7 +29,7 @@
               >
               <span class="text-subtitle-1 font-weight-medium">Crear nuevo permiso</span>
             </div>
-            <VRow align="center" density="comfortable">
+            <VRow density="compact" align="center" density="comfortable">
               <VCol cols="12">
                 <VTextField
                   id="rol-index-newpermissionname-tf-1"

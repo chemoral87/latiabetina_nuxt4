@@ -1,16 +1,16 @@
-﻿<template>
+<template>
   <div id="cmp-product-form">
     <VForm ref="formRef" @submit.prevent="save">
-      <!-- Section 1: Información básica -->
+      <!-- Section 1: Informaci�n b�sica -->
       <VCard id="prd-form-card-1" variant="outlined">
         <VCardTitle class="text-subtitle-1 font-weight-medium pb-2">
           <VIcon start size="small" color="primary"
             >mdi-information-outline</VIcon
           >
-          Información del producto
+          Informaci�n del producto
         </VCardTitle>
         <VCardText>
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol v-if="showOrgSelect" cols="12">
               <OrganizationSelect
                 v-model="item.org_id"
@@ -58,7 +58,7 @@
                 density="compact"
                 variant="outlined"
                 :disabled="loading"
-                label="Descripción"
+                label="Descripci�n"
                 :error-messages="errors?.description"
               />
             </VCol>
@@ -73,10 +73,10 @@
           Precio y existencias
         </VCardTitle>
         <VCardText>
-          <VRow density="comfortable">
+          <VRow density="compact">
             <!-- Left column: numeric fields -->
             <VCol md="6" cols="12">
-              <VRow density="comfortable">
+              <VRow density="compact">
                 <VCol sm="6" cols="12">
                   <VTextField
                     id="prd-form-item-price-tf-3"

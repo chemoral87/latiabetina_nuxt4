@@ -48,7 +48,7 @@
               {{ currentQuestion.question }}
             </p>
 
-            <VRow class="mb-4" density="comfortable">
+            <VRow density="compact" class="mb-4">
               <VCol v-for="(option, idx) in currentQuestion.options" :key="idx" sm="6" cols="12">
                 <VBtn id="btn-singp1-quiz-option" block variant="outlined" :disabled="isAnswered"
                   :color="getOptionColor(idx)" class="quiz-option-btn py-5 text-left justify-start"
@@ -107,7 +107,7 @@
             su equivalente en la voz. Toca sobre la parte correcta.
           </p>
 
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol v-for="item in partsGame" :key="item.key" md="4" sm="6" cols="12">
               <VCard variant="outlined" class="pa-4 fill-height">
                 <div class="text-body-2 font-weight-bold text-grey-darken-4 mb-3">{{ item.question }}</div>
@@ -139,7 +139,7 @@
             boca y el <strong>color</strong> del sonido (de brillante a más oscuro). Practica
             exagerando ligeramente cada forma.
           </p>
-          <VRow class="mb-2" density="comfortable">
+          <VRow density="compact" class="mb-2">
             <VCol v-for="v in vowels" :key="v.vowel" cols="4">
               <VCard variant="outlined" class="pa-3 text-center fill-height" :style="`cursor:pointer; border-color:${v.selected ? '#1976d2' : 'rgba(0,0,0,0.15)'} !important;`"
                 @click="selectVowel(v.vowel)">

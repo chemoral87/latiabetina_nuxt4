@@ -1,7 +1,7 @@
 <template>
   <VContainer class="" :fluid="true">
     <VSheet color="white" rounded>
-      <VRow density="comfortable">
+      <VRow density="compact">
       <VCol md="2" sm="4" cols="12">
         <VTextField
           id="cml-index-filter"
@@ -31,6 +31,7 @@
         <VBtn
           id="cml-refresh-btn"
           color="primary"
+          variant="outlined"
           :loading="loading"
           @click="fetchData"
         >

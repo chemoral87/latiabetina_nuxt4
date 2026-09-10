@@ -1,7 +1,7 @@
 <template>
   <VContainer class="" :fluid="true">
     <VSheet color="white" rounded>
-      <VRow>
+      <VRow density="compact">
       <!-- Filter -->
       <VCol md="2" cols="12">
         <VTextField
@@ -22,6 +22,7 @@
           id="per-refresh-btn"
           class="mr-4"
           color="primary"
+          variant="outlined"
           :loading="loading"
           @click="refreshPermissions"
         >

@@ -6,8 +6,7 @@
     class="elevation-1"
     hide-default-footer
     :headers="headers"
-    :items-length="items.length"
-  >
+    :items-length="items.length">
     <template #[`item.actions`]="{ item }">
       <VBtn
         :id="`atl-consolidator-btn-${item.created_by}`"

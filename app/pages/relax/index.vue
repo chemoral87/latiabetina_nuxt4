@@ -1,7 +1,7 @@
 <template>
   <VContainer class="breathing-container" :fluid="true">
     <!-- Header -->
-    <VRow justify="center" density="comfortable">
+    <VRow density="compact" justify="center">
       <VCol cols="12" class="py-1">
         <div class="text-center">
           <h1 class="text-h5 text-sm-h4 font-weight-medium py-0 my-0">
@@ -11,7 +11,7 @@
       </VCol>
     </VRow>
     <!-- Área de animación y controles -->
-    <VRow class="mb-1" justify="center" density="comfortable">
+    <VRow density="compact" class="mb-1" justify="center">
       <VCol cols="12" md="7">
         <VCard
           id="rel-animation-card"
@@ -20,7 +20,7 @@
           elevation="3"
           color="grey-lighten-5"
         >
-          <VRow align="center" density="comfortable">
+          <VRow density="compact" align="center">
             <!-- Controles: botón, indicadores de estado y temporizador -->
             <VCol cols="7">
               <div class="d-flex flex-column ga-2">
@@ -190,7 +190,7 @@
             Configuración
           </VCardTitle>
 
-          <VRow class="mb-1" density="comfortable">
+          <VRow density="compact" class="mb-1">
             <VCol cols="6" sm="6" md="12" lg="6">
               <VSelect
                 id="rel-exercise"
@@ -217,8 +217,7 @@
                 variant="outlined"
                 :disabled="isPlaying"
                 color="orange-darken-2"
-                label="Contracción inicial"
-              >
+                label="Contracción inicial">
                 <template #prepend-inner>
                   <VIcon size="small" color="orange-darken-2"
                     >mdi-arrow-collapse-all</VIcon
@@ -239,8 +238,7 @@
                 density="compact"
                 label="Expansión"
                 variant="outlined"
-                :disabled="isPlaying"
-              >
+                :disabled="isPlaying">
                 <template #prepend-inner>
                   <VIcon color="blue" size="small">mdi-arrow-expand-all</VIcon>
                 </template>
@@ -259,8 +257,7 @@
                 density="compact"
                 label="Inmóvil 1"
                 variant="outlined"
-                :disabled="isPlaying"
-              >
+                :disabled="isPlaying">
                 <template #prepend-inner>
                   <VIcon size="small" color="green">mdi-timer-sand</VIcon>
                 </template>
@@ -279,8 +276,7 @@
                 density="compact"
                 variant="outlined"
                 label="Contracción"
-                :disabled="isPlaying"
-              >
+                :disabled="isPlaying">
                 <template #prepend-inner>
                   <VIcon color="red" size="small">mdi-arrow-collapse-all</VIcon>
                 </template>
@@ -299,8 +295,7 @@
                 density="compact"
                 label="Inmóvil 2"
                 variant="outlined"
-                :disabled="isPlaying"
-              >
+                :disabled="isPlaying">
                 <template #prepend-inner>
                   <VIcon size="small" color="green">mdi-timer-sand</VIcon>
                 </template>
@@ -318,8 +313,7 @@
                 variant="outlined"
                 :disabled="isPlaying"
                 color="purple-darken-2"
-                label="Tiempo objetivo"
-              >
+                label="Tiempo objetivo">
                 <template #prepend-inner>
                   <VIcon size="small" color="purple-darken-2"
                     >mdi-flag-checkered</VIcon

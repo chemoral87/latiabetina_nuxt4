@@ -1,6 +1,6 @@
 <template>
   <VContainer :fluid="true">
-    <VRow density="comfortable">
+    <VRow density="compact" density="comfortable">
       <VCol cols="12" md="8" class="mx-auto">
         <VCard id="rev-main-card">
           <VCardTitle class="d-flex flex-column align-start">
@@ -24,7 +24,7 @@
           </VCardTitle>
 
           <VCardText>
-            <VRow>
+            <VRow density="compact">
               <VCol cols="12" md="4">
                 <VList density="compact">
                   <VListItem>
@@ -71,7 +71,7 @@
 
             <VDivider class="my-2" />
 
-            <VRow>
+            <VRow density="compact">
               <VCol cols="12" md="6">
                 <div class="text-caption text-grey">Creado</div>
                 <div>{{ formatShortDateTime(mTestimony.created_at as string | null) }}</div>

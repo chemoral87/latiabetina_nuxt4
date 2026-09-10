@@ -18,7 +18,7 @@
       </template>
     </h4>
 
-    <VRow id="pit-actions-row" class="mb-1" align="center" density="compact">
+    <VRow density="compact" id="pit-actions-row" class="mb-1" align="center">
       <VCol sm="7" cols="12" class="d-flex flex-wrap ga-1 py-1">
         <PitcherConfigButton />
         <VBtn
@@ -78,7 +78,7 @@
       </VCol>
     </VRow>
 
-    <VRow id="pit-display-row" density="comfortable">
+    <VRow density="compact" id="pit-display-row">
       <VCol v-if="showStaffNotation" cols="auto" class="px-0 mx-0">
         <PitcherStaffNotation
           v-if="lastValidFreq"

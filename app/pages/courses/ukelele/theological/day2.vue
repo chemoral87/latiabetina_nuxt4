@@ -13,7 +13,7 @@
             adoración sincera elige revelar su gloria de un modo particular y transformador.
           </p>
 
-          <VRow density="comfortable" class="mb-4">
+          <VRow density="compact" class="mb-4">
             <VCol cols="12" md="6" class="d-flex">
               <VCard id="card-cours-ukele-theol-day2-lighten-5-1" variant="outlined" class="pa-4 bg-grey-lighten-5 w-100 d-flex flex-column justify-space-between">
                 <div>
@@ -51,7 +51,7 @@
               <VIcon color="blue-darken-3" class="mr-2">mdi-lightbulb-on</VIcon>
               Omnipresencia y manifestación
             </p>
-            <VRow density="comfortable">
+            <VRow density="compact">
               <VCol cols="12" md="6">
                 <div class="pa-3 rounded mb-3 mb-md-0 fill-height" style="background-color: rgba(63, 81, 181, 0.1);">
                   <p class="text-subtitle-2 font-weight-bold text-blue-darken-3 mb-2">Siempre presente</p>
@@ -87,7 +87,7 @@
             actúa, el temor pierde terreno.
           </p>
 
-          <VRow density="comfortable" class="mb-4">
+          <VRow density="compact" class="mb-4">
             <VCol cols="12" md="6" class="d-flex">
               <VCard id="card-cours-ukele-theol-day2-lighten-5-4" variant="outlined" class="pa-4 bg-grey-lighten-5 w-100 d-flex flex-column justify-space-between">
                 <div>
@@ -120,7 +120,7 @@
             </VCol>
           </VRow>
 
-          <VRow density="comfortable" class="mb-4">
+          <VRow density="compact" class="mb-4">
             <VCol cols="12" md="6">
               <VCard id="card-cours-ukele-theol-day2-6" variant="outlined" class="pa-4 h-100" style="border-color: #d32f2f; background-color: rgba(211, 47, 47, 0.05);">
                 <div class="d-flex align-center mb-2">
@@ -152,7 +152,7 @@
             </VCol>
           </VRow>
 
-          <VRow density="comfortable" class="mb-4">
+          <VRow density="compact" class="mb-4">
             <VCol cols="12" md="6" class="d-flex">
               <VCard id="card-cours-ukele-theol-day2-lighten-5-8" variant="outlined" class="pa-4 bg-grey-lighten-5 w-100 d-flex flex-column justify-space-between">
                 <div>

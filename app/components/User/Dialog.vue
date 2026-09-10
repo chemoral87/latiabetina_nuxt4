@@ -19,7 +19,7 @@
 
       <VCardText class="py-1">
         <VForm ref="formRef">
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol cols="12">
               <VTextField
                 id="usr-dialo-item-name-tf-1"

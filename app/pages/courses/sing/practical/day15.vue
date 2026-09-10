@@ -41,7 +41,7 @@
             Practica por parejas: cada botón toca dos notas separadas por un semitono. Escucha la
             diferencia y canta ambas notas.
           </p>
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol v-for="(pair, i) in semitonePairs" :key="pair.label" md="3" sm="4" cols="6">
               <VCard variant="outlined" style="cursor:pointer;" class="pa-2 text-center mb-2"
                 @click="playPair(i)">
@@ -63,7 +63,7 @@
             </div>
             <p class="text-subtitle-1 font-weight-bold text-grey-darken-4 mb-4">{{ currentQuestion.question }}</p>
 
-            <VRow class="mb-4" density="comfortable">
+            <VRow density="compact" class="mb-4">
               <VCol v-for="(option, idx) in currentQuestion.options" :key="idx" sm="6" cols="12">
                 <VBtn id="btn-singp15-quiz-option" block variant="outlined" :disabled="answered"
                   :color="getOptionColor(idx)" class="py-4 text-left justify-start" @click="checkAnswer(idx)">

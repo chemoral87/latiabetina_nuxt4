@@ -13,7 +13,7 @@
             La consagración del creyente no es un nivel de espiritualidad para pocos elegidos; es la
             vocación de todo aquel redimido por la sangre de Cristo.
           </p>
-          <VRow density="comfortable" class="mb-3">
+          <VRow density="compact" class="mb-3">
             <VCol cols="12" md="6" class="d-flex">
               <VCard id="card-cours-ukele-theol-day6-lighten-5-1" variant="outlined" class="pa-4 bg-grey-lighten-5 w-100 d-flex flex-column justify-space-between">
                 <div>
@@ -87,7 +87,7 @@
             </div>
           </VCard>
 
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol v-for="dim in dimensions" :key="dim.label" cols="12" md="6">
               <VCard variant="outlined" class="pa-3 mb-2 d-flex align-start" style="border-radius:10px;">
                 <VIcon :color="dim.color" size="32" class="mr-3 mt-1 flex-shrink-0">{{ dim.icon }}</VIcon>

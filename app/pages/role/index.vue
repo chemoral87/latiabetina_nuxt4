@@ -2,7 +2,7 @@
   <VContainer class="" :fluid="true">
     <VSheet variant="outlined">
       <VSheet>
-        <VRow>
+        <VRow density="compact">
           <!-- Filter -->
           <VCol md="2" cols="12">
             <VTextField
@@ -23,6 +23,7 @@
               id="rol-refresh-btn"
               class="mr-4"
               color="primary"
+              variant="outlined"
               :loading="loading"
               @click="refreshRoles"
             >

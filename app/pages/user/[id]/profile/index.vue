@@ -1,6 +1,6 @@
 <template>
   <VContainer class="pa-4" :fluid="true">
-    <VRow class="mb-3">
+    <VRow density="compact" class="mb-3">
       <VCol cols="12">
         <VBtn
           id="usr-profile-new-btn"
@@ -15,7 +15,7 @@
       </VCol>
     </VRow>
 
-    <VRow>
+    <VRow density="compact">
       <VCol
         v-for="profile in profiles"
         :key="profile.id as number"
@@ -71,7 +71,7 @@
           </VCardItem>
 
           <VCardText>
-            <VRow>
+            <VRow density="compact">
               <VCol md="6" cols="12">
                 <div
                   class="text-caption font-weight-medium text-grey-darken-1 mb-2"
@@ -122,7 +122,7 @@
       </VCol>
     </VRow>
 
-    <VRow>
+    <VRow density="compact">
       <VCol cols="12">
         <VCard id="usp-actions-card" border>
           <VCardText class="d-flex justify-end pa-4">

@@ -13,8 +13,7 @@
       :loading="props.loading"
       :items-per-page-options="[10, 15, 30]"
       items-per-page-text="Filas por página"
-      @update:options="onUpdateOptions"
-    >
+      @update:options="onUpdateOptions">
       <template #[`item.church_member`]='{ item }'>
         {{ memberName(item.church_member) }}
       </template>

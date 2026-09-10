@@ -1,7 +1,7 @@
 <template>
   <VContainer class="" :fluid="true">
     <VSheet color="white" rounded>
-      <VRow density="comfortable">
+      <VRow density="compact">
       <!-- Filtro de busqueda -->
       <VCol md="2" cols="12">
         <VTextField
@@ -22,6 +22,7 @@
           id="chrcev-refresh-btn"
           class="mr-1"
           color="primary"
+          variant="outlined"
           :loading="loading"
           @click="refreshChurchEvents"
         >

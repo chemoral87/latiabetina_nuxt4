@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <VCard id="cmp-product-card" variant="outlined" class="d-flex flex-column fill-height" style="position: relative">
     <div class="product-card__order-btns">
       <VBtn id="prd-card-moveleft-btn" icon size="x-small" class="order-btn" :disabled="isFirst" @click="emit('move-left', product)">
@@ -21,7 +21,7 @@
         class="bg-grey-lighten-4"
       >
         <template #placeholder>
-          <VRow class="fill-height ma-0" align="center" justify="center">
+          <VRow density="compact" class="fill-height ma-0" align="center" justify="center">
             <VIcon color="grey-lighten-1">mdi-package-variant</VIcon>
           </VRow>
         </template>

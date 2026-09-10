@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div id="cmp-my-uploadimage-crop">
     <input
       ref="fileInput"
@@ -38,7 +38,7 @@
       @click="triggerFilePicker"
     >
       <VIcon :color="dragOver ? 'primary' : 'grey-lighten-1'">mdi-cloud-upload-outline</VIcon>
-      <span class="text-caption mt-1" :class="dragOver ? 'text-primary' : 'text-grey'">Arrastra el archivo aquí</span>
+      <span class="text-caption mt-1" :class="dragOver ? 'text-primary' : 'text-grey'">Arrastra el archivo aqu�</span>
     </div>
 
     <VDialog id="my-uploa-dlg-1" v-model="dialog" persistent max-width="520px">
@@ -53,7 +53,7 @@
         </VCardTitle>
 
         <VCardText>
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol cols="6">
               <Cropper v-if="uri" :stencil-component="CircleStencil" :src="uri" @change="changeCropper" />
               <div v-else class="d-flex align-center justify-center bg-grey-lighten-3 rounded" style="height: 160px">

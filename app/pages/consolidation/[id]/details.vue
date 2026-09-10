@@ -1,6 +1,6 @@
 <template>
   <VContainer class="page-consolidation-details" :fluid="true">
-    <VRow density="comfortable">
+    <VRow density="compact" density="comfortable">
       <VCol cols="12">
         <VCard id="con-detai-card-1" class="mb-3" variant="outlined">
           <VCardTitle class="text-subtitle-1 font-weight-bold d-flex align-center">
@@ -8,7 +8,7 @@
             Consolidado #{{ sheet.folio_number }}
           </VCardTitle>
           <VCardText>
-            <VRow align="center" density="comfortable">
+            <VRow density="compact" align="center" density="comfortable">
               <VCol md="2" cols="12">
                 <div class="d-flex align-center">
                   <VIcon class="mr-1" size="small">mdi-calendar</VIcon>
@@ -130,7 +130,7 @@
       <VCol cols="12">
         <VCard id="con-detai-card-2" class="mb-3" variant="outlined">
           <VCardText>
-            <VRow density="comfortable">
+            <VRow density="compact" density="comfortable">
               <VCol md="4" cols="12">
                 <VTextField
                   id="con-detai-filterterm-tf-2"
@@ -149,13 +149,13 @@
                   <VIcon start>mdi-plus</VIcon>
                   Nuevo Miembro
                 </VBtn>
-                <VBtn id="cnsld-refresh-btn" color="primary" :loading="loading" @click="fetchMembers">
+                <VBtn id="cnsld-refresh-btn" variant="outlined" color="primary" :loading="loading" @click="fetchMembers">
                   <VIcon start>mdi-reload</VIcon>
                   Refrescar
                 </VBtn>
               </VCol>
             </VRow>
-            <VRow>
+            <VRow density="compact">
               <VCol cols="12">
                 <ConsolidationMemberTable
                   id="det-members-dt"
@@ -166,7 +166,7 @@
                 />
               </VCol>
             </VRow>
-            <VRow>
+            <VRow density="compact">
               <VCol cols="12" class="d-flex justify-end">
                 <VBtn id="cnsld-back-btn" color="primary" variant="outlined" @click="navigateTo('/consolidation')">
                   <VIcon start>mdi-arrow-left</VIcon>
@@ -312,7 +312,6 @@ async function saveSheet() {
     savingSheet.value = true
     await ConsoSheet.update(sheetId.value, sheet.value)
     originalSheet.value = JSON.parse(JSON.stringify(sheet.value))
-    notify.notify({ success: "Consolidado actualizado exitosamente" })
   } catch (error) {
     notify.notify({ error: (error as { response?: { data?: { message?: string } } }).response?.data?.message || "Error al guardar consolidado" })
   } finally {

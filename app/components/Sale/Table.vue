@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div id="cmp-sale-table">
     <VDataTableServer
       id="sal-table-items-dt-1"
@@ -16,8 +16,7 @@
       mustSort
       items-per-page-text="Filas por página"
       :items-per-page-options="[10, 15, 30]"
-      @update:options="onUpdateOptions"
-    >
+      @update:options="onUpdateOptions">
       <template #[`item.total`]="{ item }">
         <span class="font-weight-medium">${{ formatNumber((item as Record<string, unknown>).total) }}</span>
       </template>

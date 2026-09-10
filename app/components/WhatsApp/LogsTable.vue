@@ -12,8 +12,7 @@
       :items-length="total"
       items-per-page-text="Filas por página"
       :items-per-page-options="[10, 15, 25, 50]"
-      @update:options="onUpdateOptions"
-    >
+      @update:options="onUpdateOptions">
       <template #[`item.sender`]="{ item }">
         <span class="text-body-2">{{ (item as any).sender || '—' }}</span>
       </template>

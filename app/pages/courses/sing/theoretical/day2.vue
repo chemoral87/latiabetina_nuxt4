@@ -14,7 +14,7 @@
             lateralmente. Es una respiración <strong>baja y ancha</strong>, no de hombros.
           </p>
 
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol md="6" cols="12">
               <VCard class="pa-3 mb-3" variant="outlined">
                 <div class="d-flex align-center mb-2">
@@ -86,7 +86,7 @@
             la lengua (como una "S"), de forma pareja y continua, mientras el diafragma se mantiene
             firme.
           </p>
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol md="6" cols="12">
               <VCard class="pa-3 mb-3" variant="outlined">
                 <div class="d-flex align-center mb-2">

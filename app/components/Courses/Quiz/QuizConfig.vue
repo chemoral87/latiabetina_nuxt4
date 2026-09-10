@@ -8,7 +8,7 @@
     <VCardText>
       <!-- Levels Selection -->
       <p class="text-subtitle-1 font-weight-medium mb-2">{{ t("selectLevels") }}</p>
-      <VRow class="mb-4">
+      <VRow density="compact" class="mb-4">
         <VCol v-for="lv in levels" :key="lv.key" sm="4" cols="12">
           <VCheckbox
             :id="`crsqi-level-${lv.key}`"
@@ -30,7 +30,7 @@
 
       <!-- Question Count -->
       <p class="text-subtitle-1 font-weight-medium mb-2">{{ t("numQuestions") }}</p>
-      <VRow class="align-center mb-2">
+      <VRow density="compact" class="align-center mb-2">
         <VCol sm="6" cols="12">
           <VSlider
             id="crsqi-count-1"

@@ -78,7 +78,7 @@
             Como cantante, cantas <strong>sobre</strong> los acordes del instrumento. Conocerlos te
             ayuda a:
           </p>
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol md="6" cols="12">
               <VCard class="pa-3 mb-2" variant="outlined">
                 <VList density="compact">

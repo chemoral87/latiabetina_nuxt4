@@ -12,7 +12,7 @@
             nuez de Adán en el cuello. Su <strong>posición vertical</strong> influye muchísimo en el
             sonido:
           </p>
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol md="4" cols="12">
               <VCard variant="outlined" class="pa-3 mb-3 text-center fill-height">
                 <VIcon size="36" class="mb-1" color="success">mdi-arrow-up-bold</VIcon>

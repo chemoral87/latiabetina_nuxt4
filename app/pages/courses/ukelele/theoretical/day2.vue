@@ -21,7 +21,7 @@
           </p>
 
           <p class="text-subtitle-2 font-weight-medium mb-3">Las 12 notas de la escala cromática</p>
-          <VRow density="comfortable" class="mb-4">
+          <VRow density="compact" class="mb-4">
             <VCol cols="12">
               <p class="text-caption text-grey-darken-2 mb-2"><strong>Con Sostenidos (#)</strong></p>
               <VChipGroup column>
@@ -33,7 +33,7 @@
             </VCol>
           </VRow>
 
-          <VRow density="comfortable" class="mb-4">
+          <VRow density="compact" class="mb-4">
             <VCol cols="12">
               <p class="text-caption text-grey-darken-2 mb-2"><strong>Con Bemoles (b)</strong></p>
               <VChipGroup column>

@@ -12,7 +12,7 @@
             cerrado y luego abre a una vocal manteniendo la posición.
           </p>
 
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol v-for="hum in hums" :key="hum.sound" md="3" sm="6" cols="12">
               <VCard variant="outlined" style="cursor:pointer;" class="pa-3 text-center mb-2"
                 :color="hum.active ? 'grey-lighten-4' : 'transparent'" @click="playHum(hum)">
@@ -64,7 +64,7 @@
             </div>
             <p class="text-subtitle-1 font-weight-bold text-grey-darken-4 mb-4">{{ currentQuestion.question }}</p>
 
-            <VRow class="mb-4" density="comfortable">
+            <VRow density="compact" class="mb-4">
               <VCol v-for="(option, idx) in currentQuestion.options" :key="idx" sm="6" cols="12">
                 <VBtn id="btn-singp10-quiz-option" block variant="outlined" :disabled="answered"
                   :color="getOptionColor(idx)" class="py-4 text-left justify-start" @click="checkAnswer(idx)">

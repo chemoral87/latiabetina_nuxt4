@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <VExpandTransition id="cmp-my-preview-image">
     <div v-if="loading || isWaiting" class="image-loading-wrapper">
       <VProgressCircular indeterminate color="primary" :size="size" />
@@ -6,7 +6,7 @@
     </div>
     <VImg v-else-if="imageReady && src" :src="src" :max-height="maxHeight" contain>
       <template #placeholder>
-        <VRow class="fill-height ma-0" align="center" justify="center">
+        <VRow density="compact" class="fill-height ma-0" align="center" justify="center">
           <VProgressCircular indeterminate color="primary" />
         </VRow>
       </template>

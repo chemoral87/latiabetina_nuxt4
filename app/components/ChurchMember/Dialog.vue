@@ -20,7 +20,7 @@
 
       <VCardText class="py-1">
         <VForm ref="formRef" @submit.prevent="save">
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol cols="6">
               <VTextField
                 id="cmm-dialog-name"

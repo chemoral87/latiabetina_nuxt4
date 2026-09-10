@@ -1,6 +1,6 @@
 <template>
   <VContainer :fluid="true">
-    <VRow density="comfortable">
+    <VRow density="compact" density="comfortable">
       <VCol cols="12" md="8" class="mx-auto">
         <VCard id="psed-main-card" variant="outlined" class="pa-4">
           <!-- Header -->
@@ -15,7 +15,7 @@
           <VDivider class="mb-4" />
 
           <!-- Customer info -->
-          <VRow density="comfortable">
+          <VRow density="compact" density="comfortable">
             <VCol cols="12" sm="6">
               <VTextField
                 id="psed-customer-name-tf"
@@ -116,7 +116,7 @@
             <VProgressCircular indeterminate color="primary" size="36" />
           </div>
 
-          <VRow v-else density="comfortable">
+          <VRow density="compact" v-else density="comfortable">
             <VCol
               v-for="product in availableProducts"
               :key="product.id"
@@ -132,7 +132,7 @@
               >
                 <VImg :src="product.image_s3 || ''" height="80px" contain class="bg-grey-lighten-4">
                   <template #placeholder>
-                    <VRow class="fill-height ma-0" align="center" justify="center">
+                    <VRow density="compact" class="fill-height ma-0" align="center" justify="center">
                       <VIcon color="grey-lighten-1" size="28">mdi-package-variant</VIcon>
                     </VRow>
                   </template>

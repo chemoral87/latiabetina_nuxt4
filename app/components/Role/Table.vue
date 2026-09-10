@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div id="cmp-role-table">
     <VDataTableServer
       id="rol-table-items-dt-1"
@@ -17,8 +17,7 @@
       :search="props.search"
       items-per-page-text="Filas por página"
       :items-per-page-options="[10, 15, 30]"
-      @update:options="onUpdateOptions"
-    >
+      @update:options="onUpdateOptions">
       <template #[`item.permissions`]="{ item }">
         <div v-if="hasPermissions(item as Record<string, unknown>)" class="d-flex flex-wrap ga-1">
           <VChip

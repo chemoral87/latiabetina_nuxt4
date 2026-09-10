@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div id="cmp-organization-table">
     <VDataTableServer
       id="org-table-items-dt-1"
@@ -19,8 +19,7 @@
       class="elevation-1 xwidth800"
       :items-per-page-options="[10, 15, 30]"
       items-per-page-text="Filas por página"
-      @update:options="onUpdateOptions"
-    >
+      @update:options="onUpdateOptions">
       <template #[`item.actions`]="{ item }">
         <VBtn
           id="org-table-edit-btn"

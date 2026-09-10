@@ -1,7 +1,7 @@
 <template>
   <VContainer class="" :fluid="true">
     <!-- Page header -->
-    <VRow class="mb-4">
+    <VRow density="compact" class="mb-4">
       <VCol cols="12">
         <div class="d-flex align-center mb-1">
           <VIcon size="x-large" color="primary" class="mr-3">mdi-flask</VIcon>
@@ -15,7 +15,7 @@
     </VRow>
 
     <!-- ─── Row 1 – Date & Time ─────────────────────────────────── -->
-    <VRow>
+    <VRow density="compact">
       <VCol cols="12">
         <h2 class="text-h5 mb-3 text-primary">
           <VIcon start color="primary">mdi-calendar-clock</VIcon>
@@ -123,7 +123,7 @@
     </VRow>
 
     <!-- ─── Row 2 – Image & Upload ──────────────────────────────── -->
-    <VRow class="mt-2">
+    <VRow density="compact" class="mt-2">
       <VCol cols="12">
         <h2 class="text-h5 mb-3 text-primary">
           <VIcon start color="primary">mdi-image</VIcon>
@@ -234,7 +234,7 @@
     </VRow>
 
     <!-- ─── Row 3 – Panel & Overlay ─────────────────────────────── -->
-    <VRow class="mt-2">
+    <VRow density="compact" class="mt-2">
       <VCol cols="12">
         <h2 class="text-h5 mb-3 text-primary">
           <VIcon start color="primary">mdi-layers</VIcon>
@@ -252,7 +252,7 @@
           <VDivider />
           <VCardText class="pt-4">
             <p class="text-caption text-grey mb-3">Panel flotante que se puede arrastrar. Aparece animado desde abajo.</p>
-            <VRow density="comfortable">
+            <VRow density="compact">
               <VCol cols="auto">
                 <VBtn id="my-drag-open-btn" color="primary" @click="dragPanelVisible = true">
                   <VIcon start>mdi-window-maximize</VIcon>
@@ -286,7 +286,7 @@
           <VDivider />
           <VCardText class="pt-4">
             <p class="text-caption text-grey mb-3">Overlay de carga con spinner y mensaje personalizable.</p>
-            <VRow density="comfortable">
+            <VRow density="compact">
               <VCol cols="auto">
                 <VBtn id="my-loading-show-btn" color="primary" @click="triggerLoading">
                   <VIcon start>mdi-play</VIcon>
@@ -343,7 +343,7 @@
     <MyLoading :model-value="loadingVisible" :message="loadingMessage" progress-color="white" />
 
     <!-- ─── State Observer (debug panel) ──────────────────────── -->
-    <VRow class="mt-4">
+    <VRow density="compact" class="mt-4">
       <VCol cols="12">
         <VCard id="my-index-card-9" :elevation="2" class="rounded-lg">
           <VCardTitle class="py-2 text-subtitle-2 font-weight-bold bg-grey-lighten-3">

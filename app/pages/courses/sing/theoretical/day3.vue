@@ -46,7 +46,7 @@
             octava</strong>. Por ejemplo, <strong>C4</strong> (Do central) es el "Do del medio" del
             piano, el punto de referencia para muchas voces.
           </p>
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol md="4" cols="12">
               <VCard variant="outlined" class="pa-3 mb-3 text-center fill-height">
                 <div class="text-h4 font-weight-bold text-primary">C4</div>

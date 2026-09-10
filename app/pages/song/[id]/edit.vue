@@ -1,6 +1,6 @@
 <template>
   <VContainer :fluid="true">
-    <VRow justify="center">
+    <VRow density="compact" justify="center">
       <VCol md="10" cols="12">
         <div v-if="loadingItem" class="text-center pa-5">
           <VProgressCircular indeterminate color="primary" />
@@ -89,7 +89,6 @@ async function saveSongAndContinue(item: Record<string, unknown>) {
   try {
     saving.value = true
     await Song.update(payload.id as number, payload)
-    notify.notify({ success: "Canción guardada" })
   } catch (error) {
     notify.notify({
       error:

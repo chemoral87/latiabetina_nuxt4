@@ -1,10 +1,10 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VRow align="center" justify="center" class="fill-height">
+    <VRow density="compact" align="center" justify="center" class="fill-height">
       <VCol lg="4" md="6" sm="8" cols="12">
         <VCard id="login-card" flat class="pa-4">
           <VForm id="login-form" @submit.prevent="submitLogin">
-            <VRow density="comfortable">
+            <VRow density="compact">
               <VCol cols="12" class="text-center mb-2">
                 <span class="text-h5">Inicio de Sesión</span>
               </VCol>

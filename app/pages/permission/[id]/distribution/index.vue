@@ -1,7 +1,7 @@
 <template>
   <VContainer :fluid="true">
     <VSheet color="white" rounded>
-      <VRow density="comfortable">
+      <VRow density="compact" density="comfortable">
       <!-- Organization filter -->
       <VCol cols="12" md="3">
         <VSelect
@@ -36,8 +36,7 @@
               :items-per-page="10"
               class="elevation-0"
               no-data-text="No hay roles asignados a este permiso"
-              density="compact"
-            >
+              density="compact">
               <template #[`item.organization`]="{ item }">
                 {{ (item as Record<string, unknown>).organization_name }} ({{ (item as Record<string, unknown>).organization_short_code }})
               </template>

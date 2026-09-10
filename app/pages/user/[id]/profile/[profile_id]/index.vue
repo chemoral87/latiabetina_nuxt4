@@ -4,7 +4,7 @@
       <div class="text-h6 mb-2">
         {{ profile.organization_name }} ({{ profile.organization_short_code }})
       </div>
-      <VRow>
+      <VRow density="compact">
         <VCol md="6" cols="12">
           <RoleCombobox
             :roles="profile.roles as Record<string, unknown>[]"

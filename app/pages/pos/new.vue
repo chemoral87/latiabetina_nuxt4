@@ -1,13 +1,13 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VRow justify="center">
+    <VRow density="compact" justify="center">
       <VCol md="8" cols="12">
         <VCard id="posn-main-card" class="pa-4" variant="outlined">
           <div class="text-subtitle-1 font-weight-bold mb-4">
             Nuevo artículo
           </div>
           <VForm id="posn-main-form" ref="formRef">
-            <VRow density="comfortable">
+            <VRow density="compact">
               <VCol v-if="showOrgSelect" md="6" cols="12">
                 <OrganizationSelect
                   v-model="product.org_id"

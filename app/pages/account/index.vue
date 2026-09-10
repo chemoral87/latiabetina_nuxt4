@@ -1,7 +1,7 @@
 <template>
   <ClientOnly>
     <VContainer class="" :fluid="true">
-    <VRow density="comfortable">
+    <VRow density="compact">
       <VCol md="5" cols="12">
         <VCard id="acc-index-card-1" flat border class="mb-3 pa-4">
           <div class="d-flex align-center mb-3">
@@ -112,7 +112,7 @@
               </template>
               <template v-else>
                 <div v-if="!hasPermissions" class="text-grey text-body-2">Sin permisos asignados</div>
-                <VRow density="comfortable">
+                <VRow density="compact">
                   <VCol v-for="(orgIds, perm) in sortedPermissionsOrg" :key="perm" sm="6" cols="12">
                     <div style="gap: 4px" class="d-flex align-center flex-wrap">
                       <VChip :id="'chip-acc-permission-' + perm" label class="mr-1" size="small" color="secondary" variant="elevated">{{ perm }}</VChip>

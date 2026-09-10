@@ -10,7 +10,7 @@
           <p class="text-body-2 text-grey-darken-3 mb-4">
             Reproduce cada franja de notas y canta encima:
           </p>
-          <VRow class="mb-2" density="comfortable">
+          <VRow density="compact" class="mb-2">
             <VCol md="4" cols="12">
               <VCard variant="outlined" class="pa-3 mb-3 text-center fill-height">
                 <VChip class="mb-2" size="small" variant="elevated" color="deep-purple">Registro de pecho</VChip>
@@ -87,7 +87,7 @@
             </div>
             <p class="text-subtitle-1 font-weight-bold text-grey-darken-4 mb-4">{{ currentQuestion.question }}</p>
 
-            <VRow class="mb-4" density="comfortable">
+            <VRow density="compact" class="mb-4">
               <VCol v-for="(option, idx) in currentQuestion.options" :key="idx" sm="6" cols="12">
                 <VBtn id="btn-singp9-quiz-option" block variant="outlined" :disabled="answered"
                   :color="getOptionColor(idx)" class="py-4 text-left justify-start" @click="checkAnswer(idx)">

@@ -14,7 +14,7 @@
             en la ofrenda congregacional. La diversidad no compite; completa.
           </p>
 
-          <VRow density="comfortable" class="mb-3">
+          <VRow density="compact" class="mb-3">
             <VCol cols="12" md="6" class="d-flex">
               <VCard id="card-cours-ukele-theol-day3-lighten-5-1" variant="outlined" class="pa-4 bg-grey-lighten-5 w-100 d-flex flex-column justify-space-between">
                 <div>
@@ -47,7 +47,7 @@
             </VCol>
           </VRow>
 
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol cols="12" md="4">
               <VCard id="card-cours-ukele-theol-day3-3" variant="outlined" class="pa-3 fill-height" style="border-radius:10px;">
                 <div class="d-flex align-center mb-2">

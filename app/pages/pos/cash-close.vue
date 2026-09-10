@@ -18,7 +18,7 @@
 
     <template v-else>
       <!-- Summary Cards -->
-      <VRow density="comfortable" class="mb-4">
+      <VRow density="compact" class="mb-4">
         <VCol cols="12" sm="4">
           <VCard id="posc-cash-card" variant="outlined" class="cash-close-card cash-close-card--cash">
             <div class="d-flex align-center mb-2">

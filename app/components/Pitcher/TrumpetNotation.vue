@@ -13,7 +13,7 @@
       >
     </VCardTitle>
     <VCardText class="pa-1">
-      <VRow no-gutters density="compact">
+      <VRow density="compact" no-gutters>
         <VCol md="4" cols="12">
           <VSelect
             id="pit-trumpet-tuning"
@@ -141,8 +141,7 @@
               v-for="(list, index) in glossaryColumns"
               :key="index"
               density="compact"
-              class="glossary-table"
-            >
+              class="glossary-table">
               <thead>
                 <tr>
                   <th class="text-left">Nota</th>

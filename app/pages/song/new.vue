@@ -1,6 +1,6 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VRow justify="center">
+    <VRow density="compact" justify="center">
       <VCol md="10" cols="12">
         <!-- JSON import / export toolbar for new song -->
         <div class="d-flex align-center flex-wrap mb-3">
@@ -178,7 +178,6 @@ async function saveSongAndContinue(item: Record<string, unknown>) {
     if (created?.id) {
       navigateTo(`/song/${created.id}/edit`)
     }
-    notify.notify({ success: "Canción guardada" })
   } catch (error) {
     notify.notify({
       error:

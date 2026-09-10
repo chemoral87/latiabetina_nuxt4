@@ -13,7 +13,7 @@
             o una melodía. Es el mejor ejercicio para calentar porque <em>obliga a la voz a trabajar
             sin tensión</em>.
           </p>
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol md="6" cols="12">
               <VCard class="pa-3 mb-3" variant="outlined">
                 <div class="d-flex align-center mb-2">
@@ -56,7 +56,7 @@
             "crepitante" como el de las películas de terror o el comienzo de "creaky voice". Es un
             ejercicio de <strong>relajación y liberación de tensión</strong> de las cuerdas vocales.
           </p>
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol md="6" cols="12">
               <VCard class="pa-3 mb-3" variant="outlined">
                 <div class="d-flex align-center mb-2">

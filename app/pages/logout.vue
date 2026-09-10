@@ -1,6 +1,6 @@
 <template>
   <VContainer class="fill-height" :fluid="true">
-    <VRow align="center" justify="center">
+    <VRow density="compact" align="center" justify="center">
       <VCol cols="auto">
         <VCard id="logout-card" flat class="pa-8 text-center" border>
           <VProgressCircular indeterminate color="primary" size="64" />

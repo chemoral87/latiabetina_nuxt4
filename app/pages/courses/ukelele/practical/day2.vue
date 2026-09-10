@@ -48,7 +48,7 @@
 
           <!-- Active game -->
           <div v-else>
-            <VRow no-gutters class="align-stretch">
+            <VRow density="compact" no-gutters class="align-stretch">
 
               <!-- LEFT: Latin column -->
               <VCol cols="5">
@@ -125,7 +125,7 @@
             cuerda se colocan tus dedos. <strong>Fórmula: 1 Semitono = 1 Traste</strong>.
           </p>
 
-          <VRow density="comfortable" class="align-center">
+          <VRow density="compact" class="align-center">
             <!-- Column 1: Scale selector and explanations -->
             <VCol cols="12" md="7" class="pr-md-4">
               <!-- Scale Step Visualizer (Horizontal Buttons) -->
@@ -157,7 +157,7 @@
 
                 <VDivider class="mb-3" />
 
-                <VRow density="comfortable">
+                <VRow density="compact">
                   <VCol cols="4">
                     <div class="text-caption text-grey">Frecuencia</div>
                     <div class="text-body-1 font-weight-bold text-grey-darken-4">{{ selectedChromaticNote.frequency }}
@@ -183,7 +183,7 @@
                 <div class="text-caption font-weight-bold text-grey-darken-2 mb-2 text-center">
                   Posición de las manos
                 </div>
-                <VRow density="comfortable" class="align-center text-center">
+                <VRow density="compact" class="align-center text-center">
                   <!-- Left hand: fretting hand -->
                   <VCol cols="6">
                     <svg viewBox="0 0 846.1 869.7" width="150" height="120" preserveAspectRatio="none"
@@ -422,7 +422,7 @@
             </p>
           </VCard>
 
-          <VRow density="comfortable" class="align-center">
+          <VRow density="compact" class="align-center">
             <!-- Column 1: Colored note selector and details -->
             <VCol cols="12" md="7" class="pr-md-4">
               <!-- Scale Step Visualizer (Colored Buttons) -->
@@ -452,7 +452,7 @@
 
                 <VDivider class="mb-3" />
 
-                <VRow density="comfortable">
+                <VRow density="compact">
                   <VCol cols="5">
                     <div class="text-caption text-grey">Frecuencia</div>
                     <div class="text-body-1 font-weight-bold text-grey-darken-4">{{ currentWorldNote.frequency }} Hz</div>

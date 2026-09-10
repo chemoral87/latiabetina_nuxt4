@@ -13,8 +13,7 @@
       class="elevation-1 xwidth1000"
       :items-per-page-options="[10, 15, 25]"
       items-per-page-text="Filas por página"
-      @update:options="onUpdateOptions"
-    >
+      @update:options="onUpdateOptions">
       <template #[`item.medium`]="{ item }">
         <VChip size="small" variant="flat" :color="mediumColor(item.medium)">
           <VIcon start size="small">{{ mediumIcon(item.medium) }}</VIcon>

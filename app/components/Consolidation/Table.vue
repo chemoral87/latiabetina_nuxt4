@@ -17,8 +17,7 @@
       class="elevation-1 xwidth600"
       :items-per-page-options="[10, 15, 30]"
       items-per-page-text="Filas por página"
-      @update:options="onUpdateOptions"
-    >
+      @update:options="onUpdateOptions">
       <template #[`item.details`]="{ item }">
         <VBtn
           :id="`con-table-view-btn-${item.id}`"

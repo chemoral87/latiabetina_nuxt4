@@ -16,7 +16,7 @@
             cuerpo es el primer paso del curso.
           </p>
 
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol v-for="part in instrumentParts" :key="part.code" md="4" sm="6" cols="12">
               <VCard variant="outlined" class="pa-4 fill-height">
                 <div class="d-flex align-center mb-2">
@@ -63,7 +63,7 @@
             Dominarlos es el objetivo de todo este curso.
           </p>
 
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol v-for="attr in voiceAttrs" :key="attr.code" md="6" sm="6" cols="12">
               <VCard variant="outlined" class="pa-3 fill-height">
                 <div class="d-flex align-center mb-1">
@@ -87,7 +87,7 @@
             Depende de la forma de tu tracto vocal (cavidades de resonancia) y de la mezcla de
             armónicos que producen tus cuerdas vocales.
           </p>
-          <VRow class="mb-2" density="comfortable">
+          <VRow density="compact" class="mb-2">
             <VCol md="6" cols="12">
               <VCard class="pa-3 mb-3" variant="outlined">
                 <div class="d-flex align-center mb-2">
@@ -126,7 +126,7 @@
             No es sinónimo de fuerza: es el resultado de una <strong>resonancia eficiente</strong> que
             amplifica el sonido usando las cavidades de tu cuerpo como caja de resonancia natural.
           </p>
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol md="4" cols="12">
               <VCard variant="outlined" class="pa-3 mb-3 text-center fill-height">
                 <VIcon size="36" class="mb-1" color="primary">mdi-tune</VIcon>
@@ -191,7 +191,7 @@
             correcta (por ejemplo, un La4 a 440&nbsp;Hz). Es un músculo del oído: se entrena
             escuchando, imitando y comparando con una referencia.
           </p>
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol md="6" cols="12">
               <VCard class="pa-3 mb-3" variant="outlined">
                 <div class="d-flex align-center mb-2">

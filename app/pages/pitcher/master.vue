@@ -11,7 +11,7 @@
       <span id="pit-db-display">({{ dBDisplay }} dB · sens {{ sensitivity.toFixed(4) }} · picos {{ peaksCount }})</span>
     </h4>
 
-    <VRow id="pit-actions-row" class="mb-1" density="comfortable">
+    <VRow density="compact" id="pit-actions-row" class="mb-1">
       <VCol cols="6">
         <VBtn id="pit-reset-btn" block size="small" color="primary" @click="resetHistory">
           <VIcon start>mdi-restart</VIcon>
@@ -38,7 +38,7 @@
       </VCol>
     </VRow>
 
-    <VRow id="pit-chord-row" class="mb-2" justify="center">
+    <VRow density="compact" id="pit-chord-row" class="mb-2" justify="center">
       <VCol cols="12" class="text-center">
         <div id="pit-chord-name" class="chord-name" :style="{ color: chordColor }">{{ chordDisplay || "—" }}</div>
         <div id="pit-chord-notes" class="chord-notes">
@@ -50,13 +50,13 @@
       </VCol>
     </VRow>
 
-    <VRow class="mb-2">
+    <VRow density="compact" class="mb-2">
       <VCol cols="12">
         <canvas id="pit-spectrum-canvas" ref="spectrumCanvas" width="900" height="150" class="spectrum-canvas" />
       </VCol>
     </VRow>
 
-    <VRow>
+    <VRow density="compact">
       <VCol cols="12">
         <VCard variant="tonal">
           <VCardTitle class="text-h6">Historial de acordes</VCardTitle>

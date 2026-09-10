@@ -6,7 +6,7 @@
     </VCardTitle>
 
     <VCardText>
-      <VRow class="mb-2" density="comfortable">
+      <VRow density="compact" class="mb-2">
         <VCol cols="auto">
           <VSelect
             id="pit-piano-keys"

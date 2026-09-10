@@ -12,7 +12,7 @@
 
       <VCardText class="py-1">
         <VForm ref="formRef" @submit.prevent="save">
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol v-if="!item.id" cols="12">
               <OrganizationSelect id="aud-dialog-org" v-model="item.org_id" hide-one required density="compact"  variant="outlined" permission="auditorium-index" :rules="[vrules.requiredField('Organización')]" />
             </VCol>

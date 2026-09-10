@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <VCard id="cmp-church-event-form">
     <VCardTitle class="d-flex align-center">
       <VIcon class="mr-2">{{ iconTitle }}</VIcon>
@@ -11,8 +11,7 @@
           v-if="errors?.slug_name"
           class="mb-4"
           type="error"
-          density="compact"
-        >
+          density="compact">
           {{
             Array.isArray(errors.slug_name)
               ? errors.slug_name[0]
@@ -20,7 +19,7 @@
           }}
         </VAlert>
 
-        <VRow>
+        <VRow density="compact">
           <VCol v-if="showOrgSelect" md="3" cols="12">
             <OrganizationSelect
               v-model="item.org_id"
@@ -116,8 +115,7 @@
               :disabled="disabled"
               label="Clasificación"
               :items="classificationOptions"
-              :error-messages="errors?.classification"
-            >
+              :error-messages="errors?.classification">
               <template #item="{ item: optionItem, props: itemProps }">
                 <VListItem v-bind="itemProps" :title="undefined">
                   <VChip
@@ -147,7 +145,7 @@
           </VCol>
         </VRow>
 
-        <VRow>
+        <VRow density="compact">
           <VCol md="6" cols="12">
             <MyUploadimage
               v-model="item.image_file"
@@ -160,7 +158,7 @@
           </VCol>
         </VRow>
 
-        <VRow v-if="previewImage || imageLoading">
+        <VRow density="compact" v-if="previewImage || imageLoading">
           <VCol cols="12">
             <MyPreviewImage
               :src="previewImage"

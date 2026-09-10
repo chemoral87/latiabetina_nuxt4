@@ -1,6 +1,6 @@
 <template>
   <VContainer class="pa-2" :fluid="true">
-    <VRow dense justify="center">
+    <VRow density="compact" dense justify="center">
       <VCol cols="12">
         <div v-if="loadingItem" class="text-center pa-5">
           <VProgressCircular indeterminate color="primary" />

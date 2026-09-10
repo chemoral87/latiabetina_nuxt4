@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div id="cmp-product-table">
     <VDataTableServer
       id="prd-table-items-dt-1"
@@ -16,8 +16,7 @@
       must-sort
       items-per-page-text="Filas por página"
       :items-per-page-options="[10, 15, 30]"
-      @update:options="onUpdateOptions"
-    >
+      @update:options="onUpdateOptions">
       <template #[`item.org_code`]="{ item }">
         {{ orgCodeById((item as Record<string, unknown>).org_id) }}
       </template>

@@ -22,7 +22,7 @@
             </template>
           </VImg>
 
-          <VRow density="comfortable" class="mb-4">
+          <VRow density="compact" class="mb-4">
             <VCol v-for="part in ukelele_parts" :key="part.name" cols="12" sm="6" md="4">
               <VCard variant="outlined" class="pa-3 fill-height">
                 <div class="d-flex align-center mb-1">
@@ -86,7 +86,7 @@
 
           <p class="text-subtitle-1 font-weight-medium mb-3">High G vs. Low G</p>
 
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol cols="12" md="6">
               <VCard variant="outlined" class="pa-3 mb-3">
                 <div class="d-flex align-center mb-2">
@@ -157,7 +157,7 @@
 
           <p class="text-subtitle-1 font-weight-medium mb-2">¿Qué son los sostenidos y bemoles?</p>
 
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol cols="12" md="6">
               <VCard variant="outlined" class="pa-3 mb-3">
                 <div class="d-flex align-center mb-2">

@@ -1,7 +1,7 @@
 <template>
   <VContainer :fluid="true" class="page-tracking-logs-all">
     <VSheet color="white" rounded>
-      <VRow density="comfortable">
+      <VRow density="compact">
         <VCol md="4" sm="6" cols="12">
           <MyDateMonthPicker
             id="atl-month-picker"
@@ -10,7 +10,7 @@
           />
         </VCol>
         <VCol cols="auto" class="d-flex align-center">
-          <VBtn id="atl-refresh-btn" color="primary" :loading="loading" @click="refreshActivity">
+          <VBtn id="atl-refresh-btn" variant="outlined" color="primary" :loading="loading" @click="refreshActivity">
             <VIcon start>mdi-reload</VIcon>
             Refrescar
           </VBtn>

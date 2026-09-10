@@ -12,7 +12,7 @@
             triste, alegre, dulce o potente según la resonancia, la vocal y la intención. Es el
             territorio donde el cantante se convierte en artista.
           </p>
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol md="4" cols="12">
               <VCard variant="outlined" class="pa-3 mb-3 text-center fill-height">
                 <VIcon size="36" class="mb-1" color="light-blue">mdi-brightness-5</VIcon>

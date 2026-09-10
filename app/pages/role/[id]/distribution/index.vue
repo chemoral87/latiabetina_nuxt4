@@ -1,7 +1,7 @@
 <template>
   <VContainer :fluid="true">
     <VSheet rounded color="white">
-      <VRow density="comfortable">
+      <VRow density="compact" density="comfortable">
       <!-- Organization filter -->
       <VCol md="3" cols="12">
         <VSelect
@@ -36,8 +36,7 @@
               class="elevation-0"
               :items-per-page="10"
               :items="filteredProfiles"
-              no-data-text="No hay perfiles asignados a este rol"
-            >
+              no-data-text="No hay perfiles asignados a este rol">
               <template #[`item.user`]="{ item }">
                 {{ userName((item as Record<string, unknown>).user as Record<string, unknown>) }}
               </template>

@@ -12,7 +12,7 @@
             a la más aguda). Y la <strong>tesitura</strong> es la zona donde tu voz suena más cómoda y
             expresiva. Ambos te ayudan a elegir canciones adecuadas y a cuidar tu voz.
           </p>
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol md="6" cols="12">
               <VCard variant="outlined" class="pa-3 mb-3 text-center fill-height">
                 <VIcon size="36" class="mb-1" color="primary">mdi-format-vertical-align-bottom</VIcon>
@@ -61,7 +61,7 @@
 
         <!-- SECCION 3: Cómo hallar tu rango -->
         <CoursesSection icon="mdi-compass-outline" title="Cómo Encontrar tu Propio Rango">
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol md="6" cols="12">
               <VCard class="pa-3 mb-3" variant="outlined">
                 <div class="text-subtitle-1 font-weight-bold mb-2">Paso a paso</div>

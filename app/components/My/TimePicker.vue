@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <VMenu id="cmp-my-time-picker" ref="timeMenuRef" v-model="timeMenu" :close-on-content-click="false" transition="scale-transition" offset-y :disabled="disabled">
     <template #activator="{ props: menuProps }">
       <VTextField
@@ -19,7 +19,7 @@
     </template>
 
     <VCard id="my-timep-card-1" min-width="auto">
-      <VRow no-gutters>
+      <VRow density="compact" no-gutters>
         <!-- Hours column -->
         <VCol cols="4" class="tp-col">
           <div v-for="h in hours" :key="h" class="tp-item" :class="{ 'tp-item--selected': selectedHour === h }" @click="selectedHour = h">

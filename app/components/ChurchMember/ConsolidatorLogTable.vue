@@ -17,8 +17,7 @@
       class="elevation-1"
       :items-per-page-options="[10, 15, 30]"
       items-per-page-text="Filas por página"
-      @update:options="onUpdateOptions"
-    >
+      @update:options="onUpdateOptions">
       <template #[`item.consolidator`]="{ item }">
         {{ item.consolidator ? `${item.consolidator.name} ${item.consolidator.last_name}` : "N/A" }}
       </template>

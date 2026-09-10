@@ -11,7 +11,7 @@
             Sigue cada ejercicio al ritmo de los botones. La lengua debe quedar suelta y flexible,
             nunca tensa.
           </p>
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol v-for="(ex, i) in tongueExercises" :key="ex.name" md="4" sm="6" cols="12">
               <VCard class="pa-3 mb-3" variant="outlined" :color="ex.done ? 'light-green-lighten-5' : 'transparent'">
                 <div class="d-flex justify-space-between align-center mb-1">
@@ -54,7 +54,7 @@
 
         <!-- SECCION 3: Frenillo -->
         <CoursesSection icon="mdi-ruler-square" title="Estiramiento del Frenillo">
-          <VRow class="mb-2" density="comfortable">
+          <VRow density="compact" class="mb-2">
             <VCol v-for="(ex, i) in frenulumPra" :key="ex.name" md="4" sm="6" cols="12">
               <VCard variant="outlined" class="pa-3 mb-3 text-center fill-height">
                 <VIcon size="32" class="mb-1" color="deep-purple">{{ ex.icon }}</VIcon>

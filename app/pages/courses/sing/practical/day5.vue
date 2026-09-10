@@ -13,7 +13,7 @@
             tono de referencia y dispara la vocal con un pequeño golpe de apoyo, sin aspirada.
           </p>
 
-          <VRow density="comfortable" class="align-center mb-2">
+          <VRow density="compact" class="align-center mb-2">
             <VCol md="4" cols="12" class="text-center">
               <VBtn id="btn-singp5-tone" size="large" color="primary" variant="tonal" @click="playTone(261.63, 1.5)">
                 <VIcon start>mdi-music-note</VIcon>
@@ -81,7 +81,7 @@
             </div>
             <p class="text-subtitle-1 font-weight-bold text-grey-darken-4 mb-4">{{ currentQuestion.question }}</p>
 
-            <VRow class="mb-4" density="comfortable">
+            <VRow density="compact" class="mb-4">
               <VCol v-for="(option, idx) in currentQuestion.options" :key="idx" sm="6" cols="12">
                 <VBtn id="btn-singp5-quiz-option" block variant="outlined" :disabled="answered"
                   :color="getOptionColor(idx)" class="py-4 text-left justify-start" @click="checkAnswer(idx)">

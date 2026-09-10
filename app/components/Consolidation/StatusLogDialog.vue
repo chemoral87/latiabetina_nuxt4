@@ -19,7 +19,7 @@
         </div>
 
         <VForm ref="formRef" @submit.prevent="save">
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol sm="8" cols="12">
               <VSelect
                 id="con-status-select"

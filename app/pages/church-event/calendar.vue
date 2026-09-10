@@ -1,6 +1,6 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VRow density="comfortable">
+    <VRow density="compact">
       <!-- Filtro de busqueda -->
       <VCol md="2" cols="12">
         <VTextField
@@ -21,6 +21,7 @@
           id="chrcev-refresh-btn"
           class="mr-2"
           color="primary"
+          variant="outlined"
           :loading="loading"
           @click="refreshChurchEvents"
         >
@@ -65,8 +66,7 @@
           v-model="weekStartsOnMonday"
           mandatory
           density="compact"
-          @update:model-value="changeWeekStart"
-        >
+          @update:model-value="changeWeekStart">
           <VBtn id="chrcev-sun-btn" :value="false">Dom</VBtn>
           <VBtn id="chrcev-mon-btn" :value="true">Lun</VBtn>
         </VBtnToggle>

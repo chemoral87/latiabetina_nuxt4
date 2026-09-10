@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div id="cmp-church-event-table">
     <VDataTableServer
       id="eve-table-items-dt-1"
@@ -16,8 +16,7 @@
       class="elevation-1 xwidth1100"
       :items-per-page-options="[10, 15, 30]"
       items-per-page-text="Filas por página"
-      @update:options="onUpdateOptions"
-    >
+      @update:options="onUpdateOptions">
       <template #[`item.org_code`]="{ item }">
         {{ orgCodeById((item as Record<string, unknown>).org_id as number) }}
       </template>

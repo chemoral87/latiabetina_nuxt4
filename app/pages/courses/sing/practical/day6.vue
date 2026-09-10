@@ -30,7 +30,7 @@
             </VBtn>
           </div>
 
-          <VRow class="mb-2" density="comfortable">
+          <VRow density="compact" class="mb-2">
             <VCol md="4" cols="12">
               <VCard variant="outlined" class="pa-3 text-center mb-2">
                 <div class="text-caption text-grey-darken-2">Velocidad</div>
@@ -59,7 +59,7 @@
             Cada fila es un nivel: comienza en 1 y sube.
           </p>
 
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol v-for="level in slideLevels" :key="level.step" md="4" sm="6" cols="12">
               <VCard class="pa-3 mb-3" variant="outlined" style="cursor:pointer;"
                 :color="level.completed ? 'light-green-lighten-5' : 'transparent'" @click="playLevel(level)">
@@ -88,7 +88,7 @@
             </div>
             <p class="text-subtitle-1 font-weight-bold text-grey-darken-4 mb-4">{{ currentQuestion.question }}</p>
 
-            <VRow class="mb-4" density="comfortable">
+            <VRow density="compact" class="mb-4">
               <VCol v-for="(option, idx) in currentQuestion.options" :key="idx" sm="6" cols="12">
                 <VBtn id="btn-singp6-quiz-option" block variant="outlined" :disabled="answered"
                   :color="getOptionColor(idx)" class="py-4 text-left justify-start" @click="checkAnswer(idx)">

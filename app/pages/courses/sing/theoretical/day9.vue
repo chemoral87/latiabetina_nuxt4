@@ -13,7 +13,7 @@
             dos que vas a entrenar hoy son la <strong>primera voz</strong> (pecho) y la
             <strong>segunda voz</strong> (cabeza / mixta).
           </p>
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol md="6" cols="12">
               <VCard variant="outlined" class="pa-3 mb-3 fill-height">
                 <div class="d-flex align-center mb-2">

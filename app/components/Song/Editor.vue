@@ -7,7 +7,7 @@
 
     <VCardText class="py-1">
       <VForm ref="formRef" @submit.prevent="save">
-        <VRow>
+        <VRow density="compact">
           <VCol md="4" cols="12">
             <VTextField
               id="song-editor-title"
@@ -264,7 +264,7 @@
         <VCardActions>
           <VSpacer />
           <VBtn variant="text" @click="confirmDeleteSectionId = null">Cancelar</VBtn>
-          <VBtn color="error" variant="elevated" @click="removeSection(confirmDeleteSectionId!); confirmDeleteSectionId = null">Eliminar</VBtn>
+          <VBtn color="error" variant="flat" @click="removeSection(confirmDeleteSectionId!); confirmDeleteSectionId = null">Eliminar</VBtn>
         </VCardActions>
       </VCard>
     </VDialog>

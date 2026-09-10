@@ -1,6 +1,6 @@
 <template>
   <VContainer :fluid="true" class="pa-0 pa-sm-2">
-    <VRow id="cmm-header-row">
+    <VRow density="compact" id="cmm-header-row">
       <VCol cols="12">
         <VSheet rounded color="white" class="pa-2 pa-sm-3">
           <div class="text-subtitle-1 font-weight-medium d-flex align-center">
@@ -16,7 +16,6 @@
             </VChip>
             <VBtn
               id="cmm-status-edit-btn"
-              size="small"
               variant="text"
               color="primary"
               rounded="circle"
@@ -29,7 +28,10 @@
           <VDivider class="my-2" />
 
           <div>
-            <VRow v-if="medals.length > 0" id="cmm-medals-row" density="compact">
+            <VRow density="compact"
+              v-if="medals.length> 0"
+              id="cmm-medals-row"
+              density="compact">
               <VCol cols="12" class="d-flex flex-wrap align-center">
                 <VIcon size="small" color="primary">mdi-medal-outline</VIcon>
                 <template v-for="medal in medals" :key="medal.id">
@@ -97,7 +99,7 @@
                 </VBtn>
               </VCol>
             </VRow>
-            <VRow v-else id="cmm-medals-empty-row" density="compact">
+            <VRow density="compact" v-else id="cmm-medals-empty-row">
               <VCol cols="12" class="d-flex align-center">
                 <VBtn
                   id="cmm-medal-add-btn"
@@ -111,90 +113,12 @@
                 </VBtn>
               </VCol>
             </VRow>
-            <VRow id="cmm-info-row" density="compact">
-              <VCol md="7" cols="12">
-                <VRow density="compact">
-                  <VCol sm="6" cols="12" class="text-body-2 py-1">
-                    <VIcon start size="x-small" color="grey-darken-1"
-                      >mdi-account</VIcon
-                    >
-                    <span class="font-weight-medium">Nombre:</span>
-                    {{ fullName }}
-                  </VCol>
-                  <VCol
-                    v-if="member.cellphone"
-                    sm="6"
-                    cols="12"
-                    class="text-body-2 py-1"
-                  >
-                    <VIcon start size="x-small" color="grey-darken-1"
-                      >mdi-phone</VIcon
-                    >
-                    <span class="font-weight-medium">Celular:</span>
-                    {{ member.cellphone }}
-                  </VCol>
-                  <VCol
-                    v-if="member.years_old != null"
-                    sm="6"
-                    cols="12"
-                    class="text-body-2 py-1"
-                  >
-                    <VIcon start size="x-small" color="grey-darken-1"
-                      >mdi-calendar-account</VIcon
-                    >
-                    <span class="font-weight-medium">Edad:</span>
-                    {{ member.years_old }}
-                  </VCol>
-                  <VCol
-                    v-if="member.number_of_children != null"
-                    sm="6"
-                    cols="12"
-                    class="text-body-2 py-1"
-                  >
-                    <VIcon start size="x-small" color="grey-darken-1"
-                      >mdi-account-multiple</VIcon
-                    >
-                    <span class="font-weight-medium">Hijos:</span>
-                    {{ member.number_of_children }}
-                  </VCol>
-                  <VCol
-                    v-if="member.marriage_status"
-                    sm="6"
-                    cols="12"
-                    class="text-body-2 py-1"
-                  >
-                    <VIcon start size="x-small" color="grey-darken-1"
-                      >mdi-ring</VIcon
-                    >
-                    <span class="font-weight-medium">Estado civil:</span>
-                    {{ member.marriage_status }}
-                  </VCol>
-                  <VCol
-                    v-if="creatorName"
-                    sm="6"
-                    cols="12"
-                    class="text-body-2 py-1"
-                  >
-                    <VIcon start size="x-small" color="grey-darken-1"
-                      >mdi-account-check</VIcon
-                    >
-                    <span class="font-weight-medium">Creado por:</span>
-                    {{ creatorName }}
-                  </VCol>
-                  <VCol
-                    v-if="member.address"
-                    cols="12"
-                    class="text-body-2 py-1 d-none d-sm-flex"
-                  >
-                    <VIcon start size="x-small" color="grey-darken-1"
-                      >mdi-map-marker</VIcon
-                    >
-                    <span class="font-weight-medium">Dirección:</span>
-                    {{ member.address }}
-                  </VCol>
-                </VRow>
-              </VCol>
-              <VCol md="5" cols="12" class="d-flex justify-center align-center">
+            <VRow density="compact" id="cmm-info-row">
+              <VCol
+                md="5"
+                cols="12"
+                class="d-flex justify-center align-center order-md-2"
+              >
                 <VAvatar
                   v-if="member.url_image_s3"
                   size="80"
@@ -217,14 +141,109 @@
                   >mdi-account-circle</VIcon
                 >
               </VCol>
+              <VCol md="7" cols="12" class="order-md-1">
+                <div class="d-flex align-center mb-1">
+                  <VBtn
+                    id="cmm-info-toggle-btn"
+                    size="x-small"
+                    variant="text"
+                    color="primary"
+                    :prepend-icon="showInfo ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+                    @click="showInfo = !showInfo"
+                  >
+                    {{ showInfo ? "Ocultar datos" : "Ver datos" }}
+                  </VBtn>
+                </div>
+                <VExpandTransition>
+                  <VRow density="compact" v-show="showInfo">
+                    <VCol sm="6" cols="12" class="text-body-2">
+                      <VIcon start size="x-small" color="grey-darken-1"
+                        >mdi-account</VIcon
+                      >
+                      <span class="font-weight-medium">Nombre:</span>
+                      {{ fullName }}
+                    </VCol>
+                    <VCol
+                      v-if="member.cellphone"
+                      sm="6"
+                      cols="12"
+                      class="text-body-2"
+                    >
+                      <VIcon start size="x-small" color="grey-darken-1"
+                        >mdi-phone</VIcon
+                      >
+                      <span class="font-weight-medium">Celular:</span>
+                      {{ member.cellphone }}
+                    </VCol>
+                    <VCol
+                      v-if="member.years_old != null"
+                      sm="6"
+                      cols="12"
+                      class="text-body-2"
+                    >
+                      <VIcon start size="x-small" color="grey-darken-1"
+                        >mdi-calendar-account</VIcon
+                      >
+                      <span class="font-weight-medium">Edad:</span>
+                      {{ member.years_old }}
+                    </VCol>
+                    <VCol
+                      v-if="member.number_of_children != null"
+                      sm="6"
+                      cols="12"
+                      class="text-body-2"
+                    >
+                      <VIcon start size="x-small" color="grey-darken-1"
+                        >mdi-account-multiple</VIcon
+                      >
+                      <span class="font-weight-medium">Hijos:</span>
+                      {{ member.number_of_children }}
+                    </VCol>
+                    <VCol
+                      v-if="member.marriage_status"
+                      sm="6"
+                      cols="12"
+                      class="text-body-2"
+                    >
+                      <VIcon start size="x-small" color="grey-darken-1"
+                        >mdi-ring</VIcon
+                      >
+                      <span class="font-weight-medium">Estado civil:</span>
+                      {{ member.marriage_status }}
+                    </VCol>
+                    <VCol
+                      v-if="creatorName"
+                      sm="6"
+                      cols="12"
+                      class="text-body-2"
+                    >
+                      <VIcon start size="x-small" color="grey-darken-1"
+                        >mdi-account-check</VIcon
+                      >
+                      <span class="font-weight-medium">Creado por:</span>
+                      {{ creatorName }}
+                    </VCol>
+                    <VCol
+                      v-if="member.address"
+                      cols="12"
+                      class="text-body-2 d-none d-sm-flex"
+                    >
+                      <VIcon start size="x-small" color="grey-darken-1"
+                        >mdi-map-marker</VIcon
+                      >
+                      <span class="font-weight-medium">Dirección:</span>
+                      {{ member.address }}
+                    </VCol>
+                  </VRow>
+                </VExpandTransition>
+              </VCol>
             </VRow>
 
-            <VRow
+            <VRow density="compact"
               v-if="member.address"
               id="cmm-address-mobile-row"
-              density="compact"
-              class="d-flex d-sm-none"
-            >
+              
+              class="d-flex d-sm-none">
               <VCol cols="12" class="text-body-2 py-1">
                 <VIcon start size="x-small" color="grey-darken-1"
                   >mdi-map-marker</VIcon
@@ -233,11 +252,10 @@
                 {{ member.address }}
               </VCol>
             </VRow>
-            <VRow id="cmm-edit-row" class="mt-1" density="compact">
+            <VRow density="compact" id="cmm-edit-row" class="mt-1">
               <VCol cols="12" class="d-flex justify-end">
                 <VBtn
                   id="cmm-edit-btn"
-                  size="small"
                   color="primary"
                   variant="elevated"
                   prepend-icon="mdi-pencil"
@@ -254,7 +272,7 @@
       </VCol>
     </VRow>
 
-    <VRow id="cmm-interactions-section" class="mt-2">
+    <VRow density="compact" id="cmm-interactions-section" class="mt-2">
       <VCol cols="12">
         <VSheet rounded color="white" class="pa-2 pa-sm-3">
           <div class="text-subtitle-1 font-weight-medium d-flex align-center">
@@ -263,17 +281,19 @@
           </div>
           <VDivider class="my-2" />
           <div>
-            <VRow id="cmm-logs-controls-row" density="comfortable" class="w-100 align-center">
+            <VRow density="compact"
+              id="cmm-logs-controls-row"
+              density="comfortable"
+              class="w-100 align-center">
               <VCol cols="12" sm="auto">
                 <VBtn
                   id="cmm-refresh-logs-btn"
-                  size="small"
                   color="primary"
                   variant="outlined"
                   :loading="loadingLogs"
                   @click="fetchTrackingLogs"
                 >
-                  <VIcon start size="small">mdi-reload</VIcon>
+                  <VIcon start>mdi-reload</VIcon>
                   Refrescar
                 </VBtn>
               </VCol>
@@ -301,13 +321,12 @@
                       v-if="phoneDigits"
                       id="cmm-whatsapp-btn"
                       icon
-                      size="small"
                       color="green"
                       variant="outlined"
                       v-bind="props"
                       @click="openContact('whatsapp', whatsappHref)"
                     >
-                      <VIcon size="small">mdi-whatsapp</VIcon>
+                      <VIcon>mdi-whatsapp</VIcon>
                     </VBtn>
                   </template>
                   <span>WhatsApp</span>
@@ -319,12 +338,11 @@
                       id="cmm-sms-btn"
                       icon
                       color="teal"
-                      size="small"
                       variant="outlined"
                       v-bind="props"
                       @click="openContact('sms', smsHref)"
                     >
-                      <VIcon size="small">mdi-message-text</VIcon>
+                      <VIcon>mdi-message-text</VIcon>
                     </VBtn>
                   </template>
                   <span>Mensaje</span>
@@ -335,13 +353,12 @@
                       v-if="phoneDigits"
                       id="cmm-call-btn"
                       icon
-                      size="small"
                       color="primary"
                       variant="outlined"
                       v-bind="props"
                       @click="openContact('llamada', telHref)"
                     >
-                      <VIcon size="small">mdi-phone</VIcon>
+                      <VIcon>mdi-phone</VIcon>
                     </VBtn>
                   </template>
                   <span>Llamar</span>
@@ -351,13 +368,12 @@
                     <VBtn
                       id="cmm-face-to-face-btn"
                       icon
-                      size="small"
                       variant="outlined"
                       color="deep-orange"
                       v-bind="props"
                       @click="openContact('presencial')"
                     >
-                      <VIcon size="small">mdi-account-group</VIcon>
+                      <VIcon>mdi-account-group</VIcon>
                     </VBtn>
                   </template>
                   <span>Presencial</span>
@@ -379,9 +395,9 @@
       </VCol>
     </VRow>
 
-    <VRow
+    <VRow density="compact"
       v-if="
-        currentConsolidators.length > 0 ||
+        currentConsolidators.length> 0 ||
         auth.hasPermission('church-member-consolidator-assign')
       "
       id="cmm-consolidators-section"
@@ -412,13 +428,12 @@
                 <VBtn
                   v-if="hasConsolidatorChanges"
                   id="cmm-consolidator-save-btn"
-                  size="small"
                   color="primary"
                   variant="elevated"
                   :loading="savingConsolidators"
                   @click="saveConsolidators"
                 >
-                  <VIcon start size="small">mdi-content-save</VIcon>
+                  <VIcon start>mdi-content-save</VIcon>
                   Guardar
                 </VBtn>
               </div>
@@ -448,9 +463,9 @@
       </VCol>
     </VRow>
 
-    <VRow
+    <VRow density="compact"
       v-if="
-        consolidatorLogs.length > 0 &&
+        consolidatorLogs.length> 0 &&
         auth.hasPermission('church-member-consolidator-assign')
       "
       id="cmm-consolidator-logs-section"
@@ -506,17 +521,16 @@
       </VCol>
     </VRow>
 
-    <VRow id="cmm-back-row" class="mt-2">
+    <VRow density="compact" id="cmm-back-row" class="mt-2">
       <VCol cols="12">
         <VSheet rounded color="white" class="pa-2 pa-sm-3 d-flex justify-end">
           <VBtn
             id="cmm-back-btn"
-            size="small"
             color="primary"
             variant="outlined"
             @click="goBack"
           >
-            <VIcon start size="small">mdi-arrow-left</VIcon>
+            <VIcon start>mdi-arrow-left</VIcon>
             Volver
           </VBtn>
         </VSheet>
@@ -613,6 +627,7 @@ const auth = useAuthStore();
 const { statusLabel, statusColor } = useChurchMemberStatus();
 
 const member = ref<Record<string, unknown>>({});
+const showInfo = ref(false);
 const statusDialog = ref(false);
 const editDialog = ref(false);
 const saving = ref(false);
@@ -1223,7 +1238,6 @@ async function removeMedal() {
   medalDeleteDialog.value = false;
   try {
     await ChurchMember.deleteMedal(id, medal.id);
-    notify.notify({ success: "Medalla removida exitosamente" });
     await onMedalSaved();
   } catch {
     // withNotify already surfaced the error

@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div id="cmp-pos-product-list">
     <div class="pos-list-header d-flex align-center">
       <div class="pos-list-col-thumb"></div>
@@ -16,7 +16,7 @@
       <div class="pos-list-col-thumb">
         <VImg :src="product.image_s3 || ''" width="44" height="44" contain class="pos-list-thumb bg-grey-lighten-4 rounded">
           <template #placeholder>
-            <VRow class="fill-height ma-0" align="center" justify="center">
+            <VRow density="compact" class="fill-height ma-0" align="center" justify="center">
               <VIcon color="grey-lighten-2" size="22">mdi-package-variant</VIcon>
             </VRow>
           </template>

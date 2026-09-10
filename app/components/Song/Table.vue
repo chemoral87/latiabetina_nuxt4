@@ -16,8 +16,7 @@
       class="elevation-1 xwidth1100"
       :items-per-page-options="[10, 15, 30]"
       items-per-page-text="Filas por página"
-      @update:options="onUpdateOptions"
-    >
+      @update:options="onUpdateOptions">
       <template #[`item.view`]="{ item }">
         <VBtn
           :id="`song-table-view-btn-${(item as Record<string, unknown>).id}`"

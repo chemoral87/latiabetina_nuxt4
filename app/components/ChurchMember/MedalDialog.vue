@@ -16,7 +16,7 @@
         </div>
 
         <VForm ref="formRef" @submit.prevent="save">
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol cols="12">
               <VSelect
                 id="cm-medal-type"
@@ -189,7 +189,6 @@ async function save() {
       medal: form.value.medal,
       description: { ...form.value.description },
     })
-    notify.notify({ success: "Medalla agregada exitosamente" })
     emit("saved")
     emit("close")
   } catch {

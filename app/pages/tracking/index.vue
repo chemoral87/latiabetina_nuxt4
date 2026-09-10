@@ -1,7 +1,7 @@
 <template>
   <VContainer :fluid="true" class="page-tracking">
     <VSheet rounded color="white">
-      <VRow density="comfortable">
+      <VRow density="compact">
         <VCol v-if="showOrgSelect" lg="2" md="3" sm="4" cols="6">
           <OrganizationSelect
             v-model="filterOrgId"
@@ -44,6 +44,7 @@
           <VBtn
             id="seg-refresh-btn"
             color="primary"
+            variant="outlined"
             :loading="loading"
             @click="fetchData"
           >

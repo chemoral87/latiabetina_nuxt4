@@ -16,7 +16,7 @@
         </div>
 
         <VForm ref="formRef" @submit.prevent="save">
-          <VRow density="comfortable">
+          <VRow density="compact">
             <VCol sm="5" cols="12">
               <VSelect
                 id="con-medal-type"
@@ -187,7 +187,6 @@ async function save() {
     medals.value = [created, ...medals.value]
     form.value.medal = ""
     form.value.description = ""
-    notify.notify({ success: "Medalla agregada exitosamente" })
   } catch {
     // withNotify already surfaced the error
   } finally {

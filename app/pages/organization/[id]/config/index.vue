@@ -1,10 +1,10 @@
 <template>
   <VContainer :fluid="true">
-    <VRow>
+    <VRow density="compact">
       <VCol>
         <VCard id="orgcfg-card">
           <VCardTitle>
-            <VRow density="comfortable">
+            <VRow density="compact" density="comfortable">
               <VCol cols="12">
                 <div class="text-h6">
                   {{ organization.name }} ({{ organization.short_code }})
@@ -12,12 +12,12 @@
               </VCol>
 
               <VCol cols="12">
-                <VRow density="comfortable">
+                <VRow density="compact" density="comfortable">
                   <VCol v-for="(group, groupName) in groupedItems" :key="groupName" cols="12">
                     <div class="text-subtitle-1 font-weight-medium text-grey-darken-1 mb-1 mt-2">
                       {{ groupName }}
                     </div>
-                    <VRow density="comfortable">
+                    <VRow density="compact" density="comfortable">
                       <VCol v-for="config in group" :key="config.id as number" cols="3">
                         <VTextField
                           :id="'tf-orgcfg-' + (config.key as string).replace(/\\./g, '-')"
