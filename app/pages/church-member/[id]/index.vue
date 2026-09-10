@@ -30,7 +30,7 @@
 
           <div>
             <VRow v-if="medals.length > 0" density="compact">
-              <VCol cols="12" class="d-flex flex-wrap align-center ga-1">
+              <VCol cols="12" class="d-flex flex-wrap align-center">
                 <VIcon size="small" color="primary">mdi-medal-outline</VIcon>
                 <template v-for="medal in medals" :key="medal.id">
                   <VTooltip location="top">
@@ -42,7 +42,7 @@
                         class="cursor-pointer"
                         :color="medalColor(medal.medal)"
                       >
-                        <VIcon start size="x-small">{{
+                        <VIcon start size="small">{{
                           medalIcon(medal.medal)
                         }}</VIcon>
                         {{ medalLabel(medal.medal) }}
@@ -57,9 +57,7 @@
                               'Información de ' + medalLabel(medal.medal)
                             "
                           >
-                            <VIcon size="x-small"
-                              >mdi-help-circle-outline</VIcon
-                            >
+                            <VIcon size="small">mdi-help-circle-outline</VIcon>
                           </VBtn>
                           <VBtn
                             icon
@@ -71,7 +69,7 @@
                             "
                             @click.stop="confirmDeleteMedal(medal)"
                           >
-                            <VIcon size="x-small">mdi-close</VIcon>
+                            <VIcon size="small">mdi-close</VIcon>
                           </VBtn>
                         </template>
                       </VChip>
@@ -225,9 +223,15 @@
               </VCol>
             </VRow>
 
-            <VRow v-if="member.address" density="compact" class="d-flex d-sm-none">
+            <VRow
+              v-if="member.address"
+              density="compact"
+              class="d-flex d-sm-none"
+            >
               <VCol cols="12" class="text-body-2 py-1">
-                <VIcon start size="x-small" color="grey-darken-1">mdi-map-marker</VIcon>
+                <VIcon start size="x-small" color="grey-darken-1"
+                  >mdi-map-marker</VIcon
+                >
                 <span class="font-weight-medium">Dirección:</span>
                 {{ member.address }}
               </VCol>
@@ -238,7 +242,7 @@
                   id="cmm-edit-btn"
                   size="small"
                   color="primary"
-                  variant="outlined"
+                  variant="elevated"
                   prepend-icon="mdi-pencil"
                   @click="editDialog = true"
                 >
@@ -268,7 +272,7 @@
                   id="cmm-refresh-logs-btn"
                   size="small"
                   color="primary"
-                  variant="elevated"
+                  variant="outlined"
                   :loading="loadingLogs"
                   @click="fetchTrackingLogs"
                 >
