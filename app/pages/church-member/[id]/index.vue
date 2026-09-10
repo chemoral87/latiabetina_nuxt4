@@ -1,44 +1,48 @@
 <template>
-  <VContainer :fluid="true">
+  <VContainer :fluid="true" class="pa-0 pa-sm-2">
     <VRow>
       <VCol cols="12">
-        <VSheet rounded class="pa-2" color="white">
+        <VSheet rounded color="white" class="pa-2 pa-sm-3">
           <div class="text-subtitle-1 font-weight-medium d-flex align-center">
             <VIcon start size="small" color="primary">mdi-account</VIcon>
-            <span class="text-subtitle-2 member-name">{{ member.name }}</span>
+            <span class="text-subtitle-2 text-truncate">{{ member.name }}</span>
             <VSpacer />
-            <VChip variant="elevated" :color="statusColor(member.status)">
+            <VChip
+              size="small"
+              variant="elevated"
+              :color="statusColor(member.status)"
+            >
               {{ statusLabel(member.status) }}
             </VChip>
             <VBtn
               id="cmm-status-edit-btn"
+              size="small"
               variant="text"
               color="primary"
               rounded="circle"
               icon="mdi-pencil"
               title="Cambiar estado"
+              aria-label="Cambiar estado del miembro"
               @click="statusDialog = true"
             />
           </div>
-          <VDivider />
+          <VDivider class="my-2" />
 
           <div>
             <VRow v-if="medals.length > 0" density="compact">
-              <VCol cols="12" class="d-flex flex-wrap align-center">
-                <VIcon class="mr-1" size="small" color="primary"
-                  >mdi-medal-outline</VIcon
-                >
+              <VCol cols="12" class="d-flex flex-wrap align-center ga-1">
+                <VIcon size="small" color="primary">mdi-medal-outline</VIcon>
                 <template v-for="medal in medals" :key="medal.id">
                   <VTooltip location="top">
                     <template #activator="{ props: tp }">
                       <VChip
                         v-bind="tp"
-                        class="ma-1"
                         size="small"
                         variant="tonal"
+                        class="cursor-pointer"
                         :color="medalColor(medal.medal)"
                       >
-                        <VIcon start size="small">{{
+                        <VIcon start size="x-small">{{
                           medalIcon(medal.medal)
                         }}</VIcon>
                         {{ medalLabel(medal.medal) }}
@@ -49,16 +53,26 @@
                             color="grey"
                             size="small"
                             variant="text"
+                            :aria-label="
+                              'Información de ' + medalLabel(medal.medal)
+                            "
                           >
-                            <VIcon size="small">mdi-help-circle-outline</VIcon>
+                            <VIcon size="x-small"
+                              >mdi-help-circle-outline</VIcon
+                            >
                           </VBtn>
-                          <VIcon
+                          <VBtn
+                            icon
                             size="small"
                             color="error"
-                            style="font-weight: 700"
+                            variant="text"
+                            :aria-label="
+                              'Eliminar medalla ' + medalLabel(medal.medal)
+                            "
                             @click.stop="confirmDeleteMedal(medal)"
-                            >mdi-close</VIcon
                           >
+                            <VIcon size="x-small">mdi-close</VIcon>
+                          </VBtn>
                         </template>
                       </VChip>
                     </template>
@@ -78,14 +92,14 @@
                 <VBtn
                   id="cmm-medal-add-btn"
                   icon
-                  class="ml-1"
                   size="x-small"
                   variant="text"
                   color="primary"
                   title="Agregar medalla"
+                  aria-label="Agregar medalla"
                   @click="medalDialog = true"
                 >
-                  <VIcon size="small">mdi-plus</VIcon>
+                  <VIcon size="x-small">mdi-plus</VIcon>
                 </VBtn>
               </VCol>
             </VRow>
@@ -104,65 +118,94 @@
               </VCol>
             </VRow>
             <VRow density="compact">
-              <VCol cols="7">
+              <VCol md="7" cols="12">
                 <VRow density="compact">
-                  <VCol sm="6" cols="12" class="text-body-2">
-                    <VIcon start size="small" color="grey-darken-1"
+                  <VCol sm="6" cols="12" class="text-body-2 py-1">
+                    <VIcon start size="x-small" color="grey-darken-1"
                       >mdi-account</VIcon
                     >
-                    <span class="font-weight-medium">Nombre completo:</span>
+                    <span class="font-weight-medium">Nombre:</span>
                     {{ fullName }}
                   </VCol>
-                  <VCol sm="6" cols="12" class="text-body-2">
-                    <VIcon start size="small" color="grey-darken-1"
+                  <VCol
+                    v-if="member.cellphone"
+                    sm="6"
+                    cols="12"
+                    class="text-body-2 py-1"
+                  >
+                    <VIcon start size="x-small" color="grey-darken-1"
                       >mdi-phone</VIcon
                     >
                     <span class="font-weight-medium">Celular:</span>
-                    {{ member.cellphone || "—" }}
+                    {{ member.cellphone }}
                   </VCol>
-                  <VCol sm="6" cols="12" class="text-body-2">
-                    <VIcon start size="small" color="grey-darken-1"
+                  <VCol
+                    v-if="member.years_old != null"
+                    sm="6"
+                    cols="12"
+                    class="text-body-2 py-1"
+                  >
+                    <VIcon start size="x-small" color="grey-darken-1"
                       >mdi-calendar-account</VIcon
                     >
                     <span class="font-weight-medium">Edad:</span>
-                    {{ member.years_old ?? "—" }}
+                    {{ member.years_old }}
                   </VCol>
-                  <VCol sm="6" cols="12" class="text-body-2">
-                    <VIcon start size="small" color="grey-darken-1"
+                  <VCol
+                    v-if="member.number_of_children != null"
+                    sm="6"
+                    cols="12"
+                    class="text-body-2 py-1"
+                  >
+                    <VIcon start size="x-small" color="grey-darken-1"
                       >mdi-account-multiple</VIcon
                     >
                     <span class="font-weight-medium">Hijos:</span>
-                    {{ member.number_of_children ?? "—" }}
+                    {{ member.number_of_children }}
                   </VCol>
-                  <VCol sm="6" cols="12" class="text-body-2">
-                    <VIcon start size="small" color="grey-darken-1"
+                  <VCol
+                    v-if="member.marriage_status"
+                    sm="6"
+                    cols="12"
+                    class="text-body-2 py-1"
+                  >
+                    <VIcon start size="x-small" color="grey-darken-1"
                       >mdi-ring</VIcon
                     >
                     <span class="font-weight-medium">Estado civil:</span>
-                    {{ member.marriage_status || "—" }}
+                    {{ member.marriage_status }}
                   </VCol>
-                  <VCol sm="6" cols="12" class="text-body-2">
-                    <VIcon start size="small" color="grey-darken-1"
+                  <VCol
+                    v-if="creatorName"
+                    sm="6"
+                    cols="12"
+                    class="text-body-2 py-1"
+                  >
+                    <VIcon start size="x-small" color="grey-darken-1"
                       >mdi-account-check</VIcon
                     >
                     <span class="font-weight-medium">Creado por:</span>
-                    {{ creatorName || "—" }}
+                    {{ creatorName }}
                   </VCol>
-                  <VCol cols="12" class="text-body-2 d-none d-sm-flex">
-                    <VIcon start size="small" color="grey-darken-1"
+                  <VCol
+                    v-if="member.address"
+                    cols="12"
+                    class="text-body-2 py-1 d-none d-sm-flex"
+                  >
+                    <VIcon start size="x-small" color="grey-darken-1"
                       >mdi-map-marker</VIcon
                     >
-                    <span class="font-weight-medium">Dirección: </span>
-                    {{ member.address || "—" }}
+                    <span class="font-weight-medium">Dirección:</span>
+                    {{ member.address }}
                   </VCol>
                 </VRow>
               </VCol>
-              <VCol cols="5" class="d-flex justify-center align-center">
+              <VCol md="5" cols="12" class="d-flex justify-center align-center">
                 <VAvatar
                   v-if="member.url_image_s3"
-                  size="110"
+                  size="80"
                   rounded="circle"
-                  style="cursor: pointer"
+                  class="cursor-pointer"
                   @click="editDialog = true"
                 >
                   <VImg
@@ -173,28 +216,27 @@
                 </VAvatar>
                 <VIcon
                   v-else
-                  size="80"
+                  size="64"
+                  class="cursor-pointer"
                   color="grey-lighten-1"
-                  style="cursor: pointer"
                   @click="editDialog = true"
                   >mdi-account-circle</VIcon
                 >
               </VCol>
             </VRow>
 
-            <VRow density="compact" class="d-flex d-sm-none">
-              <VCol cols="12" class="text-body-2">
-                <VIcon start size="small" color="grey-darken-1"
-                  >mdi-map-marker</VIcon
-                >
-                <span class="font-weight-medium">Dirección: </span>
-                {{ member.address || "—" }}
+            <VRow v-if="member.address" density="compact" class="d-flex d-sm-none">
+              <VCol cols="12" class="text-body-2 py-1">
+                <VIcon start size="x-small" color="grey-darken-1">mdi-map-marker</VIcon>
+                <span class="font-weight-medium">Dirección:</span>
+                {{ member.address }}
               </VCol>
             </VRow>
-            <VRow density="compact">
-              <VCol cols="12">
+            <VRow class="mt-1" density="compact">
+              <VCol cols="12" class="d-flex justify-end">
                 <VBtn
                   id="cmm-edit-btn"
+                  size="small"
                   color="primary"
                   variant="outlined"
                   prepend-icon="mdi-pencil"
@@ -206,30 +248,31 @@
             </VRow>
           </div>
 
-          <VDivider />
+          <VDivider class="my-2" />
         </VSheet>
       </VCol>
     </VRow>
 
-    <VRow>
+    <VRow class="mt-2">
       <VCol cols="12">
-        <VSheet rounded class="pa-2" color="white">
-          <div class="text-subtitle-1 font-weight-medium">
-            <VIcon start color="primary">mdi-history</VIcon>
+        <VSheet rounded color="white" class="pa-2 pa-sm-3">
+          <div class="text-subtitle-1 font-weight-medium d-flex align-center">
+            <VIcon start size="small" color="primary">mdi-history</VIcon>
             Interacciones
           </div>
-          <VDivider />
+          <VDivider class="my-2" />
           <div>
             <VRow density="comfortable" class="w-100 align-center">
               <VCol cols="12" sm="auto">
                 <VBtn
                   id="cmm-refresh-logs-btn"
+                  size="small"
                   color="primary"
                   variant="elevated"
                   :loading="loadingLogs"
                   @click="fetchTrackingLogs"
                 >
-                  <VIcon start>mdi-reload</VIcon>
+                  <VIcon start size="small">mdi-reload</VIcon>
                   Refrescar
                 </VBtn>
               </VCol>
@@ -249,51 +292,75 @@
               <VCol
                 cols="12"
                 sm="auto"
-                class="d-flex flex-wrap justify-center justify-sm-end"
+                class="d-flex justify-center justify-sm-end ga-2"
               >
-                <VBtn
-                  v-if="phoneDigits"
-                  id="cmm-whatsapp-btn"
-                  class="ma-1"
-                  color="green"
-                  variant="outlined"
-                  @click="openContact('whatsapp', whatsappHref)"
-                >
-                  <VIcon start>mdi-whatsapp</VIcon>
-                  WhatsApp
-                </VBtn>
-                <VBtn
-                  v-if="phoneDigits"
-                  id="cmm-sms-btn"
-                  class="ma-1"
-                  color="teal"
-                  variant="outlined"
-                  @click="openContact('sms', smsHref)"
-                >
-                  <VIcon start>mdi-message-text</VIcon>
-                  Mensaje
-                </VBtn>
-                <VBtn
-                  v-if="phoneDigits"
-                  id="cmm-call-btn"
-                  class="ma-1"
-                  color="primary"
-                  variant="outlined"
-                  @click="openContact('llamada', telHref)"
-                >
-                  <VIcon start>mdi-phone</VIcon>
-                  Llamar
-                </VBtn>
-                <VBtn
-                  id="cmm-face-to-face-btn"
-                  class="ma-1"
-                  variant="outlined"
-                  color="deep-orange"
-                  @click="openContact('presencial')"
-                >
-                  <VIcon start>mdi-account-group</VIcon>
-                  Presencial
-                </VBtn>
+                <VTooltip location="top">
+                  <template #activator="{ props }">
+                    <VBtn
+                      v-if="phoneDigits"
+                      id="cmm-whatsapp-btn"
+                      icon
+                      size="small"
+                      color="green"
+                      variant="outlined"
+                      v-bind="props"
+                      @click="openContact('whatsapp', whatsappHref)"
+                    >
+                      <VIcon size="small">mdi-whatsapp</VIcon>
+                    </VBtn>
+                  </template>
+                  <span>WhatsApp</span>
+                </VTooltip>
+                <VTooltip location="top">
+                  <template #activator="{ props }">
+                    <VBtn
+                      v-if="phoneDigits"
+                      id="cmm-sms-btn"
+                      icon
+                      color="teal"
+                      size="small"
+                      variant="outlined"
+                      v-bind="props"
+                      @click="openContact('sms', smsHref)"
+                    >
+                      <VIcon size="small">mdi-message-text</VIcon>
+                    </VBtn>
+                  </template>
+                  <span>Mensaje</span>
+                </VTooltip>
+                <VTooltip location="top">
+                  <template #activator="{ props }">
+                    <VBtn
+                      v-if="phoneDigits"
+                      id="cmm-call-btn"
+                      icon
+                      size="small"
+                      color="primary"
+                      variant="outlined"
+                      v-bind="props"
+                      @click="openContact('llamada', telHref)"
+                    >
+                      <VIcon size="small">mdi-phone</VIcon>
+                    </VBtn>
+                  </template>
+                  <span>Llamar</span>
+                </VTooltip>
+                <VTooltip location="top">
+                  <template #activator="{ props }">
+                    <VBtn
+                      id="cmm-face-to-face-btn"
+                      icon
+                      size="small"
+                      variant="outlined"
+                      color="deep-orange"
+                      v-bind="props"
+                      @click="openContact('presencial')"
+                    >
+                      <VIcon size="small">mdi-account-group</VIcon>
+                    </VBtn>
+                  </template>
+                  <span>Presencial</span>
+                </VTooltip>
               </VCol>
             </VRow>
           </div>
@@ -310,19 +377,23 @@
         </VSheet>
       </VCol>
     </VRow>
+
     <VRow
       v-if="
         currentConsolidators.length > 0 ||
         auth.hasPermission('church-member-consolidator-assign')
       "
+      class="mt-2"
     >
       <VCol cols="12">
-        <VSheet rounded class="pa-2" color="white">
-          <div class="text-subtitle-1 font-weight-medium">
-            <VIcon start color="primary">mdi-account-multiple</VIcon>
+        <VSheet rounded color="white" class="pa-2 pa-sm-3">
+          <div class="text-subtitle-1 font-weight-medium d-flex align-center">
+            <VIcon start size="small" color="primary"
+              >mdi-account-multiple</VIcon
+            >
             Consolidadores
           </div>
-          <VDivider />
+          <VDivider class="my-2" />
           <div>
             <template
               v-if="auth.hasPermission('church-member-consolidator-assign')"
@@ -335,32 +406,31 @@
                 :consolidatorsx="currentConsolidators"
                 @model-change="onPendingConsolidatorsChange"
               />
-              <div class="d-flex justify-end">
+              <div class="d-flex justify-end mt-2">
                 <VBtn
                   v-if="hasConsolidatorChanges"
                   id="cmm-consolidator-save-btn"
-                  class="mt-2"
+                  size="small"
                   color="primary"
                   variant="elevated"
                   :loading="savingConsolidators"
                   @click="saveConsolidators"
                 >
-                  <VIcon start>mdi-content-save</VIcon>
+                  <VIcon start size="small">mdi-content-save</VIcon>
                   Guardar
                 </VBtn>
               </div>
             </template>
             <template v-else>
-              <div class="text-body-2">
+              <div class="text-body-2 d-flex flex-wrap ga-1">
                 <VChip
                   v-for="c in currentConsolidators"
                   :key="c.id"
-                  class="ma-1"
                   size="small"
                   color="primary"
                   variant="outlined"
                 >
-                  <VIcon start size="small">mdi-account</VIcon>
+                  <VIcon start size="x-small">mdi-account</VIcon>
                   {{ c.name }} {{ c.last_name }}
                   <span
                     v-if="c.assigned_by"
@@ -375,19 +445,21 @@
         </VSheet>
       </VCol>
     </VRow>
+
     <VRow
       v-if="
         consolidatorLogs.length > 0 &&
         auth.hasPermission('church-member-consolidator-assign')
       "
+      class="mt-2"
     >
       <VCol cols="12">
-        <VSheet rounded class="pa-4" color="white">
-          <div class="text-subtitle-1 font-weight-medium">
-            <VIcon start color="primary">mdi-history</VIcon>
+        <VSheet rounded color="white" class="pa-2 pa-sm-3">
+          <div class="text-subtitle-1 font-weight-medium d-flex align-center">
+            <VIcon start size="small" color="primary">mdi-history</VIcon>
             Historial de Consolidadores
           </div>
-          <VDivider />
+          <VDivider class="my-2" />
           <div>
             <VTimeline side="end" align="start" density="compact">
               <VTimelineItem
@@ -430,15 +502,17 @@
         </VSheet>
       </VCol>
     </VRow>
-    <VRow>
+
+    <VRow class="mt-2">
       <VCol cols="12" class="d-flex justify-end">
         <VBtn
           id="cmm-back-btn"
+          size="small"
           color="primary"
           variant="outlined"
           @click="goBack"
         >
-          <VIcon start>mdi-arrow-left</VIcon>
+          <VIcon start size="small">mdi-arrow-left</VIcon>
           Volver
         </VBtn>
       </VCol>
@@ -479,13 +553,22 @@
       @close="medalDialog = false"
     />
 
-    <VDialog v-model="medalDeleteDialog" max-width="400">
+    <VDialog
+      v-model="medalDeleteDialog"
+      max-width="400"
+      role="alertdialog"
+      aria-describedby="medal-delete-desc"
+      aria-labelledby="medal-delete-title"
+    >
       <VCard>
-        <VCardTitle class="text-subtitle-1 font-weight-medium">
+        <VCardTitle
+          id="medal-delete-title"
+          class="text-subtitle-1 font-weight-medium"
+        >
           <VIcon start color="warning">mdi-alert-outline</VIcon>
           Confirmar eliminación
         </VCardTitle>
-        <VCardText>
+        <VCardText id="medal-delete-desc">
           ¿Desea remover la medalla
           <strong v-if="medalToDelete">{{
             medalLabel(medalToDelete.medal)
@@ -688,8 +771,6 @@ function medalDetail(medal: {
   return medalLabel(medal.medal);
 }
 
-// Resolved early (before the member fetch) so the "not found / no access" redirect
-// below can reuse it without depending on later declarations.
 const backRoute = computed(() => {
   const from = route.query.from as string | undefined;
   if (from === "tracking") return "/tracking";
@@ -700,9 +781,6 @@ const backRoute = computed(() => {
   return "/church-member/tracking-logs";
 });
 
-// Initial member data and tracking logs are loaded during SSR via useAsyncData
-// so the payload is reused on the client (no double fetch, no hydration mismatch).
-// See ai_rule/nuxt4_ssr_hydration.md.
 {
   const { data: initialMember, error: memberError } = await useAsyncData(
     `church-member-${route.params.id}`,
@@ -710,9 +788,6 @@ const backRoute = computed(() => {
     { default: () => ({}) as Record<string, unknown> },
   );
 
-  // The API scopes church-member/:id to the caller's orgs and returns 404 for
-  // out-of-scope or non-existent members. Surface that as a real error page
-  // instead of silently redirecting via the (spoofable) ?from= query param.
   if (memberError.value) {
     const err = memberError.value as unknown as {
       statusCode?: number;
@@ -865,7 +940,6 @@ const whatsappHref = computed(() => {
 function isIOSDevice(): boolean {
   if (typeof navigator === "undefined") return false;
   const ua = navigator.userAgent || "";
-  // iPadOS 13+ se identifica como Macintosh pero con soporte táctil.
   return (
     /iPad|iPhone|iPod/i.test(ua) ||
     (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1)
@@ -875,10 +949,6 @@ const smsHref = computed(() => {
   if (!phoneDigits.value) return null;
   const msg = encodeURIComponent(message.value.trim());
   if (!msg) return `sms:${phoneDigits.value}`;
-  // El esquema sms: no está estandarizado: iOS requiere "&" antes de "body"
-  // para precargar el texto, mientras que Android (y el resto) usan "?" como
-  // separador normal de query string. Usar el separador equivocado hace que
-  // la app de Mensajes abra sin el texto prellenado.
   const separator = isIOSDevice() ? "&" : "?";
   return `sms:${phoneDigits.value}${separator}body=${msg}`;
 });
@@ -892,19 +962,9 @@ async function openContact(
 ) {
   const id = route.params.id as string;
   const currentMessage = message.value.trim();
-  // Todo lo que dispara una navegación (popup de escritorio, deep link a la
-  // app en móvil) debe ejecutarse SÍNCRONO dentro del gesto de click. En
-  // cuanto pasamos por un await, el navegador (sobre todo iOS Safari) ya
-  // perdió la "user activation" y bloquea/ignora el intento de abrir la app,
-  // cayendo directo al fallback web (WhatsApp Web) aunque la app esté
-  // instalada. Por eso el intento de apertura va ANTES del await, para
-  // ambos casos.
   if (medium === "whatsapp" && url) {
     triggerWhatsApp(currentMessage);
   } else if ((medium === "sms" || medium === "llamada") && url) {
-    // sms: y tel: son esquemas estándar que el SO entrega a la app de
-    // Mensajes/Teléfono sin dejar entrada nueva en el historial. Se disparan
-    // aquí, síncrono con el click, por la misma razón que WhatsApp arriba.
     window.location.href = url;
   }
   try {
@@ -929,11 +989,6 @@ async function openContact(
   }
 }
 
-// Dispara el deep link nativo de WhatsApp (whatsapp://) con fallback a wa.me
-// en nueva pestaña. Funciona tanto en móvil como en escritorio cuando la app
-// de WhatsApp está instalada. Si la app no está instalada o no toma el foco
-// en ~1.2s, abre wa.me en una pestaña nueva sin navegar fuera de la página
-// actual. Se cancela el fallback si cambia la visibilidad (app abierta).
 function triggerWhatsApp(currentMessage: string) {
   const digits = phoneDigits.value;
   if (!digits) return;
@@ -965,11 +1020,8 @@ function triggerWhatsApp(currentMessage: string) {
   document.addEventListener("visibilitychange", onVis);
   window.addEventListener("blur", onHide);
 
-  // Intento de apertura síncrono con el gesto de click.
   window.location.href = appUrl;
 
-  // Fallback: si la app no está instalada, abre wa.me en pestaña nueva
-  // (sin navegar fuera de la página actual).
   fallback = window.setTimeout(() => {
     fallback = null;
     cancelFallback();
@@ -1118,7 +1170,6 @@ async function saveConsolidators() {
     }>(id, { consolidator_ids: ids });
     member.value = { ...member.value, consolidators: updated.data };
     pendingConsolidators.value = null;
-    // Refresh consolidator logs
     const logs = await ChurchMember.consolidatorLogs<
       {
         id: number;
@@ -1176,12 +1227,3 @@ async function removeMedal() {
   }
 }
 </script>
-
-<style scoped>
-.member-name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  min-width: 0;
-}
-</style>
