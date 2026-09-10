@@ -1,6 +1,6 @@
 <template>
   <VContainer :fluid="true" class="pa-0 pa-sm-2">
-    <VRow>
+    <VRow id="cmm-header-row">
       <VCol cols="12">
         <VSheet rounded color="white" class="pa-2 pa-sm-3">
           <div class="text-subtitle-1 font-weight-medium d-flex align-center">
@@ -29,7 +29,7 @@
           <VDivider class="my-2" />
 
           <div>
-            <VRow v-if="medals.length > 0" density="compact">
+            <VRow v-if="medals.length > 0" id="cmm-medals-row" density="compact">
               <VCol cols="12" class="d-flex flex-wrap align-center">
                 <VIcon size="small" color="primary">mdi-medal-outline</VIcon>
                 <template v-for="medal in medals" :key="medal.id">
@@ -47,30 +47,26 @@
                         }}</VIcon>
                         {{ medalLabel(medal.medal) }}
                         <template #append>
-                          <VBtn
+                          <VIcon
                             :id="'medal-info-' + medal.id"
-                            icon
                             color="grey"
                             size="small"
-                            variant="text"
+                            class="cursor-pointer ml-2"
                             :aria-label="
                               'Información de ' + medalLabel(medal.medal)
                             "
+                            >mdi-help-circle-outline</VIcon
                           >
-                            <VIcon size="small">mdi-help-circle-outline</VIcon>
-                          </VBtn>
-                          <VBtn
-                            icon
+                          <VIcon
                             size="small"
                             color="error"
-                            variant="text"
+                            class="cursor-pointer ml-2"
                             :aria-label="
                               'Eliminar medalla ' + medalLabel(medal.medal)
                             "
                             @click.stop="confirmDeleteMedal(medal)"
+                            >mdi-close</VIcon
                           >
-                            <VIcon size="small">mdi-close</VIcon>
-                          </VBtn>
                         </template>
                       </VChip>
                     </template>
@@ -101,7 +97,7 @@
                 </VBtn>
               </VCol>
             </VRow>
-            <VRow v-else density="compact">
+            <VRow v-else id="cmm-medals-empty-row" density="compact">
               <VCol cols="12" class="d-flex align-center">
                 <VBtn
                   id="cmm-medal-add-btn"
@@ -115,7 +111,7 @@
                 </VBtn>
               </VCol>
             </VRow>
-            <VRow density="compact">
+            <VRow id="cmm-info-row" density="compact">
               <VCol md="7" cols="12">
                 <VRow density="compact">
                   <VCol sm="6" cols="12" class="text-body-2 py-1">
@@ -225,6 +221,7 @@
 
             <VRow
               v-if="member.address"
+              id="cmm-address-mobile-row"
               density="compact"
               class="d-flex d-sm-none"
             >
@@ -236,7 +233,7 @@
                 {{ member.address }}
               </VCol>
             </VRow>
-            <VRow class="mt-1" density="compact">
+            <VRow id="cmm-edit-row" class="mt-1" density="compact">
               <VCol cols="12" class="d-flex justify-end">
                 <VBtn
                   id="cmm-edit-btn"
@@ -257,7 +254,7 @@
       </VCol>
     </VRow>
 
-    <VRow class="mt-2">
+    <VRow id="cmm-interactions-section" class="mt-2">
       <VCol cols="12">
         <VSheet rounded color="white" class="pa-2 pa-sm-3">
           <div class="text-subtitle-1 font-weight-medium d-flex align-center">
@@ -266,7 +263,7 @@
           </div>
           <VDivider class="my-2" />
           <div>
-            <VRow density="comfortable" class="w-100 align-center">
+            <VRow id="cmm-logs-controls-row" density="comfortable" class="w-100 align-center">
               <VCol cols="12" sm="auto">
                 <VBtn
                   id="cmm-refresh-logs-btn"
@@ -387,6 +384,7 @@
         currentConsolidators.length > 0 ||
         auth.hasPermission('church-member-consolidator-assign')
       "
+      id="cmm-consolidators-section"
       class="mt-2"
     >
       <VCol cols="12">
@@ -455,6 +453,7 @@
         consolidatorLogs.length > 0 &&
         auth.hasPermission('church-member-consolidator-assign')
       "
+      id="cmm-consolidator-logs-section"
       class="mt-2"
     >
       <VCol cols="12">
@@ -507,7 +506,7 @@
       </VCol>
     </VRow>
 
-    <VRow class="mt-2">
+    <VRow id="cmm-back-row" class="mt-2">
       <VCol cols="12">
         <VSheet rounded color="white" class="pa-2 pa-sm-3 d-flex justify-end">
           <VBtn
