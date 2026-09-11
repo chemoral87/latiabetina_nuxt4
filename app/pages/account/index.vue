@@ -45,7 +45,7 @@
               <div v-else>
                 <div v-for="group in orgGroups" :key="group.org.id" class="mb-2">
                   <div style="gap: 6px" class="d-flex align-center flex-wrap">
-                    <VChip :id="'chip-acc-roles-org-' + group.org.id" label size="small" color="primary" variant="elevated">
+                    <VChip :id="'chip-acc-roles-org-' + group.org.id" label size="small" :color="orgColor" variant="elevated">
                       <VIcon start size="small">mdi-domain</VIcon>
                       {{ getOrgNameById(group.org.id) }}
                     </VChip>
@@ -62,7 +62,7 @@
               <div v-for="(orgIds, role) in sortedRolesOrg" :key="role" class="mb-2">
                 <div style="gap: 6px" class="d-flex align-center flex-wrap">
                   <VChip :id="'chip-acc-role-' + role" label size="small" color="primary" variant="elevated">{{ role }}</VChip>
-                  <VChip v-for="oid in orgIds" :id="'chip-acc-role-org-' + oid" :key="oid" size="x-small" color="primary" variant="outlined">
+                  <VChip v-for="oid in orgIds" :id="'chip-acc-role-org-' + oid" :key="oid" size="x-small" :color="orgColor" variant="outlined">
                     {{ getOrgNameById(oid) }}
                   </VChip>
                 </div>
@@ -93,11 +93,11 @@
                 <div v-else>
                   <div v-for="group in orgGroups" :key="group.org.id" class="mb-3">
                     <div style="gap: 4px" class="d-flex align-center flex-wrap mb-1">
-                      <VChip :id="'chip-acc-perms-org-' + group.org.id" label size="small" color="secondary" variant="elevated">
+                      <VChip :id="'chip-acc-perms-org-' + group.org.id" label size="small" :color="orgColor" variant="elevated">
                         <VIcon start size="small">mdi-domain</VIcon>
                         {{ getOrgNameById(group.org.id) }}
                       </VChip>
-                      <VChip :id="'chip-acc-perms-org-count-' + group.org.id" size="x-small" color="secondary" variant="outlined">
+                      <VChip :id="'chip-acc-perms-org-count-' + group.org.id" size="x-small" :color="orgColor" variant="outlined">
                         {{ group.perms.length }} permisos
                       </VChip>
                     </div>
@@ -121,7 +121,7 @@
                       class="d-flex align-center flex-wrap mb-1"
                     >
                       <VChip :id="'chip-acc-permission-' + perm" label class="mr-1" size="small" color="secondary" variant="elevated">{{ perm }}</VChip>
-                      <VChip v-for="oid in orgIds" :id="'chip-acc-permission-org-' + oid" :key="oid" size="x-small" color="secondary" variant="outlined">
+                      <VChip v-for="oid in orgIds" :id="'chip-acc-permission-org-' + oid" :key="oid" size="x-small" :color="orgColor" variant="outlined">
                         {{ getOrgNameById(oid) }}
                       </VChip>
                     </div>
@@ -136,7 +136,7 @@
                 <div v-else>
                   <div v-for="group in orgGroups" :key="group.org.id" class="mb-4">
                     <div style="gap: 6px" class="d-flex align-center flex-wrap mb-1">
-                      <VChip :id="'chip-acc-org-combined-' + group.org.id" label size="small" color="primary" variant="elevated">
+                      <VChip :id="'chip-acc-org-combined-' + group.org.id" label size="small" :color="orgColor" variant="elevated">
                         <VIcon start size="small">mdi-domain</VIcon>
                         {{ getOrgNameById(group.org.id) }}
                       </VChip>
@@ -182,7 +182,7 @@
                         <VIcon start size="small">mdi-redhat</VIcon>
                         {{ roleName }}
                       </VChip>
-                      <VChip v-for="oid in orgIds" :id="'chip-acc-combined-org-' + oid" :key="oid" size="x-small" color="primary" variant="outlined">
+                      <VChip v-for="oid in orgIds" :id="'chip-acc-combined-org-' + oid" :key="oid" size="x-small" :color="orgColor" variant="outlined">
                         {{ getOrgNameById(oid) }}
                       </VChip>
                       <VChip :id="'chip-acc-permission-count-' + roleName" class="ml-1" size="small" color="secondary" variant="outlined">
@@ -270,6 +270,9 @@ const orgGroups = computed(() =>
     return { org, roles, perms }
   })
 )
+/** Dedicated 3rd theme color for Organization chips (roles = primary, permissions = secondary). */
+const orgColor = "deep-purple"
+
 const dialogPassword = ref(false)
 const combinedView = ref(false)
 const combinedOrgView = ref(

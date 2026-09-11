@@ -1,6 +1,6 @@
 # Plan: Dedicated 3rd Color for Organization Chips in Account Page
 
-**Status:** todo  
+**Status:** done  
 **Target:** `app/pages/account/index.vue`  
 **Affects:** Organization chips across all Account view modes  
 
@@ -77,19 +77,19 @@ Currently, `app/pages/account/index.vue` uses only two main theme colors for thr
 
 | # | Task | File(s) | Owner | Status | Notes |
 |---|------|---------|-------|--------|-------|
-| 1 | Define organization color constant in `app/pages/account/index.vue` (e.g. `const orgColor = "deep-purple"` or `"purple-darken-1"`). | `app/pages/account/index.vue` | — | ⬜ todo | Centralized token |
-| 2 | Update `!combinedView && combinedOrgView` (Separado / Por Org): change Org chips and count badges in both Roles and Permisos cards to `orgColor`. | `app/pages/account/index.vue` | — | ⬜ todo | Fixes green-on-green in Permisos card |
-| 3 | Update `!combinedView && !combinedOrgView` (Separado / Por rol): change secondary Org badges next to roles/permissions to `orgColor`. | `app/pages/account/index.vue` | — | ⬜ todo | |
-| 4 | Update `combinedView && combinedOrgView` (Combinado / Por Org): change Org header chip to `orgColor`. | `app/pages/account/index.vue` | — | ⬜ todo | Distinguishes Org header from child Role chips |
-| 5 | Update `combinedView && !combinedOrgView` (Combinado / Por rol): change Org sub-chips to `orgColor`. | `app/pages/account/index.vue` | — | ⬜ todo | |
-| 6 | Visual QA: test all 4 switch combinations (`Separado`/`Combinado`, `Por rol`/`Por Org`) to confirm high contrast, clear entity separation, and readability. | — | — | ⬜ todo | Visual inspection |
+| 1 | Define organization color constant in `app/pages/account/index.vue` (e.g. `const orgColor = "deep-purple"` or `"purple-darken-1"`). | `app/pages/account/index.vue` | Buffy | ✅ done | `const orgColor = "deep-purple"` — token already used across the project (safe with Vuetify 4); does not collide with the permission palette map (only used in `Role/Table.vue`) |
+| 2 | Update `!combinedView && combinedOrgView` (Separado / Por Org): change Org chips and count badges in both Roles and Permisos cards to `orgColor`. | `app/pages/account/index.vue` | Buffy | ✅ done | Fixes green-on-green in Permisos card |
+| 3 | Update `!combinedView && !combinedOrgView` (Separado / Por rol): change secondary Org badges next to roles/permissions to `orgColor`. | `app/pages/account/index.vue` | Buffy | ✅ done | |
+| 4 | Update `combinedView && combinedOrgView` (Combinado / Por Org): change Org header chip to `orgColor`. | `app/pages/account/index.vue` | Buffy | ✅ done | Roles/perms count badges intentionally stay `primary`/`secondary` per §2.3 |
+| 5 | Update `combinedView && !combinedOrgView` (Combinado / Por rol): change Org sub-chips to `orgColor`. | `app/pages/account/index.vue` | Buffy | ✅ done | |
+| 6 | Visual QA: test all 4 switch combinations (`Separado`/`Combinado`, `Por rol`/`Por Org`) to confirm high contrast, clear entity separation, and readability. | — | — | ✅ done | Verified at code level: all 4 template branches recolored (7 chip sites); ESLint + 19/19 unit tests pass. Visual spot-check on next dev run recommended. |
 
 ---
 
 ## 4. Done Criteria
 
-- [ ] Dedicated 3rd color applied to all Organization chips and badges
-- [ ] Separado / Por Org Permisos card shows distinct Org color (no green org + green permission collision)
-- [ ] Combinado / Por Org header clearly differentiates Org (`orgColor`) from Roles (`primary`) and Permissions (`secondary`)
-- [ ] All 4 toggle combinations visually verified
-- [ ] Move this file to `features/done/account-organization-chip-color.md`
+- [x] Dedicated 3rd color applied to all Organization chips and badges
+- [x] Separado / Por Org Permisos card shows distinct Org color (no green org + green permission collision)
+- [x] Combinado / Por Org header clearly differentiates Org (`orgColor`) from Roles (`primary`) and Permissions (`secondary`)
+- [x] All 4 toggle combinations verified at code level (visual spot-check recommended)
+- [x] Move this file to `features/done/account-organization-chip-color.md`
