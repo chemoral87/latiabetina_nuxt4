@@ -45,7 +45,7 @@
           <VIcon size="x-large">mdi-eye</VIcon>
         </VBtn>
       </template>
-      <template #[`item.action`]="{ item }">
+      <template #[`item.actions`]="{ item }">
         <VBtn
           :id="`det-member-delete-btn-${item.id}`"
           icon
