@@ -1,20 +1,11 @@
-let refreshPromise: Promise<string | null> | null = null
+import { isTokenExpired } from '~/utils/jwt'
 
-function getJwtExp(token: string): number | null {
-  try {
-    const payload = token.split(".")[1]
-    if (!payload) return null
-    const decoded = JSON.parse(atob(payload))
-    return decoded.exp ?? null
-  } catch {
-    return null
-  }
-}
+let refreshPromise: Promise<string | null> | null = null
 
 // Typed auth failure so callers (pages, withNotify) can react to it instead of
 // treating it as a generic error.
 function unauthenticatedError(): Error & { code: string } {
-  return Object.assign(new Error("Token no disponible"), { code: "UNAUTHENTICATED" })
+  return Object.assign(new Error('Token no disponible'), { code: 'UNAUTHENTICATED' })
 }
 
 export function useApi() {
@@ -27,7 +18,7 @@ export function useApi() {
     if (import.meta.client) {
       return `${window.location.protocol}//${window.location.hostname}${config.public.suffixUrl}`
     }
-    return ""
+    return ''
   }
 
   function serializeParams(params: Record<string, unknown>): string {
@@ -41,7 +32,7 @@ export function useApi() {
         parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`)
       }
     }
-    return parts.join("&")
+    return parts.join('&')
   }
 
   async function tryRefreshToken(): Promise<string | null> {
@@ -53,7 +44,7 @@ export function useApi() {
         const token = tokenCookie.value
         if (!token) return null
         const res = await $fetch<{ access_token: string }>(`${baseUrl}/auth/refresh`, {
-          method: "POST",
+          method: 'POST',
           headers: { Authorization: `Bearer ${token}` },
         })
         // Persist the new token in both the cookie and the auth store so the
@@ -72,12 +63,6 @@ export function useApi() {
     })()
 
     return refreshPromise
-  }
-
-  function isTokenExpired(token: string): boolean {
-    const exp = getJwtExp(token)
-    if (!exp) return true
-    return Date.now() >= exp * 1000 - 30000
   }
 
   async function ensureValidToken(): Promise<string | null> {
@@ -114,8 +99,8 @@ export function useApi() {
       throw unauthenticatedError()
     }
     const headers: Record<string, string> = {
-      "Content-Type": "application/json",
-      Accept: "application/json",
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
       Authorization: `Bearer ${token}`,
     }
     if (opts.headers) {
@@ -133,7 +118,7 @@ export function useApi() {
     try {
       return await $fetch<T>(url, { ...rest, headers })
     } catch (err: unknown) {
-      if (err && typeof err === "object" && "response" in err) {
+      if (err && typeof err === 'object' && 'response' in err) {
         const status = (err as { response: { status: number } }).response?.status
         if (status === 401) {
           const newToken = await tryRefreshToken()

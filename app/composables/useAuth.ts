@@ -1,4 +1,5 @@
-import { defineStore, acceptHMRUpdate } from "pinia"
+import { defineStore, acceptHMRUpdate } from 'pinia'
+import { getJwtExp } from '~/utils/jwt'
 
 interface AuthUser {
   name?: string
@@ -23,33 +24,33 @@ interface AuthStrategy {
 
 const strategies: Record<string, AuthStrategy> = {
   laravelJWT: {
-    provider: "laravel/jwt",
-    token: { property: "access_token", maxAge: 60 * 60, type: "Bearer" },
+    provider: 'laravel/jwt',
+    token: { property: 'access_token', maxAge: 60 * 60, type: 'Bearer' },
     refreshToken: { maxAge: 20160 * 60 },
-    url: "/",
+    url: '/',
     endpoints: {
-      login: { url: "auth/login", method: "post" },
-      refresh: { url: "auth/refresh", method: "post" },
-      logout: { url: "auth/logout", method: "post" },
-      user: { url: "auth/user", method: "post" },
+      login: { url: 'auth/login', method: 'post' },
+      refresh: { url: 'auth/refresh', method: 'post' },
+      logout: { url: 'auth/logout', method: 'post' },
+      user: { url: 'auth/user', method: 'post' },
     },
   },
   google: {
-    provider: "laravel/jwt",
-    token: { property: "access_token", maxAge: 60 * 60, type: "Bearer" },
+    provider: 'laravel/jwt',
+    token: { property: 'access_token', maxAge: 60 * 60, type: 'Bearer' },
     refreshToken: { maxAge: 20160 * 60 },
-    url: "/",
+    url: '/',
     user: { property: false, autoFetch: false },
     endpoints: {
-      login: { url: "auth/google/validate", method: "post" },
-      refresh: { url: "auth/refresh", method: "post" },
-      logout: { url: "auth/logout", method: "post" },
-      user: { url: "auth/user", method: "post" },
+      login: { url: 'auth/google/validate', method: 'post' },
+      refresh: { url: 'auth/refresh', method: 'post' },
+      logout: { url: 'auth/logout', method: 'post' },
+      user: { url: 'auth/user', method: 'post' },
     },
   },
 }
 
-export const useAuthStore = defineStore("auth", () => {
+export const useAuthStore = defineStore('auth', () => {
   const user = ref<AuthUser | null>(null)
   // Authoritative in-memory token. Kept in sync with the `auth.token` cookie
   // so the token survives SSR hydration even when the client cookie ref is
@@ -57,14 +58,14 @@ export const useAuthStore = defineStore("auth", () => {
   // into the Nuxt payload on the server and restored on the client.
   const token = ref<string | null>(null)
   const loggedIn = computed(() => !!user.value)
-  const strategy = ref<string>("laravelJWT")
+  const strategy = ref<string>('laravelJWT')
   // Guards the one-time hard redirect to /login after a session expires so a
   // burst of concurrent API failures doesn't navigate the browser repeatedly.
   const sessionExpiryRedirected = ref(false)
   const redirects = {
-    login: "/login",
-    logout: "/login",
-    home: "/dashboard",
+    login: '/login',
+    logout: '/login',
+    home: '/dashboard',
     callback: false,
   }
 
@@ -79,7 +80,7 @@ export const useAuthStore = defineStore("auth", () => {
   // token is the primary source for API calls (useApi reads it first); the
   // cookie remains the cross-reload persistence layer.
   token.value = tokenCookie.value ?? null
-  watch(tokenCookie, (val) => {
+  watch(tokenCookie, val => {
     token.value = val ?? null
   })
 
@@ -94,7 +95,7 @@ export const useAuthStore = defineStore("auth", () => {
       const reqUrl = useRequestURL()
       return `${reqUrl.protocol}//${reqUrl.hostname}${config.public.suffixUrl}`
     } catch {
-      return ""
+      return ''
     }
   }
 
@@ -111,7 +112,7 @@ export const useAuthStore = defineStore("auth", () => {
     tokenCookie.value = null
     refreshTokenCookie.value = null
     strategyCookie.value = null
-    strategy.value = "laravelJWT"
+    strategy.value = 'laravelJWT'
   }
 
   async function refreshAccessToken(): Promise<boolean> {
@@ -143,7 +144,7 @@ export const useAuthStore = defineStore("auth", () => {
     })
 
     const accessToken = (res as Record<string, string>)[s.token.property]
-    if (!accessToken) throw new Error("No access token returned")
+    if (!accessToken) throw new Error('No access token returned')
 
     setAccessToken(accessToken)
     strategyCookie.value = name
@@ -208,7 +209,7 @@ export const useAuthStore = defineStore("auth", () => {
     if (!wasLoggedIn) return
     if (sessionExpiryRedirected.value) return
     sessionExpiryRedirected.value = true
-    if (window.location.pathname === "/login") return
+    if (window.location.pathname === '/login') return
     const current = window.location.pathname + window.location.search
     window.location.href = `/login?redirect=${encodeURIComponent(current)}`
   }
@@ -222,21 +223,10 @@ export const useAuthStore = defineStore("auth", () => {
     user.value = userData
   }
 
-  function setToken(accessToken: string, name = "laravelJWT") {
+  function setToken(accessToken: string, name = 'laravelJWT') {
     setAccessToken(accessToken)
     strategyCookie.value = name
     strategy.value = name
-  }
-
-  function getJwtExp(tokenValue: string): number | null {
-    try {
-      const payload = tokenValue.split(".")[1]
-      if (!payload) return null
-      const decoded = JSON.parse(atob(payload))
-      return decoded.exp ?? null
-    } catch {
-      return null
-    }
   }
 
   async function init() {
@@ -295,10 +285,27 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   return {
-    user, loggedIn, token, hasToken, strategy, redirects, permissions, permissionsOrg, hasPermission,
-    orgIdsFor, hasSingleOrgFor,
-    loginWith, fetchUser, logout, setToken, setStrategy, setUser, init,
-    setAccessToken, clearSession, expireSession,
+    user,
+    loggedIn,
+    token,
+    hasToken,
+    strategy,
+    redirects,
+    permissions,
+    permissionsOrg,
+    hasPermission,
+    orgIdsFor,
+    hasSingleOrgFor,
+    loginWith,
+    fetchUser,
+    logout,
+    setToken,
+    setStrategy,
+    setUser,
+    init,
+    setAccessToken,
+    clearSession,
+    expireSession,
   }
 })
 
