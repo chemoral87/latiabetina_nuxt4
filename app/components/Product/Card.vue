@@ -1,5 +1,5 @@
 <template>
-  <VCard id="cmp-product-card" variant="outlined" class="d-flex flex-column fill-height" style="position: relative">
+  <VCard id="cmp-product-card" variant="outlined" style="position: relative" class="d-flex flex-column fill-height">
     <div class="product-card__order-btns">
       <VBtn id="prd-card-moveleft-btn" icon size="x-small" class="order-btn" :disabled="isFirst" @click="emit('move-left', product)">
         <VIcon size="x-small">mdi-chevron-left</VIcon>
@@ -14,14 +14,14 @@
       :style="product.hidden ? 'opacity: 0.7; background-color: #b0b0b0;' : ''"
     >
       <VImg
-        :src="product.image_s3 || ''"
-        height="180px"
         contain
-        :style="product.hidden ? 'filter: brightness(0.7);' : ''"
+        height="180px"
         class="bg-grey-lighten-4"
+        :src="product.image_s3 || ''"
+        :style="product.hidden ? 'filter: brightness(0.7);' : ''"
       >
         <template #placeholder>
-          <VRow density="compact" class="fill-height ma-0" align="center" justify="center">
+          <VRow align="center" justify="center" density="compact" class="fill-height ma-0">
             <VIcon color="grey-lighten-1">mdi-package-variant</VIcon>
           </VRow>
         </template>
@@ -29,7 +29,7 @@
 
       <VCardTitle class="text-subtitle-1 font-weight-bold pb-1 d-flex align-center">
         <span class="text-truncate d-block">{{ product.name }}</span>
-        <VIcon v-if="product.requires_preparation" color="orange-darken-1" small class="ml-1 flex-shrink-0">
+        <VIcon v-if="product.requires_preparation" small color="orange-darken-1" class="ml-1 flex-shrink-0">
           mdi-chef-hat
         </VIcon>
       </VCardTitle>
@@ -48,12 +48,12 @@
           <strong :class="product.stock > 0 ? 'text-success' : 'text-error'">{{ product.stock }}</strong>
         </div>
         <VSwitch
-          v-model="product.requires_preparation"
-          label="Requiere preparar"
-          density="compact"
+          v-model="requiresPreparation"
           hide-details
           class="mt-0 pt-0"
-          @change="emit('toggle-preparation', product)"
+          density="compact"
+          label="Requiere preparar"
+          @update:model-value="onTogglePreparation"
         />
       </VCardText>
     </div>
@@ -61,7 +61,7 @@
     <VDivider></VDivider>
 
     <VCardActions class="justify-end">
-      <VBtn id="prd-card-toggle-btn" icon size="small" class="mr-1" @click="emit('toggle-hidden', product)">
+      <VBtn id="prd-card-toggle-btn" icon class="mr-1" size="small" @click="emit('toggle-hidden', product)">
         <VIcon size="small" :color="product.hidden ? 'warning' : 'grey'">
           {{ product.hidden ? 'mdi-eye-off' : 'mdi-eye' }}
         </VIcon>
@@ -83,7 +83,7 @@ const props = defineProps<{
   isLast?: boolean
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'toggle-preparation', val: Record<string, unknown>): void
   (e: 'toggle-hidden', val: Record<string, unknown>): void
   (e: 'edit', val: Record<string, unknown>): void
@@ -91,6 +91,21 @@ defineEmits<{
   (e: 'move-left', val: Record<string, unknown>): void
   (e: 'move-right', val: Record<string, unknown>): void
 }>()
+
+const requiresPreparation = ref(Boolean(props.product.requires_preparation))
+
+watch(
+  () => props.product.requires_preparation,
+  (value) => {
+    requiresPreparation.value = Boolean(value)
+  }
+)
+
+function onTogglePreparation(value: boolean | null) {
+  const next = Boolean(value)
+  requiresPreparation.value = next
+  emit('toggle-preparation', { ...props.product, requires_preparation: next })
+}
 
 const isFirst = computed(() => props.isFirst ?? false)
 const isLast = computed(() => props.isLast ?? false)

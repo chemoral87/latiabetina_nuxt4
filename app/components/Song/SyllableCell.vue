@@ -3,26 +3,27 @@
     <input
       id="cmp-syllable-chords"
       :value="chordsText"
+      aria-label="Acordes"
       placeholder="Acordes"
       class="syllable-input chord-input"
       title="Acordes (separados por coma o espacio)"
-      aria-label="Acordes"
       @change="onChords"
     />
     <input
       id="cmp-syllable-text"
-      v-model="syllable.text"
-      placeholder="sílaba"
-      class="syllable-input text-input"
       aria-label="Sílaba"
+      placeholder="sílaba"
+      :value="syllable.text"
+      class="syllable-input text-input"
+      @input="onText"
     />
     <input
       id="cmp-syllable-notes"
+      aria-label="Notas"
       :value="notesText"
       placeholder="Notas"
       class="syllable-input note-input"
       title="Melodía (notas separadas por coma o espacio)"
-      aria-label="Notas"
       @change="onNotes"
     />
     <VBtn
@@ -47,6 +48,9 @@ const props = defineProps<{ syllable: SongSyllable }>()
 
 const emit = defineEmits<{
   (e: "remove"): void
+  (e: "update:text", value: string): void
+  (e: "update:chords", value: string[]): void
+  (e: "update:notes", value: string[]): void
 }>()
 
 const chordsText = ref(props.syllable.chords.join(", "))
@@ -59,12 +63,20 @@ function parseList(value: string): string[] {
     .filter(Boolean)
 }
 
-function onChords() {
-  props.syllable.chords = parseList(chordsText.value)
+function onText(event: Event) {
+  emit("update:text", (event.target as HTMLInputElement).value)
 }
 
-function onNotes() {
-  props.syllable.notes = parseList(notesText.value)
+function onChords(event: Event) {
+  const value = (event.target as HTMLInputElement).value
+  chordsText.value = value
+  emit("update:chords", parseList(value))
+}
+
+function onNotes(event: Event) {
+  const value = (event.target as HTMLInputElement).value
+  notesText.value = value
+  emit("update:notes", parseList(value))
 }
 </script>
 
