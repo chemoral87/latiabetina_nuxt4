@@ -141,10 +141,41 @@ watch(search, (val) => {
   const q = val?.trim() ?? ""
   if (!q) {
     searching.value = false
+    // Cancel the pending debounce and invalidate any in-flight response so a
+    // late API result can't repopulate stale items after the clear.
+    if (debounceTimer) clearTimeout(debounceTimer)
+    requestId++
+    // Drop stale results from the previous search and keep only the selected
+    // items (they must stay in `items` for the chips to render); with nothing
+    // left to show, the dropdown closes instead of listing old matches.
+    items.value = sortPermissionsForDisplay([...model.value])
     return
   }
   runSearch(q)
 })
+
+// Re-open the menu when a debounced API response arrives. Vuetify closes it
+// as soon as the keystroke filter matches nothing against the still-empty
+// items list; reopening on results makes the dropdown show them.
+watch(items, (val) => {
+  if (val.length > 0 && search.value && search.value.trim()) {
+    nextTick(() => {
+      menu.value = true
+    })
+  }
+})
+
+// Clear the search text when the menu closes so refocusing the combobox
+// doesn't concatenate stale text into the next query (e.g. "a" + "assistance").
+watch(menu, (isOpen) => {
+  if (!isOpen) {
+    search.value = ""
+  }
+})
+
+// Set during the one-time initial sync below so this watcher doesn't
+// open the menu while the parent's prop populates the model.
+let isInitialSync = false
 
 watch(model, (val, prev) => {
   if (val.length === prev.length) return
@@ -154,7 +185,7 @@ watch(model, (val, prev) => {
     if (typeof copy[i] === "string" || typeof copy[i] === "number") copy.splice(i, 1)
   }
 
-  if (val.length > prev.length) {
+  if (val.length > prev.length && !isInitialSync) {
     // Keep the menu open and the current search text so the user can
     // keep clicking additional matching items without retyping the query.
     nextTick(() => {
@@ -176,8 +207,12 @@ watch(model, (val, prev) => {
 // would otherwise loop back here and overwrite `items` with only the currently
 // selected permissions, wiping out the rest of the active search results.
 if (props.permissionsx && props.permissionsx.length > 0) {
+  isInitialSync = true
   model.value = sortPermissionsForDisplay([...props.permissionsx])
   items.value = sortPermissionsForDisplay([...props.permissionsx])
+  nextTick(() => {
+    isInitialSync = false
+  })
 }
 
 // Additively merge in permissions added by the parent after mount (e.g. the

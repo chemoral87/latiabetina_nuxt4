@@ -2,19 +2,19 @@
   <div id="cmp-user-combobox">
     <VAutocomplete
       v-model="model"
-      v-model:search="search"
       v-model:menu="menu"
+      v-model:search="search"
       v-bind="$attrs"
-      :filter="customFilter"
+      multiple
+      hide-selected
+      return-object
+      :items="items"
+      :label="label"
       item-value="id"
       item-title="name"
-      :label="label"
-      variant="underlined"
-      hide-selected
+      variant="outlined"
+      :filter="customFilter"
       :hide-no-data="!search"
-      :items="items"
-      multiple
-      return-object
     >
       <template #no-data>
         <VListItem v-if="!searching">Intente con otra búsqueda</VListItem>
@@ -22,10 +22,10 @@
       </template>
       <template #selection="{ item }">
         <VChip
-          color="primary"
-          size="small"
-          variant="elevated"
           closable
+          size="small"
+          variant="flat"
+          color="primary"
           @click:close="removeUser(item as UserItem)"
         >
           {{ (item as UserItem).name }} {{ (item as UserItem).last_name }} ({{ (item as UserItem).email }})
@@ -34,7 +34,7 @@
       <template #item="{ item, props: itemProps }">
         <VListItem v-bind="itemProps">
           <template #title>
-            <VChip color="primary" variant="elevated" size="large" label>
+            <VChip size="small" variant="flat" color="primary">
               {{ (item as UserItem).name }} {{ (item as UserItem).last_name }} ({{ (item as UserItem).email }})
             </VChip>
           </template>
@@ -117,10 +117,41 @@ watch(search, (val) => {
   const q = val?.trim() ?? ''
   if (!q) {
     searching.value = false
+    // Cancel the pending debounce and invalidate any in-flight response so a
+    // late API result can't repopulate stale items after the clear.
+    if (debounceTimer) clearTimeout(debounceTimer)
+    requestId++
+    // Drop stale results from the previous search and keep only the selected
+    // items (they must stay in `items` for the chips to render); with nothing
+    // left to show, the dropdown closes instead of listing old matches.
+    items.value = [...model.value]
     return
   }
   runSearch(q)
 })
+
+// Re-open the menu when a debounced API response arrives. Vuetify closes it
+// as soon as the keystroke filter matches nothing against the still-empty
+// items list; reopening on results makes the dropdown show them.
+watch(items, (val) => {
+  if (val.length > 0 && search.value && search.value.trim()) {
+    nextTick(() => {
+      menu.value = true
+    })
+  }
+})
+
+// Clear the search text when the menu closes so refocusing the combobox
+// doesn't concatenate stale text into the next query (e.g. "a" + "assistance").
+watch(menu, (isOpen) => {
+  if (!isOpen) {
+    search.value = ''
+  }
+})
+
+// Set during the one-time initial sync below so this watcher doesn't
+// open the menu while the parent's prop populates the model.
+let isInitialSync = false
 
 watch(model, (val, prev) => {
   if (val.length === prev.length) return
@@ -130,7 +161,7 @@ watch(model, (val, prev) => {
     if (typeof copy[i] === 'string' || typeof copy[i] === 'number') copy.splice(i, 1)
   }
 
-  if (val.length > prev.length) {
+  if (val.length > prev.length && !isInitialSync) {
     // Keep the menu open and the current search text so the user can
     // keep clicking additional matching items without retyping the query.
     nextTick(() => {
@@ -154,8 +185,12 @@ watch(model, (val, prev) => {
 // Permission/Combobox fix). Parents that push NEW users in after mount use
 // the additive watch below — no remount needed.
 if (props.users && props.users.length > 0) {
+  isInitialSync = true
   model.value = [...props.users]
   items.value = [...props.users]
+  nextTick(() => {
+    isInitialSync = false
+  })
 }
 
 // Additively merge users pushed in by the parent after mount (e.g. a
