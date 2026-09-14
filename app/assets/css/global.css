@@ -18,7 +18,7 @@
    native <input>/<textarea> inside `.v-input`, so `:has()` can reach up
    from there and mark the associated `.v-field-label`. */
 .v-input:has(input[required], textarea[required]) .v-field-label::after {
-  content: " *";
+  content: ' *';
   color: rgb(var(--v-theme-error));
   font-size: 1.35em;
 }
@@ -33,12 +33,7 @@
   background-color: rgba(var(--v-theme-on-surface), 0.03) !important;
 }
 
-.v-theme--light
-  .v-table--striped-odd
-  > .v-table__wrapper
-  > table
-  > tbody
-  > tr:nth-child(odd) {
+.v-theme--light .v-table--striped-odd > .v-table__wrapper > table > tbody > tr:nth-child(odd) {
   background-color: #f5fbff !important;
 }
 
@@ -149,7 +144,7 @@
 .v-field:has(input[required]) .v-field-label::after,
 .v-field:has(textarea[required]) .v-field-label::after,
 .v-field:has(select[required]) .v-field-label::after {
-  content: " *";
+  content: ' *';
   color: rgb(var(--v-theme-error));
 }
 
@@ -173,6 +168,21 @@
 .status-bg-visita.v-field {
   background-color: rgba(33, 150, 243, 0.12) !important;
   border-color: rgba(33, 150, 243, 0.4) !important;
+}
+
+/* Ensure VChip elements inside input fields (e.g. VCombobox, VSelect selection slots)
+   maintain full opacity and color fidelity matching table cells.
+   The .v-field__input container defaults to opacity: 0.87 which cascades
+   to children — override both the container and the chips themselves. */
+.v-combobox .v-field__input,
+.v-select .v-field__input,
+.v-autocomplete .v-field__input {
+  opacity: 1 !important;
+}
+.v-combobox .v-field__input .v-chip,
+.v-select .v-field__input .v-chip,
+.v-autocomplete .v-field__input .v-chip {
+  opacity: 1 !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

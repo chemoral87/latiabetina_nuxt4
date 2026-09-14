@@ -23,8 +23,8 @@
               id="rol-refresh-btn"
               class="mr-4"
               color="primary"
-              variant="outlined"
               :loading="loading"
+              variant="outlined"
               @click="refreshRoles"
             >
               <VIcon start>mdi-reload</VIcon>
@@ -80,6 +80,7 @@ definePageMeta({
 });
 
 const { Role } = useRepository();
+const { loadCatalog } = usePermissionCatalog();
 
 const filterInput = ref("");
 const filterRole = ref("");
@@ -111,9 +112,14 @@ const lastOptions = ref<Record<string, unknown>>({
   const { data: initialData } = await useAsyncData(
     "role-index",
     async () => {
-      return await Role.index<{ data: unknown[]; total: number }>(
-        apiParams,
-      ).catch(() => ({ data: [] as unknown[], total: 0 }));
+      const [roleData] = await Promise.all([
+        Role.index<{ data: unknown[]; total: number }>(apiParams).catch(() => ({
+          data: [] as unknown[],
+          total: 0,
+        })),
+        loadCatalog().catch(() => []),
+      ]);
+      return roleData;
     },
     { default: () => ({ data: [] as unknown[], total: 0 }) },
   );

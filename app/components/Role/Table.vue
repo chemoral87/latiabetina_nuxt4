@@ -3,29 +3,29 @@
     <VDataTableServer
       id="rol-table-items-dt-1"
       v-model:page="page"
-      v-model:items-per-page="itemsPerPage"
       v-model:sort-by="sortBy"
+      v-model:items-per-page="itemsPerPage"
+      mustSort
+      striped="odd"
+      :items="items"
       density="compact"
       :headers="headers"
-      :items="items"
-      :items-length="total"
       :loading="loading"
+      :items-length="total"
       :row-props="rowProps"
-      class="elevation-1 xwidth800"
-      striped="odd"
-      mustSort
       :search="props.search"
-      items-per-page-text="Filas por página"
+      class="elevation-1 xwidth800"
       :items-per-page-options="[10, 15, 30]"
+      items-per-page-text="Filas por página"
       @update:options="onUpdateOptions">
       <template #[`item.permissions`]="{ item }">
         <div v-if="hasPermissions(item as Record<string, unknown>)" class="d-flex flex-wrap ga-1">
           <VChip
             v-for="permission in sortedPermissions((item as Record<string, unknown>).permissions as Record<string, unknown>[])"
             :key="permission.id as number"
-            :color="permissionColors[permission.name as string] ?? 'primary'"
             size="small"
             variant="flat"
+            :color="permissionColors[permission.name as string] ?? 'primary'"
           >
             {{ permission.name as string }}
           </VChip>
@@ -36,52 +36,52 @@
       <template #[`item.actions`]="{ item }">
         <VBtn
           id="rol-table-edit-btn"
-          title="Editar"
-          class="ma-1"
-          color="primary"
-          variant="outlined"
-          size="small"
           icon
+          class="ma-1"
+          size="small"
+          title="Editar"
+          color="primary"
           rounded="circle"
+          variant="outlined"
           @click="emitEdit(item)"
         >
           <VIcon size="x-large">mdi-pencil</VIcon>
         </VBtn>
         <VBtn
           id="rol-table-permissions-btn"
-          title="Permisos"
-          class="ma-1"
-          color="success"
-          variant="outlined"
-          size="small"
           icon
+          class="ma-1"
+          size="small"
+          color="success"
           rounded="circle"
+          title="Permisos"
+          variant="outlined"
           @click="emitEditPermissions(item)"
         >
           <VIcon size="x-large">mdi-key-variant</VIcon>
         </VBtn>
         <VBtn
           id="rol-table-distribute-btn"
-          title="Distribuir"
+          icon
           class="ma-1"
           color="info"
-          variant="outlined"
           size="small"
-          icon
           rounded="circle"
+          title="Distribuir"
+          variant="outlined"
           @click="emitDistribution(item)"
         >
           <VIcon size="x-large">mdi-share-variant</VIcon>
         </VBtn>
         <VBtn
           id="rol-table-delete-btn"
-          title="Eliminar"
-          class="ma-1"
-          color="error"
-          variant="outlined"
-          size="small"
           icon
+          class="ma-1"
+          size="small"
+          color="error"
           rounded="circle"
+          title="Eliminar"
+          variant="outlined"
           @click="confirmDelete(item)"
         >
           <VIcon size="x-large">mdi-delete</VIcon>
@@ -153,12 +153,21 @@ const total = computed(() => props.response?.total ?? 0)
 const items = computed(() => props.response?.data ?? [])
 const loading = computed(() => props.loading ?? false)
 
+const { catalog: allPermissionNames, loadCatalog } = usePermissionCatalog()
+
 const permissionColors = computed(() => {
-  const allNames = items.value.flatMap((item) => {
-    const perms = (item as Record<string, unknown>).permissions as Record<string, unknown>[] | undefined
-    return (perms ?? []).map((p) => p.name as string)
-  })
-  return buildPermissionColorMap(allNames)
+  const combined = new Set([
+    ...allPermissionNames.value,
+    ...items.value.flatMap((item) => {
+      const perms = (item as Record<string, unknown>).permissions as Record<string, unknown>[] | undefined
+      return (perms ?? []).map((p) => p.name as string)
+    }),
+  ])
+  return buildPermissionColorMap([...combined])
+})
+
+onMounted(() => {
+  loadCatalog()
 })
 
 const rowProps = rowPropsFor(() => props.highlightId, () => props.removingId)
