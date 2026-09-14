@@ -1,6 +1,6 @@
 <template>
   <VContainer :fluid="true">
-    <VSheet color="white" rounded>
+    <VSheet rounded color="white">
       <VRow density="compact">
         <!-- Existing permissions -->
         <VCol cols="12">
@@ -29,21 +29,21 @@
               >
               <span class="text-subtitle-1 font-weight-medium">Crear nuevo permiso</span>
             </div>
-            <VRow density="compact" align="center">
+            <VRow align="center" density="compact">
               <VCol cols="12">
                 <VTextField
                   id="rol-index-newpermissionname-tf-1"
                   v-model="newPermissionName"
                   clearable
                   hide-details
+                  persistent-hint
                   density="compact"
                   variant="outlined"
                   label="Nombre del permiso"
                   :loading="creatingPermission"
                   :disabled="creatingPermission"
-                  placeholder="ej. product-create song-update, song-delete"
                   hint="Separa varios permisos con comas o espacios"
-                  persistent-hint
+                  placeholder="ej. product-create song-update, song-delete"
                   @keyup.enter="createAndAddPermission"
                 />
               </VCol>
@@ -102,6 +102,7 @@ const roleId = route.params.id as string;
 
 const { Role } = useRepository();
 const { $api } = useApi();
+const { loadCatalog } = usePermissionCatalog();
 
 const mRole = ref<Record<string, unknown>>({});
 const newPermissionName = ref("");
@@ -111,7 +112,10 @@ const creatingPermission = ref(false);
 const notify = useNotifyStore();
 
 // Top-level await — data loads before render (asyncData equivalent)
-const res = await Role.show(roleId).catch(() => null);
+const [res] = await Promise.all([
+  Role.show(roleId).catch(() => null),
+  loadCatalog().catch(() => []),
+]);
 mRole.value = (res as Record<string, unknown>) ?? {};
 if (mRole.value.name) {
   route.meta.title = `Rol ${mRole.value.name}`;

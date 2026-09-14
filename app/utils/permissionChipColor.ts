@@ -13,30 +13,30 @@
  */
 
 const PALETTE = [
-  "purple",
-  "teal",
-  "pink-darken-2",
-  "indigo",
-  "brown",
-  "cyan-darken-2",
-  "deep-orange-darken-1",
-  "blue-grey",
-  "lime-darken-4",
-  "amber-darken-4",
-  "green-darken-1",
-  "red-darken-2",
-  "light-blue-darken-3",
-  "orange-darken-2",
-  "blue-darken-1",
-  "yellow-darken-4",
-  "grey-darken-3",
-  "light-green-darken-3",
-  "deep-purple",
-  "deep-orange-darken-3",
-  "teal-darken-1",
-  "indigo-darken-1",
-  "brown-darken-1",
-  "red-darken-1",
+  'purple',
+  'teal',
+  'pink-darken-2',
+  'indigo',
+  'brown',
+  'cyan-darken-2',
+  'deep-orange-darken-1',
+  'blue-grey',
+  'lime-darken-4',
+  'amber-darken-4',
+  'green-darken-1',
+  'red-darken-2',
+  'light-blue-darken-3',
+  'orange-darken-2',
+  'blue-darken-1',
+  'yellow-darken-4',
+  'grey-darken-3',
+  'light-green-darken-3',
+  'deep-purple',
+  'deep-orange-darken-3',
+  'teal-darken-1',
+  'indigo-darken-1',
+  'brown-darken-1',
+  'red-darken-1',
 ]
 
 /**
@@ -48,9 +48,20 @@ const PALETTE = [
  * @example permissionGroupKey("church-member-tracking-logs-index") // "church-member-tracking-logs"
  */
 export function permissionGroupKey(name: string): string {
-  const parts = name.split("-")
-  if (parts.length <= 1) return name
-  return parts.slice(0, -1).join("-")
+  const lastHyphen = name.lastIndexOf('-')
+  if (lastHyphen <= 0) return name
+  return name.slice(0, lastHyphen)
+}
+
+/**
+ * Count the number of hyphen characters in a string without array allocations.
+ */
+function countHyphens(str: string): number {
+  let count = 0
+  for (let i = 0; i < str.length; i++) {
+    if (str.charCodeAt(i) === 45) count++
+  }
+  return count
 }
 
 /**
@@ -89,10 +100,22 @@ export function buildPermissionColorMap(names: string[]): Record<string, string>
       const idx = hashString(key) % PALETTE.length
       colorMap[name] = PALETTE[idx]
     } else {
-      colorMap[name] = "primary"
+      colorMap[name] = 'primary'
     }
   }
   return colorMap
+}
+
+/**
+ * Map any name (role, permission group, etc.) to a deterministic Vuetify
+ * color token from PALETTE, using a hash of the full name string.
+ * Unlike `buildPermissionColorMap` there is no group-keying step, so every
+ * distinct name gets its own stable color regardless of how many times it
+ * appears.
+ */
+export function hashColorForName(name: string): string {
+  const idx = hashString(name) % PALETTE.length
+  return PALETTE[idx]
 }
 
 /**
@@ -105,7 +128,7 @@ export function buildPermissionColorMap(names: string[]): Record<string, string>
 export function comparePermissionNames(a: string, b: string): number {
   const groupCmp = permissionGroupKey(a).localeCompare(permissionGroupKey(b))
   if (groupCmp !== 0) return groupCmp
-  const depthCmp = a.split("-").length - b.split("-").length
+  const depthCmp = countHyphens(a) - countHyphens(b)
   if (depthCmp !== 0) return depthCmp
   return a.localeCompare(b)
 }

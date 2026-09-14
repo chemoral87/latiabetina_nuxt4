@@ -1,6 +1,6 @@
 <template>
   <VContainer>
-    <VSheet color="white" rounded class="pa-6">
+    <VSheet rounded class="pa-6" color="white">
       <div class="text-h6 mb-2">
         {{ profile.organization_name }} ({{ profile.organization_short_code }})
       </div>
@@ -59,6 +59,7 @@ const userId = route.params.id as string;
 const profileId = route.params.profile_id as string;
 
 const { User, Profile } = useRepository();
+const { loadCatalog } = usePermissionCatalog();
 
 const mUser = ref<Record<string, unknown>>({});
 const profile = ref<Record<string, unknown>>({});
@@ -67,6 +68,7 @@ const profile = ref<Record<string, unknown>>({});
   const [_mUser, _profile] = await Promise.all([
     User.show(userId).catch(() => null),
     Profile.show(userId, profileId).catch(() => null),
+    loadCatalog().catch(() => []),
   ]);
   mUser.value = (_mUser as Record<string, unknown>) ?? {};
   profile.value = (_profile as Record<string, unknown>) ?? {};

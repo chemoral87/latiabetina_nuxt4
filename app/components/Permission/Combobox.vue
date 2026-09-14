@@ -5,11 +5,11 @@
       v-model:menu="menu"
       v-model:search="search"
       v-bind="$attrs"
-      hide-selected
-      :items="items"
       multiple
-      :label="label"
+      hide-selected
       return-object
+      :items="items"
+      :label="label"
       item-value="id"
       item-title="name"
       variant="outlined"
@@ -29,8 +29,8 @@
         <VChip
           closable
           size="small"
-          color="primary"
-          variant="elevated"
+          variant="flat"
+          :color="permissionColors[(item as PermissionItem).name] ?? 'primary'"
           @click:close="removePermission(item as PermissionItem)"
         >
           {{ (item as PermissionItem).name }}
@@ -40,9 +40,7 @@
       <template #item="{ item, props: itemProps }">
         <VListItem v-bind="itemProps">
           <template #title>
-            <VChip label size="large" color="success" variant="elevated">{{
-              (item as PermissionItem).name
-            }}</VChip>
+            <VChip size="small" variant="flat" :color="permissionColors[(item as PermissionItem).name] ?? 'primary'">{{ (item as PermissionItem).name }}</VChip>
           </template>
         </VListItem>
       </template>
@@ -51,106 +49,125 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ inheritAttrs: false });
+import { buildPermissionColorMap, sortPermissionsForDisplay } from "~/utils/permissionChipColor"
+
+defineOptions({ inheritAttrs: false })
 
 interface PermissionItem {
-  id: number;
-  name: string;
+  id: number
+  name: string
 }
 
 const props = withDefaults(
   defineProps<{
-    permissionsx?: PermissionItem[];
-    label?: string;
+    permissionsx?: PermissionItem[]
+    label?: string
   }>(),
   {
     label: "Permisos Directos",
   },
-);
+)
 
 const emit = defineEmits<{
-  (e: "modelChange", val: PermissionItem[]): void;
-}>();
+  (e: "modelChange", val: PermissionItem[]): void
+}>()
 
-const items = ref<PermissionItem[]>([]);
-const model = ref<PermissionItem[]>([]);
-const search = ref<string | null>(null);
-const searching = ref(false);
-const menu = ref(false);
+const items = ref<PermissionItem[]>([])
+const model = ref<PermissionItem[]>([])
+const search = ref<string | null>(null)
+const searching = ref(false)
+const menu = ref(false)
 
-const { Permission } = useRepository();
+const { Permission } = useRepository()
 
-const permissionsId = computed(() => model.value.map((el) => el.id));
+const permissionsId = computed(() => model.value.map((el) => el.id))
 
-let debounceTimer: ReturnType<typeof setTimeout> | null = null;
-let requestId = 0;
+let debounceTimer: ReturnType<typeof setTimeout> | null = null
+let requestId = 0
+
+const { catalog: allPermissionNames, loadCatalog } = usePermissionCatalog()
+
+const permissionColors = computed(() => {
+  const combined = new Set([
+    ...allPermissionNames.value,
+    ...items.value.map((i) => i.name),
+    ...model.value.map((m) => m.name),
+  ])
+  return buildPermissionColorMap([...combined])
+})
+
+onMounted(() => {
+  loadCatalog()
+})
 
 async function loadPermissions(queryText: string) {
-  const currentRequestId = ++requestId;
-  searching.value = true;
+  const currentRequestId = ++requestId
+  searching.value = true
   try {
     const result = await Permission.filter({
       queryText,
       ids: permissionsId.value,
-    });
+    })
     if (currentRequestId === requestId) {
-      items.value = (Array.isArray(result) ? result : []) as PermissionItem[];
-      const selected = model.value;
+      items.value = (Array.isArray(result) ? result : []) as PermissionItem[]
+      items.value = sortPermissionsForDisplay(items.value)
+
+      const selected = model.value
       if (selected.length > 0) {
-        const existingIds = new Set(items.value.map((r) => r.id));
+        const existingIds = new Set(items.value.map((r) => r.id))
         for (const perm of selected) {
           if (!existingIds.has(perm.id)) {
-            items.value.push(perm);
+            items.value.push(perm)
           }
         }
+        items.value = sortPermissionsForDisplay(items.value)
       }
     }
   } catch (error) {
-    console.error("Unable to load filtered permissions", error);
+    console.error("Unable to load filtered permissions", error)
   } finally {
     if (currentRequestId === requestId) {
-      searching.value = false;
+      searching.value = false
     }
   }
 }
 
 function runSearch(queryText: string) {
-  if (debounceTimer) clearTimeout(debounceTimer);
-  debounceTimer = setTimeout(() => loadPermissions(queryText), 500);
+  if (debounceTimer) clearTimeout(debounceTimer)
+  debounceTimer = setTimeout(() => loadPermissions(queryText), 500)
 }
 
 watch(search, (val) => {
-  const q = val?.trim() ?? "";
+  const q = val?.trim() ?? ""
   if (!q) {
-    searching.value = false;
-    return;
+    searching.value = false
+    return
   }
-  runSearch(q);
-});
+  runSearch(q)
+})
 
 watch(model, (val, prev) => {
-  if (val.length === prev.length) return;
-  let i = val.length;
-  const copy = [...val];
+  if (val.length === prev.length) return
+  let i = val.length
+  const copy = [...val]
   while (i--) {
-    if (typeof copy[i] === "string" || typeof copy[i] === "number")
-      copy.splice(i, 1);
+    if (typeof copy[i] === "string" || typeof copy[i] === "number") copy.splice(i, 1)
   }
 
   if (val.length > prev.length) {
     // Keep the menu open and the current search text so the user can
     // keep clicking additional matching items without retyping the query.
     nextTick(() => {
-      menu.value = true;
-    });
+      menu.value = true
+    })
   }
 
   if (copy.length !== val.length) {
-    model.value = copy as PermissionItem[];
-    return;
+    model.value = copy as PermissionItem[]
+    return
   }
-  emit("modelChange", copy as PermissionItem[]);
-});
+  emit("modelChange", copy as PermissionItem[])
+})
 
 // Sync the initial selection from the parent's `permissionsx` prop only once,
 // matching the old Vuetify 2 component's `mounted()` behavior. We deliberately
@@ -159,8 +176,8 @@ watch(model, (val, prev) => {
 // would otherwise loop back here and overwrite `items` with only the currently
 // selected permissions, wiping out the rest of the active search results.
 if (props.permissionsx && props.permissionsx.length > 0) {
-  model.value = [...props.permissionsx];
-  items.value = [...props.permissionsx];
+  model.value = sortPermissionsForDisplay([...props.permissionsx])
+  items.value = sortPermissionsForDisplay([...props.permissionsx])
 }
 
 // Additively merge in permissions added by the parent after mount (e.g. the
@@ -171,28 +188,28 @@ if (props.permissionsx && props.permissionsx.length > 0) {
 watch(
   () => props.permissionsx,
   (val) => {
-    if (!val || val.length === 0) return;
-    const known = new Set(model.value.map((p) => p.id));
-    const fresh = val.filter((p) => !known.has(p.id));
-    if (fresh.length === 0) return;
-    model.value = [...model.value, ...fresh];
-    items.value = [...items.value, ...fresh];
+    if (!val || val.length === 0) return
+    const known = new Set(model.value.map((p) => p.id))
+    const fresh = val.filter((p) => !known.has(p.id))
+    if (fresh.length === 0) return
+    model.value = sortPermissionsForDisplay([...model.value, ...fresh])
+    items.value = sortPermissionsForDisplay([...items.value, ...fresh])
   },
-);
+)
 
 function customFilter(
   value: unknown,
   query: string,
   item: { title: string; raw: Record<string, unknown> },
 ) {
-  const text = (item.title ?? "").toString().toLowerCase();
-  const q = (query ?? "").toString().toLowerCase();
-  return text.includes(q);
+  const text = (item.title ?? "").toString().toLowerCase()
+  const q = (query ?? "").toString().toLowerCase()
+  return text.includes(q)
 }
 
 function removePermission(perm: PermissionItem) {
-  model.value = model.value.filter((p) => p.id !== perm.id);
-  emit("modelChange", model.value);
+  model.value = model.value.filter((p) => p.id !== perm.id)
+  emit("modelChange", model.value)
 }
 </script>
 

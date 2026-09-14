@@ -2,19 +2,19 @@
   <div id="cmp-role-combobox">
     <VCombobox
       v-model="model"
-      v-model:search="search"
       v-model:menu="menu"
+      v-model:search="search"
       v-bind="$attrs"
-      variant="outlined"
-      :filter="customFilter"
+      multiple
+      hide-selected
+      return-object
+      :items="items"
+      :label="label"
       item-value="id"
       item-title="name"
-      :label="label"
-      hide-selected
+      variant="outlined"
+      :filter="customFilter"
       :hide-no-data="!search"
-      :items="items"
-      multiple
-      return-object
     >
       <template #no-data>
         <VListItem>
@@ -27,10 +27,10 @@
 
       <template #selection="{ item }">
         <VChip
-          color="primary"
+          closable
           size="small"
           variant="elevated"
-          closable
+          :color="hashColorForName(item.name)"
           @click:close="removeRole(item as RoleItem)"
         >
           <span>{{ item.name }}</span>
@@ -40,7 +40,7 @@
       <template #item="{ item, props: itemProps }">
         <VListItem v-bind="itemProps">
           <template #title>
-            <VChip color="success" variant="elevated" size="large" label>{{ item.name }}</VChip>
+            <VChip label size="large" variant="elevated" :color="hashColorForName(item.name)">{{ item.name }}</VChip>
           </template>
         </VListItem>
       </template>
@@ -49,6 +49,8 @@
 </template>
 
 <script setup lang="ts">
+import { hashColorForName } from "~/utils/permissionChipColor"
+
 defineOptions({ inheritAttrs: false })
 
 interface RoleItem {
