@@ -3,7 +3,7 @@
     <VRow justify="center" density="compact">
       <VCol md="8" cols="12">
         <AssistanceForm
-          v-if="loadingItem"
+          v-if="!loadingItem"
           :loading="saving"
           :assistance="assistance"
           permission="assistance-update"

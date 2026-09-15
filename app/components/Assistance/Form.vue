@@ -7,41 +7,29 @@
       </VCardTitle>
 
       <VCardText class="py-1">
-        <VAlert
-          v-if="upsertWarning"
-          class="mb-4"
-          type="warning"
-          density="compact">
-          Ya existe una asistencia para esta organización, fecha y horario de servicio. Al guardar se reemplazarán los datos existentes.
-        </VAlert>
-
         <VForm ref="formRef" @submit.prevent="save">
           <VRow density="compact">
             <VCol v-if="showOrgSelect" md="3" cols="12">
               <OrganizationSelect
                 v-model="item.org_id"
-                required
                 density="compact"
                 variant="outlined"
+                :required="!isEditMode"
                 :permission="permission"
                 :disabled="disabled || isEditMode"
-                :rules="[vrules.requiredField('Organización')]"
+                :rules="isEditMode ? [] : [vrules.requiredField('Organización')]"
               />
             </VCol>
-            <VCol md="3" cols="12">
-              <VTextField
-                id="ass-form-date"
+            <VCol md="5" cols="12">
+              <MyDatePicker
                 v-model="item.assistance_date"
                 required
-                autofocus
-                type="date"
                 density="compact"
                 variant="outlined"
                 :disabled="disabled"
                 label="Fecha Asistencia"
                 :error-messages="errors?.assistance_date"
                 :rules="[vrules.requiredField('Fecha Asistencia')]"
-                @keyup.enter="save"
               />
             </VCol>
             <VCol md="3" cols="12">
@@ -144,7 +132,8 @@
           variant="text"
           color="primary"
           :disabled="disabled"
-          @click="close">
+          @click="close"
+        >
           Cancelar
         </VBtn>
         <VBtn
@@ -153,7 +142,8 @@
           :loading="saving"
           :disabled="saving"
           variant="elevated"
-          @click="save">
+          @click="save"
+        >
           Guardar
         </VBtn>
       </div>
@@ -162,127 +152,130 @@
 </template>
 
 <script setup lang="ts">
-import { useValidationErrors } from "~/composables/useValidationErrors";
-import { useVrules } from "~/composables/useVrules";
-import { useAuthStore } from "~/composables/useAuth";
+  import { useValidationErrors } from '~/composables/useValidationErrors'
+  import { useVrules } from '~/composables/useVrules'
+  import { useAuthStore } from '~/composables/useAuth'
 
-interface AssistanceItem {
-  id?: number | null;
-  org_id?: number | string | null;
-  assistance_date: string;
-  service_time: "09:45" | "12:00" | "20:00";
-  adults: number;
-  teens: number;
-  kids: number;
-  babies: number;
-  notes?: string | null;
-}
+  interface AssistanceItem {
+    id?: number | null
+    org_id?: number | string | null
+    assistance_date: string
+    service_time: '09:45' | '12:00' | '20:00'
+    adults: number
+    teens: number
+    kids: number
+    babies: number
+    notes?: string | null
+  }
 
-const props = defineProps<{
-  assistance?: Record<string, unknown> | null;
-  loading?: boolean;
-  permission?: string;
-  dialog?: boolean;
-}>();
+  const props = defineProps<{
+    assistance?: Record<string, unknown> | null
+    loading?: boolean
+    permission?: string
+    dialog?: boolean
+  }>()
 
-const emit = defineEmits<{
-  (e: "close"): void;
-  (e: "save", val: Record<string, unknown>): void;
-}>();
+  const emit = defineEmits<{
+    (e: 'close'): void
+    (e: 'save', val: Record<string, unknown>): void
+  }>()
 
-const { vrules } = useVrules();
-const { errors: validationErrors, clearErrors } = useValidationErrors();
-const auth = useAuthStore();
+  const { vrules } = useVrules()
+  const { errors: validationErrors, clearErrors } = useValidationErrors()
+  const auth = useAuthStore()
 
-const formRef = ref();
-const saving = ref(false);
-const dialogVisible = ref(false);
+  const formRef = ref()
+  const saving = ref(false)
+  const dialogVisible = ref(false)
 
-const item = ref<AssistanceItem>({
-  id: null,
-  org_id: null,
-  assistance_date: "",
-  service_time: "09:45",
-  adults: 0,
-  teens: 0,
-  kids: 0,
-  babies: 0,
-  notes: undefined,
-});
+  const item = ref<AssistanceItem>({
+    id: null,
+    org_id: null,
+    assistance_date: '',
+    service_time: '09:45',
+    adults: 0,
+    teens: 0,
+    kids: 0,
+    babies: 0,
+    notes: undefined,
+  })
 
-watch(
-  () => props.loading,
-  (val) => {
-    if (!val) saving.value = false;
-  },
-  { immediate: true },
-);
+  watch(
+    () => props.loading,
+    val => {
+      if (!val) saving.value = false
+    },
+    { immediate: true }
+  )
 
-const isEditMode = computed(() => !!item.value.id);
-const iconTitle = computed(() =>
-  isEditMode.value ? "mdi-pencil" : "mdi-plus",
-);
-const formTitle = computed(() => (isEditMode.value ? "Editar" : "Nuevo"));
+  const isEditMode = computed(() => !!item.value.id)
+  const iconTitle = computed(() => (isEditMode.value ? 'mdi-pencil' : 'mdi-plus'))
+  const formTitle = computed(() => (isEditMode.value ? 'Editar' : 'Nuevo'))
 
-const serviceTimeOptions = ["09:45", "12:00", "20:00"];
+  const serviceTimeOptions = ['09:45', '12:00', '20:00']
 
-const errors = computed(() => {
-  const base = validationErrors.value ? { ...validationErrors.value } : {};
-  return base;
-});
+  const errors = computed(() => {
+    const base = validationErrors.value ? { ...validationErrors.value } : {}
+    return base
+  })
 
-const showOrgSelect = computed(() => {
-  const orgIds = auth.permissionsOrg[props.permission ?? "assistance-index"] ?? [];
-  return Array.isArray(orgIds) && orgIds.length > 1;
-});
+  const showOrgSelect = computed(() => {
+    const orgIds = auth.permissionsOrg[props.permission ?? 'assistance-index'] ?? []
+    return Array.isArray(orgIds) && orgIds.length > 1
+  })
 
-const upsertWarning = ref(false);
-
-watch(
-  () => props.assistance,
-  (val) => {
-    if (val && Object.keys(val).length > 0) {
-      item.value = { ...item.value, ...val } as AssistanceItem;
+  function normalizeServiceTime(val: Record<string, unknown>) {
+    if (typeof val.service_time === 'string' && val.service_time.length > 5) {
+      val.service_time = val.service_time.slice(0, 5)
     }
-  },
-  { immediate: true, deep: true },
-);
-
-onMounted(() => {
-  initializeForm();
-  dialogVisible.value = props.dialog ?? false;
-});
-
-function initializeForm() {
-  if (props.assistance && Object.keys(props.assistance).length > 0) {
-    item.value = { ...item.value, ...props.assistance } as AssistanceItem;
+    return val
   }
-  if (!item.value.org_id && !showOrgSelect.value) {
-    const orgIds = auth.permissionsOrg[props.permission ?? "assistance-index"] ?? [];
-    if (Array.isArray(orgIds) && orgIds.length === 1) {
-      item.value.org_id = orgIds[0];
+
+  watch(
+    () => props.assistance,
+    val => {
+      if (val && Object.keys(val).length > 0) {
+        item.value = { ...item.value, ...normalizeServiceTime({ ...val }) } as AssistanceItem
+      }
+    },
+    { immediate: true, deep: true }
+  )
+
+  onMounted(() => {
+    initializeForm()
+    dialogVisible.value = props.dialog ?? false
+  })
+
+  function initializeForm() {
+    if (props.assistance && Object.keys(props.assistance).length > 0) {
+      item.value = { ...item.value, ...normalizeServiceTime({ ...props.assistance }) } as AssistanceItem
     }
-  }
-  clearErrors();
-}
-
-function close() {
-  emit("close");
-}
-
-async function save() {
-  if (saving.value) return;
-  const form = formRef.value;
-  const { valid } = form ? await form.validate() : { valid: true };
-  if (!valid) return;
-  if (saving.value) return;
-  saving.value = true;
-
-  const payload: Record<string, unknown> = { ...item.value };
-  if (isEditMode.value) {
-    delete payload.org_id;
+    if (!item.value.org_id && !showOrgSelect.value) {
+      const orgIds = auth.permissionsOrg[props.permission ?? 'assistance-index'] ?? []
+      if (Array.isArray(orgIds) && orgIds.length === 1) {
+        item.value.org_id = orgIds[0]
+      }
+    }
+    clearErrors()
   }
 
-  emit("save", payload);
-}
+  function close() {
+    emit('close')
+  }
+
+  async function save() {
+    if (saving.value) return
+    const form = formRef.value
+    const { valid } = form ? await form.validate() : { valid: true }
+    if (!valid) return
+    if (saving.value) return
+    saving.value = true
+
+    const payload: Record<string, unknown> = { ...item.value }
+    if (isEditMode.value) {
+      delete payload.org_id
+    }
+
+    emit('save', payload)
+  }
 </script>

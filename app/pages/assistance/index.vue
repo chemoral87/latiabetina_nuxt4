@@ -59,6 +59,7 @@
             :response="response"
             :search="filterAssistances"
             :initial-sort-by="lastOptions.sortBy as any"
+            @edit="openEditDialog"
             @sorting="handleSorting"
             @delete="beforeDeleteAssistance"
           />
@@ -74,6 +75,16 @@
       :assistance="newAssistanceRecord"
       @save="saveNewAssistance"
       @close="closeAssistanceDialog"
+    />
+
+    <AssistanceForm
+      v-if="editDialog"
+      :dialog="true"
+      :loading="savingAssistance"
+      permission="assistance-update"
+      :assistance="editAssistanceRecord"
+      @close="closeEditDialog"
+      @save="saveEditAssistance"
     />
 
     <DialogDelete
@@ -109,8 +120,11 @@
   const assistanceDialogDelete = ref(false)
   const dialogDelete = ref<Record<string, unknown>>({})
   const assistanceDialog = ref(false)
+  const editDialog = ref(false)
+  const editAssistanceRecord = ref<Record<string, unknown>>({})
   const savingAssistance = ref(false)
   const newAssistanceRecord = ref<Record<string, unknown>>(createNewAssistance())
+  const loading = ref(false)
   const deleting = ref(false)
   const skipFilterWatch = ref(false)
   const { clearErrors, extractFromError } = useValidationErrors()
@@ -221,6 +235,37 @@
     clearErrors()
   }
 
+  function openEditDialog(item: unknown) {
+    clearErrors()
+    const record = { ...(item as Record<string, unknown>) }
+    if (typeof record.service_time === 'string') {
+      record.service_time = record.service_time.slice(0, 5)
+    }
+    editAssistanceRecord.value = record
+    editDialog.value = true
+  }
+
+  function closeEditDialog() {
+    editDialog.value = false
+    clearErrors()
+  }
+
+  async function saveEditAssistance(item: Record<string, unknown>) {
+    const payload = { ...item }
+    delete payload.org_id
+
+    try {
+      savingAssistance.value = true
+      await Assistance.update(payload.id as number, payload)
+      closeEditDialog()
+      await loadAssistances()
+    } catch (error) {
+      extractFromError(error)
+    } finally {
+      savingAssistance.value = false
+    }
+  }
+
   function createNewAssistance(): Record<string, unknown> {
     const now = new Date()
     const localToday = new Date(now.getTime() - now.getTimezoneOffset() * 60_000)
@@ -247,22 +292,16 @@
     try {
       savingAssistance.value = true
       await Assistance.create<{ data: Record<string, unknown> }>(payload)
-      notify.notify({ success: 'Asistencia creada correctamente.' })
       closeAssistanceDialog()
       await loadAssistances()
     } catch (error) {
       extractFromError(error)
-      const response = (error as { response?: { status?: number } })?.response
-      notify.notify({
-        error: response?.status === 422 ? 'Error de validación' : 'Error al crear la asistencia',
-      })
-      console.error('Error al crear asistencia', error)
     } finally {
       savingAssistance.value = false
     }
   }
 
-  const { beforeDeleteAssistance, deleteAssistance, editAssistance } = useAssistanceActions({
+  const { beforeDeleteAssistance, deleteAssistance } = useAssistanceActions({
     loadAssistances,
     routeQuery: () => ({ from: 'table' }),
     deleteReloadOverrides: () => ({ page: 1 }),
