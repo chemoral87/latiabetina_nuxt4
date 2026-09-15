@@ -24,3 +24,6 @@ logs
 !.env.example
 .vscode/tasks.json
 features/*
+graphify-out/*
+.claude/settings.json
+CLAUDE.md

@@ -1,9 +1,9 @@
 export const vrules = {
   required: (value: unknown) => {
-    if (value === null || value === undefined) return "El campo es obligatorio."
-    if (typeof value === "string") return value.trim().length > 0 || "El campo es obligatorio."
-    if (typeof value === "number") return true
-    if (Array.isArray(value)) return value.length > 0 || "El campo es obligatorio."
+    if (value === null || value === undefined) return 'El campo es obligatorio.'
+    if (typeof value === 'string') return value.trim().length > 0 || 'El campo es obligatorio.'
+    if (typeof value === 'number') return true
+    if (Array.isArray(value)) return value.length > 0 || 'El campo es obligatorio.'
     return true
   },
 
@@ -18,17 +18,17 @@ export const vrules = {
   email: (value: unknown) => {
     if (!value) return true
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return re.test(String(value)) || "El campo debe ser una dirección de correo válida."
+    return re.test(String(value)) || 'El campo debe ser una dirección de correo válida.'
   },
 
   minLength: (min: number) => (value: unknown) => {
     if (!value) return true
-    return (String(value).length >= min) || `El campo debe tener al menos ${min} caracteres.`
+    return String(value).length >= min || `El campo debe tener al menos ${min} caracteres.`
   },
 
   maxLength: (max: number) => (value: unknown) => {
     if (!value) return true
-    return (String(value).length <= max) || `El campo no debe tener más de ${max} caracteres.`
+    return String(value).length <= max || `El campo no debe tener más de ${max} caracteres.`
   },
 
   between: (min: number, max: number) => (value: unknown) => {
@@ -38,23 +38,31 @@ export const vrules = {
   },
 
   numeric: (value: unknown) => {
-    if (value === null || value === undefined || value === "") return true
-    return !isNaN(parseFloat(String(value))) && isFinite(Number(value)) || "El campo debe ser un número."
+    if (value === null || value === undefined || value === '') return true
+    return (
+      (!isNaN(parseFloat(String(value))) && isFinite(Number(value))) ||
+      'El campo debe ser un número.'
+    )
   },
 
   integer: (value: unknown) => {
-    if (value === null || value === undefined || value === "") return true
-    return Number.isInteger(Number(value)) || "El campo debe ser un número entero."
+    if (value === null || value === undefined || value === '') return true
+    return Number.isInteger(Number(value)) || 'El campo debe ser un número entero.'
   },
 
   alpha: (value: unknown) => {
     if (!value) return true
-    return /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/.test(String(value)) || "El campo sólo debe contener letras."
+    return (
+      /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/.test(String(value)) || 'El campo sólo debe contener letras.'
+    )
   },
 
   alphaNum: (value: unknown) => {
     if (!value) return true
-    return /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9\s]+$/.test(String(value)) || "El campo sólo debe contener letras y números."
+    return (
+      /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9\s]+$/.test(String(value)) ||
+      'El campo sólo debe contener letras y números.'
+    )
   },
 
   url: (value: unknown) => {
@@ -63,32 +71,47 @@ export const vrules = {
       const url = new URL(String(value))
       return !!url
     } catch {
-      return "El campo debe ser una URL válida."
+      return 'El campo debe ser una URL válida.'
     }
   },
 
-  pattern: (regex: RegExp, message = "El formato del campo es inválido.") => (value: unknown) => {
-    if (!value) return true
-    return regex.test(String(value)) || message
-  },
+  pattern:
+    (regex: RegExp, message = 'El formato del campo es inválido.') =>
+    (value: unknown) => {
+      if (!value) return true
+      return regex.test(String(value)) || message
+    },
 
   confirmed: (matchValue: unknown) => (value: unknown) => {
     if (!value && !matchValue) return true
-    return value === matchValue || "La confirmación no coincide."
+    return value === matchValue || 'La confirmación no coincide.'
   },
 
   phone: (value: unknown) => {
     if (!value) return true
-    return /^\+?[\d\s()-]{7,15}$/.test(String(value)) || "El campo debe ser un número de teléfono válido."
+    return (
+      /^\+?[\d\s()-]{7,15}$/.test(String(value)) ||
+      'El campo debe ser un número de teléfono válido.'
+    )
   },
 
   min: (min: number) => (value: unknown) => {
-    if (value === null || value === undefined || value === "") return true
+    if (value === null || value === undefined || value === '') return true
     return Number(value) >= min || `El campo debe ser mayor o igual a ${min}.`
   },
 
   max: (max: number) => (value: unknown) => {
-    if (value === null || value === undefined || value === "") return true
+    if (value === null || value === undefined || value === '') return true
+    return Number(value) <= max || `El campo debe ser menor o igual a ${max}.`
+  },
+
+  minValue: (min: number) => (value: unknown) => {
+    if (value === null || value === undefined || value === '') return true
+    return Number(value) >= min || `El campo debe ser mayor o igual a ${min}.`
+  },
+
+  maxValue: (max: number) => (value: unknown) => {
+    if (value === null || value === undefined || value === '') return true
     return Number(value) <= max || `El campo debe ser menor o igual a ${max}.`
   },
 }
