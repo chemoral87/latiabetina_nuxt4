@@ -1,14 +1,14 @@
 <template>
   <VContainer fluid>
-    <VRow density="compact" justify="center">
-      <VCol cols="12" md="8">
+    <VRow justify="center" density="compact">
+      <VCol md="8" cols="12">
         <div v-if="loadingItem" class="text-center pa-5">
           <VProgressCircular indeterminate color="primary" />
         </div>
         <ChurchEventForm
           v-else
-          :church-event="churchEvent"
           :loading="saving"
+          :church-event="churchEvent"
           permission="church-event-update"
           @close="close"
           @save="saveChurchEvent"

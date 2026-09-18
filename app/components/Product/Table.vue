@@ -3,19 +3,19 @@
     <VDataTableServer
       id="prd-table-items-dt-1"
       v-model:page="page"
-      v-model:items-per-page="itemsPerPage"
       v-model:sort-by="sortBy"
+      v-model:items-per-page="itemsPerPage"
+      must-sort
+      striped="odd"
+      :items="items"
       density="compact"
       :headers="headers"
-      :items="items"
-      :items-length="total"
       :loading="loading"
+      :items-length="total"
       :row-props="rowProps"
       class="elevation-1 xwidth1100"
-      striped="odd"
-      must-sort
-      items-per-page-text="Filas por página"
       :items-per-page-options="[10, 15, 30]"
+      items-per-page-text="Filas por página"
       @update:options="onUpdateOptions">
       <template #[`item.org_code`]="{ item }">
         {{ orgCodeById((item as Record<string, unknown>).org_id) }}
@@ -38,26 +38,26 @@
       <template #[`item.actions`]="{ item }">
         <VBtn
           id="prd-table-edit-btn"
-          title="Editar"
-          class="ma-1"
-          color="primary"
-          variant="outlined"
-          size="small"
           icon
+          class="ma-1"
+          size="small"
+          title="Editar"
+          color="primary"
           rounded="circle"
+          variant="outlined"
           @click="emitEdit(item)"
         >
           <VIcon size="x-large">mdi-pencil</VIcon>
         </VBtn>
         <VBtn
           id="prd-table-delete-btn"
-          title="Eliminar"
-          class="ma-1"
-          color="error"
-          variant="outlined"
-          size="small"
           icon
+          class="ma-1"
+          size="small"
+          color="error"
           rounded="circle"
+          title="Eliminar"
+          variant="outlined"
           @click="confirmDelete(item)"
         >
           <VIcon size="x-large">mdi-delete</VIcon>

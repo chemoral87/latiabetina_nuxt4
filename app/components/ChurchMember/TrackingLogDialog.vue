@@ -34,9 +34,9 @@
               <MyTimePicker
                 id="cmm-tlg-contact-time"
                 v-model="contactTime"
-                label="Hora"
                 dense
                 outlined
+                label="Hora"
                 :disabled="loading"
               />
             </VCol>

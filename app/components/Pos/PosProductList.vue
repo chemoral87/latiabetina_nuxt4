@@ -14,10 +14,10 @@
       :class="{ 'pos-list-item--in-cart': cartQty(product.id) > 0 }"
     >
       <div class="pos-list-col-thumb">
-        <VImg :src="product.image_s3 || ''" width="44" height="44" contain class="pos-list-thumb bg-grey-lighten-4 rounded">
+        <VImg contain width="44" height="44" :src="product.image_s3 || ''" class="pos-list-thumb bg-grey-lighten-4 rounded">
           <template #placeholder>
-            <VRow density="compact" class="fill-height ma-0" align="center" justify="center">
-              <VIcon color="grey-lighten-2" size="22">mdi-package-variant</VIcon>
+            <VRow align="center" justify="center" density="compact" class="fill-height ma-0">
+              <VIcon size="22" color="grey-lighten-2">mdi-package-variant</VIcon>
             </VRow>
           </template>
         </VImg>
@@ -30,7 +30,7 @@
         </div>
         <div class="pos-list-col-info">
           <template v-if="showStock">
-            <span class="text-caption font-weight-medium" :class="stockColor(product.stock)">
+            <span :class="stockColor(product.stock)" class="text-caption font-weight-medium">
               {{ product.stock === 0 ? 'Sin stock' : `Stock: ${product.stock}` }}
             </span>
           </template>
@@ -49,14 +49,14 @@
         <PosProductControls
           :quantity="cartQty(product.id)"
           @add="emit('add', product)"
-          @decrease="emit('decrease', product)"
           @remove="emit('remove', product)"
+          @decrease="emit('decrease', product)"
         />
       </div>
     </div>
 
     <div v-if="products.length === 0" class="text-center py-12">
-      <VIcon color="grey-lighten-1" size="56">mdi-package-variant-closed</VIcon>
+      <VIcon size="56" color="grey-lighten-1">mdi-package-variant-closed</VIcon>
       <div class="text-body-1 text-grey mt-2">Sin productos disponibles</div>
     </div>
   </div>

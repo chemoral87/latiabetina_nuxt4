@@ -1,20 +1,20 @@
 <template>
   <VContainer :fluid="true">
-    <VSheet color="white" rounded>
+    <VSheet rounded color="white">
       <VRow density="compact">
       <!-- Organization filter -->
-      <VCol cols="12" md="3">
+      <VCol md="3" cols="12">
         <VSelect
           id="permdst-org-sel"
           v-model="selectedOrganization"
-          :items="organizationOptions"
-          item-title="name"
-          item-value="id"
-          label="Organización"
           clearable
-          variant="outlined"
-          density="compact"
           hide-details
+          item-value="id"
+          density="compact"
+          item-title="name"
+          variant="outlined"
+          label="Organización"
+          :items="organizationOptions"
         />
       </VCol>
 
@@ -31,12 +31,12 @@
           <VCardText class="pt-0">
             <VDataTable
               id="permdst-roles-dt-1"
+              density="compact"
               :headers="headers"
-              :items="filteredRoles"
-              :items-per-page="10"
               class="elevation-0"
-              no-data-text="No hay roles asignados a este permiso"
-              density="compact">
+              :items-per-page="10"
+              :items="filteredRoles"
+              no-data-text="No hay roles asignados a este permiso">
               <template #[`item.organization`]="{ item }">
                 {{ (item as Record<string, unknown>).organization_name }} ({{ (item as Record<string, unknown>).organization_short_code }})
               </template>

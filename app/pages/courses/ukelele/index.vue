@@ -2,7 +2,7 @@
   <VContainer class="" :fluid="true" style="max-width: 900px">
     <h2 class="text-h5 mb-4">Curso de Ukelele</h2>
 
-    <VAlert v-if="error" type="error" density="compact" variant="outlined" class="mb-4">
+    <VAlert v-if="error" class="mb-4" type="error" density="compact" variant="outlined">
       {{ error }}
     </VAlert>
 

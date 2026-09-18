@@ -1,12 +1,12 @@
 <template>
   <VExpandTransition id="cmp-my-preview-image">
     <div v-if="loading || isWaiting" class="image-loading-wrapper">
-      <VProgressCircular indeterminate color="primary" :size="size" />
+      <VProgressCircular :size="size" indeterminate color="primary" />
       <span v-if="loadingText" class="ml-3 text-grey-darken-1">{{ loadingText }}</span>
     </div>
-    <VImg v-else-if="imageReady && src" :src="src" :max-height="maxHeight" contain>
+    <VImg v-else-if="imageReady && src" contain :src="src" :max-height="maxHeight">
       <template #placeholder>
-        <VRow density="compact" class="fill-height ma-0" align="center" justify="center">
+        <VRow align="center" justify="center" density="compact" class="fill-height ma-0">
           <VProgressCircular indeterminate color="primary" />
         </VRow>
       </template>

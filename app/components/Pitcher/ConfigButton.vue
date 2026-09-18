@@ -103,7 +103,7 @@
           </VRow>
           <VExpandTransition>
             <div v-if="showHistogram">
-              <VRow density="compact" class="mt-2">
+              <VRow class="mt-2" density="compact">
                 <VCol sm="6" cols="12">
                   <VSwitch
                     id="pit-config-staff-notation"
@@ -292,6 +292,17 @@
                 label="Notación piano"
               />
             </VCol>
+            <VCol sm="6" cols="12">
+              <VSwitch
+                id="pit-config-bass-notation"
+                v-model="showBassNotation"
+                inset
+                hide-details
+                color="success"
+                class="mt-0 pt-0"
+                label="Notación bajo"
+              />
+            </VCol>
           </VRow>
 
           <!-- Diapasón Section (only rendered when scale-on-fretboard is on) -->
@@ -431,6 +442,29 @@
                   <VSelect
                     id="pit-config-piano-cols"
                     v-model="pianoCols"
+                    hide-details
+                    label="Columnas"
+                    density="compact"
+                    variant="outlined"
+                    :items="notationColsOptions"
+                  />
+                </VCol>
+              </VRow>
+            </div>
+          </VExpandTransition>
+          <VExpandTransition>
+            <div v-if="showBassNotation">
+              <VDivider class="my-4" />
+              <VRow density="compact">
+                <VCol cols="12">
+                  <div class="text-subtitle-2 text-medium-emphasis">
+                    Notación bajo
+                  </div>
+                </VCol>
+                <VCol cols="12">
+                  <VSelect
+                    id="pit-config-bass-cols"
+                    v-model="bassCols"
                     hide-details
                     label="Columnas"
                     density="compact"
@@ -616,9 +650,17 @@ const showPianoNotation = computed({
   get: () => store.showPianoNotation,
   set: (v: boolean) => store.setShowPianoNotation(v),
 });
+const showBassNotation = computed({
+  get: () => store.showBassNotation,
+  set: (v: boolean) => store.setShowBassNotation(v),
+});
 const pianoCols = computed({
   get: () => store.pianoCols,
   set: (v: string | number) => store.setPianoCols(v),
+});
+const bassCols = computed({
+  get: () => store.bassCols,
+  set: (v: string | number) => store.setBassCols(v),
 });
 const showStaffNotation = computed({
   get: () => store.showStaffNotation,

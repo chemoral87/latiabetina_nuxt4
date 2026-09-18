@@ -1,8 +1,8 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VRow density="compact" align="center" justify="center">
-      <VCol cols="12" md="5" lg="6" class="text-center">
-        <VProgressCircular indeterminate color="primary" size="64" />
+    <VRow align="center" justify="center" density="compact">
+      <VCol lg="6" md="5" cols="12" class="text-center">
+        <VProgressCircular size="64" indeterminate color="primary" />
         <p class="mt-4">Procesando autenticación...</p>
       </VCol>
     </VRow>

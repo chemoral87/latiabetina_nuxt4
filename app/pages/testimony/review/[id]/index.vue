@@ -1,23 +1,23 @@
 <template>
   <VContainer :fluid="true">
     <VRow density="compact">
-      <VCol cols="12" md="8" class="mx-auto">
+      <VCol md="8" cols="12" class="mx-auto">
         <VCard id="rev-main-card">
           <VCardTitle class="d-flex flex-column align-start">
-            <div class="d-flex align-center justify-space-between" style="width: 100%">
+            <div style="width: 100%" class="d-flex align-center justify-space-between">
               <div>
                 <div class="text-h6">{{ mTestimony.name || "Sin nombre" }}</div>
                 <div class="text-caption text-grey">ID: {{ mTestimony.id }}</div>
               </div>
               <div class="text-right">
-                <VChip v-if="mTestimony.status === 'approved'" id="rev-status-approved-chip" color="success" size="small">APROBADO</VChip>
-                <VChip v-else-if="mTestimony.status === 'rejected'" id="rev-status-rejected-chip" color="error" size="small">RECHAZADO</VChip>
+                <VChip v-if="mTestimony.status === 'approved'" id="rev-status-approved-chip" size="small" color="success">APROBADO</VChip>
+                <VChip v-else-if="mTestimony.status === 'rejected'" id="rev-status-rejected-chip" size="small" color="error">RECHAZADO</VChip>
                 <VChip v-else id="rev-status-pending-chip" size="small">Pendiente</VChip>
                 <div v-if="mTestimony.status_username" class="text-caption text-grey mt-1">Por: {{ mTestimony.status_username }}</div>
               </div>
             </div>
             <div class="mt-2">
-              <VChip v-for="(c, i) in (mTestimony.categories as string[] || [])" id="rev-category-chip" :key="i" class="ma-1" color="primary" size="small">
+              <VChip v-for="(c, i) in (mTestimony.categories as string[] || [])" id="rev-category-chip" :key="i" class="ma-1" size="small" color="primary">
                 {{ c }}
               </VChip>
             </div>
@@ -25,7 +25,7 @@
 
           <VCardText>
             <VRow density="compact">
-              <VCol cols="12" md="4">
+              <VCol md="4" cols="12">
                 <VList density="compact">
                   <VListItem>
                     <template #prepend>
@@ -39,7 +39,7 @@
                       <VIcon>mdi-link-variant</VIcon>
                     </template>
                     <VListItemTitle>
-                      <a :href="mTestimony.link as string" target="_blank" rel="noopener">Ver enlace</a>
+                      <a rel="noopener" target="_blank" :href="mTestimony.link as string">Ver enlace</a>
                     </VListItemTitle>
                   </VListItem>
                 </VList>
@@ -47,21 +47,21 @@
                 <div v-if="mTestimony.link" class="mt-3">
                   <VResponsive v-if="embedSrc" aspect-ratio="16/9">
                     <iframe
-                      :src="embedSrc"
+                      allowfullscreen
                       frameborder="0"
+                      :src="embedSrc"
                       style="width: 100%; height: 100%"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      allowfullscreen
                     />
                   </VResponsive>
                   <div v-else class="text-caption text-grey">
                     Vista previa no disponible para este enlace.
-                    <a :href="mTestimony.link as string" target="_blank" rel="noopener">Abrir enlace</a>
+                    <a rel="noopener" target="_blank" :href="mTestimony.link as string">Abrir enlace</a>
                   </div>
                 </div>
               </VCol>
 
-              <VCol cols="12" md="8">
+              <VCol md="8" cols="12">
                 <div class="mb-4">
                   <div class="text-subtitle-1 font-weight-medium mb-1">Descripción</div>
                   <div class="text-body-1">{{ mTestimony.description || "—" }}</div>
@@ -72,11 +72,11 @@
             <VDivider class="my-2" />
 
             <VRow density="compact">
-              <VCol cols="12" md="6">
+              <VCol md="6" cols="12">
                 <div class="text-caption text-grey">Creado</div>
                 <div>{{ formatShortDateTime(mTestimony.created_at as string | null) }}</div>
               </VCol>
-              <VCol cols="12" md="6">
+              <VCol md="6" cols="12">
                 <div class="text-caption text-grey">Última actualización</div>
                 <div>{{ formatShortDateTime(mTestimony.updated_at as string | null) }}</div>
               </VCol>
@@ -84,12 +84,12 @@
           </VCardText>
 
           <div class="d-flex justify-end px-4 pb-4">
-            <VBtn id="tesrev-back-btn" variant="text" color="primary" class="mr-5" @click="navigateTo('/testimony')">Volver</VBtn>
+            <VBtn id="tesrev-back-btn" class="mr-5" variant="text" color="primary" @click="navigateTo('/testimony')">Volver</VBtn>
 
-            <VBtn id="tesrev-reject-btn" class="mr-5" variant="outlined" :loading="saving" color="error" @click="updateStatus('rejected')">
+            <VBtn id="tesrev-reject-btn" class="mr-5" color="error" :loading="saving" variant="outlined" @click="updateStatus('rejected')">
               Rechazar
             </VBtn>
-            <VBtn id="tesrev-approve-btn" :loading="saving" color="success" class="mr-2" @click="updateStatus('approved')">
+            <VBtn id="tesrev-approve-btn" class="mr-2" color="success" :loading="saving" @click="updateStatus('approved')">
               Aprobar
             </VBtn>
           </div>

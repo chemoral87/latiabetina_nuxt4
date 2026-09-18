@@ -2,11 +2,11 @@
   <CoursesQuizQuizPage
     icon="mdi-database"
     title-en="SQL Server Quiz"
-    subtitle-en="Test your SQL Server knowledge"
     title-es="SQL Server Quiz"
-    subtitle-es="Pon a prueba tus conocimientos de SQL Server"
     :questions-en="questionsEn"
     :questions-es="questionsEs"
+    subtitle-en="Test your SQL Server knowledge"
+    subtitle-es="Pon a prueba tus conocimientos de SQL Server"
   />
 </template>
 

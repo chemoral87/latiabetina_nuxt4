@@ -3,31 +3,31 @@
     <VDataTableServer
       id="tes-table-localitems-dt-1"
       v-model:page="page"
-      v-model:items-per-page="itemsPerPage"
       v-model:sort-by="sortBy"
+      v-model:items-per-page="itemsPerPage"
+      mustSort
+      striped="odd"
+      :items="items"
       density="compact"
       :headers="headers"
-      :items="items"
-      :items-length="total"
       :loading="loading"
+      :items-length="total"
       :row-props="rowProps"
-      class="elevation-1 xwidth1100"
-      striped="odd"
-      mustSort
       :search="props.search"
-      items-per-page-text="Filas por página"
+      class="elevation-1 xwidth1100"
       :items-per-page-options="[10, 15, 30]"
+      items-per-page-text="Filas por página"
       @update:options="onUpdateOptions">
       <template #[`item.review`]="{ item }">
         <VBtn
           id="tes-table-show-btn"
-          title="Revisar"
-          color="primary"
-          variant="outlined"
           icon
-          rounded="circle"
-          size="small"
           class="ma-1"
+          size="small"
+          color="primary"
+          title="Revisar"
+          rounded="circle"
+          variant="outlined"
           @click="emit('show', item)"
         >
           <VIcon size="x-large">mdi-eye</VIcon>
@@ -50,13 +50,13 @@
         <div class="d-flex flex-nowrap justify-center">
           <VBtn
             id="tes-table-edit-btn"
+            icon
+            class="ma-1"
+            size="small"
             title="Editar"
             color="primary"
+                    rounded="circle"
             variant="outlined"
-            icon
-            rounded="circle"
-                    size="small"
-            class="ma-1"
             @click="emit('edit', item)"
           >
             <VIcon size="x-large">mdi-pencil</VIcon>
@@ -64,13 +64,13 @@
 
           <VBtn
             id="tes-table-delete-btn"
-            title="Eliminar"
-            color="error"
-            variant="outlined"
-                    icon
+            icon
             class="ma-1"
-            rounded="circle"
             size="small"
+                    color="error"
+            rounded="circle"
+            title="Eliminar"
+            variant="outlined"
             @click="emit('delete', item)"
           >
             <VIcon size="x-large">mdi-delete</VIcon>

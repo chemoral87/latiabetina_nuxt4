@@ -1,6 +1,6 @@
 <template>
   <VContainer class="pa-4" :fluid="true">
-    <VRow density="compact" class="mb-3">
+    <VRow class="mb-3" density="compact">
       <VCol cols="12">
         <VBtn
           id="usr-profile-new-btn"

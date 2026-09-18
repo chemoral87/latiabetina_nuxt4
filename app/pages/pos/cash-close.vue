@@ -1,8 +1,8 @@
 <template>
-  <VContainer class="cash-close-page px-4 pt-4 pb-16" :fluid="true">
+  <VContainer :fluid="true" class="cash-close-page px-4 pt-4 pb-16">
     <!-- Header -->
     <div class="d-flex align-center mb-4">
-      <VIcon start color="primary" class="mr-2">mdi-cash-register</VIcon>
+      <VIcon start class="mr-2" color="primary">mdi-cash-register</VIcon>
       <span class="text-h6 font-weight-black">Cierre de Caja</span>
     </div>
 
@@ -13,16 +13,16 @@
 
     <!-- Loading -->
     <div v-if="loading" class="text-center py-10">
-      <VProgressCircular indeterminate color="primary" size="48" />
+      <VProgressCircular size="48" indeterminate color="primary" />
     </div>
 
     <template v-else>
       <!-- Summary Cards -->
-      <VRow density="compact" class="mb-4">
-        <VCol cols="12" sm="4">
+      <VRow class="mb-4" density="compact">
+        <VCol sm="4" cols="12">
           <VCard id="posc-cash-card" variant="outlined" class="cash-close-card cash-close-card--cash">
             <div class="d-flex align-center mb-2">
-              <VIcon color="green-darken-1" class="mr-2">mdi-cash</VIcon>
+              <VIcon class="mr-2" color="green-darken-1">mdi-cash</VIcon>
               <span class="text-subtitle-2 font-weight-bold">Efectivo</span>
             </div>
             <div class="cash-close-card-amount text-green-darken-1 font-weight-black">
@@ -31,10 +31,10 @@
             <div class="text-caption text-grey mt-1">{{ summary.cashCount }} venta(s)</div>
           </VCard>
         </VCol>
-        <VCol cols="12" sm="4">
+        <VCol sm="4" cols="12">
           <VCard id="posc-card-card" variant="outlined" class="cash-close-card cash-close-card--card">
             <div class="d-flex align-center mb-2">
-              <VIcon color="blue-darken-1" class="mr-2">mdi-credit-card</VIcon>
+              <VIcon class="mr-2" color="blue-darken-1">mdi-credit-card</VIcon>
               <span class="text-subtitle-2 font-weight-bold">Tarjeta</span>
             </div>
             <div class="cash-close-card-amount text-blue-darken-1 font-weight-black">
@@ -43,10 +43,10 @@
             <div class="text-caption text-grey mt-1">{{ summary.cardCount }} venta(s)</div>
           </VCard>
         </VCol>
-        <VCol cols="12" sm="4">
+        <VCol sm="4" cols="12">
           <VCard id="posc-transfer-card" variant="outlined" class="cash-close-card cash-close-card--transfer">
             <div class="d-flex align-center mb-2">
-              <VIcon color="purple-darken-1" class="mr-2">mdi-bank-transfer</VIcon>
+              <VIcon class="mr-2" color="purple-darken-1">mdi-bank-transfer</VIcon>
               <span class="text-subtitle-2 font-weight-bold">Transferencia</span>
             </div>
             <div class="cash-close-card-amount text-purple-darken-1 font-weight-black">
@@ -64,7 +64,7 @@
             <div class="text-caption text-grey">Total del día</div>
             <div class="text-h4 font-weight-black text-primary">${{ formatPrice(summary.total) }}</div>
           </div>
-          <VChip color="primary" size="large" variant="elevated" class="font-weight-bold">
+          <VChip size="large" color="primary" variant="elevated" class="font-weight-bold">
             {{ summary.totalCount }} venta(s)
           </VChip>
         </div>
@@ -72,11 +72,11 @@
 
       <!-- Product metrics -->
       <div class="d-flex align-center mb-3">
-        <VIcon color="orange-darken-2" class="mr-2">mdi-package-variant</VIcon>
+        <VIcon class="mr-2" color="orange-darken-2">mdi-package-variant</VIcon>
         <span class="text-subtitle-1 font-weight-bold">Totales por producto</span>
       </div>
 
-      <VCard id="posc-products-card" variant="outlined" class="mb-6">
+      <VCard id="posc-products-card" class="mb-6" variant="outlined">
         <VTable id="posc-products-tbl" density="compact">
           <thead>
             <tr>
@@ -90,7 +90,7 @@
             <tr v-for="row in productTotals" :key="row.id">
               <td class="font-weight-medium">{{ row.name }}</td>
               <td class="text-center">
-                <VChip size="x-small" color="orange-darken-2" variant="elevated" class="font-weight-bold">
+                <VChip size="x-small" variant="elevated" color="orange-darken-2" class="font-weight-bold">
                   {{ row.qty }}
                 </VChip>
               </td>
@@ -118,7 +118,7 @@
 
       <!-- Sales detail -->
       <div class="d-flex align-center mb-3">
-        <VIcon color="primary" class="mr-2">mdi-receipt</VIcon>
+        <VIcon class="mr-2" color="primary">mdi-receipt</VIcon>
         <span class="text-subtitle-1 font-weight-bold">Detalle de ventas</span>
       </div>
       <VCard variant="outlined">
@@ -137,7 +137,7 @@
               <td class="font-weight-bold">{{ sale.number }}</td>
               <td>{{ sale.customer_name || '—' }}</td>
               <td class="text-center">
-                <VChip size="x-small" :color="paymentColor(sale.payment_method as string)" variant="elevated">
+                <VChip size="x-small" variant="elevated" :color="paymentColor(sale.payment_method as string)">
                   {{ paymentLabel(sale.payment_method as string) }}
                 </VChip>
               </td>

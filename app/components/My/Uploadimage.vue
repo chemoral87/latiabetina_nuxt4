@@ -3,9 +3,9 @@
     <input
       ref="fileInput"
       type="file"
-      accept="image/png, image/jpeg, image/bmp"
       style="display: none"
       aria-label="Subir imagen"
+      accept="image/png, image/jpeg, image/bmp"
       @change="onFileSelected"
     />
 
@@ -14,28 +14,28 @@
       {{ label || 'Seleccionar foto' }}
     </VBtn>
 
-    <div v-if="loading" class="d-flex align-center justify-center mt-2 bg-grey-lighten-3 rounded" style="min-height: 80px">
-      <VProgressCircular indeterminate color="primary" size="24" />
+    <div v-if="loading" style="min-height: 80px" class="d-flex align-center justify-center mt-2 bg-grey-lighten-3 rounded">
+      <VProgressCircular size="24" indeterminate color="primary" />
     </div>
     <div v-else-if="selectedFilename" class="d-flex align-center mt-2">
-      <VChip size="small" label color="primary" variant="outlined" class="mr-2">
+      <VChip label class="mr-2" size="small" color="primary" variant="outlined">
         <VIcon start size="x-small">mdi-file-image</VIcon>
         {{ selectedFilename }}
       </VChip>
-      <VBtn id="my-uploadimage-clear-btn" size="small" variant="outlined" color="error" @click="clearImage">
+      <VBtn id="my-uploadimage-clear-btn" size="small" color="error" variant="outlined" @click="clearImage">
         <VIcon start size="x-small">mdi-close</VIcon>
         Limpiar
       </VBtn>
     </div>
     <div
       v-else
-      class="d-flex flex-column align-center justify-center mt-2 rounded drop-zone"
       :class="{ 'drop-zone--active': dragOver }"
       style="min-height: 80px; cursor: pointer; border: 2px dashed #bdbdbd;"
-      @dragover.prevent="onDragOver"
-      @dragleave="onDragLeave"
+      class="d-flex flex-column align-center justify-center mt-2 rounded drop-zone"
       @drop.prevent="onDrop"
+      @dragleave="onDragLeave"
       @click="triggerFilePicker"
+      @dragover.prevent="onDragOver"
     >
       <VIcon :color="dragOver ? 'primary' : 'grey-lighten-1'">mdi-cloud-upload-outline</VIcon>
       <span class="text-caption mt-1" :class="dragOver ? 'text-primary' : 'text-grey'">Arrastra el archivo aquí</span>

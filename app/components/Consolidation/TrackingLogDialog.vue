@@ -33,8 +33,8 @@
               <VTextField
                 id="con-track-time"
                 v-model="contactTime"
-                label="Hora"
                 type="time"
+                label="Hora"
                 density="compact"
                 :disabled="saving"
                 variant="outlined"

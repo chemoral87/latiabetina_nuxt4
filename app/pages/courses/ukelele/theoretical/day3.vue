@@ -6,14 +6,14 @@
       <div v-if="showContent" class="pa-4">
 
         <!-- SECCION 1: Grados de la Escala Mayor -->
-        <CoursesSection title="Grados de la Escala Mayor" icon="mdi-stairs">
+        <CoursesSection icon="mdi-stairs" title="Grados de la Escala Mayor">
           <p class="text-body-2 text-grey-darken-3 mb-4">
             Antes de formar acordes, es necesario conocer los <strong>7 grados</strong> que componen una
             escala mayor. Cada nota de la escala recibe un nombre según la función que cumple respecto
             a la tónica:
           </p>
 
-          <VTable density="compact" class="mb-2">
+          <VTable class="mb-2" density="compact">
             <thead>
               <tr>
                 <th class="text-left">Grado</th>
@@ -32,14 +32,14 @@
             </tbody>
           </VTable>
 
-          <VAlert type="info" density="compact" variant="text" class="mt-4 mb-0">
+          <VAlert type="info" variant="text" class="mt-4 mb-0" density="compact">
             De estos 7 grados, el acorde mayor solo utiliza tres: la <strong>1ª (Tónica)</strong>, la
             <strong>3ª (Mediante)</strong> y la <strong>5ª (Dominante)</strong>.
           </VAlert>
         </CoursesSection>
 
         <!-- SECCION 2: ¿Qué es un Acorde Mayor? -->
-        <CoursesSection title="¿Qué es un Acorde Mayor?" icon="mdi-music-box-outline">
+        <CoursesSection icon="mdi-music-box-outline" title="¿Qué es un Acorde Mayor?">
           <p class="text-body-2 text-grey-darken-3 mb-4">
             Un acorde mayor es una <strong>tríada</strong>: la combinación de tres notas tocadas al mismo tiempo,
             construidas a partir de una nota raíz (fundamental) siguiendo esta fórmula de intervalos:
@@ -60,12 +60,12 @@
         </CoursesSection>
 
         <!-- SECCION 3: Tabla de Acordes Mayores y sus Notas -->
-        <CoursesSection title="Acordes Mayores y sus Notas" icon="mdi-table-music">
+        <CoursesSection icon="mdi-table-music" title="Acordes Mayores y sus Notas">
           <p class="text-body-2 text-grey-darken-2 mb-4">
             Cada acorde mayor se forma con su tónica (1ª), su tercera mayor (3ª) y su quinta justa (5ª).
           </p>
 
-          <VTable density="compact" class="mb-2">
+          <VTable class="mb-2" density="compact">
             <thead>
               <tr>
                 <th class="text-left">Acorde</th>
@@ -78,7 +78,7 @@
             <tbody>
               <tr v-for="chord in major_chords_table" :key="chord.name">
                 <td>
-                  <VChip size="x-small" color="primary"  class="font-weight-bold" variant="elevated">{{ chord.name }}</VChip>
+                  <VChip size="x-small" color="primary"  variant="elevated" class="font-weight-bold">{{ chord.name }}</VChip>
                 </td>
                 <td class="text-body-2">{{ chord.fullName }}</td>
                 <td class="font-weight-bold">{{ chord.root }}</td>
@@ -88,7 +88,7 @@
             </tbody>
           </VTable>
 
-          <VAlert type="info" density="compact" variant="text" class="mt-4 mb-0">
+          <VAlert type="info" variant="text" class="mt-4 mb-0" density="compact">
             La tercera mayor se ubica <strong>2 tonos completos</strong> por encima de la tónica, y la
             quinta justa se ubica <strong>3 tonos y medio</strong> por encima de la tónica.
           </VAlert>

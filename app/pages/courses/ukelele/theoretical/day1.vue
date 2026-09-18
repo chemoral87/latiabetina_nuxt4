@@ -6,13 +6,13 @@
       <div v-if="showContent" class="pa-4">
 
         <!-- SECCION 1: Partes del Ukelele -->
-        <CoursesSection title="Partes del Ukelele" icon="mdi-guitar-acoustic">
+        <CoursesSection icon="mdi-guitar-acoustic" title="Partes del Ukelele">
           <p class="text-subtitle-1 font-weight-medium mb-3">Partes principales</p>
           <VImg
-            src="/courses/ukelele/images/partes-ukelele.jpg"
-            class="mb-4 rounded"
-            max-height="420"
             contain
+            max-height="420"
+            class="mb-4 rounded"
+            src="/courses/ukelele/images/partes-ukelele.jpg"
           >
             <template #error>
               <div class="d-flex align-center justify-center fill-height bg-grey-lighten-3">
@@ -22,15 +22,15 @@
             </template>
           </VImg>
 
-          <VRow density="compact" class="mb-4">
-            <VCol v-for="part in ukelele_parts" :key="part.name" cols="12" sm="6" md="4">
+          <VRow class="mb-4" density="compact">
+            <VCol v-for="part in ukelele_parts" :key="part.name" md="4" sm="6" cols="12">
               <VCard variant="outlined" class="pa-3 fill-height">
                 <div class="d-flex align-center mb-1">
-                  <VIcon size="small" color="primary" class="mr-2">{{ part.icon }}</VIcon>
+                  <VIcon class="mr-2" size="small" color="primary">{{ part.icon }}</VIcon>
                   <span class="font-weight-medium">{{ part.name }}</span>
                 </div>
                 <p class="text-body-2 text-grey-darken-1 mb-0">{{ part.description }}</p>
-                <VImg :src="part.image" height="140" class="mt-3 rounded" contain>
+                <VImg contain height="140" :src="part.image" class="mt-3 rounded">
                   <template #placeholder>
                     <div class="d-flex align-center justify-center fill-height bg-grey-lighten-3">
                       <span class="text-caption text-grey-darken-1">Cargando imagen...</span>
@@ -49,7 +49,7 @@
         </CoursesSection>
 
         <!-- SECCION 2: Afinación Estándar -->
-        <CoursesSection title="Afinación Estándar" icon="mdi-tune">
+        <CoursesSection icon="mdi-tune" title="Afinación Estándar">
           <p class="text-subtitle-1 font-weight-medium mb-2">Afinación estándar (G-C-E-A)</p>
           <p class="text-body-2 text-grey-darken-2 mb-4">
             El ukelele soprano, concert y tenor se afinan de forma reentrante: la cuerda 4 (G)
@@ -57,7 +57,7 @@
             la más común en los ukeleles estándar.
           </p>
 
-          <VTable density="compact" class="mb-4">
+          <VTable class="mb-4" density="compact">
             <thead>
               <tr>
                 <th class="text-left">Cuerda</th>
@@ -71,7 +71,7 @@
             <tbody>
               <tr v-for="string in tuning_strings" :key="string.number">
                 <td>
-                  <VChip size="x-small" :color="string.color"  variant="elevated">{{ string.number }}</VChip>
+                  <VChip size="x-small" variant="elevated"  :color="string.color">{{ string.number }}</VChip>
                 </td>
                 <td><strong>{{ string.note_en }}</strong></td>
                 <td>{{ string.note_es }}</td>
@@ -87,10 +87,10 @@
           <p class="text-subtitle-1 font-weight-medium mb-3">High G vs. Low G</p>
 
           <VRow density="compact">
-            <VCol cols="12" md="6">
-              <VCard variant="outlined" class="pa-3 mb-3">
+            <VCol md="6" cols="12">
+              <VCard class="pa-3 mb-3" variant="outlined">
                 <div class="d-flex align-center mb-2">
-                  <VIcon color="amber" class="mr-2">mdi-music-note-high</VIcon>
+                  <VIcon class="mr-2" color="amber">mdi-music-note-high</VIcon>
                   <span class="font-weight-medium">High G (G4 - 392 Hz)</span>
                 </div>
                 <p class="text-body-2 mb-0">
@@ -100,10 +100,10 @@
               </VCard>
             </VCol>
 
-            <VCol cols="12" md="6">
-              <VCard variant="outlined" class="pa-3 mb-3">
+            <VCol md="6" cols="12">
+              <VCard class="pa-3 mb-3" variant="outlined">
                 <div class="d-flex align-center mb-2">
-                  <VIcon color="blue" class="mr-2">mdi-music-note</VIcon>
+                  <VIcon class="mr-2" color="blue">mdi-music-note</VIcon>
                   <span class="font-weight-medium">Low G (G3 - 196 Hz)</span>
                 </div>
                 <p class="text-body-2 mb-0">
@@ -116,7 +116,7 @@
         </CoursesSection>
 
         <!-- SECCION 3: Notas Musicales -->
-        <CoursesSection title="Notas Musicales" icon="mdi-music-note">
+        <CoursesSection icon="mdi-music-note" title="Notas Musicales">
           <p class="text-subtitle-1 font-weight-medium mb-2">Notación latina vs. inglesa</p>
           <p class="text-body-2 text-grey-darken-2 mb-4">
             En Latinoamérica se usa notación <strong>latina (Do, Re, Mi...)</strong>.
@@ -124,7 +124,7 @@
             Ejemplo: Do = C.
           </p>
 
-          <VTable density="compact" class="mb-5">
+          <VTable class="mb-5" density="compact">
             <thead>
               <tr>
                 <th class="text-left">Latino</th>
@@ -138,13 +138,13 @@
                 <td><strong>{{ note.latin }}</strong></td>
                 <td>{{ note.english }}</td>
                 <td>
-                  <VChip v-if="note.sharp" size="x-small" color="deep-orange-lighten-4" class="font-weight-medium" variant="elevated">
+                  <VChip v-if="note.sharp" size="x-small" variant="elevated" class="font-weight-medium" color="deep-orange-lighten-4">
                     {{ note.sharp }}
                   </VChip>
                   <span v-else class="text-grey">—</span>
                 </td>
                 <td>
-                  <VChip v-if="note.flat_next" size="x-small" color="blue-lighten-4" class="font-weight-medium" variant="elevated">
+                  <VChip v-if="note.flat_next" size="x-small" variant="elevated" color="blue-lighten-4" class="font-weight-medium">
                     {{ note.flat_next }}
                   </VChip>
                   <span v-else class="text-grey">—</span>
@@ -158,10 +158,10 @@
           <p class="text-subtitle-1 font-weight-medium mb-2">¿Qué son los sostenidos y bemoles?</p>
 
           <VRow density="compact">
-            <VCol cols="12" md="6">
-              <VCard variant="outlined" class="pa-3 mb-3">
+            <VCol md="6" cols="12">
+              <VCard class="pa-3 mb-3" variant="outlined">
                 <div class="d-flex align-center mb-2">
-                  <VIcon color="deep-orange" class="mr-2">mdi-arrow-up</VIcon>
+                  <VIcon class="mr-2" color="deep-orange">mdi-arrow-up</VIcon>
                   <span class="font-weight-medium">Sostenido (# · Sharp)</span>
                 </div>
                 <p class="text-body-2 mb-0">
@@ -171,10 +171,10 @@
               </VCard>
             </VCol>
 
-            <VCol cols="12" md="6">
-              <VCard variant="outlined" class="pa-3 mb-3">
+            <VCol md="6" cols="12">
+              <VCard class="pa-3 mb-3" variant="outlined">
                 <div class="d-flex align-center mb-2">
-                  <VIcon color="blue" class="mr-2">mdi-arrow-down</VIcon>
+                  <VIcon class="mr-2" color="blue">mdi-arrow-down</VIcon>
                   <span class="font-weight-medium">Bemol (b · Flat)</span>
                 </div>
                 <p class="text-body-2 mb-0">
@@ -185,7 +185,7 @@
             </VCol>
           </VRow>
 
-          <VAlert type="warning" density="compact" variant="text" class="mt-4">
+          <VAlert class="mt-4" type="warning" variant="text" density="compact">
             Entre <strong>Mi-Fa (E-F)</strong> y <strong>Si-Do (B-C)</strong>
             <strong>no hay nota intermedia</strong>: son semitonos naturales y no existe
             un sostenido/bemol entre ellos.

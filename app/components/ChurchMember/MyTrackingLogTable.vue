@@ -12,9 +12,9 @@
       density="compact"
       :headers="headers"
       :loading="loading"
+      class="elevation-1"
       :items-length="total"
       :row-props="rowProps"
-      class="elevation-1"
       :items-per-page-options="[10, 15, 30]"
       items-per-page-text="Filas por página"
       @update:options="onUpdateOptions">
@@ -26,8 +26,8 @@
           size="small"
           color="primary"
           rounded="circle"
-          title="Ver miembro"
           variant="outlined"
+          title="Ver miembro"
           @click="emit('view', item)"
         >
           <VIcon size="x-large">mdi-eye</VIcon>

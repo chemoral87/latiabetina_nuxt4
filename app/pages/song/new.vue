@@ -1,6 +1,6 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VRow density="compact" justify="center">
+    <VRow justify="center" density="compact">
       <VCol md="10" cols="12">
         <!-- JSON import / export toolbar for new song -->
         <div class="d-flex align-center flex-wrap mb-3">

@@ -11,7 +11,7 @@
       <span id="pit-db-display">({{ dBDisplay }} dB · sens {{ sensitivity.toFixed(4) }} · picos {{ peaksCount }})</span>
     </h4>
 
-    <VRow density="compact" id="pit-actions-row" class="mb-1">
+    <VRow id="pit-actions-row" class="mb-1" density="compact">
       <VCol cols="6">
         <VBtn id="pit-reset-btn" block size="small" color="primary" @click="resetHistory">
           <VIcon start>mdi-restart</VIcon>
@@ -38,7 +38,7 @@
       </VCol>
     </VRow>
 
-    <VRow density="compact" id="pit-chord-row" class="mb-2" justify="center">
+    <VRow id="pit-chord-row" class="mb-2" justify="center" density="compact">
       <VCol cols="12" class="text-center">
         <div id="pit-chord-name" class="chord-name" :style="{ color: chordColor }">{{ chordDisplay || "—" }}</div>
         <div id="pit-chord-notes" class="chord-notes">
@@ -50,7 +50,7 @@
       </VCol>
     </VRow>
 
-    <VRow density="compact" class="mb-2">
+    <VRow class="mb-2" density="compact">
       <VCol cols="12">
         <canvas id="pit-spectrum-canvas" ref="spectrumCanvas" width="900" height="150" class="spectrum-canvas" />
       </VCol>

@@ -1,7 +1,7 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VSheet color="white" rounded>
-      <VRow density="compact" align="center">
+    <VSheet rounded color="white">
+      <VRow align="center" density="compact">
       <VCol md="4" sm="6" cols="12">
         <VTextField
           id="tes-index-filtertestimony-tf-1"
@@ -42,8 +42,8 @@
           id="tes-refresh-btn"
           class="mr-1"
           color="primary"
-          variant="outlined"
           :loading="loading"
+          variant="outlined"
           @click="refreshTestimonies"
         >
           <VIcon start>mdi-reload</VIcon>

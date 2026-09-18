@@ -6,7 +6,7 @@
       <div v-if="showContent" class="pa-4">
 
         <!-- SECCION 1: ¿Qué es la Cejilla? -->
-        <CoursesSection title="¿Qué es la Cejilla (Barré)?" icon="mdi-hand-back-right-outline">
+        <CoursesSection icon="mdi-hand-back-right-outline" title="¿Qué es la Cejilla (Barré)?">
           <p class="text-body-2 text-grey-darken-3 mb-4">
             La <strong>cejilla</strong> (o <em>barré</em>, del francés "barra") es una técnica en la que
             un solo dedo de la mano izquierda —normalmente el índice— presiona <strong>varias o todas
@@ -22,7 +22,7 @@
         </CoursesSection>
 
         <!-- SECCION 2: ¿Por qué se usa? Acordes Movibles -->
-        <CoursesSection title="Acordes Movibles: La Gran Ventaja de la Cejilla" icon="mdi-arrow-right-bold-box-outline">
+        <CoursesSection icon="mdi-arrow-right-bold-box-outline" title="Acordes Movibles: La Gran Ventaja de la Cejilla">
           <p class="text-body-2 text-grey-darken-3 mb-4">
             La principal ventaja de la cejilla es que convierte una digitación en una <strong>forma
             movible</strong>: si tomas la forma de un acorde con cejilla y la desplazas un traste hacia
@@ -30,7 +30,7 @@
             una sola forma puedes tocar los 12 acordes mayores (o menores) de la escala cromática.
           </p>
 
-          <VTable density="compact" class="mb-2">
+          <VTable class="mb-2" density="compact">
             <thead>
               <tr>
                 <th class="text-left">Traste de la Cejilla</th>
@@ -41,7 +41,7 @@
             <tbody>
               <tr v-for="step in movable_shape_example" :key="step.fret">
                 <td>
-                  <VChip size="x-small" color="deep-purple"  class="font-weight-bold" variant="elevated">Traste {{ step.fret }}</VChip>
+                  <VChip size="x-small" variant="elevated"  color="deep-purple" class="font-weight-bold">Traste {{ step.fret }}</VChip>
                 </td>
                 <td class="font-weight-bold">{{ step.chord }}</td>
                 <td class="text-body-2">{{ step.semitones }}</td>
@@ -49,7 +49,7 @@
             </tbody>
           </VTable>
 
-          <VAlert type="info" density="compact" variant="text" class="mt-4 mb-0">
+          <VAlert type="info" variant="text" class="mt-4 mb-0" density="compact">
             Por eso decimos que la cejilla "transporta" un acorde: la forma de los dedos no cambia, solo
             se desplaza a lo largo del diapasón.
           </VAlert>
@@ -62,7 +62,7 @@
             dedo índice:
           </p>
 
-          <VTable density="compact" class="mb-2">
+          <VTable class="mb-2" density="compact">
             <thead>
               <tr>
                 <th class="text-left">Tipo</th>
@@ -79,7 +79,7 @@
             </tbody>
           </VTable>
 
-          <VAlert type="warning" density="compact" variant="text" class="mt-4 mb-0">
+          <VAlert type="warning" variant="text" class="mt-4 mb-0" density="compact">
             <strong>Consejo:</strong> la cejilla requiere práctica y firmeza en el dedo índice. Es normal
             que al principio algunas cuerdas suenen apagadas; con repetición, la presión se vuelve
             uniforme en toda la cejilla.

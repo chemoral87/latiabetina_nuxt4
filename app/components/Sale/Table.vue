@@ -3,19 +3,19 @@
     <VDataTableServer
       id="sal-table-items-dt-1"
       v-model:page="page"
-      v-model:items-per-page="itemsPerPage"
       v-model:sort-by="sortBy"
+      v-model:items-per-page="itemsPerPage"
+      mustSort
+      striped="odd"
+      :items="items"
       density="compact"
       :headers="headers"
-      :items="items"
-      :items-length="total"
       :loading="loading"
+      :items-length="total"
       :row-props="rowProps"
       class="elevation-1 xwidth1100"
-      striped="odd"
-      mustSort
-      items-per-page-text="Filas por página"
       :items-per-page-options="[10, 15, 30]"
+      items-per-page-text="Filas por página"
       @update:options="onUpdateOptions">
       <template #[`item.total`]="{ item }">
         <span class="font-weight-medium">${{ formatNumber((item as Record<string, unknown>).total) }}</span>
@@ -26,13 +26,13 @@
       </template>
 
       <template #[`item.payment_method`]="{ item }">
-        <VChip size="small" :color="salePaymentColor((item as Record<string, unknown>).payment_method as string | null)" text-color="white" class="font-weight-medium">
+        <VChip size="small" text-color="white" class="font-weight-medium" :color="salePaymentColor((item as Record<string, unknown>).payment_method as string | null)">
           {{ salePaymentLabel((item as Record<string, unknown>).payment_method as string | null) }}
         </VChip>
       </template>
 
       <template #[`item.status`]="{ item }">
-        <VChip size="small" :color="saleStatusColor((item as Record<string, unknown>).status as string | null)" text-color="white" class="font-weight-medium">
+        <VChip size="small" text-color="white" class="font-weight-medium" :color="saleStatusColor((item as Record<string, unknown>).status as string | null)">
           {{ saleStatusLabel((item as Record<string, unknown>).status as string | null) }}
         </VChip>
       </template>
@@ -40,39 +40,39 @@
       <template #[`item.actions`]="{ item }">
         <VBtn
           id="sal-table-view-btn"
-          title="Ver detalle"
-          class="ma-1"
-          color="primary"
-          variant="outlined"
-          size="small"
           icon
+          class="ma-1"
+          size="small"
+          color="primary"
           rounded="circle"
+          variant="outlined"
+          title="Ver detalle"
           @click="emitView(item)"
         >
           <VIcon size="x-large">mdi-eye</VIcon>
         </VBtn>
         <VBtn
           id="sal-table-edit-btn"
-          title="Editar"
+          icon
           class="ma-1"
           color="info"
-          variant="outlined"
           size="small"
-          icon
+          title="Editar"
           rounded="circle"
+          variant="outlined"
           @click="emitEdit(item)"
         >
           <VIcon size="x-large">mdi-pencil</VIcon>
         </VBtn>
         <VBtn
           id="sal-table-delete-btn"
-          title="Eliminar"
-          class="ma-1"
-          color="error"
-          variant="outlined"
-          size="small"
           icon
+          class="ma-1"
+          size="small"
+          color="error"
           rounded="circle"
+          title="Eliminar"
+          variant="outlined"
           @click="confirmDelete(item)"
         >
           <VIcon size="x-large">mdi-delete</VIcon>

@@ -53,15 +53,15 @@
             cada nota por separado.
           </p>
           <div class="text-center mb-3">
-            <VBtnToggle v-model="selectedRoot" mandatory class="mb-2" color="primary" variant="outlined"
-              density="compact">
+            <VBtnToggle v-model="selectedRoot" mandatory class="mb-2" color="primary" density="compact"
+              variant="outlined">
               <VBtn v-for="root in roots" id="btn-singp14-root" :key="root" :value="root">
                 {{ root }}
               </VBtn>
             </VBtnToggle>
             <div>
-              <VBtnToggle v-model="selectedType" mandatory class="mb-2" color="primary" variant="outlined"
-                density="compact">
+              <VBtnToggle v-model="selectedType" mandatory class="mb-2" color="primary" density="compact"
+                variant="outlined">
                 <VBtn id="btn-singp14-type-maj" value="major">
                   <span class="font-weight-bold">Mayor</span>
                 </VBtn>
@@ -95,7 +95,7 @@
             </div>
             <p class="text-subtitle-1 font-weight-bold text-grey-darken-4 mb-4">{{ currentQuestion.question }}</p>
 
-            <VRow density="compact" class="mb-4">
+            <VRow class="mb-4" density="compact">
               <VCol v-for="(option, idx) in currentQuestion.options" :key="idx" sm="6" cols="12">
                 <VBtn id="btn-singp14-quiz-option" block variant="outlined" :disabled="answered"
                   :color="getOptionColor(idx)" class="py-4 text-left justify-start" @click="checkAnswer(idx)">

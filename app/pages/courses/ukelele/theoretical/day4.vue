@@ -6,7 +6,7 @@
       <div v-if="showContent" class="pa-4">
 
         <!-- SECCION 1: Tonos y Semitonos -->
-        <CoursesSection title="Tonos y Semitonos: La Clave de los Acordes" icon="mdi-ruler">
+        <CoursesSection icon="mdi-ruler" title="Tonos y Semitonos: La Clave de los Acordes">
           <p class="text-body-2 text-grey-darken-3 mb-4">
             Para entender la diferencia entre un acorde mayor y uno menor, primero hay que medir la
             distancia entre sus notas en <strong>tonos</strong> y <strong>semitonos</strong>. Un semitono
@@ -14,7 +14,7 @@
             semitonos (2 trastes).
           </p>
 
-          <VTable density="compact" class="mb-2">
+          <VTable class="mb-2" density="compact">
             <thead>
               <tr>
                 <th class="text-left">Tipo de Tercera</th>
@@ -26,7 +26,7 @@
             <tbody>
               <tr v-for="third in third_types" :key="third.type">
                 <td>
-                  <VChip size="x-small" :color="third.color"  class="font-weight-bold" variant="elevated">{{ third.type }}</VChip>
+                  <VChip size="x-small" variant="elevated"  :color="third.color" class="font-weight-bold">{{ third.type }}</VChip>
                 </td>
                 <td class="font-weight-bold">{{ third.distance }}</td>
                 <td class="text-body-2">{{ third.example }}</td>
@@ -35,14 +35,14 @@
             </tbody>
           </VTable>
 
-          <VAlert type="info" density="compact" variant="text" class="mt-4 mb-0">
+          <VAlert type="info" variant="text" class="mt-4 mb-0" density="compact">
             Toda la diferencia entre un acorde mayor y uno menor está en <strong>medio tono</strong>: la
             tercera menor es solo 1 semitono más baja que la tercera mayor.
           </VAlert>
         </CoursesSection>
 
         <!-- SECCION 2: ¿Qué es un Acorde Menor? -->
-        <CoursesSection title="¿Qué es un Acorde Menor?" icon="mdi-music-box-outline">
+        <CoursesSection icon="mdi-music-box-outline" title="¿Qué es un Acorde Menor?">
           <p class="text-body-2 text-grey-darken-3 mb-4">
             Un acorde menor es también una <strong>tríada</strong>, pero a diferencia del acorde mayor,
             su tercera se baja medio tono (1 semitono). La fórmula de intervalos es:
@@ -63,12 +63,12 @@
         </CoursesSection>
 
         <!-- SECCION 3: Tabla de Acordes Menores y sus Notas -->
-        <CoursesSection title="Acordes Menores y sus Notas" icon="mdi-table-music">
+        <CoursesSection icon="mdi-table-music" title="Acordes Menores y sus Notas">
           <p class="text-body-2 text-grey-darken-2 mb-4">
             Cada acorde menor se forma con su tónica (1ª), su tercera menor (b3ª) y su quinta justa (5ª).
           </p>
 
-          <VTable density="compact" class="mb-2">
+          <VTable class="mb-2" density="compact">
             <thead>
               <tr>
                 <th class="text-left">Acorde</th>
@@ -81,7 +81,7 @@
             <tbody>
               <tr v-for="chord in minor_chords_table" :key="chord.name">
                 <td>
-                  <VChip size="x-small" color="indigo"  class="font-weight-bold" variant="elevated">{{ chord.name }}</VChip>
+                  <VChip color="indigo" size="x-small"  variant="elevated" class="font-weight-bold">{{ chord.name }}</VChip>
                 </td>
                 <td class="text-body-2">{{ chord.fullName }}</td>
                 <td class="font-weight-bold">{{ chord.root }}</td>
@@ -91,7 +91,7 @@
             </tbody>
           </VTable>
 
-          <VAlert type="info" density="compact" variant="text" class="mt-4 mb-0">
+          <VAlert type="info" variant="text" class="mt-4 mb-0" density="compact">
             Cada acorde menor comparte su tónica con su acorde mayor "relativo" (ej. Do Mayor y Do menor
             inician en la misma nota), pero suenan completamente distintos por ese único semitono de
             diferencia en la tercera.

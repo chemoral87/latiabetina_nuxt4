@@ -5,25 +5,25 @@
       :id="`pos-kds-item-${order.id}-${row.item.id}-${rowIndex}`"
       :key="`${row.item.id}-${rowIndex}`"
       class="kds-item-row"
-      :class="{ 'kds-item-row-done': isRowDone(row) || isItemCompleted(row.item) }"
       :title="statusTitle(row.item)"
+      :class="{ 'kds-item-row-done': isRowDone(row) || isItemCompleted(row.item) }"
       @click="toggleRow(row.item.id, rowIndex)"
     >
       <div class="kds-item-thumb">
         <VImg
           v-if="row.item.product?.image_s3"
-          :src="row.item.product.image_s3"
-          height="36"
           width="36"
+          height="36"
           class="rounded"
+          :src="row.item.product.image_s3"
         >
           <template #placeholder>
-            <VSheet height="36" width="36" color="grey-lighten-3" class="d-flex align-center justify-center rounded">
+            <VSheet width="36" height="36" color="grey-lighten-3" class="d-flex align-center justify-center rounded">
               <VIcon size="small" color="grey-lighten-1">mdi-food</VIcon>
             </VSheet>
           </template>
         </VImg>
-        <VSheet v-else height="36" width="36" color="grey-lighten-3" class="d-flex align-center justify-center rounded">
+        <VSheet v-else width="36" height="36" color="grey-lighten-3" class="d-flex align-center justify-center rounded">
           <VIcon size="small" color="grey-lighten-1">mdi-food</VIcon>
         </VSheet>
       </div>
@@ -37,11 +37,11 @@
         v-if="isRowDone(row)"
         :id="`pos-kds-item-undo-${order.id}-${row.item.id}-${rowIndex}`"
         icon
-        rounded="circle"
         size="small"
-        color="orange-darken-2"
         variant="flat"
+        rounded="circle"
         class="kds-undo-button"
+        color="orange-darken-2"
         @click.stop="undoRow(row.item.id, rowIndex)"
       >
         <VIcon size="small" color="white">mdi-undo-variant</VIcon>
@@ -49,11 +49,11 @@
 
       <VBtn
         icon
-        rounded="circle"
         size="small"
-        :color="isRowDone(row) || isItemCompleted(row.item) ? 'success' : 'orange-darken-2'"
         variant="flat"
+        rounded="circle"
         class="kds-toggle-button"
+        :color="isRowDone(row) || isItemCompleted(row.item) ? 'success' : 'orange-darken-2'"
         @click.stop="toggleRow(row.item.id, rowIndex)"
       >
         <VIcon size="small" color="white">

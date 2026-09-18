@@ -80,7 +80,7 @@
 
         <!-- SECCION 3: Escala menor y grados -->
         <CoursesSection icon="mdi-format-list-numbered" title="Escala Menor y Grados de la Escala">
-          <VRow density="compact" class="mb-2">
+          <VRow class="mb-2" density="compact">
             <VCol md="6" cols="12">
               <VCard class="pa-3 mb-3" variant="outlined">
                 <div class="d-flex align-center mb-2">

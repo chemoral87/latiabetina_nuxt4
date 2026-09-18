@@ -6,14 +6,14 @@
       <div v-if="showContent" class="pa-4">
 
         <!-- SECCION 1: La Cuarta Nota del Acorde -->
-        <CoursesSection title="Más Allá de la Tríada: La Séptima" icon="mdi-numeric-7-circle-outline">
+        <CoursesSection icon="mdi-numeric-7-circle-outline" title="Más Allá de la Tríada: La Séptima">
           <p class="text-body-2 text-grey-darken-3 mb-4">
             Hasta ahora hemos formado acordes con tres notas (tríadas). Si le agregamos una cuarta nota
             —la <strong>séptima</strong> de la escala— el acorde gana más color, tensión y
             sofisticación. Existen dos tipos principales de séptima, según su distancia con la tónica:
           </p>
 
-          <VTable density="compact" class="mb-2">
+          <VTable class="mb-2" density="compact">
             <thead>
               <tr>
                 <th class="text-left">Tipo de Séptima</th>
@@ -25,7 +25,7 @@
             <tbody>
               <tr v-for="seventh in seventh_types" :key="seventh.type">
                 <td>
-                  <VChip size="x-small" :color="seventh.color"  class="font-weight-bold" variant="elevated">{{ seventh.type }}</VChip>
+                  <VChip size="x-small" variant="elevated"  :color="seventh.color" class="font-weight-bold">{{ seventh.type }}</VChip>
                 </td>
                 <td class="font-weight-bold">{{ seventh.distance }}</td>
                 <td class="text-body-2">{{ seventh.example }}</td>
@@ -34,7 +34,7 @@
             </tbody>
           </VTable>
 
-          <VAlert type="info" density="compact" variant="text" class="mt-4 mb-0">
+          <VAlert type="info" variant="text" class="mt-4 mb-0" density="compact">
             La séptima mayor está a <strong>medio tono</strong> de la octava (muy cerca de "casa"), por
             eso suena suave y soñadora. La séptima menor está a <strong>un tono completo</strong> de la
             octava, lo que crea más tensión y "ganas de resolver" hacia otro acorde.
@@ -42,7 +42,7 @@
         </CoursesSection>
 
         <!-- SECCION 2: Acorde con Séptima Mayor (maj7) -->
-        <CoursesSection title="Acorde con Séptima Mayor (maj7)" icon="mdi-music-box-outline">
+        <CoursesSection icon="mdi-music-box-outline" title="Acorde con Séptima Mayor (maj7)">
           <p class="text-body-2 text-grey-darken-3 mb-4">
             El acorde con séptima mayor se construye tomando un acorde mayor (1ª-3ª-5ª) y añadiendo la
             séptima mayor de la escala. Su fórmula de intervalos es:
@@ -62,7 +62,7 @@
         </CoursesSection>
 
         <!-- SECCION 3: Acorde con Séptima Menor (Dominante) -->
-        <CoursesSection title="Acorde con Séptima Menor (Dominante, 7)" icon="mdi-music-box-outline">
+        <CoursesSection icon="mdi-music-box-outline" title="Acorde con Séptima Menor (Dominante, 7)">
           <p class="text-body-2 text-grey-darken-3 mb-4">
             El acorde con séptima menor (también llamado "acorde dominante" y escrito simplemente como
             "7", ej. C7, G7) toma un acorde mayor y le añade la séptima menor de la escala. Su fórmula
@@ -83,13 +83,13 @@
         </CoursesSection>
 
         <!-- SECCION 4: Tabla Comparativa de Acordes con Séptima -->
-        <CoursesSection title="Acordes con Séptima y sus Notas" icon="mdi-table-music">
+        <CoursesSection icon="mdi-table-music" title="Acordes con Séptima y sus Notas">
           <p class="text-body-2 text-grey-darken-2 mb-4">
             A continuación, una comparación de los acordes con séptima mayor y séptima menor (dominante)
             más usados en el ukelele:
           </p>
 
-          <VTable density="compact" class="mb-2">
+          <VTable class="mb-2" density="compact">
             <thead>
               <tr>
                 <th class="text-left">Acorde</th>
@@ -103,7 +103,7 @@
             <tbody>
               <tr v-for="chord in seventh_chords_table" :key="chord.name">
                 <td>
-                  <VChip size="x-small" :color="chord.type === 'Mayor 7 (maj7)' ? 'teal' : 'deep-orange'"  class="font-weight-bold" variant="elevated">{{ chord.name }}</VChip>
+                  <VChip size="x-small" variant="elevated"  class="font-weight-bold" :color="chord.type === 'Mayor 7 (maj7)' ? 'teal' : 'deep-orange'">{{ chord.name }}</VChip>
                 </td>
                 <td class="text-body-2">{{ chord.type }}</td>
                 <td class="font-weight-bold">{{ chord.root }}</td>
@@ -114,7 +114,7 @@
             </tbody>
           </VTable>
 
-          <VAlert type="info" density="compact" variant="text" class="mt-4 mb-0">
+          <VAlert type="info" variant="text" class="mt-4 mb-0" density="compact">
             Fíjate que <strong>Cmaj7</strong> y <strong>C7</strong> comparten las mismas tres primeras
             notas (Do, Mi, Sol); la única diferencia es esa última nota, Si vs. Sib, que cambia
             completamente el carácter del acorde.

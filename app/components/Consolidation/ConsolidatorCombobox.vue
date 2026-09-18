@@ -5,11 +5,11 @@
       v-model:menu="menu"
       v-model:search="search"
       v-bind="$attrs"
-      hide-selected
-      :items="items"
       multiple
-      :label="label"
+      hide-selected
       return-object
+      :items="items"
+      :label="label"
       item-value="id"
       item-title="name"
       variant="outlined"

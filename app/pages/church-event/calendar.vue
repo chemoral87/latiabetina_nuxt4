@@ -21,8 +21,8 @@
           id="chrcev-refresh-btn"
           class="mr-2"
           color="primary"
-          variant="outlined"
           :loading="loading"
+          variant="outlined"
           @click="refreshChurchEvents"
         >
           <VIcon start>mdi-reload</VIcon>

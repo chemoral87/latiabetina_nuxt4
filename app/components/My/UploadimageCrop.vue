@@ -3,9 +3,9 @@
     <input
       ref="fileInput"
       type="file"
-      accept="image/png, image/jpeg, image/bmp"
       style="display: none"
       aria-label="Subir imagen"
+      accept="image/png, image/jpeg, image/bmp"
       @change="onFileSelected"
     />
 
@@ -14,28 +14,28 @@
       {{ label || 'Subir foto' }}
     </VBtn>
 
-    <div v-if="loading" class="d-flex align-center justify-center mt-2 bg-grey-lighten-3 rounded" style="min-height: 80px">
-      <VProgressCircular indeterminate color="primary" size="24" />
+    <div v-if="loading" style="min-height: 80px" class="d-flex align-center justify-center mt-2 bg-grey-lighten-3 rounded">
+      <VProgressCircular size="24" indeterminate color="primary" />
     </div>
     <div v-else-if="filename" class="d-flex align-center mt-2">
-      <VChip size="small" label color="primary" variant="outlined" class="mr-2">
+      <VChip label class="mr-2" size="small" color="primary" variant="outlined">
         <VIcon start size="x-small">mdi-file-image</VIcon>
         {{ filename }}
       </VChip>
-      <VBtn id="my-uploadimagecrop-clear-btn" size="small" variant="outlined" color="error" @click="clearImage">
+      <VBtn id="my-uploadimagecrop-clear-btn" size="small" color="error" variant="outlined" @click="clearImage">
         <VIcon start size="x-small">mdi-close</VIcon>
         Limpiar
       </VBtn>
     </div>
     <div
       v-else
-      class="d-flex flex-column align-center justify-center mt-2 rounded drop-zone"
       :class="{ 'drop-zone--active': dragOver }"
       style="min-height: 80px; cursor: pointer; border: 2px dashed #bdbdbd;"
-      @dragover.prevent="onDragOver"
-      @dragleave="onDragLeave"
+      class="d-flex flex-column align-center justify-center mt-2 rounded drop-zone"
       @drop.prevent="onDrop"
+      @dragleave="onDragLeave"
       @click="triggerFilePicker"
+      @dragover.prevent="onDragOver"
     >
       <VIcon :color="dragOver ? 'primary' : 'grey-lighten-1'">mdi-cloud-upload-outline</VIcon>
       <span class="text-caption mt-1" :class="dragOver ? 'text-primary' : 'text-grey'">Arrastra el archivo aqu�</span>
@@ -55,16 +55,16 @@
         <VCardText>
           <VRow density="compact">
             <VCol cols="6">
-              <Cropper v-if="uri" :stencil-component="CircleStencil" :src="uri" @change="changeCropper" />
-              <div v-else class="d-flex align-center justify-center bg-grey-lighten-3 rounded" style="height: 160px">
+              <Cropper v-if="uri" :src="uri" :stencil-component="CircleStencil" @change="changeCropper" />
+              <div v-else style="height: 160px" class="d-flex align-center justify-center bg-grey-lighten-3 rounded">
                 <VIcon size="large" color="grey-lighten-1">mdi-image-plus</VIcon>
               </div>
             </VCol>
             <VCol cols="6">
-              <div v-if="imageToUpload" class="d-flex align-center justify-center bg-grey-lighten-4 rounded-circle" style="width: 160px; height: 160px; overflow: hidden;">
-                <img style="max-width: 100%; min-height: 120px; border-radius: 50%;" :src="imageToUpload" />
+              <div v-if="imageToUpload" style="width: 160px; height: 160px; overflow: hidden;" class="d-flex align-center justify-center bg-grey-lighten-4 rounded-circle">
+                <img :src="imageToUpload" style="max-width: 100%; min-height: 120px; border-radius: 50%;" />
               </div>
-              <div v-else class="d-flex align-center justify-center bg-grey-lighten-3 rounded-circle" style="width: 160px; height: 160px;">
+              <div v-else style="width: 160px; height: 160px;" class="d-flex align-center justify-center bg-grey-lighten-3 rounded-circle">
                 <VIcon size="large" color="grey-lighten-1">mdi-image-off-outline</VIcon>
               </div>
             </VCol>
@@ -72,7 +72,7 @@
         </VCardText>
 
         <div class="d-flex justify-end px-4 pb-4">
-          <VBtn id="my-uploadimagecrop-cancel-btn" color="primary" variant="outlined" class="mr-4" @click="cancel()">
+          <VBtn id="my-uploadimagecrop-cancel-btn" class="mr-4" color="primary" variant="outlined" @click="cancel()">
             <VIcon start>mdi-close</VIcon>
             Cancelar
           </VBtn>

@@ -31,8 +31,8 @@
         <!-- SECCION 2: Paladar blando -->
         <CoursesSection icon="mdi-tent" title="Eleva el Paladar Blando">
           <div class="text-center py-3 mb-2">
-            <VBtnToggle v-model="palateMode" mandatory class="mb-3" color="primary" variant="outlined"
-              density="compact">
+            <VBtnToggle v-model="palateMode" mandatory class="mb-3" color="primary" density="compact"
+              variant="outlined">
               <VBtn id="btn-singp12-palate-half" value="half" :prepend-icon="palateMode === 'half' ? 'mdi-check' : ''">
                 Medio bostezo
               </VBtn>
@@ -54,7 +54,7 @@
 
         <!-- SECCION 3: Frenillo -->
         <CoursesSection icon="mdi-ruler-square" title="Estiramiento del Frenillo">
-          <VRow density="compact" class="mb-2">
+          <VRow class="mb-2" density="compact">
             <VCol v-for="(ex, i) in frenulumPra" :key="ex.name" md="4" sm="6" cols="12">
               <VCard variant="outlined" class="pa-3 mb-3 text-center fill-height">
                 <VIcon size="32" class="mb-1" color="deep-purple">{{ ex.icon }}</VIcon>

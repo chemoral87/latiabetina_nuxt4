@@ -6,7 +6,7 @@
     </VCardTitle>
 
     <VCardText>
-      <VRow density="compact" class="mb-2">
+      <VRow class="mb-2" density="compact">
         <VCol cols="auto">
           <VSelect id="pit-ukele-strings" v-model="stringCount" hide-details label="Cuerdas" density="compact" variant="outlined" style="max-width: 150px" :items="stringCountOptions" />
         </VCol>
@@ -38,7 +38,7 @@
           <!-- Notes on fretboard -->
           <g v-for="(string, stringIndex) in strings" :key="'notes-' + stringIndex">
             <!-- Cuerda al aire (traste 0) -->
-            <circle :r="noteRadius" :class="['note-circle', { 'scale-circle': isNoteInScale(string, -1) }]" :cx="getFretX(0) - 30" :cy="getStringY(stringIndex)" :fill="getNoteColor(string, -1)" :fill-opacity="getNoteOpacity(string, -1)" :stroke-opacity="scaleRingOpacity" />
+            <circle :r="noteRadius" :cx="getFretX(0) - 30" :cy="getStringY(stringIndex)" :fill="getNoteColor(string, -1)" :stroke-opacity="scaleRingOpacity" :fill-opacity="getNoteOpacity(string, -1)" :class="['note-circle', { 'scale-circle': isNoteInScale(string, -1) }]" />
             <text font-size="11" class="note-text" font-weight="bold" text-anchor="middle" :x="getFretX(0) - 30" :y="getStringY(stringIndex) + 5" :fill="getNoteTextColor(string, -1)">
               {{ getNoteAtFret(string, -1) }}
             </text>
@@ -48,12 +48,12 @@
               v-for="fret in 12"
               :key="'note-' + stringIndex + '-' + fret"
               :r="noteRadius"
-              :class="['note-circle', { 'scale-circle': isNoteInScale(string, fret) }]"
               :cy="getStringY(stringIndex)"
               :fill="getNoteColor(string, fret)"
-              :fill-opacity="getNoteOpacity(string, fret)"
               :stroke-opacity="scaleRingOpacity"
               :cx="getFretX(fret) - fretSpacing / 2"
+              :fill-opacity="getNoteOpacity(string, fret)"
+              :class="['note-circle', { 'scale-circle': isNoteInScale(string, fret) }]"
             />
             <text
               v-for="fret in 12"

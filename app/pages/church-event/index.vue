@@ -1,6 +1,6 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VSheet color="white" rounded>
+    <VSheet rounded color="white">
       <VRow density="compact">
       <!-- Filtro de busqueda -->
       <VCol md="2" cols="12">
@@ -22,8 +22,8 @@
           id="chrcev-refresh-btn"
           class="mr-1"
           color="primary"
-          variant="outlined"
           :loading="loading"
+          variant="outlined"
           @click="refreshChurchEvents"
         >
           <VIcon start>mdi-reload</VIcon>

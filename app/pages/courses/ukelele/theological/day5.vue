@@ -6,19 +6,19 @@
       <div v-if="showContent" class="pa-4">
 
         <!-- SECCIÓN 1: La Armonía — El Sonido del Cielo en la Tierra -->
-        <CoursesSection outlined title="La Armonía — El Sonido del Cielo en la Tierra" icon="mdi-music-note-eighth" text-class="">
+        <CoursesSection outlined text-class="" icon="mdi-music-note-eighth" title="La Armonía — El Sonido del Cielo en la Tierra">
           <p class="text-body-1 text-grey-darken-3 mb-4">
             La armonía musical requiere que cada nota conozca su lugar y se subordine a una tonalidad
             común. En la vida espiritual, la armonía entre creyentes refleja la unidad que Dios llama
             a guardar: no uniformidad de caracteres, sino convergencia en el mismo Señor.
             Pablo describe este llamado con dos textos que se complementan.
           </p>
-          <VRow density="compact" class="mb-3">
-            <VCol cols="12" md="6" class="d-flex">
+          <VRow class="mb-3" density="compact">
+            <VCol md="6" cols="12" class="d-flex">
               <VCard id="card-cours-ukele-theol-day5-lighten-5-1" variant="outlined" class="pa-4 bg-grey-lighten-5 w-100 d-flex flex-column justify-space-between">
                 <div>
                   <div class="d-flex align-center mb-2">
-                    <VIcon color="primary" class="mr-2">mdi-book-open-variant</VIcon>
+                    <VIcon class="mr-2" color="primary">mdi-book-open-variant</VIcon>
                     <span class="font-weight-bold text-grey-darken-4">Colosenses 3:14-15</span>
                   </div>
                   <p class="text-body-2 italic text-grey-darken-3 mb-0">
@@ -29,11 +29,11 @@
                 <div class="text-caption text-primary font-weight-bold mt-2 text-right">RVR1960</div>
               </VCard>
             </VCol>
-            <VCol cols="12" md="6" class="d-flex">
+            <VCol md="6" cols="12" class="d-flex">
               <VCard id="card-cours-ukele-theol-day5-lighten-5-2" variant="outlined" class="pa-4 bg-grey-lighten-5 w-100 d-flex flex-column justify-space-between">
                 <div>
                   <div class="d-flex align-center mb-2">
-                    <VIcon color="primary" class="mr-2">mdi-book-open-variant</VIcon>
+                    <VIcon class="mr-2" color="primary">mdi-book-open-variant</VIcon>
                     <span class="font-weight-bold text-grey-darken-4">Efesios 4:2-3</span>
                   </div>
                   <p class="text-body-2 italic text-grey-darken-3 mb-0">
@@ -45,7 +45,7 @@
               </VCard>
             </VCol>
           </VRow>
-          <VAlert type="info" border="left" colored-border elevation="1" class="mb-0">
+          <VAlert type="info" class="mb-0" border="left" elevation="1" colored-border>
             <div class="text-body-2 font-weight-medium text-grey-darken-4">
               "Guardar la unidad" no es crearla: ya existe en el Espíritu. La tarea del creyente es
               no romperla. Como el músico que cuida la afinación ya lograda, el cuerpo cuida el
@@ -55,7 +55,7 @@
         </CoursesSection>
 
         <!-- SECCIÓN 2: Consonancia y Disonancia Espiritual -->
-        <CoursesSection outlined title="Consonancia y Disonancia Espiritual" icon="mdi-sine-wave" text-class="">
+        <CoursesSection outlined text-class="" icon="mdi-sine-wave" title="Consonancia y Disonancia Espiritual">
           <p class="text-body-1 text-grey-darken-3 mb-4">
             En la música tonal hay intervalos consonantes y disonantes. La disonancia no es un error;
             es tensión que el compositor resuelve intencionalmente, produciendo una armonía más rica.
@@ -63,33 +63,33 @@
             verdad, pueden generar una unidad más profunda que la que existía antes.
             <strong>El perdón es la resolución armónica del Evangelio.</strong>
           </p>
-          <VRow density="compact" class="mb-3">
-            <VCol cols="12" md="6">
+          <VRow class="mb-3" density="compact">
+            <VCol md="6" cols="12">
               <VCard id="card-cours-ukele-theol-day5-3" variant="outlined" class="pa-4 fill-height" style="border-radius:10px;">
                 <div class="d-flex align-center mb-2">
-                  <VIcon color="green-darken-2" class="mr-2">mdi-check-decagram</VIcon>
+                  <VIcon class="mr-2" color="green-darken-2">mdi-check-decagram</VIcon>
                   <span class="text-subtitle-2 font-weight-bold text-green-darken-2">Consonancia espiritual</span>
                 </div>
                 <VList density="compact">
                   <VListItem v-for="item in consonances" :key="item" class="px-0 py-0">
                     <template #prepend>
-<VIcon color="green-darken-1" size="x-small">mdi-music-note</VIcon>
+<VIcon size="x-small" color="green-darken-1">mdi-music-note</VIcon>
 </template>
 <VListItemTitle class="text-body-2 text-grey-darken-3 text-wrap">{{ item }}</VListItemTitle>
                   </VListItem>
                 </VList>
               </VCard>
             </VCol>
-            <VCol cols="12" md="6">
+            <VCol md="6" cols="12">
               <VCard id="card-cours-ukele-theol-day5-4" variant="outlined" class="pa-4 fill-height" style="border-radius:10px;">
                 <div class="d-flex align-center mb-2">
-                  <VIcon color="orange-darken-2" class="mr-2">mdi-alert-outline</VIcon>
+                  <VIcon class="mr-2" color="orange-darken-2">mdi-alert-outline</VIcon>
                   <span class="text-subtitle-2 font-weight-bold text-orange-darken-2">Disonancia que busca resolución</span>
                 </div>
                 <VList density="compact">
                   <VListItem v-for="item in dissonances" :key="item" class="px-0 py-0">
                     <template #prepend>
-<VIcon color="orange-darken-1" size="x-small">mdi-music-note-off</VIcon>
+<VIcon size="x-small" color="orange-darken-1">mdi-music-note-off</VIcon>
 </template>
 <VListItemTitle class="text-body-2 text-grey-darken-3 text-wrap">{{ item }}</VListItemTitle>
                   </VListItem>
@@ -98,15 +98,15 @@
             </VCol>
           </VRow>
 
-          <VCard variant="outlined" class="pa-4 mb-0" style="border-radius:10px; border-left: 4px solid #1976D2;">
+          <VCard class="pa-4 mb-0" variant="outlined" style="border-radius:10px; border-left: 4px solid #1976D2;">
             <div class="d-flex align-center mb-2">
-              <VIcon color="primary" class="mr-2">mdi-music-clef-treble</VIcon>
+              <VIcon class="mr-2" color="primary">mdi-music-clef-treble</VIcon>
               <span class="text-subtitle-2 font-weight-bold text-primary">Las "notas" de Colosenses 3 — la tonalidad del amor</span>
             </div>
             <VRow density="compact">
-              <VCol v-for="note in colossians" :key="note.label" cols="12" sm="6" md="4">
+              <VCol v-for="note in colossians" :key="note.label" md="4" sm="6" cols="12">
                 <div class="d-flex align-start pa-2">
-                  <VIcon :color="note.color" size="small" class="mr-2 mt-1 flex-shrink-0">{{ note.icon }}</VIcon>
+                  <VIcon size="small" :color="note.color" class="mr-2 mt-1 flex-shrink-0">{{ note.icon }}</VIcon>
                   <div>
                     <span class="text-caption font-weight-bold text-grey-darken-4">{{ note.label }}</span>
                     <span class="text-caption text-primary font-weight-medium"> ({{ note.ref }})</span>
@@ -119,8 +119,8 @@
         </CoursesSection>
 
         <!-- SECCIÓN 3: Aplicación Práctica -->
-        <CoursesSection outlined title="Aplicación Práctica" icon="mdi-hand-pointing-right" text-class="">
-          <VAlert type="warning" border="left" colored-border elevation="1" class="mb-0">
+        <CoursesSection outlined text-class="" title="Aplicación Práctica" icon="mdi-hand-pointing-right">
+          <VAlert class="mb-0" border="left" elevation="1" colored-border type="warning">
             <div class="text-body-2 font-weight-medium text-grey-darken-4">
               Esta semana, cuando practiques un acorde en tu ukelele, escucha si todas las cuerdas suenan
               con igual claridad. Si alguna "buzza" o se apaga, corrígela antes de continuar. Haz lo mismo

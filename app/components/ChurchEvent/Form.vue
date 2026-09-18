@@ -158,7 +158,7 @@
           </VCol>
         </VRow>
 
-        <VRow density="compact" v-if="previewImage || imageLoading">
+        <VRow v-if="previewImage || imageLoading" density="compact">
           <VCol cols="12">
             <MyPreviewImage
               :src="previewImage"

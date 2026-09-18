@@ -1,18 +1,18 @@
 <template>
-  <VContainer id="pos-page" class="pos-page px-2 pt-2" :fluid="true" :style="{ paddingBottom: footerHeight + 'px' }">
+  <VContainer id="pos-page" :fluid="true" class="pos-page px-2 pt-2" :style="{ paddingBottom: footerHeight + 'px' }">
     <!-- Loading -->
     <div v-if="productsStore.loading" id="pos-loading" class="text-center py-10">
-      <VProgressCircular indeterminate color="primary" size="48" />
+      <VProgressCircular size="48" indeterminate color="primary" />
     </div>
 
     <!-- View toggle + Product grid/list -->
     <div v-else>
       <div id="pos-view-toggle" class="pos-view-toggle mb-2">
-        <VBtnToggle v-model="viewMode" mandatory density="compact" color="primary" class="bg-grey-lighten-3">
-          <VBtn id="pos-toggle-grid-btn" value="grid" icon>
+        <VBtnToggle v-model="viewMode" mandatory color="primary" density="compact" class="bg-grey-lighten-3">
+          <VBtn id="pos-toggle-grid-btn" icon value="grid">
             <VIcon>mdi-view-grid</VIcon>
           </VBtn>
-          <VBtn id="pos-toggle-list-btn" value="list" icon>
+          <VBtn id="pos-toggle-list-btn" icon value="list">
             <VIcon>mdi-view-list</VIcon>
           </VBtn>
         </VBtnToggle>
@@ -20,8 +20,8 @@
           <template #activator="{ props }">
             <VBtn
               id="pos-toggle-stock-btn"
-              size="small"
               icon
+              size="small"
               class="ml-2 pos-stock-toggle"
               :color="showStock ? 'blue' : 'blue-darken-3'"
               v-bind="props"
@@ -36,29 +36,29 @@
 
       <!-- GRID VIEW -->
       <div v-if="viewMode === 'grid'" id="pos-grid-view">
-        <PosProductGrid :products="productsStore.products" :cart="cart" :show-stock="showStock" @add="addToCart" @decrease="decreaseCart" @remove="removeProduct" />
+        <PosProductGrid :cart="cart" :show-stock="showStock" :products="productsStore.products" @add="addToCart" @remove="removeProduct" @decrease="decreaseCart" />
       </div>
 
       <!-- LIST VIEW -->
       <div v-if="viewMode === 'list'" id="pos-list-view">
-        <PosProductList :products="productsStore.products" :cart="cart" :show-stock="showStock" @add="addToCart" @decrease="decreaseCart" @remove="removeProduct" />
+        <PosProductList :cart="cart" :show-stock="showStock" :products="productsStore.products" @add="addToCart" @remove="removeProduct" @decrease="decreaseCart" />
       </div>
 
       <!-- Footer -->
       <PosCartFooter
         ref="posFooterEl"
         :cart="cart"
+        :saving="saving"
         :show-cart="showCart"
         :customer-name="customerName"
         :payment-method="paymentMethod"
         :payment-methods="paymentMethods"
-        :saving="saving"
-        @toggle-cart="showCart = !showCart"
-        @change-qty="changeQuantity($event.index, $event.delta)"
+        @checkout="registerSale"
         @remove-cart-item="removeFromCart"
+        @toggle-cart="showCart = !showCart"
         @update:customer-name="customerName = $event"
         @update:payment-method="paymentMethod = $event"
-        @checkout="registerSale"
+        @change-qty="changeQuantity($event.index, $event.delta)"
       />
     </div>
   </VContainer>

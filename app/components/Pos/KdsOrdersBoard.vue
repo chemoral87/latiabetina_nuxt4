@@ -2,7 +2,7 @@
   <div id="cmp-pos-kds-orders-board">
     <!-- ── Loading ──────────────────────────────────────────────────── -->
     <div v-if="loading" class="kds-state kds-state--loading">
-      <VProgressCircular indeterminate color="primary" size="56" />
+      <VProgressCircular size="56" indeterminate color="primary" />
     </div>
 
     <!-- ── Error ────────────────────────────────────────────────────── -->
@@ -16,7 +16,7 @@
       <div class="text-h6 mt-4 text-grey">Sin órdenes pendientes</div>
       <div class="text-body-2 text-grey mt-1">Todas las órdenes han sido completadas</div>
       <div class="mt-6">
-        <VBtn id="kds-reload-btn" variant="outlined" color="primary" @click="emit('reload')">
+        <VBtn id="kds-reload-btn" color="primary" variant="outlined" @click="emit('reload')">
           <VIcon start size="small">mdi-refresh</VIcon>
           Recargar
         </VBtn>
@@ -26,29 +26,29 @@
     <!-- ── Orders board ─────────────────────────────────────────────── -->
     <template v-else>
       <!-- Header strip -->
-      <VRow density="compact" align="center" class="mb-4">
+      <VRow class="mb-4" align="center" density="compact">
         <VCol cols="auto">
           <VIcon size="32" color="orange-darken-2">mdi-chef-hat</VIcon>
         </VCol>
         <VCol>
-          <div class="text-h5 font-weight-bold d-flex align-center" style="gap: 12px">
+          <div style="gap: 12px" class="text-h5 font-weight-bold d-flex align-center">
             Pantalla de Cocina
-            <VChip color="orange-darken-2" size="small" variant="elevated" class="font-weight-bold">
+            <VChip size="small" variant="elevated" color="orange-darken-2" class="font-weight-bold">
               {{ activeOrders.length }} {{ activeOrders.length === 1 ? 'orden' : 'órdenes' }}
             </VChip>
           </div>
         </VCol>
-        <VCol cols="auto" class="d-flex align-center" style="gap: 10px">
+        <VCol cols="auto" style="gap: 10px" class="d-flex align-center">
           <!-- Sound toggle -->
-          <VTooltip text="Sonido activado / desactivado" location="bottom">
+          <VTooltip location="bottom" text="Sonido activado / desactivado">
             <template #activator="{ props: tooltipProps }">
               <VBtn
                 v-bind="tooltipProps"
                 id="kds-sound-btn"
                 icon
                 size="small"
-                :color="soundEnabled ? 'orange-darken-2' : 'grey'"
                 variant="flat"
+                :color="soundEnabled ? 'orange-darken-2' : 'grey'"
                 @click="emit('update:sound-enabled', !soundEnabled)"
               >
                 <VIcon>{{ soundEnabled ? 'mdi-volume-high' : 'mdi-volume-off' }}</VIcon>
@@ -57,7 +57,7 @@
           </VTooltip>
 
           <!-- Live indicator -->
-          <VTooltip :text="echoConnected ? 'Conectado' : 'Sin conexión en tiempo real'" location="bottom">
+          <VTooltip location="bottom" :text="echoConnected ? 'Conectado' : 'Sin conexión en tiempo real'">
             <template #activator="{ props: tooltipProps }">
               <span v-bind="tooltipProps" class="d-flex align-center">
                 <span
@@ -71,14 +71,14 @@
       </VRow>
 
       <PosKdsOrderGrid
-        :active-orders="activeOrders"
         :done-map="doneMap"
-        :is-item-completed="isItemCompleted"
         :status-title="statusTitle"
-        @toggle-row-done="(saleId, itemId, rowIndex) => emit('toggle-row-done', saleId, itemId, rowIndex)"
-        @undo-row-done="(saleId, itemId, rowIndex) => emit('undo-row-done', saleId, itemId, rowIndex)"
+        :active-orders="activeOrders"
+        :is-item-completed="isItemCompleted"
         @dismiss-order="(orderId) => emit('dismiss-order', orderId)"
         @complete-order="(orderId) => emit('complete-order', orderId)"
+        @undo-row-done="(saleId, itemId, rowIndex) => emit('undo-row-done', saleId, itemId, rowIndex)"
+        @toggle-row-done="(saleId, itemId, rowIndex) => emit('toggle-row-done', saleId, itemId, rowIndex)"
       />
     </template>
   </div>

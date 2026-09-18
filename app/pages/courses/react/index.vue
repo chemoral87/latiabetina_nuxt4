@@ -2,11 +2,11 @@
   <CoursesQuizQuizPage
     icon="mdi-atom"
     title-en="React 16 Quiz"
-    subtitle-en="Test your React 16 knowledge"
     title-es="React 16 Quiz"
-    subtitle-es="Pon a prueba tus conocimientos de React 16"
     :questions-en="questionsEn"
     :questions-es="questionsEs"
+    subtitle-en="Test your React 16 knowledge"
+    subtitle-es="Pon a prueba tus conocimientos de React 16"
   />
 </template>
 

@@ -1,6 +1,6 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VSheet color="white" rounded>
+    <VSheet rounded color="white">
       <VRow density="compact">
       <VCol md="4" cols="12">
         <VTextField
@@ -21,8 +21,8 @@
           id="song-refresh-btn"
           class="mr-1"
           color="primary"
-          variant="outlined"
           :loading="loading"
+          variant="outlined"
           @click="refreshSongs"
         >
           <VIcon start>mdi-reload</VIcon>

@@ -3,9 +3,9 @@
     <VBtn
       id="pos-controls-add-btn"
       icon
-      rounded="circle"
       variant="flat"
       color="primary"
+      rounded="circle"
       class="pos-ctrl-fab"
       @click="emit('add')"
     >
@@ -15,9 +15,9 @@
   <div v-else id="cmp-pos-product-controls" class="pos-ctrl-filled">
     <VBtn
       icon
+      color="error"
       rounded="circle"
       variant="outlined"
-      color="error"
       class="pos-ctrl-delete mr-2"
       @click="emit('remove')"
     >
@@ -25,9 +25,9 @@
     </VBtn>
     <VBtn
       icon
-      rounded="circle"
-      variant="flat"
       color="error"
+      variant="flat"
+      rounded="circle"
       class="pos-ctrl-btn"
       @click="emit('decrease')"
     >
@@ -36,9 +36,9 @@
     <span class="pos-ctrl-qty">{{ quantity }}</span>
     <VBtn
       icon
-      rounded="circle"
       variant="flat"
       color="success"
+      rounded="circle"
       class="pos-ctrl-btn"
       @click="emit('add')"
     >

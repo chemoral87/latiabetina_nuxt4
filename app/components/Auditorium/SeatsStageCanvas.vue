@@ -34,9 +34,9 @@
             :blink-state="blinkState"
             :loading-seats="loadingSeats"
             :subsection="selectedSubsection"
+            :border-width="SUBSECTION_BORDER_WIDTH"
             :selected-seats-array="selectedSeatsArray"
             :border-color="getSubsectionBorderColorForSub(selectedSubsection)"
-            :border-width="SUBSECTION_BORDER_WIDTH"
             @seat-click="handleSeatClick"
           />
         </template>
@@ -75,9 +75,9 @@
                     :categories="categories"
                     :blink-state="blinkState"
                     :loading-seats="loadingSeats"
+                    :border-width="SUBSECTION_BORDER_WIDTH"
                     :selected-seats-array="selectedSeatsArray"
                     :border-color="getSubsectionBorderColor(sIdx, subIdx)"
-                    :border-width="SUBSECTION_BORDER_WIDTH"
                     @seat-click="handleSeatClick"
                   />
                 </template>

@@ -6,7 +6,7 @@
       <div v-if="showContent" class="pa-4">
 
         <!-- SECCIÓN 1: Un Solo Cuerpo, Muchos Instrumentos -->
-        <CoursesSection outlined title="Un Solo Cuerpo, Muchos Instrumentos" icon="mdi-account-group" text-class="">
+        <CoursesSection outlined text-class="" icon="mdi-account-group" title="Un Solo Cuerpo, Muchos Instrumentos">
           <p class="text-body-1 text-grey-darken-3 mb-4">
             La Escritura no presenta un solo canal de alabanza como suficiente. Al leer el Salmo 150 como
             el clímax deliberado del Salterio, y 1 Crónicas 15 como relato histórico del culto levítico,
@@ -14,12 +14,12 @@
             en la ofrenda congregacional. La diversidad no compite; completa.
           </p>
 
-          <VRow density="compact" class="mb-3">
-            <VCol cols="12" md="6" class="d-flex">
+          <VRow class="mb-3" density="compact">
+            <VCol md="6" cols="12" class="d-flex">
               <VCard id="card-cours-ukele-theol-day3-lighten-5-1" variant="outlined" class="pa-4 bg-grey-lighten-5 w-100 d-flex flex-column justify-space-between">
                 <div>
                   <div class="d-flex align-center mb-2">
-                    <VIcon color="primary" class="mr-2">mdi-book-open-variant</VIcon>
+                    <VIcon class="mr-2" color="primary">mdi-book-open-variant</VIcon>
                     <span class="font-weight-bold text-grey-darken-4">1 Corintios 12:17</span>
                   </div>
                   <p class="text-body-2 italic text-grey-darken-3 mb-0">
@@ -30,11 +30,11 @@
                 <div class="text-caption text-primary font-weight-bold mt-2 text-right">RVR1960</div>
               </VCard>
             </VCol>
-            <VCol cols="12" md="6" class="d-flex">
+            <VCol md="6" cols="12" class="d-flex">
               <VCard id="card-cours-ukele-theol-day3-lighten-5-2" variant="outlined" class="pa-4 bg-grey-lighten-5 w-100 d-flex flex-column justify-space-between">
                 <div>
                   <div class="d-flex align-center mb-2">
-                    <VIcon color="primary" class="mr-2">mdi-book-open-variant</VIcon>
+                    <VIcon class="mr-2" color="primary">mdi-book-open-variant</VIcon>
                     <span class="font-weight-bold text-grey-darken-4">Salmo 150:3-6</span>
                   </div>
                   <p class="text-body-2 italic text-grey-darken-3 mb-0">
@@ -48,10 +48,10 @@
           </VRow>
 
           <VRow density="compact">
-            <VCol cols="12" md="4">
+            <VCol md="4" cols="12">
               <VCard id="card-cours-ukele-theol-day3-3" variant="outlined" class="pa-3 fill-height" style="border-radius:10px;">
                 <div class="d-flex align-center mb-2">
-                  <VIcon color="primary" class="mr-2">mdi-guitar-acoustic</VIcon>
+                  <VIcon class="mr-2" color="primary">mdi-guitar-acoustic</VIcon>
                   <span class="text-subtitle-2 font-weight-bold text-primary">Los instrumentos</span>
                 </div>
                 <p class="text-body-2 text-grey-darken-3 mb-0">
@@ -60,10 +60,10 @@
                 </p>
               </VCard>
             </VCol>
-            <VCol cols="12" md="4">
+            <VCol md="4" cols="12">
               <VCard id="card-cours-ukele-theol-day3-4" variant="outlined" class="pa-3 fill-height" style="border-radius:10px;">
                 <div class="d-flex align-center mb-2">
-                  <VIcon color="primary" class="mr-2">mdi-account-voice</VIcon>
+                  <VIcon class="mr-2" color="primary">mdi-account-voice</VIcon>
                   <span class="text-subtitle-2 font-weight-bold text-primary">Las voces graves</span>
                 </div>
                 <p class="text-body-2 text-grey-darken-3 mb-0">
@@ -72,10 +72,10 @@
                 </p>
               </VCard>
             </VCol>
-            <VCol cols="12" md="4">
+            <VCol md="4" cols="12">
               <VCard id="card-cours-ukele-theol-day3-5" variant="outlined" class="pa-3 fill-height" style="border-radius:10px;">
                 <div class="d-flex align-center mb-2">
-                  <VIcon color="primary" class="mr-2">mdi-account-music</VIcon>
+                  <VIcon class="mr-2" color="primary">mdi-account-music</VIcon>
                   <span class="text-subtitle-2 font-weight-bold text-primary">Las voces agudas</span>
                 </div>
                 <p class="text-body-2 text-grey-darken-3 mb-0">
@@ -88,7 +88,7 @@
         </CoursesSection>
 
         <!-- SECCIÓN 2: La Unidad como Testimonio -->
-        <CoursesSection outlined title="La Unidad como Testimonio" icon="mdi-seal" text-class="">
+        <CoursesSection outlined text-class="" icon="mdi-seal" title="La Unidad como Testimonio">
           <p class="text-body-1 text-grey-darken-3 mb-4">
             La unidad de la iglesia no es un ideal opcional. Según Jesús, es una de las pruebas más
             poderosas ante el mundo de que el Evangelio es verdadero. En su oración sacerdotal no pidió
@@ -97,7 +97,7 @@
 
           <VCard id="card-cours-ukele-theol-day3-lighten-5-6" variant="outlined" class="pa-4 bg-grey-lighten-5 mb-3">
             <div class="d-flex align-center mb-2">
-              <VIcon color="primary" class="mr-2">mdi-book-open-variant</VIcon>
+              <VIcon class="mr-2" color="primary">mdi-book-open-variant</VIcon>
               <span class="font-weight-bold text-grey-darken-4">Juan 17:21</span>
             </div>
             <p class="text-body-2 italic text-grey-darken-3 mb-0">
@@ -107,7 +107,7 @@
             <div class="text-caption text-primary font-weight-bold mt-1 text-right">RVR1960</div>
           </VCard>
 
-          <VAlert type="info" border="left" colored-border elevation="1" class="mb-0">
+          <VAlert type="info" class="mb-0" border="left" elevation="1" colored-border>
             <div class="text-body-2 font-weight-medium text-grey-darken-4">
               Pablo vincula la unidad directamente a la adoración: "para que con unánime voz y un solo
               corazón glorifiquéis a Dios" (Ro 15:6). La congregación que canta junta no solo hace música;
@@ -117,8 +117,8 @@
         </CoursesSection>
 
         <!-- SECCIÓN 3: Aplicación Práctica -->
-        <CoursesSection outlined title="Aplicación Práctica" icon="mdi-hand-pointing-right" text-class="">
-          <VAlert type="warning" border="left" colored-border elevation="1" class="mb-0">
+        <CoursesSection outlined text-class="" title="Aplicación Práctica" icon="mdi-hand-pointing-right">
+          <VAlert class="mb-0" border="left" elevation="1" colored-border type="warning">
             <div class="text-body-2 font-weight-medium text-grey-darken-4">
               Esta semana, cuando practiques con tu ukelele en la próxima sesión de adoración, nota quién
               canta grave y quién canta agudo. Escúchalos. Deja que tu instrumento sirva al conjunto en

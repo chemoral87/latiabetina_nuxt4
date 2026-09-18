@@ -30,7 +30,7 @@
             </VBtn>
           </div>
 
-          <VRow density="compact" class="mb-2">
+          <VRow class="mb-2" density="compact">
             <VCol md="4" cols="12">
               <VCard variant="outlined" class="pa-3 text-center mb-2">
                 <div class="text-caption text-grey-darken-2">Velocidad</div>
@@ -88,7 +88,7 @@
             </div>
             <p class="text-subtitle-1 font-weight-bold text-grey-darken-4 mb-4">{{ currentQuestion.question }}</p>
 
-            <VRow density="compact" class="mb-4">
+            <VRow class="mb-4" density="compact">
               <VCol v-for="(option, idx) in currentQuestion.options" :key="idx" sm="6" cols="12">
                 <VBtn id="btn-singp6-quiz-option" block variant="outlined" :disabled="answered"
                   :color="getOptionColor(idx)" class="py-4 text-left justify-start" @click="checkAnswer(idx)">

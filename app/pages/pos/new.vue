@@ -1,6 +1,6 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VRow density="compact" justify="center">
+    <VRow justify="center" density="compact">
       <VCol md="8" cols="12">
         <VCard id="posn-main-card" class="pa-4" variant="outlined">
           <div class="text-subtitle-1 font-weight-bold mb-4">

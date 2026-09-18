@@ -34,8 +34,8 @@
           <VBtn
             id="mtl-refresh-btn"
             color="primary"
-            variant="outlined"
             :loading="loading"
+            variant="outlined"
             @click="fetchData"
           >
             <VIcon start>mdi-reload</VIcon>

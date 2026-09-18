@@ -6,7 +6,7 @@
     </VCardTitle>
 
     <VCardText>
-      <VRow density="compact" class="mb-2">
+      <VRow class="mb-2" density="compact">
         <VCol cols="auto">
           <VSelect
             id="pit-piano-keys"
@@ -15,8 +15,8 @@
             label="Teclas"
             density="compact"
             variant="outlined"
-            :items="keyboardSizeOptions"
             style="max-width: 150px"
+            :items="keyboardSizeOptions"
           />
         </VCol>
       </VRow>
@@ -25,25 +25,25 @@
           <!-- White keys -->
           <g v-for="(key, i) in whiteKeys" :key="'wk-' + i">
             <rect
-              :x="key.x"
               y="0"
+              rx="0"
+              :x="key.x"
+              stroke="#999"
+              stroke-width="1"
+              class="white-key"
               :width="whiteKeyWidth"
               :height="whiteKeyHeight"
               :fill="getWhiteKeyFill(key)"
               :fill-opacity="getWhiteKeyOpacity(key)"
-              stroke="#999"
-              stroke-width="1"
-              rx="0"
-              class="white-key"
             />
             <text
-              :x="key.x + whiteKeyWidth / 2"
-              :y="whiteKeyHeight - 10"
-              text-anchor="middle"
               font-size="11"
-              font-weight="bold"
-              :fill="getWhiteKeyTextColor(key)"
               class="note-label"
+              font-weight="bold"
+              text-anchor="middle"
+              :y="whiteKeyHeight - 10"
+              :x="key.x + whiteKeyWidth / 2"
+              :fill="getWhiteKeyTextColor(key)"
             >
               {{ key.label }}
             </text>
@@ -52,25 +52,25 @@
           <!-- Black keys -->
           <g v-for="(key, i) in blackKeys" :key="'bk-' + i">
             <rect
-              :x="key.x"
               y="0"
+              rx="0"
+              :x="key.x"
+              stroke="#333"
+              stroke-width="1"
+              class="black-key"
               :width="blackKeyWidth"
               :height="blackKeyHeight"
               :fill="getBlackKeyFill(key)"
               :fill-opacity="getBlackKeyOpacity(key)"
-              stroke="#333"
-              stroke-width="1"
-              rx="0"
-              class="black-key"
             />
             <text
-              :x="key.x + blackKeyWidth / 2"
-              :y="blackKeyHeight - 8"
-              text-anchor="middle"
               font-size="9"
-              font-weight="bold"
-              :fill="getBlackKeyTextColor(key)"
               class="note-label"
+              font-weight="bold"
+              text-anchor="middle"
+              :y="blackKeyHeight - 8"
+              :x="key.x + blackKeyWidth / 2"
+              :fill="getBlackKeyTextColor(key)"
             >
               {{ key.label }}
             </text>

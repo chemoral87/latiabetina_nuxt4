@@ -1,7 +1,7 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VSheet color="white" rounded>
-      <VRow density="compact" align="center">
+    <VSheet rounded color="white">
+      <VRow align="center" density="compact">
       <VCol md="3" sm="6" cols="12">
         <VTextField
           id="wa-logs-filter-receiver"
@@ -42,8 +42,8 @@
         <VBtn
           id="wa-logs-refresh"
           color="primary"
-          variant="outlined"
           :loading="loading"
+          variant="outlined"
           @click="fetchLogs()"
         >
           <VIcon start>mdi-reload</VIcon> Refrescar

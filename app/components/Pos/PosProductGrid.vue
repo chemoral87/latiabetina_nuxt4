@@ -1,20 +1,20 @@
 <template>
-  <VRow density="compact" id="cmp-pos-product-grid">
-    <VCol v-for="product in products" :key="product.id" cols="6" sm="4" md="3">
+  <VRow id="cmp-pos-product-grid" density="compact">
+    <VCol v-for="product in products" :key="product.id" md="3" sm="4" cols="6">
       <VCard
         variant="outlined"
         class="pos-product-card d-flex flex-column"
         :class="{ 'pos-product-card--in-cart': cartQty(product.id) > 0 }"
       >
         <div class="pos-product-image">
-          <VImg :src="product.image_s3 || ''" height="100px" contain class="bg-grey-lighten-4 flex-shrink-0">
+          <VImg contain height="100px" :src="product.image_s3 || ''" class="bg-grey-lighten-4 flex-shrink-0">
             <template #placeholder>
-              <VRow density="compact" class="fill-height ma-0" align="center" justify="center">
-                <VIcon color="grey-lighten-2" size="40">mdi-package-variant</VIcon>
+              <VRow align="center" justify="center" density="compact" class="fill-height ma-0">
+                <VIcon size="40" color="grey-lighten-2">mdi-package-variant</VIcon>
               </VRow>
             </template>
           </VImg>
-          <VChip v-if="cartQty(product.id) > 0" color="primary" size="small" variant="elevated" class="pos-cart-badge font-weight-bold">
+          <VChip v-if="cartQty(product.id) > 0" size="small" color="primary" variant="elevated" class="pos-cart-badge font-weight-bold">
             {{ cartQty(product.id) }}
           </VChip>
         </div>
@@ -27,7 +27,7 @@
             </div>
             <div class="pos-price text-primary font-weight-black">${{ formatPrice(product.price) }}</div>
           </div>
-          <div v-if="showStock" class="text-caption font-weight-medium" :class="stockColor(product.stock)">
+          <div v-if="showStock" :class="stockColor(product.stock)" class="text-caption font-weight-medium">
             {{ product.stock === 0 ? 'Sin stock' : `Stock: ${product.stock}` }}
           </div>
           <div v-else-if="product.stock === 0" class="text-caption font-weight-medium text-error">
@@ -39,15 +39,15 @@
           <PosProductControls
             :quantity="cartQty(product.id)"
             @add="emit('add', product)"
-            @decrease="emit('decrease', product)"
             @remove="emit('remove', product)"
+            @decrease="emit('decrease', product)"
           />
         </div>
       </VCard>
     </VCol>
 
     <VCol v-if="products.length === 0" cols="12" class="text-center py-12">
-      <VIcon color="grey-lighten-1" size="56">mdi-package-variant-closed</VIcon>
+      <VIcon size="56" color="grey-lighten-1">mdi-package-variant-closed</VIcon>
       <div class="text-body-1 text-grey mt-2">Sin productos disponibles</div>
     </VCol>
   </VRow>

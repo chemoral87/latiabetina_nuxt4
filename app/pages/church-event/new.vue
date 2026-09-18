@@ -1,13 +1,13 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VRow density="compact" justify="center">
-      <VCol cols="12" md="8">
+    <VRow justify="center" density="compact">
+      <VCol md="8" cols="12">
         <ChurchEventForm
           :loading="saving"
+          permission="church-event-create"
           :initial-event-date="
             (route.query.event_date as string | undefined) || null
           "
-          permission="church-event-create"
           @close="close"
           @save="saveChurchEvent"
         />

@@ -98,7 +98,7 @@
             @update:model-value="(v: boolean) => openDropdown = v ? `section-${section.id}` : null"
           >
             <template #activator="{ props }">
-              <VBtn v-bind="props" size="small" variant="text" title="Herramientas de sección" :disabled="disabled">
+              <VBtn v-bind="props" size="small" variant="text" :disabled="disabled" title="Herramientas de sección">
                 <VIcon>mdi-dots-vertical</VIcon>
               </VBtn>
             </template>
@@ -120,14 +120,14 @@
           </VMenu>
           <VSelect
             :id="`song-section-order-${section.id}`"
-            :model-value="si"
-            :items="content.sections.map((s, i) => ({ title: i === 0 ? 'Inicio' : `Después de ${s.name}`, value: i }))"
-            density="compact"
-            variant="outlined"
             hide-details
-            style="max-width: 200px"
-            placeholder="Mover a..."
+            density="compact"
+            :model-value="si"
+            variant="outlined"
             :disabled="disabled"
+            placeholder="Mover a..."
+            style="max-width: 200px"
+            :items="content.sections.map((s, i) => ({ title: i === 0 ? 'Inicio' : `Después de ${s.name}`, value: i }))"
             @update:model-value="(v: number) => moveSection(si, v)"
           />
         </div>
@@ -173,7 +173,7 @@
               @update:model-value="(v: boolean) => openDropdown = v ? `line-${line.id}` : null"
             >
               <template #activator="{ props }">
-                <VBtn v-bind="props" size="x-small" variant="text" color="primary" title="Herramientas de línea" :disabled="disabled">
+                <VBtn v-bind="props" size="x-small" variant="text" color="primary" :disabled="disabled" title="Herramientas de línea">
                   <VIcon start size="small">mdi-dots-vertical</VIcon>
                   Herramientas
                 </VBtn>
@@ -244,7 +244,7 @@
 
     <div class="d-flex justify-end px-4 pb-4">
       <VBtn id="song-editor-cancel-btn" class="mr-4" variant="text" color="primary" :disabled="disabled" @click="close">Cancelar</VBtn>
-      <VBtn id="song-editor-save-continue-btn" color="primary" variant="outlined" class="mr-2" :loading="saving || loading" :disabled="saving || loading" @click="saveAndContinue">
+      <VBtn id="song-editor-save-continue-btn" class="mr-2" color="primary" variant="outlined" :loading="saving || loading" :disabled="saving || loading" @click="saveAndContinue">
         <VIcon start>mdi-content-save-plus</VIcon>
         Guardar y continuar
       </VBtn>
@@ -257,7 +257,7 @@
     <SongPasteDialog v-if="pasteDialog" @apply="applyPasted" @close="pasteDialog = false" />
     <SongEditorHistoryFab :can-redo="canRedo" :can-undo="canUndo" @redo="redo" @undo="undo" />
 
-    <VDialog :model-value="!!confirmDeleteSectionId" @update:model-value="(v: boolean) => { if (!v) confirmDeleteSectionId = null }" max-width="400">
+    <VDialog max-width="400" :model-value="!!confirmDeleteSectionId" @update:model-value="(v: boolean) => { if (!v) confirmDeleteSectionId = null }">
       <VCard>
         <VCardTitle class="text-h6">Eliminar sección</VCardTitle>
         <VCardText>¿Estás seguro de que quieres eliminar esta sección? Esta acción no se puede deshacer.</VCardText>

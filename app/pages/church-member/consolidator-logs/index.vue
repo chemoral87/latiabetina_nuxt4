@@ -1,6 +1,6 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VSheet color="white" rounded>
+    <VSheet rounded color="white">
       <VRow density="compact">
       <VCol md="2" sm="4" cols="12">
         <VTextField
@@ -8,10 +8,10 @@
           v-model="filterInput"
           clearable
           hide-details
+          label="Filtro"
           density="compact"
           variant="outlined"
           placeholder="Filtro"
-          label="Filtro"
           append-inner-icon="mdi-magnify"
         />
       </VCol>
@@ -31,8 +31,8 @@
         <VBtn
           id="cml-refresh-btn"
           color="primary"
-          variant="outlined"
           :loading="loading"
+          variant="outlined"
           @click="fetchData"
         >
           <VIcon start>mdi-reload</VIcon>

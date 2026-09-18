@@ -13,10 +13,10 @@
           >
             <input
               :id="`cmp-editorline-chords-${syllable.id}`"
+              aria-label="Acordes"
               :value="chordsText(syllable)"
               class="cell-input chord-input"
               title="Acordes (separados por coma o espacio)"
-              aria-label="Acordes"
               @focus="emit('set-active', syllable.id)"
               @change="emit('chords-change', syllable, $event)"
               @keydown="emit('keydown', $event, line, syllable)"
@@ -34,9 +34,9 @@
           >
             <input
               :id="`cmp-editorline-text-${syllable.id}`"
+              aria-label="Letra"
               :value="syllable.text"
               class="cell-input text-input"
-              aria-label="Letra"
               @focus="emit('set-active', syllable.id)"
               @keydown="emit('keydown', $event, line, syllable)"
               @input="emit('text-input', syllable, ($event.target as HTMLInputElement).value)"
@@ -54,10 +54,10 @@
           >
             <input
               :id="`cmp-editorline-notes-${syllable.id}`"
+              aria-label="Notas"
               :value="notesText(syllable)"
               class="cell-input note-input"
               title="Melodía (notas separadas por coma o espacio)"
-              aria-label="Notas"
               @focus="emit('set-active', syllable.id)"
               @change="emit('notes-change', syllable, $event)"
               @keydown="emit('keydown', $event, line, syllable)"

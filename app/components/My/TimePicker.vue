@@ -1,25 +1,25 @@
 <template>
-  <VMenu id="cmp-my-time-picker" ref="timeMenuRef" v-model="timeMenu" :close-on-content-click="false" transition="scale-transition" offset-y :disabled="disabled">
+  <VMenu id="cmp-my-time-picker" ref="timeMenuRef" v-model="timeMenu" offset-y :disabled="disabled" transition="scale-transition" :close-on-content-click="false">
     <template #activator="{ props: menuProps }">
       <VTextField
         :id="props.id"
         ref="inputField"
-        :model-value="displayValue"
-        :label="label"
-        prepend-inner-icon="mdi-clock-outline"
         readonly
-        :error-messages="errorMessages"
-        :disabled="disabled"
-        :density="dense ? 'compact' : undefined"
-        :variant="outlined ? 'outlined' : undefined"
-        :hide-details="hideDetails"
         v-bind="menuProps"
         clearable
+        :label="label"
+        :disabled="disabled"
+        :hide-details="hideDetails"
+        :model-value="displayValue"
+        :error-messages="errorMessages"
+        prepend-inner-icon="mdi-clock-outline"
+        :density="dense ? 'compact' : undefined"
+        :variant="outlined ? 'outlined' : undefined"
       />
     </template>
 
     <VCard id="my-timep-card-1" min-width="auto">
-      <VRow density="compact" no-gutters>
+      <VRow no-gutters density="compact">
         <!-- Hours column -->
         <VCol cols="4" class="tp-col">
           <div v-for="h in hours" :key="h" class="tp-item" :class="{ 'tp-item--selected': selectedHour === h }" @click="selectedHour = h">
@@ -43,7 +43,7 @@
       </VRow>
 
       <div class="d-flex justify-end px-4 pb-4 pt-2">
-        <VBtn id="my-timepicker-clear-btn" color="primary" variant="outlined" class="mr-4" @click="clearTime">
+        <VBtn id="my-timepicker-clear-btn" class="mr-4" color="primary" variant="outlined" @click="clearTime">
           <VIcon start>mdi-close</VIcon>
           Limpiar
         </VBtn>

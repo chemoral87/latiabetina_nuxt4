@@ -3,32 +3,32 @@
     :id="`${id}-menu`"
     ref="dateMenuRef"
     v-model="dateMenu"
-    :close-on-content-click="false"
-    transition="scale-transition"
     offset-y
     min-width="auto"
+    transition="scale-transition"
+    :close-on-content-click="false"
   >
     <template #activator="{ props }">
       <VTextField
         :id="id"
-        :model-value="dateRangeText"
-        :label="label"
-        :placeholder="placeholder"
-        :prepend-inner-icon="prependIcon"
         readonly
+        :label="label"
+        :disabled="disabled"
         :clearable="clearable"
+        :placeholder="placeholder"
         :hide-details="hideDetails"
+        :model-value="dateRangeText"
+        :error-messages="errorMessages"
+        :prepend-inner-icon="prependIcon"
         :density="density ?? (dense ? 'compact' : undefined)"
         :variant="variant ?? (outlined ? 'outlined' : 'underlined')"
-        :disabled="disabled"
-        :error-messages="errorMessages"
         v-bind="props"
         @click:clear="onClear"
       />
     </template>
 
-    <VCard elevation="4" rounded="lg" class="my-date-range">
-      <VDatePickerControls :view-mode="viewMode" :disabled="disabled">
+    <VCard rounded="lg" elevation="4" class="my-date-range">
+      <VDatePickerControls :disabled="disabled" :view-mode="viewMode">
         <template #default="controls">
           <VBtn
             id="my-daterange-prev-btn"
@@ -43,8 +43,8 @@
           <VSpacer />
           <VBtn
             id="my-daterange-title-btn"
-            variant="text"
             rounded
+            variant="text"
             class="text-subtitle-1 font-weight-bold text-none px-2"
             @click="onTitleClick"
           >
@@ -66,46 +66,46 @@
 
       <VDatePickerMonth
         v-if="viewMode === 'month'"
-        :model-value="pendingDates"
-        :month="displayMonth"
-        :year="displayYear"
-        :min="minDate"
-        :max="maxDate"
-        :first-day-of-week="firstDayOfWeek"
-        :show-adjacent-months="scrollable"
         :color="color"
-        :disabled="disabled"
+        :max="maxDate"
+        :min="minDate"
         multiple="range"
-        weeks-in-month="static"
+        :year="displayYear"
+        :disabled="disabled"
+        :month="displayMonth"
         weekday-format="short"
-        @update:model-value="onRangeUpdate"
-        @update:month="onMonthUpdate"
+        weeks-in-month="static"
+        :model-value="pendingDates"
+        :show-adjacent-months="scrollable"
+        :first-day-of-week="firstDayOfWeek"
         @update:year="onYearUpdate"
+        @update:month="onMonthUpdate"
+        @update:model-value="onRangeUpdate"
       />
       <VDatePickerMonths
         v-else-if="viewMode === 'months'"
-        :model-value="highlightMonth"
-        :year="displayYear"
-        :min="minDate"
-        :max="maxDate"
         :columns="3"
-        :height="gridHeight"
         :color="color"
+        :max="maxDate"
+        :min="minDate"
+        :year="displayYear"
+        :height="gridHeight"
+        :model-value="highlightMonth"
         @update:model-value="pickMonth"
       />
       <VDatePickerYears
         v-else
-        :model-value="highlightYear"
-        :min="minDate"
-        :max="maxDate"
-        :height="gridHeight"
         :color="color"
+        :max="maxDate"
+        :min="minDate"
+        :height="gridHeight"
+        :model-value="highlightYear"
         @update:model-value="pickYear"
       />
 
       <VDivider />
       <div class="d-flex justify-end pa-2">
-        <VBtn id="my-daterange-clear-btn" variant="outlined" color="primary" prepend-icon="mdi-close" @click="onClear">
+        <VBtn id="my-daterange-clear-btn" color="primary" variant="outlined" prepend-icon="mdi-close" @click="onClear">
           LIMPIAR
         </VBtn>
       </div>

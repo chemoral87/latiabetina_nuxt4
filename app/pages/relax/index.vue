@@ -1,7 +1,7 @@
 <template>
-  <VContainer class="breathing-container" :fluid="true">
+  <VContainer :fluid="true" class="breathing-container">
     <!-- Header -->
-    <VRow density="compact" justify="center">
+    <VRow justify="center" density="compact">
       <VCol cols="12" class="py-1">
         <div class="text-center">
           <h1 class="text-h5 text-sm-h4 font-weight-medium py-0 my-0">
@@ -11,8 +11,8 @@
       </VCol>
     </VRow>
     <!-- Área de animación y controles -->
-    <VRow density="compact" class="mb-1" justify="center">
-      <VCol cols="12" md="7">
+    <VRow class="mb-1" justify="center" density="compact">
+      <VCol md="7" cols="12">
         <VCard
           id="rel-animation-card"
           class="pa-3"
@@ -20,7 +20,7 @@
           elevation="3"
           color="grey-lighten-5"
         >
-          <VRow density="compact" align="center">
+          <VRow align="center" density="compact">
             <!-- Controles: botón, indicadores de estado y temporizador -->
             <VCol cols="7">
               <div class="d-flex flex-column ga-2">
@@ -183,15 +183,15 @@
       </VCol>
 
       <!-- Controles de configuración -->
-      <VCol cols="12" md="5">
+      <VCol md="5" cols="12">
         <VCard id="rel-config-card" class="" rounded="lg" elevation="2">
           <VCardTitle class="text-subtitle-1 py-2 my-0">
             <VIcon start size="small" color="primary">mdi-cog-outline</VIcon>
             Configuración
           </VCardTitle>
 
-          <VRow density="compact" class="mb-1">
-            <VCol cols="6" sm="6" md="12" lg="6">
+          <VRow class="mb-1" density="compact">
+            <VCol lg="6" sm="6" md="12" cols="6">
               <VSelect
                 id="rel-exercise"
                 v-model="selectedExercise"
@@ -205,7 +205,7 @@
               />
             </VCol>
 
-            <VCol cols="6" sm="4" md="6" lg="4">
+            <VCol lg="4" md="6" sm="4" cols="6">
               <VTextField
                 id="rel-initial-contract"
                 v-model.number="initialContract"
@@ -226,7 +226,7 @@
               </VTextField>
             </VCol>
 
-            <VCol cols="6" sm="4" md="6" lg="4">
+            <VCol lg="4" md="6" sm="4" cols="6">
               <VTextField
                 id="rel-expansion"
                 v-model.number="expansion"
@@ -245,7 +245,7 @@
               </VTextField>
             </VCol>
 
-            <VCol cols="6" sm="4" md="6" lg="4">
+            <VCol lg="4" md="6" sm="4" cols="6">
               <VTextField
                 id="rel-immobile-1"
                 v-model.number="immobile1"
@@ -264,7 +264,7 @@
               </VTextField>
             </VCol>
 
-            <VCol cols="6" sm="4" md="6" lg="4">
+            <VCol lg="4" md="6" sm="4" cols="6">
               <VTextField
                 id="rel-contraction"
                 v-model.number="contraction"
@@ -283,7 +283,7 @@
               </VTextField>
             </VCol>
 
-            <VCol cols="6" sm="4" md="6" lg="4">
+            <VCol lg="4" md="6" sm="4" cols="6">
               <VTextField
                 id="rel-immobile-2"
                 v-model.number="immobile2"
@@ -301,7 +301,7 @@
                 </template>
               </VTextField>
             </VCol>
-            <VCol cols="6" sm="4" md="6" lg="4">
+            <VCol lg="4" md="6" sm="4" cols="6">
               <VTextField
                 id="rel-goal-time"
                 v-model.number="goalTime"

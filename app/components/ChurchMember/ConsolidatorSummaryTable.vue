@@ -3,9 +3,9 @@
     id="atl-summary"
     :items="items"
     density="compact"
+    :headers="headers"
     class="elevation-1"
     hide-default-footer
-    :headers="headers"
     :items-length="items.length">
     <template #[`item.actions`]="{ item }">
       <VBtn

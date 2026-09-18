@@ -13,7 +13,7 @@
       >
     </VCardTitle>
     <VCardText class="pa-1">
-      <VRow density="compact" no-gutters>
+      <VRow no-gutters density="compact">
         <VCol md="4" cols="12">
           <VSelect
             id="pit-trumpet-tuning"
@@ -152,19 +152,22 @@
                 <tr
                   v-for="row in list"
                   :key="row.sounding"
+                  :style="isGhostRow(row) ? { '--ghost-opacity': ghostNoteOpacity } : undefined"
                   :class="{
                     'glossary-row-active': row.sounding === activeSounding,
+                    'glossary-row-ghost': isGhostRow(row),
                   }"
-                  :style="isGhostRow(row) ? { backgroundColor: `rgba(33, 150, 243, ${ghostNoteOpacity})` } : undefined"
                 >
                   <td>{{ row.sounding }}</td>
                   <td>
                     <VChip
                       size="x-small"
                       variant="tonal"
-                      :color="
-                        row.fingering.length === 0 ? 'success' : 'primary'
-                      "
+                      :color="row.fingering.length === 0 ? 'success' : 'primary'"
+                      :class="{
+                        'chip-active': row.sounding === activeSounding,
+                        'chip-ghost': isGhostRow(row),
+                      }"
                     >
                       {{ row.label }}
                     </VChip>
@@ -282,9 +285,6 @@ const glossaryColumns = computed<GlossaryRow[][]>(() => {
 // Sonido detectado actualmente para resaltar la fila correspondiente
 const activeSounding = computed(() => noteInfo.value?.sounding ?? null);
 
-// Nota fantasma: misma nota (pitch class) en octava ±1 (MIDI ±12).
-// Se compara por MIDI y no por texto para que funcione igual con
-// notación latina (Sol3) o inglesa (G3) y con alteraciones (#).
 const activeMidi = computed(() => {
   if (!props.frequency) return -1;
   return Math.round(freqToMidi(props.frequency));
@@ -409,5 +409,27 @@ function isValvePressed(valve: number): boolean {
 .glossary-row-active td {
   font-weight: 700;
   color: #ffffff;
+}
+
+.glossary-row-active :deep(.v-chip) {
+  background-color: rgb(255 255 255 / 0.18) !important;
+  color: #ffffff !important;
+  border: 1px solid rgb(255 255 255 / 0.55);
+}
+
+.glossary-row-ghost {
+  background: rgb(33 150 243 / var(--ghost-opacity)) !important;
+}
+
+.glossary-row-ghost td {
+  color: #ffffff !important;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.85);
+}
+
+.glossary-row-ghost .chip-ghost {
+  background-color: rgb(0 0 0 / 0.32) !important;
+  color: #ffffff !important;
+  border: 1px solid rgb(255 255 255 / 0.55);
 }
 </style>

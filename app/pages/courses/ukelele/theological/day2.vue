@@ -6,19 +6,19 @@
       <div v-if="showContent" class="pa-4">
 
         <!-- SECCIÓN 1: Dios habita y se manifiesta en la alabanza -->
-        <CoursesSection outlined title="Dios Habita y Se Manifiesta en la Alabanza" icon="mdi-heart-multiple" text-class="">
+        <CoursesSection outlined text-class="" icon="mdi-heart-multiple" title="Dios Habita y Se Manifiesta en la Alabanza">
           <p class="text-body-1 text-grey-darken-3 mb-4">
             La Escritura enseña que <strong>Dios habita en medio de la alabanza de su pueblo</strong>.
             Esto no significa que esté ausente en otros lugares —Él es omnipresente—, sino que en la
             adoración sincera elige revelar su gloria de un modo particular y transformador.
           </p>
 
-          <VRow density="compact" class="mb-4">
-            <VCol cols="12" md="6" class="d-flex">
+          <VRow class="mb-4" density="compact">
+            <VCol md="6" cols="12" class="d-flex">
               <VCard id="card-cours-ukele-theol-day2-lighten-5-1" variant="outlined" class="pa-4 bg-grey-lighten-5 w-100 d-flex flex-column justify-space-between">
                 <div>
                   <div class="d-flex align-center mb-2">
-                    <VIcon color="primary" class="mr-2">mdi-book-open-variant</VIcon>
+                    <VIcon class="mr-2" color="primary">mdi-book-open-variant</VIcon>
                     <span class="font-weight-bold text-grey-darken-4">Salmo 22:3</span>
                   </div>
                   <p class="text-body-2 italic text-grey-darken-3 mb-0">
@@ -29,11 +29,11 @@
               </VCard>
             </VCol>
 
-            <VCol cols="12" md="6" class="d-flex">
+            <VCol md="6" cols="12" class="d-flex">
               <VCard id="card-cours-ukele-theol-day2-lighten-5-2" variant="outlined" class="pa-4 bg-grey-lighten-5 w-100 d-flex flex-column justify-space-between">
                 <div>
                   <div class="d-flex align-center mb-2">
-                    <VIcon color="primary" class="mr-2">mdi-book-open-variant</VIcon>
+                    <VIcon class="mr-2" color="primary">mdi-book-open-variant</VIcon>
                     <span class="font-weight-bold text-grey-darken-4">Salmo 100:2-4</span>
                   </div>
                   <p class="text-body-2 italic text-grey-darken-3 mb-0">
@@ -48,11 +48,11 @@
 
           <VCard id="card-cours-ukele-theol-day2-blue-3" variant="outlined" class="pa-4 mb-0 bg-blue-lighten-5">
             <p class="text-subtitle-2 font-weight-bold text-blue-darken-3 mb-3">
-              <VIcon color="blue-darken-3" class="mr-2">mdi-lightbulb-on</VIcon>
+              <VIcon class="mr-2" color="blue-darken-3">mdi-lightbulb-on</VIcon>
               Omnipresencia y manifestación
             </p>
             <VRow density="compact">
-              <VCol cols="12" md="6">
+              <VCol md="6" cols="12">
                 <div class="pa-3 rounded mb-3 mb-md-0 fill-height" style="background-color: rgba(63, 81, 181, 0.1);">
                   <p class="text-subtitle-2 font-weight-bold text-blue-darken-3 mb-2">Siempre presente</p>
                   <p class="text-body-2 italic text-grey-darken-3 mb-2">
@@ -63,7 +63,7 @@
                   </p>
                 </div>
               </VCol>
-              <VCol cols="12" md="6">
+              <VCol md="6" cols="12">
                 <div class="pa-3 rounded fill-height" style="background-color: rgba(244, 67, 54, 0.1);">
                   <p class="text-subtitle-2 font-weight-bold text-red-darken-3 mb-2">Presencia manifiesta</p>
                   <p class="text-body-2 italic text-grey-darken-3 mb-2">
@@ -80,19 +80,19 @@
         </CoursesSection>
 
         <!-- SECCIÓN 2: Adorar antes que desgastarse -->
-        <CoursesSection outlined title="Adorar Antes que Desgastarse" icon="mdi-shield-account" text-class="">
+        <CoursesSection outlined text-class="" icon="mdi-shield-account" title="Adorar Antes que Desgastarse">
           <p class="text-body-1 text-grey-darken-3 mb-4">
             La victoria espiritual no comienza enfrentando al enemigo con nuestras fuerzas, sino
             sometiéndonos a Dios. La alabanza trae su presencia al campo de batalla —y donde Dios
             actúa, el temor pierde terreno.
           </p>
 
-          <VRow density="compact" class="mb-4">
-            <VCol cols="12" md="6" class="d-flex">
+          <VRow class="mb-4" density="compact">
+            <VCol md="6" cols="12" class="d-flex">
               <VCard id="card-cours-ukele-theol-day2-lighten-5-4" variant="outlined" class="pa-4 bg-grey-lighten-5 w-100 d-flex flex-column justify-space-between">
                 <div>
                   <div class="d-flex align-center mb-2">
-                    <VIcon color="primary" class="mr-2">mdi-book-open-variant</VIcon>
+                    <VIcon class="mr-2" color="primary">mdi-book-open-variant</VIcon>
                     <span class="font-weight-bold text-grey-darken-4">Santiago 4:7</span>
                   </div>
                   <p class="text-body-2 italic text-grey-darken-3 mb-0">
@@ -103,11 +103,11 @@
               </VCard>
             </VCol>
 
-            <VCol cols="12" md="6" class="d-flex">
+            <VCol md="6" cols="12" class="d-flex">
               <VCard id="card-cours-ukele-theol-day2-lighten-5-5" variant="outlined" class="pa-4 bg-grey-lighten-5 w-100 d-flex flex-column justify-space-between">
                 <div>
                   <div class="d-flex align-center mb-2">
-                    <VIcon color="primary" class="mr-2">mdi-book-open-variant</VIcon>
+                    <VIcon class="mr-2" color="primary">mdi-book-open-variant</VIcon>
                     <span class="font-weight-bold text-grey-darken-4">2 Crónicas 20:21-22</span>
                   </div>
                   <p class="text-body-2 italic text-grey-darken-3 mb-0">
@@ -120,11 +120,11 @@
             </VCol>
           </VRow>
 
-          <VRow density="compact" class="mb-4">
-            <VCol cols="12" md="6">
-              <VCard id="card-cours-ukele-theol-day2-6" variant="outlined" class="pa-4 h-100" style="border-color: #d32f2f; background-color: rgba(211, 47, 47, 0.05);">
+          <VRow class="mb-4" density="compact">
+            <VCol md="6" cols="12">
+              <VCard id="card-cours-ukele-theol-day2-6" class="pa-4 h-100" variant="outlined" style="border-color: #d32f2f; background-color: rgba(211, 47, 47, 0.05);">
                 <div class="d-flex align-center mb-2">
-                  <VIcon color="red-darken-2" class="mr-2">mdi-cloud-alert</VIcon>
+                  <VIcon class="mr-2" color="red-darken-2">mdi-cloud-alert</VIcon>
                   <h3 class="text-subtitle-2 font-weight-bold text-red-darken-2 mb-0">
                     Centrarse solo en el enemigo
                   </h3>
@@ -136,10 +136,10 @@
               </VCard>
             </VCol>
 
-            <VCol cols="12" md="6">
-              <VCard id="card-cours-ukele-theol-day2-7" variant="outlined" class="pa-4 h-100" style="border-color: #388e3c; background-color: rgba(56, 142, 60, 0.05);">
+            <VCol md="6" cols="12">
+              <VCard id="card-cours-ukele-theol-day2-7" class="pa-4 h-100" variant="outlined" style="border-color: #388e3c; background-color: rgba(56, 142, 60, 0.05);">
                 <div class="d-flex align-center mb-2">
-                  <VIcon color="green-darken-2" class="mr-2">mdi-music-box-multiple</VIcon>
+                  <VIcon class="mr-2" color="green-darken-2">mdi-music-box-multiple</VIcon>
                   <h3 class="text-subtitle-2 font-weight-bold text-green-darken-2 mb-0">
                     Centrarse en adorar a Dios
                   </h3>
@@ -152,12 +152,12 @@
             </VCol>
           </VRow>
 
-          <VRow density="compact" class="mb-4">
-            <VCol cols="12" md="6" class="d-flex">
+          <VRow class="mb-4" density="compact">
+            <VCol md="6" cols="12" class="d-flex">
               <VCard id="card-cours-ukele-theol-day2-lighten-5-8" variant="outlined" class="pa-4 bg-grey-lighten-5 w-100 d-flex flex-column justify-space-between">
                 <div>
                   <div class="d-flex align-center mb-2">
-                    <VIcon color="primary" class="mr-2">mdi-book-open-variant</VIcon>
+                    <VIcon class="mr-2" color="primary">mdi-book-open-variant</VIcon>
                     <span class="font-weight-bold text-grey-darken-4">Salmo 27:1</span>
                   </div>
                   <p class="text-body-2 italic text-grey-darken-3 mb-0">
@@ -168,11 +168,11 @@
               </VCard>
             </VCol>
 
-            <VCol cols="12" md="6" class="d-flex">
+            <VCol md="6" cols="12" class="d-flex">
               <VCard id="card-cours-ukele-theol-day2-lighten-5-9" variant="outlined" class="pa-4 bg-grey-lighten-5 w-100 d-flex flex-column justify-space-between">
                 <div>
                   <div class="d-flex align-center mb-2">
-                    <VIcon color="primary" class="mr-2">mdi-book-open-variant</VIcon>
+                    <VIcon class="mr-2" color="primary">mdi-book-open-variant</VIcon>
                     <span class="font-weight-bold text-grey-darken-4">Filipenses 4:6-7</span>
                   </div>
                   <p class="text-body-2 italic text-grey-darken-3 mb-0">
@@ -185,7 +185,7 @@
             </VCol>
           </VRow>
 
-          <VAlert type="success" border="left" colored-border elevation="1" class="mb-0">
+          <VAlert class="mb-0" border="left" elevation="1" colored-border type="success">
             <div class="text-body-2 font-weight-medium text-grey-darken-4">
               <strong>Aplicación práctica:</strong> Si el temor o la opresión te abruman, no te desgastes
               repitiendo la batalla en tus propias fuerzas. Abre tu corazón a la adoración: canta, alaba,

@@ -1,9 +1,9 @@
 <template>
-  <VContainer class="fill-height" :fluid="true">
-    <VRow density="compact" align="center" justify="center">
+  <VContainer :fluid="true" class="fill-height">
+    <VRow align="center" justify="center" density="compact">
       <VCol cols="auto">
-        <VCard id="logout-card" flat class="pa-8 text-center" border>
-          <VProgressCircular indeterminate color="primary" size="64" />
+        <VCard id="logout-card" flat border class="pa-8 text-center">
+          <VProgressCircular size="64" indeterminate color="primary" />
           <div class="mt-4 text-h6 text-grey-darken-1">Finalizando sesión...</div>
         </VCard>
       </VCol>

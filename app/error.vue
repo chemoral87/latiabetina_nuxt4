@@ -2,7 +2,7 @@
   <NuxtLayout name="error">
     <VCard id="error-layout-card">
       <VCardTitle class="text-h4">
-        <VIcon :color="iconColor" size="40">mdi-alert</VIcon>
+        <VIcon size="40" :color="iconColor">mdi-alert</VIcon>
         Ocurrió un problema
       </VCardTitle>
 

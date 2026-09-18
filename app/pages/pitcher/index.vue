@@ -18,7 +18,7 @@
       </template>
     </h4>
 
-    <VRow density="compact" id="pit-actions-row" class="mb-1" align="center">
+    <VRow id="pit-actions-row" class="mb-1" align="center" density="compact">
       <VCol sm="7" cols="12" class="d-flex flex-wrap ga-1 py-1">
         <PitcherConfigButton />
         <VBtn
@@ -75,7 +75,7 @@
       </VCol>
     </VRow>
 
-    <VRow density="compact" id="pit-display-row">
+    <VRow id="pit-display-row" density="compact">
       <VCol v-if="showStaffNotation" cols="auto" class="px-0 mx-0">
         <PitcherStaffNotation
           v-if="lastValidFreq"
@@ -95,10 +95,10 @@
           :last-freq="lastFreq"
           :db-display="dBDisplay"
           :freq-display="freqDisplay"
-          :cents-deviation="centsDeviation"
           :show-db-meter="showDbMeter"
-          :show-tuning-range="showTuningRange"
           :min-width="histogramMinWidth"
+          :cents-deviation="centsDeviation"
+          :show-tuning-range="showTuningRange"
         />
       </VCol>
       <VCol v-if="showUkeleleNotation" :cols="ukeleleCols">
@@ -125,6 +125,12 @@
           :frequency="lastValidFreq"
         />
       </VCol>
+      <VCol v-if="showBassNotation" :cols="bassCols">
+        <PitcherBassNotation
+          v-if="lastValidFreq"
+          :frequency="lastValidFreq"
+        />
+      </VCol>
     </VRow>
 
     <div class="notation-cols-fabs">
@@ -134,8 +140,8 @@
             id="pit-ukelele-cols-btn"
             v-bind="props"
             color="primary"
-            icon="mdi-guitar-acoustic"
             density="compact"
+            icon="mdi-guitar-acoustic"
             class="notation-cols-fab pit-ukelele-btn"
           />
         </template>
@@ -182,8 +188,8 @@
             id="pit-trumpet-cols-btn"
             v-bind="props"
             color="primary"
-            icon="mdi-trumpet"
             density="compact"
+            icon="mdi-trumpet"
             class="notation-cols-fab"
           />
         </template>
@@ -220,6 +226,30 @@
           >
             <VListItemTitle>{{ opt }}</VListItemTitle>
             <VIcon v-if="pianoCols === opt" end>mdi-check</VIcon>
+          </VListItem>
+        </VList>
+      </VMenu>
+
+      <VMenu v-if="showBassNotation" location="top end">
+        <template #activator="{ props }">
+          <VBtn
+            id="pit-bass-cols-btn"
+            v-bind="props"
+            color="primary"
+            density="compact"
+            class="notation-cols-fab"
+            icon="mdi-guitar-electric"
+          />
+        </template>
+        <VList id="pit-bass-cols-menu" density="compact">
+          <VListItem
+            v-for="opt in notationColsOptions"
+            :key="opt"
+            :disabled="!isColsOptionEnabled(opt)"
+            @click="bassCols = opt"
+          >
+            <VListItemTitle>{{ opt }}</VListItemTitle>
+            <VIcon v-if="bassCols === opt" end>mdi-check</VIcon>
           </VListItem>
         </VList>
       </VMenu>
@@ -267,12 +297,14 @@ const {
   showUkeleleNotation,
   showTrumpetNotation,
   showPianoNotation,
+  showBassNotation,
   histogramMinWidth,
   histogramEffectiveHeight,
   ukeleleCols,
   guitarCols,
   trumpetCols,
   pianoCols,
+  bassCols,
 } = storeToRefs(store);
 
 // El pentagrama comparte la misma altura que pit-hist-canvas / pit-db-meter
@@ -349,6 +381,9 @@ onMounted(() => {
   }
   if (route.query.NotPiano !== undefined) {
     store.setShowPianoNotation(route.query.NotPiano !== 'false');
+  }
+  if (route.query.NotBass !== undefined) {
+    store.setShowBassNotation(route.query.NotBass !== 'false');
   }
   if (route.query.LatinNotation !== undefined) {
     store.setLatinNotation(route.query.LatinNotation !== 'false');

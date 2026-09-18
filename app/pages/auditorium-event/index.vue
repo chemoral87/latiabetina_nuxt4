@@ -14,8 +14,8 @@
             id="auev-refresh-btn"
             class="mr-1"
             color="primary"
-            variant="outlined"
             :loading="loading"
+            variant="outlined"
             @click="getAuditoriumEvents()"
           >
             <VIcon start>mdi-reload</VIcon>

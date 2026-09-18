@@ -1,20 +1,20 @@
 <template>
-  <VContainer id="pos-kds-page" class="kds-page" :fluid="true">
+  <VContainer id="pos-kds-page" :fluid="true" class="kds-page">
     <PosKdsOrdersBoard
-      :active-orders="activeOrders"
+      :error="error"
       :done-map="doneMap"
       :loading="initialLoading"
-      :error="error"
-      :echo-connected="echoConnected"
-      :sound-enabled="soundEnabled"
-      :is-item-completed="isItemCompleted"
       :status-title="statusTitle"
+      :active-orders="activeOrders"
+      :sound-enabled="soundEnabled"
+      :echo-connected="echoConnected"
+      :is-item-completed="isItemCompleted"
       @reload="loadActiveOrders"
-      @update:sound-enabled="soundEnabled = $event"
+      @undo-row-done="undoRowDone"
       @dismiss-order="dismissOrder"
       @complete-order="completeOrder"
       @toggle-row-done="toggleRowDone"
-      @undo-row-done="undoRowDone"
+      @update:sound-enabled="soundEnabled = $event"
     />
   </VContainer>
 </template>

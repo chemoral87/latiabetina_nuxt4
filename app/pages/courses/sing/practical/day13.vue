@@ -32,7 +32,7 @@
             </VBtn>
           </div>
 
-          <VRow density="compact" class="mt-3">
+          <VRow class="mt-3" density="compact">
             <VCol md="6" cols="12">
               <VCard class="pa-3 mb-2" variant="outlined">
                 <div class="text-subtitle-2 font-weight-bold mb-1">Prueba 1 · La octava</div>
@@ -63,7 +63,7 @@
             </div>
             <p class="text-subtitle-1 font-weight-bold text-grey-darken-4 mb-4">{{ currentQuestion.question }}</p>
 
-            <VRow density="compact" class="mb-4">
+            <VRow class="mb-4" density="compact">
               <VCol v-for="(option, idx) in currentQuestion.options" :key="idx" sm="6" cols="12">
                 <VBtn id="btn-singp13-quiz-option" block variant="outlined" :disabled="answered"
                   :color="getOptionColor(idx)" class="py-4 text-left justify-start" @click="checkAnswer(idx)">

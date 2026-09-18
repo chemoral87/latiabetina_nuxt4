@@ -1,5 +1,5 @@
 <template>
-  <VDialog id="eve-copyd-dlg-1" :model-value="true" persistent max-width="560px">
+  <VDialog id="eve-copyd-dlg-1" persistent max-width="560px" :model-value="true">
     <VCard rounded="lg">
       <VCardTitle class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center">
         <VIcon start size="small" color="primary">mdi-content-copy</VIcon>
@@ -18,38 +18,38 @@
         <VBtnToggle
           v-model="mode"
           mandatory
-          density="compact"
           rounded="pill"
+          density="compact"
           class="mode-toggle mb-4">
-          <VBtn id="eve-copydialog-mode-dates-btn" value="dates" size="small" rounded="pill">POR CALENDARIO</VBtn>
-          <VBtn id="eve-copydialog-mode-recurrence-btn" value="recurrence" size="small" rounded="pill">POR RANGO Y DÍAS</VBtn>
+          <VBtn id="eve-copydialog-mode-dates-btn" size="small" value="dates" rounded="pill">POR CALENDARIO</VBtn>
+          <VBtn id="eve-copydialog-mode-recurrence-btn" size="small" rounded="pill" value="recurrence">POR RANGO Y DÍAS</VBtn>
         </VBtnToggle>
 
         <template v-if="mode === 'dates'">
           <VDatePicker
             v-model="selectedDates"
-            v-model:month="pickerMonth"
             v-model:year="pickerYear"
+            v-model:month="pickerMonth"
             multiple
             color="primary"
-            class="copy-date-picker"
-            control-variant="modal"
-            weeks-in-month="dynamic"
             :disabled="loading"
-            :events="eventDateArray"
             event-color="#fb8c00"
-            :allowed-dates="isAllowedDate"
             :first-day-of-week="1"
+            control-variant="modal"
+            class="copy-date-picker"
+            :events="eventDateArray"
+            weeks-in-month="dynamic"
             :show-adjacent-months="false"
+            :allowed-dates="isAllowedDate"
           />
 
           <div v-if="selectedDates.length" class="mt-2">
             <VChip
               v-for="date in sortedDates"
               :key="date"
+              closable
               size="small"
               class="mr-1 mb-1"
-              closable
               :disabled="loading"
               @click:close="removeDate(date)"
             >
@@ -60,36 +60,36 @@
 
         <template v-else>
           <VRow density="compact">
-            <VCol cols="12" sm="6">
-              <VMenu v-model="startDateMenu" :close-on-content-click="false" transition="scale-transition" offset-y min-width="auto">
+            <VCol sm="6" cols="12">
+              <VMenu v-model="startDateMenu" offset-y min-width="auto" transition="scale-transition" :close-on-content-click="false">
                 <template #activator="{ props: menuProps }">
                   <VTextField
                     id="eve-copydialog-start-date"
                     v-model="recurrence.start_date"
+                    readonly
+                    hide-details
+                    density="compact"
+                    variant="outlined"
                     label="Fecha inicial"
                     prepend-inner-icon="mdi-calendar"
-                    readonly
-                    variant="outlined"
-                    density="compact"
-                    hide-details
                     v-bind="menuProps"
                   />
                 </template>
                 <VDatePicker v-model="recurrence.start_date" @update:model-value="startDateMenu = false" />
               </VMenu>
             </VCol>
-            <VCol cols="12" sm="6">
-              <VMenu v-model="endDateMenu" :close-on-content-click="false" transition="scale-transition" offset-y min-width="auto">
+            <VCol sm="6" cols="12">
+              <VMenu v-model="endDateMenu" offset-y min-width="auto" transition="scale-transition" :close-on-content-click="false">
                 <template #activator="{ props: menuProps }">
                   <VTextField
                     id="eve-copydialog-end-date"
                     v-model="recurrence.end_date"
+                    readonly
+                    hide-details
+                    density="compact"
+                    variant="outlined"
                     label="Fecha final"
                     prepend-inner-icon="mdi-calendar"
-                    readonly
-                    variant="outlined"
-                    density="compact"
-                    hide-details
                     v-bind="menuProps"
                   />
                 </template>
@@ -98,8 +98,8 @@
             </VCol>
           </VRow>
 
-          <VChipGroup v-model="recurrence.days_of_week" multiple column aria-label="Días de la semana">
-            <VChip v-for="(day, index) in weekDays" :key="day" filter variant="outlined" :value="index">
+          <VChipGroup v-model="recurrence.days_of_week" column multiple aria-label="Días de la semana">
+            <VChip v-for="(day, index) in weekDays" :key="day" filter :value="index" variant="outlined">
               {{ day }}
             </VChip>
           </VChipGroup>
@@ -107,10 +107,10 @@
       </VCardText>
 
       <div class="d-flex justify-end px-4 pb-4">
-        <VBtn id="eve-copydialog-cancel-btn" color="primary" variant="text" :disabled="loading" @click="close">
+        <VBtn id="eve-copydialog-cancel-btn" variant="text" color="primary" :disabled="loading" @click="close">
           Cancelar
         </VBtn>
-        <VBtn id="eve-copydialog-copy-btn" color="primary" variant="elevated" :loading="loading" :disabled="!canCopy" @click="copy">
+        <VBtn id="eve-copydialog-copy-btn" color="primary" :loading="loading" variant="elevated" :disabled="!canCopy" @click="copy">
           <VIcon start size="small">mdi-content-copy</VIcon>
           Copiar
         </VBtn>

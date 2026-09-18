@@ -2,11 +2,11 @@
   <CoursesQuizQuizPage
     icon="mdi-vuejs"
     title-en="Vue 2 Quiz"
-    subtitle-en="Test your Vue 2 knowledge"
     title-es="Vue 2 Quiz"
-    subtitle-es="Pon a prueba tus conocimientos de Vue 2"
     :questions-en="questionsEn"
     :questions-es="questionsEs"
+    subtitle-en="Test your Vue 2 knowledge"
+    subtitle-es="Pon a prueba tus conocimientos de Vue 2"
   />
 </template>
 

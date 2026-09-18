@@ -5,17 +5,17 @@
     <VExpandTransition>
       <div v-if="showContent" class="pa-4">
         <!-- SECCIÓN 1: La Alabanza y los Instrumentos -->
-        <CoursesSection outlined title="La Alabanza y los Instrumentos" icon="mdi-music-clef-treble" text-class="">
+        <CoursesSection outlined text-class="" icon="mdi-music-clef-treble" title="La Alabanza y los Instrumentos">
           <p class="text-body-1 text-grey-darken-3 mb-4">
             A lo largo de las Escrituras, vemos que la música y los instrumentos musicales juegan un papel fundamental en la adoración a Dios. No son simples acompañamientos decorativos, sino canales a través de los cuales expresamos júbilo, gratitud y reverencia al Creador.
           </p>
 
           <VRow density="compact">
-            <VCol cols="12" md="4" class="d-flex">
+            <VCol md="4" cols="12" class="d-flex">
               <VCard id="card-cours-ukele-theol-day1-lighten-5-1" variant="outlined" class="pa-4 bg-grey-lighten-5 w-100 d-flex flex-column justify-space-between">
                 <div>
                   <div class="d-flex align-center mb-2">
-                    <VIcon color="primary" class="mr-2">mdi-book-open-variant</VIcon>
+                    <VIcon class="mr-2" color="primary">mdi-book-open-variant</VIcon>
                     <span class="font-weight-bold text-grey-darken-4">Salmo 150:3-5</span>
                   </div>
                   <p class="text-body-2 italic text-grey-darken-3 mb-0">
@@ -26,11 +26,11 @@
               </VCard>
             </VCol>
 
-            <VCol cols="12" md="4" class="d-flex">
+            <VCol md="4" cols="12" class="d-flex">
               <VCard id="card-cours-ukele-theol-day1-lighten-5-2" variant="outlined" class="pa-4 bg-grey-lighten-5 w-100 d-flex flex-column justify-space-between">
                 <div>
                   <div class="d-flex align-center mb-2">
-                    <VIcon color="primary" class="mr-2">mdi-book-open-variant</VIcon>
+                    <VIcon class="mr-2" color="primary">mdi-book-open-variant</VIcon>
                     <span class="font-weight-bold text-grey-darken-4">Salmo 33:2-3</span>
                   </div>
                   <p class="text-body-2 italic text-grey-darken-3 mb-0">
@@ -41,11 +41,11 @@
               </VCard>
             </VCol>
 
-            <VCol cols="12" md="4" class="d-flex">
+            <VCol md="4" cols="12" class="d-flex">
               <VCard id="card-cours-ukele-theol-day1-lighten-5-3" variant="outlined" class="pa-4 bg-grey-lighten-5 w-100 d-flex flex-column justify-space-between">
                 <div>
                   <div class="d-flex align-center mb-2">
-                    <VIcon color="primary" class="mr-2">mdi-book-open-variant</VIcon>
+                    <VIcon class="mr-2" color="primary">mdi-book-open-variant</VIcon>
                     <span class="font-weight-bold text-grey-darken-4">Efesios 5:19</span>
                   </div>
                   <p class="text-body-2 italic text-grey-darken-3 mb-0">
@@ -60,22 +60,22 @@
           <!-- Galería de Instrumentos Bíblicos -->
           <div class="mt-6">
             <h3 class="text-subtitle-1 font-weight-bold text-grey-darken-3 mb-3 d-flex align-center">
-              <VIcon color="primary" class="mr-2">mdi-image-multiple</VIcon>
+              <VIcon class="mr-2" color="primary">mdi-image-multiple</VIcon>
               Instrumentos mencionados en las Escrituras
             </h3>
-            <VRow density="compact" justify="center">
-              <VCol cols="6" sm="4" md="2" v-for="instrumento in instrumentos" :key="instrumento.nombre" class="d-flex">
+            <VRow justify="center" density="compact">
+              <VCol v-for="instrumento in instrumentos" :key="instrumento.nombre" md="2" sm="4" cols="6" class="d-flex">
                 <VCard
                   variant="outlined"
                   class="pa-3 text-center w-100 instrument-card"
                   style="border-radius:12px; transition: all 0.25s ease;"
                 >
                   <VImg
-                    :src="instrumento.imagen"
-                    :alt="instrumento.nombre"
-                    height="110"
                     contain
                     class="mb-2"
+                    height="110"
+                    :alt="instrumento.nombre"
+                    :src="instrumento.imagen"
                   />
                   <div class="text-caption font-weight-bold text-grey-darken-3">{{ instrumento.nombre }}</div>
                   <div class="text-caption text-grey-darken-1">{{ instrumento.referencia }}</div>
@@ -86,13 +86,13 @@
         </CoursesSection>
 
         <!-- SECCIÓN 2: ¿Existe la Música Cristiana? -->
-        <CoursesSection outlined title="¿Existe la Música Cristiana?" icon="mdi-help-circle-outline" text-class="">
+        <CoursesSection outlined text-class="" icon="mdi-help-circle-outline" title="¿Existe la Música Cristiana?">
           <p class="text-body-1 text-grey-darken-3 mb-4">
             Frecuentemente se clasifica la música en categorías como "cristiana" o "secular". Sin embargo, desde una perspectiva estrictamente técnica y bíblica, <strong>la música en sí misma no tiene religión</strong>.
           </p>
 
-          <VRow density="compact" class="mb-4">
-            <VCol cols="12" md="6">
+          <VRow class="mb-4" density="compact">
+            <VCol md="6" cols="12">
               <VCard flat class="pa-2">
                 <h3 class="text-subtitle-1 font-weight-bold text-primary mb-2">La neutralidad del sonido</h3>
                 <p class="text-body-2 text-grey-darken-3">
@@ -100,7 +100,7 @@
                 </p>
               </VCard>
             </VCol>
-            <VCol cols="12" md="6">
+            <VCol md="6" cols="12">
               <VCard flat class="pa-2">
                 <h3 class="text-subtitle-1 font-weight-bold text-primary mb-2">La letra y la intención del corazón</h3>
                 <p class="text-body-2 text-grey-darken-3">
@@ -110,14 +110,14 @@
             </VCol>
           </VRow>
 
-          <VAlert type="info" border="left" colored-border elevation="1" class="mb-6">
+          <VAlert type="info" class="mb-6" border="left" elevation="1" colored-border>
             <div class="text-body-2 font-weight-medium text-grey-darken-4">
               "El ukelele que tienes en tus manos es un instrumento neutral. Al aprender acordes y ritmos, estás dominando la creación de Dios. Es la intención de tu corazón y la letra de tus cantos lo que convertirá tu práctica en adoración verdadera."
             </div>
           </VAlert>
 
           <!-- Analogía del Cuchillo -->
-          <VCard class="knife-analogy-card pa-5" elevation="2" style="border-radius: 16px; border-left: 5px solid #FF6F00;">
+          <VCard elevation="2" class="knife-analogy-card pa-5" style="border-radius: 16px; border-left: 5px solid #FF6F00;">
             <div class="d-flex align-start">
               <VIcon size="40" color="orange-darken-3" class="mr-4 mt-1 flex-shrink-0">mdi-knife</VIcon>
               <div>
@@ -144,20 +144,20 @@
         </CoursesSection>
 
         <!-- SECCIÓN 3: La Importancia de la Disciplina -->
-        <CoursesSection outlined title="La Importancia de la Disciplina" icon="mdi-seal" text-class="">
+        <CoursesSection outlined text-class="" icon="mdi-seal" title="La Importancia de la Disciplina">
           <p class="text-body-1 text-grey-darken-3 mb-4">
             Desarrollar una habilidad musical requiere perseverancia, práctica y paciencia. En la Biblia, la disciplina y la excelencia técnica no se oponen a la espiritualidad, sino que caminan de la mano para servir a Dios con lo mejor de nosotros.
           </p>
 
           <VRow density="compact" class="align-center mb-4">
-            <VCol cols="12" md="8">
+            <VCol md="8" cols="12">
               <h3 class="text-subtitle-1 font-weight-bold text-primary mb-2">David tocando el arpa para Saúl</h3>
               <p class="text-body-2 text-grey-darken-3 mb-3">
                 Cuando el rey Saúl era atormentado por un espíritu malo, sus sirvientes buscaron a alguien que supiera tocar bien. Encontraron a David, quien no solo tenía el respaldo de Dios, sino que era sumamente dedicado a su instrumento.
               </p>
               <VCard variant="outlined" class="pa-4 bg-grey-lighten-5 mb-3">
                 <div class="d-flex align-center mb-2">
-                  <VIcon color="primary" class="mr-2">mdi-book-open-variant</VIcon>
+                  <VIcon class="mr-2" color="primary">mdi-book-open-variant</VIcon>
                   <span class="font-weight-bold text-grey-darken-4">1 Samuel 16:23</span>
                 </div>
                 <p class="text-body-2 italic text-grey-darken-3 mb-0">
@@ -167,9 +167,9 @@
               </VCard>
             </VCol>
 
-            <VCol cols="12" md="4" class="text-center">
+            <VCol md="4" cols="12" class="text-center">
               <VCard variant="outlined" class="pa-4 fill-height d-flex flex-column justify-center align-center">
-                <VIcon size="48" color="amber-darken-2" class="mb-2">mdi-music</VIcon>
+                <VIcon size="48" class="mb-2" color="amber-darken-2">mdi-music</VIcon>
                 <div class="text-subtitle-2 font-weight-bold mb-1">"Tañendo con júbilo"</div>
                 <p class="text-caption text-grey-darken-2 mb-0">
                   David no tocaba de manera improvisada; su destreza en el arpa era fruto de horas de cuidado de las ovejas y práctica silenciosa, capacitando su talento para ser un canal de paz y liberación espiritual.
@@ -178,7 +178,7 @@
             </VCol>
           </VRow>
 
-          <VAlert type="warning" border="left" colored-border elevation="1" class="my-0">
+          <VAlert class="my-0" border="left" elevation="1" colored-border type="warning">
             <div class="text-body-2 font-weight-medium text-grey-darken-4">
               <strong>El llamado a la excelencia:</strong> Así como el rey David, la práctica diaria del ukelele es un acto de disciplina y respeto hacia Dios. Estudiar teoría musical y practicar digitación es preparar una ofrenda digna para nuestro Creador.
             </div>

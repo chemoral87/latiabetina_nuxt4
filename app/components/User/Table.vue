@@ -11,11 +11,11 @@
       density="compact"
       :headers="headers"
       :loading="loading"
-      class="elevation-1 xwidth1100"
       :items-length="total"
       :row-props="rowProps"
       :search="props.search"
       initial-sort-order="asc"
+      class="elevation-1 xwidth1100"
       :items-per-page-options="[10, 15, 30]"
       items-per-page-text="Filas por página"
       @update:options="onUpdateOptions">

@@ -2,11 +2,11 @@
   <CoursesQuizQuizPage
     icon="mdi-nodejs"
     title-en="Node.js Quiz"
-    subtitle-en="Test your Node.js knowledge"
     title-es="Node.js Quiz"
-    subtitle-es="Pon a prueba tus conocimientos de Node.js"
     :questions-en="questionsEn"
     :questions-es="questionsEs"
+    subtitle-en="Test your Node.js knowledge"
+    subtitle-es="Pon a prueba tus conocimientos de Node.js"
   />
 </template>
 

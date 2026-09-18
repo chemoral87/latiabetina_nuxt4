@@ -1,11 +1,11 @@
 <template>
   <VContainer :fluid="true" class="pa-2 pa-md-4">
     <!-- Header -->
-    <VRow density="compact" class="mb-2">
+    <VRow class="mb-2" density="compact">
       <VCol cols="12">
         <div class="d-flex align-center justify-space-between">
           <span v-if="auditorium && auditorium.name" class="text-h6 text-md-h5">{{ auditorium.name }}</span>
-          <VBtn id="audid-save-btn" color="primary" :size="mobile ? 'small' : undefined" :loading="saving" :disabled="saving" @click="saveAuditorium">
+          <VBtn id="audid-save-btn" color="primary" :loading="saving" :disabled="saving" :size="mobile ? 'small' : undefined" @click="saveAuditorium">
             <VIcon :start="!mobile">mdi-content-save</VIcon>
             <span v-if="!mobile">Guardar</span>
           </VBtn>
@@ -15,151 +15,38 @@
 
     <VRow density="compact">
       <!-- Canvas de Asientos - Primero en mobile -->
-      <VCol cols="12" :md="9" :order="mdAndUp ? 2 : 1">
+      <VCol :md="9" cols="12" :order="mdAndUp ? 2 : 1">
         <ClientOnly>
           <AuditoriumSeats :sections="sections" :settings="settings" :stage-config="stageConfig" :categories="stageCategories" />
         </ClientOnly>
       </VCol>
 
       <!-- Panel de Control - Segundo en mobile -->
-      <VCol cols="12" :md="3" :order="mdAndUp ? 1 : 2">
-        <!-- Botones de Acción -->
-        <VRow density="compact" class="mb-3">
-          <VCol cols="6" md="12">
-            <VBtn id="audid-add-section-btn" color="primary" block :size="mobile ? 'small' : undefined" class="mb-md-2" @click="addSection(false)">
-              <VIcon :start="mdAndUp" :size="mobile ? 'small' : undefined">mdi-plus</VIcon>
-              <span :class="{ 'd-none d-sm-inline': mobile }">Agregar sección</span>
-            </VBtn>
-          </VCol>
-          <VCol cols="6" md="12">
-            <VBtn id="audid-add-label-btn" color="secondary" block :size="mobile ? 'small' : undefined" class="mb-md-2" @click="addSection(true)">
-              <VIcon :start="mdAndUp" :size="mobile ? 'small' : undefined">mdi-label</VIcon>
-              <span :class="{ 'd-none d-sm-inline': mobile }">Agregar etiqueta sección</span>
-            </VBtn>
-          </VCol>
-          <VCol cols="6" md="12">
-            <VBtn id="audid-clear-cats-btn" color="warning" block :size="mobile ? 'small' : undefined" class="mb-md-2" @click="clearAllSeatStates">
-              <VIcon :start="mdAndUp" :size="mobile ? 'small' : undefined">mdi-broom</VIcon>
-              <span :class="{ 'd-none d-sm-inline': mobile }">Limpiar categorías</span>
-            </VBtn>
-          </VCol>
-        </VRow>
+      <VCol :md="3" cols="12" :order="mdAndUp ? 1 : 2">
+        <AuditoriumEditorPanel
+          :settings="settings"
+          :config-data="configData"
+          :save-format="saveFormat"
+          :config-data-csv="configDataCsv"
+          @add-section="addSection"
+          @import-error="onImportError"
+          @imported="handleImportedConfig"
+          @clear-categories="clearAllSeatStates"
+          @update:save-format="saveFormat = $event"
+          @update:settings="(k, v) => (settings as Record<string, number>)[k] = v"
+        />
 
-        <!-- Configuración -->
-        <VCard id="aud-edito-card-1" variant="outlined" class="mb-3 pa-2">
-          <div class="text-subtitle-2 mb-2">Configuración</div>
-
-          <!-- Save Format Toggle -->
-          <div class="d-flex align-center mb-2">
-            <span class="text-caption mr-2">Formato:</span>
-            <VBtnToggle v-model="saveFormat" mandatory density="compact">
-              <VBtn id="audid-fmt-csv-btn" size="x-small" value="csv" color="primary">
-                <VIcon start size="x-small">mdi-file-delimited</VIcon>CSV
-              </VBtn>
-              <VBtn id="audid-fmt-json-btn" size="x-small" value="json" color="primary">
-                <VIcon start size="x-small">mdi-code-json</VIcon>JSON
-              </VBtn>
-            </VBtnToggle>
-            <VChip id="aed-format-chip" size="x-small" :color="saveFormat === 'csv' ? 'success' : 'info'" class="ml-2">
-              {{ saveFormat === 'csv' ? 'Plano CSV' : 'JSON anidado' }}
-            </VChip>
-          </div>
-
-          <JsonConfig :config-data="configData" :config-data-csv="configDataCsv" :save-format="saveFormat" @imported="handleImportedConfig" @import-error="onImportError" />
-
-          <VSlider id="aed-seat-size-sld" v-model="settings.SEAT_SIZE" :min="5" :max="20" :step="1" label="Tamaño de asiento" thumb-label density="compact" class="mb-1" />
-          <VSlider id="aed-seat-distance-sld" v-model="settings.SEATS_DISTANCE" :min="2" :max="8" :step="1" label="Distancia entre asientos" thumb-label density="compact" class="mb-1" />
-          <VSlider id="aed-section-padding-sld" v-model="settings.SECTION_TOP_PADDING" :min="0" :max="160" :step="5" label="Padding superior sección" thumb-label density="compact" class="mb-0" />
-        </VCard>
-
-        <!-- Lista de Secciones -->
-        <div class="text-subtitle-2 mb-2">Secciones</div>
-        <div v-for="(section, sIdx) in sections" :key="`section-${sIdx}`">
-          <VCard id="aed-section-card" variant="outlined" class="mb-2">
-            <div class="d-flex align-center pa-2">
-              <VBtn id="audid-section-toggle-btn" icon size="x-small" class="mr-1" @click="toggleSection(sIdx)">
-                <VIcon size="x-small">{{ openSections[sIdx] ? 'mdi-chevron-down' : 'mdi-chevron-right' }}</VIcon>
-              </VBtn>
-              <VTextField id="audid-section-name-tf" v-model="section.name" density="compact" variant="solo" hide-details :style="mobile ? 'max-width: 120px' : 'max-width: 140px'" />
-              <VChip v-if="section.isLabel" id="aed-label-chip" size="x-small" color="secondary" class="ml-1 ml-md-2">Etiqueta</VChip>
-              <VSpacer />
-              <VBtn id="audid-section-remove-btn" icon size="x-small" color="error" @click="removeSection(sIdx)">
-                <VIcon size="x-small">mdi-delete</VIcon>
-              </VBtn>
-            </div>
-
-            <VCardText v-if="openSections[sIdx] && !section.isLabel" class="pa-2 pt-0">
-              <VRow density="compact" class="mb-2">
-                <VCol cols="6">
-                  <VBtn id="audid-subsection-add-btn" :size="xs ? 'x-small' : mobile ? 'small' : undefined" block color="secondary" @click="addSubsection(sIdx, false)">
-                    <VIcon :start="smAndUp" size="small">mdi-plus</VIcon>
-                    <span :class="{ 'd-none d-sm-inline': xs }">Agregar subsección</span>
-                  </VBtn>
-                </VCol>
-                <VCol cols="6">
-                  <VBtn id="audid-subsection-add-label-btn" :size="xs ? 'x-small' : mobile ? 'small' : undefined" block color="accent" @click="addSubsection(sIdx, true)">
-                    <VIcon :start="smAndUp" size="small">mdi-label-outline</VIcon>
-                    <span :class="{ 'd-none d-sm-inline': xs }">Agregar área</span>
-                  </VBtn>
-                </VCol>
-              </VRow>
-
-              <!-- Subsecciones -->
-              <VCard v-for="(sub, subIdx) in section.subsections" id="aed-subsection-card" :key="`sub-${subIdx}`" variant="outlined" class="mb-2" :class="mobile ? 'pa-1' : 'pa-2'">
-                <div class="d-flex align-center mb-2">
-                  <VTextField id="audid-sub-name-tf" v-model="sub.name" :label="sub.isLabel ? 'Nombre área' : 'Nombre subsección'" density="compact" hide-details :style="mobile ? 'font-size: 14px' : ''" />
-                  <VChip v-if="sub.isLabel" id="aed-area-chip" size="x-small" color="accent" class="ml-1 ml-md-2">Área</VChip>
-                </div>
-
-                <!-- Ancho de área (solo para etiquetas) -->
-                <VSlider v-if="sub.isLabel" id="aed-area-width-sld" v-model="sub.width" :min="50" :max="300" :step="10" label="Ancho del área" thumb-label density="compact" hide-details class="mb-2" />
-
-                <template v-if="!sub.isLabel">
-                  <!-- Definir filas y columnas -->
-                  <VRow density="compact" class="mb-2">
-                    <VCol cols="4" sm="3">
-                      <VTextField id="audid-sub-rows-tf" v-model.number="sub.tempRows" label="Filas" type="text" density="compact" hide-details />
-                    </VCol>
-                    <VCol cols="4" sm="3">
-                      <VTextField id="audid-sub-cols-tf" v-model.number="sub.tempCols" label="Columnas" type="text" density="compact" hide-details />
-                    </VCol>
-                    <VCol cols="4" sm="2">
-                      <VBtn id="audid-sub-grid-btn" :size="xs ? 'x-small' : 'small'" color="primary" @click="setSubsectionGrid(sIdx, subIdx)">Set</VBtn>
-                    </VCol>
-                  </VRow>
-
-                  <!-- Agregar asiento individual por fila -->
-                  <VDivider class="my-2" />
-                  <div class="text-caption mb-1">Agregar asiento individual:</div>
-                  <VRow density="compact">
-                    <VCol cols="12" sm="6">
-                      <VSelect id="audid-sub-row-sel" v-model="selectedRow[`${sIdx}-${subIdx}`]" :items="getRowOptions(sub)" label="Seleccionar fila" density="compact" hide-details />
-                    </VCol>
-                    <VCol cols="12" sm="6" class="d-flex" style="gap: 4px">
-                      <VBtn id="audid-seat-left-btn" size="x-small" color="primary" block :disabled="!isRowSelected(sIdx, subIdx)" @click="addSeatToRow(sIdx, subIdx, 'left')">
-                        <VIcon size="x-small">mdi-arrow-left-circle</VIcon>
-                        <span class="ml-1">Izq</span>
-                      </VBtn>
-                      <VBtn id="audid-seat-right-btn" size="x-small" color="primary" block :disabled="!isRowSelected(sIdx, subIdx)" @click="addSeatToRow(sIdx, subIdx, 'right')">
-                        <VIcon size="x-small">mdi-arrow-right-circle</VIcon>
-                        <span class="ml-1">Der</span>
-                      </VBtn>
-                    </VCol>
-                  </VRow>
-
-                  <VDivider class="my-2" />
-                </template>
-
-                <div class="d-flex gap-2">
-                  <VSpacer />
-                  <VBtn id="audid-sub-remove-btn" icon size="x-small" color="error" @click="removeSubsection(sIdx, subIdx)">
-                    <VIcon size="x-small">mdi-delete</VIcon>
-                  </VBtn>
-                </div>
-              </VCard>
-            </VCardText>
-          </VCard>
-        </div>
+        <AuditoriumSectionsList
+          :sections="sections"
+          :selected-row="selectedRow"
+          :open-sections="openSections"
+          @set-grid="setSubsectionGrid"
+          @add-seat-to-row="addSeatToRow"
+          @add-subsection="addSubsection"
+          @remove-section="removeSection"
+          @toggle-section="toggleSection"
+          @remove-subsection="removeSubsection"
+        />
       </VCol>
     </VRow>
 
@@ -172,6 +59,7 @@
 import { STAGE_CATEGORIES } from "~/constants/auditorium"
 import { useNotifyStore } from "~/composables/useNotify"
 import { withNotify } from "~/repositories/factory/withNotify"
+import type { Section, Subsection, Seat } from "~/utils/auditorium"
 
 definePageMeta({
   title: "Editor Auditorio",
@@ -187,30 +75,6 @@ const DEFAULT_SETTINGS = {
   SECTION_TOP_PADDING: 80,
   SECTION_SIDE_PADDING: 20,
   SECTION_BOTTOM_PADDING: 20,
-}
-
-interface Seat {
-  id: string
-  row: number
-  col: number
-  category?: string | null
-}
-
-interface Subsection {
-  id: string
-  name: string
-  isLabel: boolean
-  width?: number
-  tempRows?: number
-  tempCols?: number
-  seats?: (Seat | null)[][]
-}
-
-interface Section {
-  id: string
-  name: string
-  isLabel: boolean
-  subsections: Subsection[]
 }
 
 const route = useRoute()
@@ -758,13 +622,6 @@ function clearAllSeatStates() {
     })
   })
   notify.notify({ success: "Categorías eliminadas" })
-}
-
-function getRowOptions(sub: Subsection) {
-  return (sub.seats ?? []).map((_, idx) => ({
-    title: `Fila ${idx + 1}`,
-    value: idx,
-  }))
 }
 
 function isRowSelected(sIdx: number, subIdx: number): boolean {

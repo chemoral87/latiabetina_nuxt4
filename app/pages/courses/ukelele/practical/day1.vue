@@ -6,22 +6,22 @@
       <div v-if="showContent" class="pa-4">
 
         <!-- SECCION 1: Afinador de Referencia -->
-        <CoursesSection title="Afinador de Referencia Interactivo" icon="mdi-tune">
+        <CoursesSection icon="mdi-tune" title="Afinador de Referencia Interactivo">
           <p class="text-body-2 text-grey-darken-3 mb-4">
             Usa estos tonos de referencia generados en tiempo real para afinar tu ukelele de oído.
             Toca cada cuerda y ajusta el clavijero de tu instrumento hasta que suene idéntico al tono del afinador.
           </p>
 
           <VRow density="compact" class="mb-4 align-center">
-            <VCol cols="12" md="8">
+            <VCol md="8" cols="12">
               <VRow density="compact">
-                <VCol v-for="(string, index) in tuningStrings" :key="string.number" cols="6" sm="3">
-                  <VCard variant="outlined" :color="activeStringIndex === index ? 'grey-lighten-4' : 'transparent'"
-                    class="pa-3 text-center fill-height d-flex flex-column justify-space-between align-center border-transition"
+                <VCol v-for="(string, index) in tuningStrings" :key="string.number" sm="3" cols="6">
+                  <VCard variant="outlined" style="cursor: pointer"
+                    :color="activeStringIndex === index ? 'grey-lighten-4' : 'transparent'"
                     :style="activeStringIndex === index ? 'border-color: var(--v-primary-base, #1976d2) !important;' : ''"
-                    style="cursor: pointer" @click="playString(index)">
+                    class="pa-3 text-center fill-height d-flex flex-column justify-space-between align-center border-transition" @click="playString(index)">
                     <div>
-                      <VChip size="x-small" :color="string.color"  class="mb-2 font-weight-black" variant="elevated">
+                      <VChip size="x-small" variant="elevated"  :color="string.color" class="mb-2 font-weight-black">
                         Cuerda {{ string.number }}
                       </VChip>
                       <div class="text-h4 font-weight-bold text-primary mb-1">
@@ -36,22 +36,22 @@
                     </div>
 
                     <div class="mt-3">
-                      <VBtn id="btn-uked1-play-string" icon :color="activeStringIndex === index ? 'primary' : 'grey'" class="elevation-1">
+                      <VBtn id="btn-uked1-play-string" icon class="elevation-1" :color="activeStringIndex === index ? 'primary' : 'grey'">
                         <VIcon>{{ activeStringIndex === index ? 'mdi-volume-high' : 'mdi-play-circle-outline'
                         }}</VIcon>
                       </VBtn>
                     </div>
 
                     <!-- Wave visualizer for active string -->
-                    <div class="d-flex justify-center align-end mt-2" style="height: 16px; width: 40px;">
+                    <div style="height: 16px; width: 40px;" class="d-flex justify-center align-end mt-2">
                       <template v-if="activeStringIndex === index">
                         <div v-for="n in 5" :key="n" class="wave-active mx-0.5 primary rounded-sm"
                           :style="`height: 100%; width: 3px; animation-delay: ${n * 0.1}s; background-color: var(--v-primary-base, #1976d2);`">
                         </div>
                       </template>
                       <template v-else>
-                        <div v-for="n in 5" :key="n" class="mx-0.5 bg-bg-grey-lighten-2 rounded-sm"
-                          style="height: 3px; width: 3px;"></div>
+                        <div v-for="n in 5" :key="n" style="height: 3px; width: 3px;"
+                          class="mx-0.5 bg-bg-grey-lighten-2 rounded-sm"></div>
                       </template>
                     </div>
                   </VCard>
@@ -59,23 +59,23 @@
               </VRow>
             </VCol>
 
-            <VCol cols="12" md="4" class="text-center py-4">
-              <VBtn id="btn-uked1-tune-all" :color="isPlayingAll ? 'red-darken-2' : 'primary'" class="mb-3 w-100"  size="large"
+            <VCol md="4" cols="12" class="text-center py-4">
+              <VBtn id="btn-uked1-tune-all" size="large" class="mb-3 w-100"  :color="isPlayingAll ? 'red-darken-2' : 'primary'"
                 @click="playAllStrings">
                 <VIcon start>{{ isPlayingAll ? 'mdi-stop' : 'mdi-play' }}</VIcon>
                 {{ isPlayingAll ? 'Detener Afinador' : 'Afinar en Secuencia' }}
               </VBtn>
 
               <!-- Wave type and settings controls -->
-              <VSelect v-model="waveType" :items="waveOptions" label="Tipo de Sonido" density="compact" variant="outlined" hide-details
-                class="mt-2"></VSelect>
+              <VSelect v-model="waveType" class="mt-2" hide-details density="compact" variant="outlined" :items="waveOptions"
+                label="Tipo de Sonido"></VSelect>
 
               <div class="mt-4 px-2">
                 <div class="d-flex justify-space-between text-caption text-grey-darken-2 mb-1">
                   <span>Volumen</span>
                   <span>{{ Math.round(volume * 100) }}%</span>
                 </div>
-                <VSlider v-model="volume" min="0" max="1" step="0.05" density="compact" hide-details color="primary"
+                <VSlider v-model="volume" max="1" min="0" step="0.05" hide-details color="primary" density="compact"
                   track-color="grey-lighten-2"></VSlider>
               </div>
             </VCol>
@@ -83,7 +83,7 @@
         </CoursesSection>
 
         <!-- SECCION 2: Cuestionario de Partes del Ukelele -->
-        <CoursesSection title="Ponte a Prueba: Identificación de Partes" icon="mdi-help-circle-outline">
+        <CoursesSection icon="mdi-help-circle-outline" title="Ponte a Prueba: Identificación de Partes">
           <div v-if="!quizCompleted">
             <div class="d-flex justify-space-between align-center mb-2">
               <span class="text-subtitle-2 text-grey-darken-2">Pregunta {{ currentQuestionIndex + 1 }} de {{
@@ -91,21 +91,21 @@
               <span class="text-subtitle-2 font-weight-bold text-primary">Puntuación: {{ score }}</span>
             </div>
 
-            <VProgressLinear :model-value="((currentQuestionIndex) / quizQuestions.length) * 100" color="primary"
-              bg-color="grey-lighten-3" height="6" rounded class="mb-4"></VProgressLinear>
+            <VProgressLinear rounded height="6"
+              class="mb-4" color="primary" bg-color="grey-lighten-3" :model-value="((currentQuestionIndex) / quizQuestions.length) * 100"></VProgressLinear>
 
             <p class="text-subtitle-1 font-weight-bold text-grey-darken-4 mb-4">
               {{ currentQuestion.question }}
             </p>
 
-            <VRow density="compact" class="mb-4">
-              <VCol v-for="(option, idx) in currentQuestion.options" :key="idx" cols="12" sm="6">
+            <VRow class="mb-4" density="compact">
+              <VCol v-for="(option, idx) in currentQuestion.options" :key="idx" sm="6" cols="12">
                 <VBtn id="btn-uked1-quiz-option" block variant="outlined" :disabled="isAnswered" :color="getOptionColor(idx)"
                   class="quiz-option-btn py-6 text-left justify-start" @click="checkAnswer(idx)">
                   <VIcon start class="mr-2" :color="getOptionIconColor(idx)">
                     {{ getOptionIcon(idx) }}
                   </VIcon>
-                  <span class="text-truncate text-body-2 font-weight-medium" style="color: inherit;">{{ option
+                  <span style="color: inherit;" class="text-truncate text-body-2 font-weight-medium">{{ option
                   }}</span>
                 </VBtn>
               </VCol>
@@ -113,8 +113,8 @@
 
             <VExpandTransition>
               <div v-if="isAnswered" class="mt-4">
-                <VAlert :type="selectedAnswer === currentQuestion.answerIndex ? 'success' : 'error'" density="compact" variant="outlined"
-                  class="mb-4">
+                <VAlert class="mb-4" density="compact" variant="outlined"
+                  :type="selectedAnswer === currentQuestion.answerIndex ? 'success' : 'error'">
                   <div class="font-weight-bold mb-1">
                     {{ selectedAnswer === currentQuestion.answerIndex ? '¡Correcto!' : 'Incorrecto' }}
                   </div>
@@ -142,13 +142,13 @@
               Tu puntuación: {{ score }} / {{ quizQuestions.length }}
             </p>
 
-            <VCard variant="outlined" class="pa-4 my-4 mx-auto bg-grey-lighten-5 border-grey" max-width="500">
+            <VCard max-width="500" variant="outlined" class="pa-4 my-4 mx-auto bg-grey-lighten-5 border-grey">
               <p class="text-body-1 mb-0 text-grey-darken-3">
                 {{ quizFeedbackMessage }}
               </p>
             </VCard>
 
-            <VBtn id="btn-uked1-quiz-retry" color="primary" size="large" class="mt-2" @click="resetQuiz">
+            <VBtn id="btn-uked1-quiz-retry" class="mt-2" size="large" color="primary" @click="resetQuiz">
               <VIcon start>mdi-refresh</VIcon>
               Intentar de nuevo
             </VBtn>
@@ -156,7 +156,7 @@
         </CoursesSection>
 
         <!-- SECCION 3: Juego de Correspondencia Latina / Inglesa -->
-        <CoursesSection title="Ponte a Prueba: Relaciona las Notas" icon="mdi-swap-horizontal">
+        <CoursesSection icon="mdi-swap-horizontal" title="Ponte a Prueba: Relaciona las Notas">
           <p class="text-body-2 text-grey-darken-3 mb-4">
             Selecciona una nota en la columna <strong>latina</strong> y su equivalente en la columna
             <strong>inglesa</strong>.
@@ -170,9 +170,9 @@
                 <VIcon size="small" color="success">mdi-check-circle</VIcon>
                 Pares resueltos ({{ matchedPairs.length }} / {{ notePairs.length }}):
               </div>
-              <div class="d-flex flex-wrap" style="gap: 8px;">
-                <VChip v-for="pair in matchedPairs" :key="pair.latin" color="light-green-lighten-4"
-                  class="font-weight-bold match-resolved-chip" style="border: 2px solid #43a047;" variant="elevated">
+              <div style="gap: 8px;" class="d-flex flex-wrap">
+                <VChip v-for="pair in matchedPairs" :key="pair.latin" variant="elevated"
+                  color="light-green-lighten-4" style="border: 2px solid #43a047;" class="font-weight-bold match-resolved-chip">
                   <VIcon start size="small" color="light-green-darken-3">mdi-check-circle</VIcon>
                   <span class="text-light-green-darken-4">{{ pair.latin }}</span>
                   <span class="mx-1 text-grey">=</span>
@@ -190,7 +190,7 @@
             <p class="text-body-1 text-grey-darken-2 mt-2">
               Dominas perfectamente la equivalencia entre notación latina e inglesa. ¡Excelente!
             </p>
-            <VBtn id="btn-uked1-match-retry" color="primary" class="mt-4" @click="resetMatchGame">
+            <VBtn id="btn-uked1-match-retry" class="mt-4" color="primary" @click="resetMatchGame">
               <VIcon start>mdi-refresh</VIcon>
               Jugar de nuevo
             </VBtn>
@@ -198,18 +198,18 @@
 
           <!-- Active game -->
           <div v-else>
-            <VRow density="compact" no-gutters class="align-stretch">
+            <VRow no-gutters density="compact" class="align-stretch">
 
               <!-- LEFT: Latin column -->
               <VCol cols="5">
-                <div class="text-subtitle-2 font-weight-bold text-center text-primary mb-3"
-                  style="letter-spacing: 0.5px;">
+                <div style="letter-spacing: 0.5px;"
+                  class="text-subtitle-2 font-weight-bold text-center text-primary mb-3">
                   🇪🇸 Latina
                 </div>
-                <transition-group name="match-list" tag="div">
+                <transition-group tag="div" name="match-list">
                   <div v-for="note in unmatchedLatin" :key="note.latin" class="mb-2">
-                    <VBtn id="btn-uked1-latin-note" block variant="flat" :color="getLatinBtnColor(note.latin)"
-                      class="match-note-btn"
+                    <VBtn id="btn-uked1-latin-note" block variant="flat" class="match-note-btn"
+                      :color="getLatinBtnColor(note.latin)"
                       :class="{
                         'match-selected-left': selectedLatinName === note.latin && wrongLatinName === null,
                         'match-wrong-shake': wrongLatinName === note.latin
@@ -222,22 +222,22 @@
 
               <!-- CENTER: connector icon -->
               <VCol cols="2" class="d-flex flex-column align-center justify-center">
-                <div v-for="i in unmatchedLatin.length" :key="i" class="mb-2 d-flex align-center justify-center"
-                  style="height: 44px;">
+                <div v-for="i in unmatchedLatin.length" :key="i" style="height: 44px;"
+                  class="mb-2 d-flex align-center justify-center">
                   <VIcon size="small" color="grey-lighten-1">mdi-arrow-left-right</VIcon>
                 </div>
               </VCol>
 
               <!-- RIGHT: English column -->
               <VCol cols="5">
-                <div class="text-subtitle-2 font-weight-bold text-center text-orange-darken-2 mb-3"
-                  style="letter-spacing: 0.5px;">
+                <div style="letter-spacing: 0.5px;"
+                  class="text-subtitle-2 font-weight-bold text-center text-orange-darken-2 mb-3">
                   🇬🇧 Inglesa
                 </div>
-                <transition-group name="match-list" tag="div">
+                <transition-group tag="div" name="match-list">
                   <div v-for="note in unmatchedEnglish" :key="note.english" class="mb-2">
-                    <VBtn id="btn-uked1-english-note" block variant="flat" :color="getEnglishBtnColor(note.english)"
-                      class="match-note-btn" :class="{
+                    <VBtn id="btn-uked1-english-note" block variant="flat" class="match-note-btn"
+                      :color="getEnglishBtnColor(note.english)" :class="{
                         'match-selected-right': selectedEnglishName === note.english && wrongEnglishName === null,
                         'match-wrong-shake': wrongEnglishName === note.english
                       }" @click="selectEnglish(note.english)">
@@ -250,14 +250,14 @@
 
             <!-- Hint bar -->
             <div class="text-center text-caption text-grey-darken-1 mt-4">
-              <VIcon size="x-small" color="grey">mdi-information-outline</VIcon>
+              <VIcon color="grey" size="x-small">mdi-information-outline</VIcon>
               Haz clic en una nota latina y luego en su equivalente inglesa para emparejarlas.
             </div>
           </div>
         </CoursesSection>
 
         <!-- SECCION 4: Escala de Do Mayor -->
-        <CoursesSection title="Escala de Do Mayor (C Major Scale)" icon="mdi-music-clef-treble">
+        <CoursesSection icon="mdi-music-clef-treble" title="Escala de Do Mayor (C Major Scale)">
           <p class="text-body-2 text-grey-darken-3 mb-3">
             La escala mayor natural se construye a partir de una nota raíz siguiendo la fórmula de intervalos:
           </p>
@@ -278,22 +278,22 @@
 
           <VRow density="compact" class="align-center">
             <!-- Column 1: Scale selector and explanations -->
-            <VCol cols="12" md="7" class="pr-md-4">
+            <VCol md="7" cols="12" class="pr-md-4">
               <!-- Scale Step Visualizer (Horizontal Buttons) -->
               <div class="d-flex align-center justify-space-between flex-wrap mb-6 py-2 px-1 rounded bg-grey-lighten-4">
                 <template v-for="(note, index) in scaleNotes" :key="`note-${index}`">
                   <div class="d-flex align-center justify-center flex-grow-1 my-1">
-                    <VBtn id="btn-uked1-scale-note" icon rounded="circle" size="small" :color="selectedNoteIndex === index ? 'primary' : 'grey-lighten-2'"
+                    <VBtn id="btn-uked1-scale-note" icon size="small" rounded="circle" style="width: 38px; height: 38px;"
                       class="elevation-2 font-weight-black text-subtitle-1"
-                      :class="selectedNoteIndex === index ? 'text-white scale-up-pulse' : 'text-grey-darken-3'"
-                      style="width: 38px; height: 38px;" @click="selectNote(index)">
+                      :color="selectedNoteIndex === index ? 'primary' : 'grey-lighten-2'"
+                      :class="selectedNoteIndex === index ? 'text-white scale-up-pulse' : 'text-grey-darken-3'" @click="selectNote(index)">
                       {{ note.name }}
                     </VBtn>
 
                     <!-- Connector indicating Tone / Semitone interval -->
                     <div v-if="index < scaleNotes.length - 1" class="note-step-connector"
-                      :class="{ active: selectedNoteIndex === index || selectedNoteIndex === index + 1 }"
-                      style="position: relative;">
+                      style="position: relative;"
+                      :class="{ active: selectedNoteIndex === index || selectedNoteIndex === index + 1 }">
                       <span class="text-caption font-weight-black font-mono"
                         :style="selectedNoteIndex === index ? 'color: var(--v-primary-base, #1976d2)' : 'color: #888'"
                         style="position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 0.65rem !important;">
@@ -334,7 +334,7 @@
                   <VCol cols="12" class="mt-2">
                     <div class="text-caption text-grey">Instrucciones de digitación</div>
                     <div class="text-caption  mt-1 text-grey-darken-4">
-                      <VIcon size="small" color="primary" class="mr-1">mdi-hand-pointing-right</VIcon>
+                      <VIcon class="mr-1" size="small" color="primary">mdi-hand-pointing-right</VIcon>
                       {{ selectedNote.instructions }}
                     </div>
                   </VCol>
@@ -348,33 +348,33 @@
                 <VRow density="compact" class="align-center text-center">
                   <!-- Left hand: fretting hand -->
                   <VCol cols="6">
-                    <svg viewBox="0 0 846.1 869.7" width="150" height="120" preserveAspectRatio="none"
-                      class="mx-auto d-block">
+                    <svg width="150" height="120" class="mx-auto d-block" viewBox="0 0 846.1 869.7"
+                      preserveAspectRatio="none">
                       <g transform="scale(-1,1) translate(-846.1,0)">
                         <path
-                          d="M 600.8 394.7 C 584.0999999999999 398.5 568.5 429.2 542.6999999999999 456.7 L 542.6999999999999 398.59999999999997 L 542.6999999999999 369.79999999999995 L 542.6999999999999 211.5 C 542.6999999999999 198.1 531.8 187.2 518.4 187.2 L 515.6999999999999 187.2 C 502.29999999999995 187.2 491.3999999999999 198.1 491.3999999999999 211.5 L 491.0952819824218 370.71412353515626 L 480.99999999999994 369.8 L 480.99999999999994 160.5 C 480.99999999999994 147.1 470.09999999999997 136.2 456.69999999999993 136.2 L 453.99999999999994 136.2 C 440.59999999999997 136.2 429.69999999999993 147.1 429.69999999999993 160.5 L 429.69999999999993 375.5893981933594 L 421.90471801757803 376.5392272949219 L 421.5999999999999 192.1 C 421.5999999999999 178.7 410.69999999999993 167.79999999999998 397.19999999999993 167.79999999999998 L 394.49999999999994 167.79999999999998 C 381.09999999999997 167.79999999999998 370.19999999999993 178.7 370.19999999999993 192.1 L 370.50468749999993 389.9105041503906 L 364.20940551757803 390.82462768554683 L 363.5999999999999 239.79999999999995 C 363.5999999999999 226.39999999999995 352.69999999999993 215.49999999999994 339.2999999999999 215.49999999999994 L 336.5999999999999 215.49999999999994 C 323.19999999999993 215.49999999999994 312.2999999999999 226.39999999999995 312.2999999999999 239.79999999999995 L 312.2999999999999 369.79999999999995 L 312 369.79999999999995 L 312 542.5 C 312 542.5 312 645.4 427.4 645.4 C 499.4 645.4 529.8 611.8 539.3 588.9 C 539.4 588.8 610.9 463.9 625.8 435.2 C 640.7 406.3 622.4 389.7 600.8 394.7 Z"
-                          fill="#f0d9b8" stroke="#5a4632" stroke-width="8" stroke-linejoin="round"
-                          transform="matrix(1.2674051523208618, 0, 0, 1.2674051523208618, -153.31993103027344, -57.254132499850925)" />
+                          fill="#f0d9b8"
+                          stroke="#5a4632" stroke-width="8" stroke-linejoin="round" transform="matrix(1.2674051523208618, 0, 0, 1.2674051523208618, -153.31993103027344, -57.254132499850925)"
+                          d="M 600.8 394.7 C 584.0999999999999 398.5 568.5 429.2 542.6999999999999 456.7 L 542.6999999999999 398.59999999999997 L 542.6999999999999 369.79999999999995 L 542.6999999999999 211.5 C 542.6999999999999 198.1 531.8 187.2 518.4 187.2 L 515.6999999999999 187.2 C 502.29999999999995 187.2 491.3999999999999 198.1 491.3999999999999 211.5 L 491.0952819824218 370.71412353515626 L 480.99999999999994 369.8 L 480.99999999999994 160.5 C 480.99999999999994 147.1 470.09999999999997 136.2 456.69999999999993 136.2 L 453.99999999999994 136.2 C 440.59999999999997 136.2 429.69999999999993 147.1 429.69999999999993 160.5 L 429.69999999999993 375.5893981933594 L 421.90471801757803 376.5392272949219 L 421.5999999999999 192.1 C 421.5999999999999 178.7 410.69999999999993 167.79999999999998 397.19999999999993 167.79999999999998 L 394.49999999999994 167.79999999999998 C 381.09999999999997 167.79999999999998 370.19999999999993 178.7 370.19999999999993 192.1 L 370.50468749999993 389.9105041503906 L 364.20940551757803 390.82462768554683 L 363.5999999999999 239.79999999999995 C 363.5999999999999 226.39999999999995 352.69999999999993 215.49999999999994 339.2999999999999 215.49999999999994 L 336.5999999999999 215.49999999999994 C 323.19999999999993 215.49999999999994 312.2999999999999 226.39999999999995 312.2999999999999 239.79999999999995 L 312.2999999999999 369.79999999999995 L 312 369.79999999999995 L 312 542.5 C 312 542.5 312 645.4 427.4 645.4 C 499.4 645.4 529.8 611.8 539.3 588.9 C 539.4 588.8 610.9 463.9 625.8 435.2 C 640.7 406.3 622.4 389.7 600.8 394.7 Z" />
                         <!-- finger highlight markers: pulgar, índice, medio, anular, meñique -->
-                        <circle cx="607" cy="377" r="38"
+                        <circle r="38" cx="607" cy="377"
                           :fill="selectedNote.leftFinger === 0 ? 'var(--v-primary-base, #1976d2)' : 'transparent'" />
-                        <circle cx="503" cy="135" r="38"
+                        <circle r="38" cx="503" cy="135"
                           :fill="selectedNote.leftFinger === 1 ? 'var(--v-primary-base, #1976d2)' : 'transparent'" />
-                        <circle cx="424" cy="70" r="38"
+                        <circle r="38" cy="70" cx="424"
                           :fill="selectedNote.leftFinger === 2 ? 'var(--v-primary-base, #1976d2)' : 'transparent'" />
-                        <circle cx="350" cy="109" r="38"
+                        <circle r="38" cx="350" cy="109"
                           :fill="selectedNote.leftFinger === 3 ? 'var(--v-primary-base, #1976d2)' : 'transparent'" />
-                        <circle cx="276" cy="170" r="38"
+                        <circle r="38" cx="276" cy="170"
                           :fill="selectedNote.leftFinger === 4 ? 'var(--v-primary-base, #1976d2)' : 'transparent'" />
                       </g>
                       <!-- finger numbers -->
-                      <text x="343.1" y="161" text-anchor="middle" font-size="75" font-weight="bold"
+                      <text y="161" x="343.1" font-size="75" font-weight="bold" text-anchor="middle"
                         font-family="sans-serif" :fill="selectedNote.leftFinger === 1 ? '#ffffff' : 'red'">1</text>
-                      <text x="422.1" y="96" text-anchor="middle" font-size="75" font-weight="bold"
+                      <text y="96" x="422.1" font-size="75" font-weight="bold" text-anchor="middle"
                         font-family="sans-serif" :fill="selectedNote.leftFinger === 2 ? '#ffffff' : 'red'">2</text>
-                      <text x="496.1" y="135" text-anchor="middle" font-size="75" font-weight="bold"
+                      <text y="135" x="496.1" font-size="75" font-weight="bold" text-anchor="middle"
                         font-family="sans-serif" :fill="selectedNote.leftFinger === 3 ? '#ffffff' : 'red'">3</text>
-                      <text x="570.1" y="196" text-anchor="middle" font-size="75" font-weight="bold"
+                      <text y="196" x="570.1" font-size="75" font-weight="bold" text-anchor="middle"
                         font-family="sans-serif" :fill="selectedNote.leftFinger === 4 ? '#ffffff' : 'red'">4</text>
                     </svg>
                     <div class="text-caption font-weight-bold text-grey-darken-3 mt-1">
@@ -387,33 +387,33 @@
 
                   <!-- Right hand: plucking hand -->
                   <VCol cols="6">
-                    <svg viewBox="0 0 846.1 869.7" width="150" height="120" preserveAspectRatio="none"
-                      class="mx-auto d-block">
+                    <svg width="150" height="120" class="mx-auto d-block" viewBox="0 0 846.1 869.7"
+                      preserveAspectRatio="none">
                       <g transform="scale(-1,1) translate(-846.1,0)">
                         <path
-                          d="M 600.8 394.7 C 584.0999999999999 398.5 568.5 429.2 542.6999999999999 456.7 L 542.6999999999999 398.59999999999997 L 542.6999999999999 369.79999999999995 L 542.6999999999999 211.5 C 542.6999999999999 198.1 531.8 187.2 518.4 187.2 L 515.6999999999999 187.2 C 502.29999999999995 187.2 491.3999999999999 198.1 491.3999999999999 211.5 L 491.0952819824218 370.71412353515626 L 480.99999999999994 369.8 L 480.99999999999994 160.5 C 480.99999999999994 147.1 470.09999999999997 136.2 456.69999999999993 136.2 L 453.99999999999994 136.2 C 440.59999999999997 136.2 429.69999999999993 147.1 429.69999999999993 160.5 L 429.69999999999993 375.5893981933594 L 421.90471801757803 376.5392272949219 L 421.5999999999999 192.1 C 421.5999999999999 178.7 410.69999999999993 167.79999999999998 397.19999999999993 167.79999999999998 L 394.49999999999994 167.79999999999998 C 381.09999999999997 167.79999999999998 370.19999999999993 178.7 370.19999999999993 192.1 L 370.50468749999993 389.9105041503906 L 364.20940551757803 390.82462768554683 L 363.5999999999999 239.79999999999995 C 363.5999999999999 226.39999999999995 352.69999999999993 215.49999999999994 339.2999999999999 215.49999999999994 L 336.5999999999999 215.49999999999994 C 323.19999999999993 215.49999999999994 312.2999999999999 226.39999999999995 312.2999999999999 239.79999999999995 L 312.2999999999999 369.79999999999995 L 312 369.79999999999995 L 312 542.5 C 312 542.5 312 645.4 427.4 645.4 C 499.4 645.4 529.8 611.8 539.3 588.9 C 539.4 588.8 610.9 463.9 625.8 435.2 C 640.7 406.3 622.4 389.7 600.8 394.7 Z"
-                          fill="#f0d9b8" stroke="#5a4632" stroke-width="8" stroke-linejoin="round"
-                          transform="matrix(1.2674051523208618, 0, 0, 1.2674051523208618, -153.31993103027344, -57.254132499850925)" />
+                          fill="#f0d9b8"
+                          stroke="#5a4632" stroke-width="8" stroke-linejoin="round" transform="matrix(1.2674051523208618, 0, 0, 1.2674051523208618, -153.31993103027344, -57.254132499850925)"
+                          d="M 600.8 394.7 C 584.0999999999999 398.5 568.5 429.2 542.6999999999999 456.7 L 542.6999999999999 398.59999999999997 L 542.6999999999999 369.79999999999995 L 542.6999999999999 211.5 C 542.6999999999999 198.1 531.8 187.2 518.4 187.2 L 515.6999999999999 187.2 C 502.29999999999995 187.2 491.3999999999999 198.1 491.3999999999999 211.5 L 491.0952819824218 370.71412353515626 L 480.99999999999994 369.8 L 480.99999999999994 160.5 C 480.99999999999994 147.1 470.09999999999997 136.2 456.69999999999993 136.2 L 453.99999999999994 136.2 C 440.59999999999997 136.2 429.69999999999993 147.1 429.69999999999993 160.5 L 429.69999999999993 375.5893981933594 L 421.90471801757803 376.5392272949219 L 421.5999999999999 192.1 C 421.5999999999999 178.7 410.69999999999993 167.79999999999998 397.19999999999993 167.79999999999998 L 394.49999999999994 167.79999999999998 C 381.09999999999997 167.79999999999998 370.19999999999993 178.7 370.19999999999993 192.1 L 370.50468749999993 389.9105041503906 L 364.20940551757803 390.82462768554683 L 363.5999999999999 239.79999999999995 C 363.5999999999999 226.39999999999995 352.69999999999993 215.49999999999994 339.2999999999999 215.49999999999994 L 336.5999999999999 215.49999999999994 C 323.19999999999993 215.49999999999994 312.2999999999999 226.39999999999995 312.2999999999999 239.79999999999995 L 312.2999999999999 369.79999999999995 L 312 369.79999999999995 L 312 542.5 C 312 542.5 312 645.4 427.4 645.4 C 499.4 645.4 529.8 611.8 539.3 588.9 C 539.4 588.8 610.9 463.9 625.8 435.2 C 640.7 406.3 622.4 389.7 600.8 394.7 Z" />
                         <!-- finger highlight markers: pulgar, índice, medio, anular, meñique -->
-                        <circle cx="607" cy="377" r="38"
+                        <circle r="38" cx="607" cy="377"
                           :fill="selectedNote.rightFinger === 0 ? 'var(--v-primary-base, #1976d2)' : 'transparent'" />
-                        <circle cx="503" cy="135" r="38"
+                        <circle r="38" cx="503" cy="135"
                           :fill="selectedNote.rightFinger === 1 ? 'var(--v-primary-base, #1976d2)' : 'transparent'" />
-                        <circle cx="424" cy="70" r="38"
+                        <circle r="38" cy="70" cx="424"
                           :fill="selectedNote.rightFinger === 2 ? 'var(--v-primary-base, #1976d2)' : 'transparent'" />
-                        <circle cx="350" cy="109" r="38"
+                        <circle r="38" cx="350" cy="109"
                           :fill="selectedNote.rightFinger === 3 ? 'var(--v-primary-base, #1976d2)' : 'transparent'" />
-                        <circle cx="276" cy="170" r="38"
+                        <circle r="38" cx="276" cy="170"
                           :fill="selectedNote.rightFinger === 4 ? 'var(--v-primary-base, #1976d2)' : 'transparent'" />
                       </g>
                       <!-- finger letters: P (pulgar), I (índice), M (medio), A (anular) -->
-                      <text x="239.1" y="403" text-anchor="middle" font-size="75" font-weight="bold"
+                      <text y="403" x="239.1" font-size="75" font-weight="bold" text-anchor="middle"
                         font-family="sans-serif" :fill="selectedNote.rightFinger === 0 ? '#ffffff' : 'red'">P</text>
-                      <text x="343.1" y="161" text-anchor="middle" font-size="75" font-weight="bold"
+                      <text y="161" x="343.1" font-size="75" font-weight="bold" text-anchor="middle"
                         font-family="sans-serif" :fill="selectedNote.rightFinger === 1 ? '#ffffff' : 'red'">I</text>
-                      <text x="422.1" y="96" text-anchor="middle" font-size="75" font-weight="bold"
+                      <text y="96" x="422.1" font-size="75" font-weight="bold" text-anchor="middle"
                         font-family="sans-serif" :fill="selectedNote.rightFinger === 2 ? '#ffffff' : 'red'">M</text>
-                      <text x="496.1" y="135" text-anchor="middle" font-size="75" font-weight="bold"
+                      <text y="135" x="496.1" font-size="75" font-weight="bold" text-anchor="middle"
                         font-family="sans-serif" :fill="selectedNote.rightFinger === 3 ? '#ffffff' : 'red'">A</text>
                     </svg>
                     <div class="text-caption font-weight-bold text-grey-darken-3 mt-1">
@@ -427,13 +427,13 @@
               </VCard>
 
               <div class="d-flex flex-wrap gap-2">
-                <VBtn id="btn-uked1-scale-play" :color="isPlayingScale ? 'red-darken-2' : 'primary'" class="mr-2 mb-2 text-white"
+                <VBtn id="btn-uked1-scale-play" class="mr-2 mb-2 text-white" :color="isPlayingScale ? 'red-darken-2' : 'primary'"
                   @click="playScaleSequence">
                   <VIcon start>{{ isPlayingScale ? 'mdi-stop' : 'mdi-play-circle' }}</VIcon>
                   {{ isPlayingScale ? 'Detener escala' : 'Reproducir Escala' }}
                 </VBtn>
 
-                <VBtn id="btn-uked1-scale-sound" variant="outlined" color="grey-darken-2" class="mb-2" @click="playTone(selectedNote.frequency, 1.2)">
+                <VBtn id="btn-uked1-scale-sound" class="mb-2" variant="outlined" color="grey-darken-2" @click="playTone(selectedNote.frequency, 1.2)">
                   <VIcon start>mdi-music-note</VIcon>
                   Sonar Nota Actual
                 </VBtn>
@@ -441,8 +441,8 @@
             </VCol>
 
             <!-- Column 2: Fretboard diagram -->
-            <VCol cols="12" md="5" class="d-flex justify-center">
-              <VCard variant="outlined" class="pa-4 w-100" max-width="340">
+            <VCol md="5" cols="12" class="d-flex justify-center">
+              <VCard max-width="340" class="pa-4 w-100" variant="outlined">
                 <div class="text-subtitle-2 font-weight-bold text-center text-grey-darken-2 mb-3">
                   Diagrama del Diapasón
                 </div>
@@ -450,10 +450,10 @@
                 <div class="fretboard-container mx-auto" style="max-width: 280px; padding: 0 32px;">
                   <!-- Labels of strings at top -->
                   <div
-                    class="d-flex justify-space-between mb-2 text-caption font-weight-black text-grey-darken-3"
-                    style="width: 100%;">
-                    <div v-for="(str, idx) in ['4ª G', '3ª C', '2ª E', '1ª A']" :key="idx" class="text-center"
-                      style="flex: 1;">
+                    style="width: 100%;"
+                    class="d-flex justify-space-between mb-2 text-caption font-weight-black text-grey-darken-3">
+                    <div v-for="(str, idx) in ['4ª G', '3ª C', '2ª E', '1ª A']" :key="idx" style="flex: 1;"
+                      class="text-center">
                       {{ str }}
                     </div>
                   </div>
@@ -483,12 +483,12 @@
                     </div>
 
                     <!-- Open string row (above nut) -->
-                    <div class="d-flex justify-space-around pb-2 pt-2" style="position: relative; z-index: 4;">
-                      <div v-for="s in [4, 3, 2, 1]" :key="s" class="d-flex justify-center align-center"
-                        style="flex: 1; height: 28px;">
-                        <VAvatar v-if="selectedNote.string === s && selectedNote.fret === 0" color="primary" size="26"
-                          class="elevation-4 scale-up-pulse font-weight-black text-white"
-                          style="font-size: 0.7rem; border: 2px solid white;">
+                    <div style="position: relative; z-index: 4;" class="d-flex justify-space-around pb-2 pt-2">
+                      <div v-for="s in [4, 3, 2, 1]" :key="s" style="flex: 1; height: 28px;"
+                        class="d-flex justify-center align-center">
+                        <VAvatar v-if="selectedNote.string === s && selectedNote.fret === 0" size="26" color="primary"
+                          style="font-size: 0.7rem; border: 2px solid white;"
+                          class="elevation-4 scale-up-pulse font-weight-black text-white">
                           {{ selectedNote.name }}
                         </VAvatar>
                         <div v-else class="rounded-circle"
@@ -521,12 +521,12 @@
                       </div>
 
                       <!-- Note avatars per string, centered in each cell -->
-                      <div class="d-flex justify-space-around fill-height align-center"
-                        style="position: relative; z-index: 4;">
-                        <div v-for="s in [4, 3, 2, 1]" :key="s" class="d-flex justify-center align-center"
-                          style="flex: 1; height: 100%;">
-                          <VAvatar v-if="selectedNote.string === s && selectedNote.fret === f" color="amber-accent-4"
-                            size="28" class="elevation-6 scale-up-pulse font-weight-black text-black"
+                      <div style="position: relative; z-index: 4;"
+                        class="d-flex justify-space-around fill-height align-center">
+                        <div v-for="s in [4, 3, 2, 1]" :key="s" style="flex: 1; height: 100%;"
+                          class="d-flex justify-center align-center">
+                          <VAvatar v-if="selectedNote.string === s && selectedNote.fret === f" size="28"
+                            color="amber-accent-4" class="elevation-6 scale-up-pulse font-weight-black text-black"
                             style="z-index: 5; font-size: 0.68rem; border: 2px solid #fff;">
                             {{ selectedNote.name }}
                           </VAvatar>
@@ -892,7 +892,7 @@ export default {
         osc.start();
         osc.stop(ctx.currentTime + duration);
       } catch (e) {
-        // eslint-disable-next-line no-console
+         
         console.error("No se pudo generar sonido:", e);
       }
     },

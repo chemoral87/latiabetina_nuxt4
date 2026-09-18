@@ -7,6 +7,9 @@
           <VCol v-if="canViewAuditorium" lg="4" md="6" cols="12">
             <DashboardConsolidacion />
           </VCol>
+          <VCol v-if="canViewAssistanceDashboard" lg="8" md="6" cols="12">
+            <DashboardAssistencia />
+          </VCol>
         </ClientOnly>
       </VRow>
     </VCard>
@@ -22,4 +25,5 @@ definePageMeta({
 
 const auth = useAuthStore()
 const canViewAuditorium = computed(() => auth.hasPermission("auditorium-index"))
+const canViewAssistanceDashboard = computed(() => auth.hasPermission("assitance-dashboard"))
 </script>

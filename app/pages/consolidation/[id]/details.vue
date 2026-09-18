@@ -1,5 +1,5 @@
 <template>
-  <VContainer class="page-consolidation-details" :fluid="true">
+  <VContainer :fluid="true" class="page-consolidation-details">
     <VRow density="compact">
       <VCol cols="12">
         <VCard id="con-detai-card-1" class="mb-3" variant="outlined">
@@ -149,7 +149,7 @@
                   <VIcon start>mdi-plus</VIcon>
                   Nuevo Miembro
                 </VBtn>
-                <VBtn id="cnsld-refresh-btn" variant="outlined" color="primary" :loading="loading" @click="fetchMembers">
+                <VBtn id="cnsld-refresh-btn" color="primary" :loading="loading" variant="outlined" @click="fetchMembers">
                   <VIcon start>mdi-reload</VIcon>
                   Refrescar
                 </VBtn>

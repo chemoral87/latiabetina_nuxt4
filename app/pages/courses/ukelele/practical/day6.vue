@@ -6,7 +6,7 @@
       <div v-if="showContent" class="pa-4">
 
         <!-- SECCION 1: Explorador de Acordes con Séptima -->
-        <CoursesSection title="Explorador de Acordes con Séptima" icon="mdi-guitar-pick-outline">
+        <CoursesSection icon="mdi-guitar-pick-outline" title="Explorador de Acordes con Séptima">
           <p class="text-body-2 text-grey-darken-3 mb-4">
             El ukelele tiene exactamente <strong>4 cuerdas</strong>: ¡perfecto para tocar las 4 notas de
             un acorde con séptima, una por cuerda! Selecciona un acorde con séptima mayor (maj7) o
@@ -14,7 +14,7 @@
           </p>
 
           <!-- Type filter -->
-          <div class="d-flex justify-center mb-3" style="gap: 8px;">
+          <div style="gap: 8px;" class="d-flex justify-center mb-3">
             <VChipGroup v-model="selectedTypeFilter" mandatory selected-class="text-teal-darken-2">
               <VChip filter value="all" variant="outlined">Todos</VChip>
               <VChip filter value="maj7" variant="outlined">Solo Mayor 7 (maj7)</VChip>
@@ -23,19 +23,19 @@
           </div>
 
           <!-- Chord selector buttons -->
-          <div class="d-flex flex-wrap justify-center mb-6" style="gap: 10px;">
+          <div style="gap: 10px;" class="d-flex flex-wrap justify-center mb-6">
             <VBtn v-for="chord in filteredChords" :key="chord.name"
-              :color="selectedChord.name === chord.name ? (chord.type === 'maj7' ? 'teal' : 'deep-orange') : 'grey-lighten-3'"
-              :variant="selectedChord.name === chord.name ? 'flat' : 'outlined'"
-              class="font-weight-bold" rounded size="large" @click="selectChordByName(chord.name)">
+              rounded
+              size="large"
+              class="font-weight-bold" :variant="selectedChord.name === chord.name ? 'flat' : 'outlined'" :color="selectedChord.name === chord.name ? (chord.type === 'maj7' ? 'teal' : 'deep-orange') : 'grey-lighten-3'" @click="selectChordByName(chord.name)">
               {{ chord.name }}
             </VBtn>
           </div>
 
           <VRow density="compact" class="align-start">
             <!-- Column 1: Chord diagram -->
-            <VCol cols="12" md="5" class="d-flex justify-center">
-              <VCard id="card-cours-ukele-pract-day6-1" variant="outlined" class="pa-4 w-100" max-width="320">
+            <VCol md="5" cols="12" class="d-flex justify-center">
+              <VCard id="card-cours-ukele-pract-day6-1" max-width="320" class="pa-4 w-100" variant="outlined">
                 <div class="text-center mb-3">
                   <span class="text-h4 font-weight-black" :class="selectedChord.type === 'maj7' ? 'text-teal-darken-2' : 'text-deep-orange-darken-3'">{{ selectedChord.name }}</span>
                   <span class="text-subtitle-1 text-grey-darken-2 ml-2">({{ selectedChord.fullName }})</span>
@@ -44,10 +44,10 @@
                 <div class="fretboard-container mx-auto" style="max-width: 240px; padding: 0 26px;">
                   <!-- Labels of strings at top -->
                   <div
-                    class="d-flex justify-space-between mb-2 text-caption font-weight-black text-grey-darken-3"
-                    style="width: 100%;">
-                    <div v-for="(str, idx) in ['4ª G', '3ª C', '2ª E', '1ª A']" :key="idx" class="text-center"
-                      style="flex: 1;">
+                    style="width: 100%;"
+                    class="d-flex justify-space-between mb-2 text-caption font-weight-black text-grey-darken-3">
+                    <div v-for="(str, idx) in ['4ª G', '3ª C', '2ª E', '1ª A']" :key="idx" style="flex: 1;"
+                      class="text-center">
                       {{ str }}
                     </div>
                   </div>
@@ -77,9 +77,9 @@
                     </div>
 
                     <!-- Open string row (above nut) -->
-                    <div class="d-flex justify-space-around pb-2 pt-2" style="position: relative; z-index: 4;">
-                      <div v-for="s in [4, 3, 2, 1]" :key="s" class="d-flex justify-center align-center"
-                        style="flex: 1; height: 26px;">
+                    <div style="position: relative; z-index: 4;" class="d-flex justify-space-around pb-2 pt-2">
+                      <div v-for="s in [4, 3, 2, 1]" :key="s" style="flex: 1; height: 26px;"
+                        class="d-flex justify-center align-center">
                         <span v-if="getFretForString(s) === 0" class="font-weight-black"
                           style="color: rgba(255,255,255,0.85); font-size: 0.85rem;">○</span>
                       </div>
@@ -104,14 +104,14 @@
                           f }}</span>
 
                       <!-- Note avatars per string, centered in each cell -->
-                      <div class="d-flex justify-space-around fill-height align-center"
-                        style="position: relative; z-index: 4;">
-                        <div v-for="s in [4, 3, 2, 1]" :key="s" class="d-flex justify-center align-center"
-                          style="flex: 1; height: 100%;">
+                      <div style="position: relative; z-index: 4;"
+                        class="d-flex justify-space-around fill-height align-center">
+                        <div v-for="s in [4, 3, 2, 1]" :key="s" style="flex: 1; height: 100%;"
+                          class="d-flex justify-center align-center">
                           <VAvatar v-if="getFretForString(s) === f"
-                            :color="selectedChord.type === 'maj7' ? 'teal-accent-3' : 'deep-orange-accent-3'" size="26"
-                            class="elevation-6 scale-up-pulse font-weight-black text-white"
-                            style="z-index: 5; font-size: 0.72rem; border: 2px solid #fff;">
+                            size="26" class="elevation-6 scale-up-pulse font-weight-black text-white"
+                            style="z-index: 5; font-size: 0.72rem; border: 2px solid #fff;"
+                            :color="selectedChord.type === 'maj7' ? 'teal-accent-3' : 'deep-orange-accent-3'">
                             {{ getFingerForString(s) }}
                           </VAvatar>
                         </div>
@@ -127,7 +127,7 @@
                   <div class="text-center text-caption text-grey-darken-2 mt-3">
                     <span class="text-white">○</span><span class="text-grey-darken-1">
                       cuerda al aire</span> &nbsp;|&nbsp;
-                    <span :class="selectedChord.type === 'maj7' ? 'text-teal-darken-2' : 'text-deep-orange-darken-3'" class="font-weight-bold">●</span> dedo / traste
+                    <span class="font-weight-bold" :class="selectedChord.type === 'maj7' ? 'text-teal-darken-2' : 'text-deep-orange-darken-3'">●</span> dedo / traste
                   </div>
                 </div>
 
@@ -141,29 +141,29 @@
             </VCol>
 
             <!-- Column 2: Chord details -->
-            <VCol cols="12" md="7" class="pl-md-4 mt-4 mt-md-0">
+            <VCol md="7" cols="12" class="pl-md-4 mt-4 mt-md-0">
               <VCard variant="outlined" class="pa-4 bg-grey-lighten-5"
                 :style="`border-color: ${selectedChord.type === 'maj7' ? 'rgba(0, 150, 136, 0.25)' : 'rgba(255, 87, 34, 0.25)'} !important;`">
                 <div class="d-flex align-center justify-space-between mb-3">
                   <span class="text-subtitle-2 font-weight-bold text-grey-darken-2">
                     Notas que componen el acorde {{ selectedChord.name }}
                   </span>
-                  <VChip size="x-small" :color="selectedChord.type === 'maj7' ? 'teal' : 'deep-orange'"  variant="elevated">
+                  <VChip size="x-small" variant="elevated"  :color="selectedChord.type === 'maj7' ? 'teal' : 'deep-orange'">
                     {{ selectedChord.type === 'maj7' ? 'Séptima Mayor' : 'Séptima Menor (Dominante)' }}
                   </VChip>
                 </div>
 
-                <VRow density="compact" class="mb-2">
+                <VRow class="mb-2" density="compact">
                   <VCol v-for="(note, idx) in selectedChord.notes" :key="idx" cols="3">
-                    <VCard variant="outlined" class="pa-2 text-center fill-height d-flex flex-column align-center"
-                      style="cursor: pointer;" @click="playTone(note.frequency, 1.0)">
-                      <VChip size="x-small" :color="selectedChord.type === 'maj7' ? 'teal' : 'deep-orange'" variant="outlined" class="mb-2"
-                        style="font-size: 0.6rem;">
+                    <VCard variant="outlined" style="cursor: pointer;"
+                      class="pa-2 text-center fill-height d-flex flex-column align-center" @click="playTone(note.frequency, 1.0)">
+                      <VChip class="mb-2" size="x-small" variant="outlined" style="font-size: 0.6rem;"
+                        :color="selectedChord.type === 'maj7' ? 'teal' : 'deep-orange'">
                         {{ note.degree }}
                       </VChip>
                       <div class="text-subtitle-1 font-weight-bold" :class="selectedChord.type === 'maj7' ? 'text-teal-darken-2' : 'text-deep-orange-darken-3'">{{ note.latin }}</div>
                       <div class="text-caption text-grey-darken-2">{{ note.english }}</div>
-                      <VIcon size="small" color="grey" class="mt-1">mdi-volume-high</VIcon>
+                      <VIcon class="mt-1" color="grey" size="small">mdi-volume-high</VIcon>
                     </VCard>
                   </VCol>
                 </VRow>
@@ -171,7 +171,7 @@
                 <VDivider class="my-3" />
 
                 <div class="text-caption text-grey-darken-1 mb-2">
-                  <VIcon size="x-small" :color="selectedChord.type === 'maj7' ? 'teal' : 'deep-orange'" class="mr-1">mdi-information-outline</VIcon>
+                  <VIcon class="mr-1" size="x-small" :color="selectedChord.type === 'maj7' ? 'teal' : 'deep-orange'">mdi-information-outline</VIcon>
                   Cada una de las 4 cuerdas del ukelele toca una nota distinta del acorde: ¡no sobra
                   ninguna cuerda!
                 </div>
@@ -207,7 +207,7 @@
         </CoursesSection>
 
         <!-- SECCION 2: Ponte a Prueba -->
-        <CoursesSection title="Ponte a Prueba: Acordes con Séptima" icon="mdi-help-circle-outline">
+        <CoursesSection icon="mdi-help-circle-outline" title="Ponte a Prueba: Acordes con Séptima">
           <div v-if="!quizCompleted">
             <div class="d-flex justify-space-between align-center mb-2">
               <span class="text-subtitle-2 text-grey-darken-2">Pregunta {{ currentQuestionIndex + 1 }} de {{
@@ -215,21 +215,21 @@
               <span class="text-subtitle-2 font-weight-bold text-teal-darken-2">Puntuación: {{ score }}</span>
             </div>
 
-            <VProgressLinear :model-value="((currentQuestionIndex) / quizQuestions.length) * 100" color="teal"
-              bg-color="grey-lighten-3" height="6" rounded class="mb-4"></VProgressLinear>
+            <VProgressLinear rounded height="6"
+              class="mb-4" color="teal" bg-color="grey-lighten-3" :model-value="((currentQuestionIndex) / quizQuestions.length) * 100"></VProgressLinear>
 
             <p class="text-subtitle-1 font-weight-bold text-grey-darken-4 mb-4">
               {{ currentQuestion.question }}
             </p>
 
-            <VRow density="compact" class="mb-4">
-              <VCol v-for="(option, idx) in currentQuestion.options" :key="idx" cols="12" sm="6">
+            <VRow class="mb-4" density="compact">
+              <VCol v-for="(option, idx) in currentQuestion.options" :key="idx" sm="6" cols="12">
               <VBtn id="btn-uked6-quiz-option" block variant="outlined" :disabled="isAnswered" :color="getOptionColor(idx)"
                 class="quiz-option-btn py-6 text-left justify-start" @click="checkAnswer(idx)">
                   <VIcon start class="mr-2" :color="getOptionIconColor(idx)">
                     {{ getOptionIcon(idx) }}
                   </VIcon>
-                  <span class="text-truncate text-body-2 font-weight-medium" style="color: inherit;">{{ option
+                  <span style="color: inherit;" class="text-truncate text-body-2 font-weight-medium">{{ option
                   }}</span>
                 </VBtn>
               </VCol>
@@ -237,8 +237,8 @@
 
             <VExpandTransition>
               <div v-if="isAnswered" class="mt-4">
-                <VAlert :type="selectedAnswer === currentQuestion.answerIndex ? 'success' : 'error'" density="compact" variant="outlined"
-                  class="mb-4">
+                <VAlert class="mb-4" density="compact" variant="outlined"
+                  :type="selectedAnswer === currentQuestion.answerIndex ? 'success' : 'error'">
                   <div class="font-weight-bold mb-1">
                     {{ selectedAnswer === currentQuestion.answerIndex ? '¡Correcto!' : 'Incorrecto' }}
                   </div>
@@ -266,13 +266,13 @@
               Tu puntuación: {{ score }} / {{ quizQuestions.length }}
             </p>
 
-            <VCard variant="outlined" class="pa-4 my-4 mx-auto bg-grey-lighten-5 border-grey" max-width="500">
+            <VCard max-width="500" variant="outlined" class="pa-4 my-4 mx-auto bg-grey-lighten-5 border-grey">
               <p class="text-body-1 mb-0 text-grey-darken-3">
                 {{ quizFeedbackMessage }}
               </p>
             </VCard>
 
-            <VBtn id="btn-uked6-quiz-retry" color="teal"  size="large" class="mt-2" @click="resetQuiz">
+            <VBtn id="btn-uked6-quiz-retry" class="mt-2"  color="teal" size="large" @click="resetQuiz">
               <VIcon start>mdi-refresh</VIcon>
               Intentar de nuevo
             </VBtn>
@@ -528,7 +528,7 @@ export default {
         osc.start(startTime);
         osc.stop(startTime + duration);
       } catch (e) {
-        // eslint-disable-next-line no-console
+         
         console.error("No se pudo generar sonido:", e);
       }
     },

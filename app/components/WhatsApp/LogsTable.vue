@@ -81,8 +81,8 @@
         <VBtn
           size="small"
           variant="tonal"
-          :color="isResent(item) ? 'grey' : (item as any).success ? 'grey' : 'primary'"
           :disabled="isResent(item)"
+          :color="isResent(item) ? 'grey' : (item as any).success ? 'grey' : 'primary'"
           :title="isResent(item) ? 'Ya reenviado (solo 1 vez)' : (item as any).success ? 'Reenviar de nuevo' : 'Reenviar mensaje fallido'"
           @click="emit('resend', item as Record<string, unknown>)"
         >

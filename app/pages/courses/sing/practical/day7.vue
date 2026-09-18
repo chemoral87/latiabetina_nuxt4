@@ -12,7 +12,7 @@
             Aumenta el nivel conforme tu labio aguante la vibración con melodías más largas.
           </p>
 
-          <VRow density="compact" class="mb-2">
+          <VRow class="mb-2" density="compact">
             <VCol v-for="(line, index) in trillLines" :key="line.name" md="4" sm="6" cols="12">
               <VCard class="pa-3 mb-3" variant="outlined" style="cursor:pointer;"
                 :color="line.completed ? 'light-green-lighten-5' : 'transparent'" @click="playTrillLine(index)">
@@ -58,7 +58,7 @@
                 <div class="py-4">
                   <p class="text-body-1 font-weight-medium mb-3">{{ step.title }}</p>
                   <p class="text-body-2 text-grey-darken-2 mb-2">{{ step.description }}</p>
-                  <VAlert v-if="step.tip" type="info" class="" variant="text" density="compact">
+                  <VAlert v-if="step.tip" class="" type="info" variant="text" density="compact">
                     <span class="text-caption">{{ step.tip }}</span>
                   </VAlert>
                 </div>
@@ -82,7 +82,7 @@
             </div>
             <p class="text-subtitle-1 font-weight-bold text-grey-darken-4 mb-4">{{ currentQuestion.question }}</p>
 
-            <VRow density="compact" class="mb-4">
+            <VRow class="mb-4" density="compact">
               <VCol v-for="(option, idx) in currentQuestion.options" :key="idx" sm="6" cols="12">
                 <VBtn id="btn-singp7-quiz-option" block variant="outlined" :disabled="answered"
                   :color="getOptionColor(idx)" class="py-4 text-left justify-start" @click="checkAnswer(idx)">

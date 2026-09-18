@@ -1,6 +1,6 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VRow density="compact" align="center" justify="center" class="fill-height">
+    <VRow align="center" justify="center" density="compact" class="fill-height">
       <VCol lg="4" md="6" sm="8" cols="12">
         <VCard id="login-card" flat class="pa-4">
           <VForm id="login-form" @submit.prevent="submitLogin">
@@ -62,13 +62,13 @@
                   autocomplete="current-password"
                   :type="showed ? 'text' : 'password'"
                   :append-inner-icon="showed ? 'mdi-eye' : 'mdi-eye-off'"
-                  @click:append-inner="showed = !showed"
                   @input="errorMsg = ''"
+                  @click:append-inner="showed = !showed"
                 />
               </VCol>
 
               <VCol v-if="errorMsg" cols="12">
-                <VAlert type="error" density="compact" variant="tonal">
+                <VAlert type="error" variant="tonal" density="compact">
                   {{ errorMsg }}
                 </VAlert>
               </VCol>

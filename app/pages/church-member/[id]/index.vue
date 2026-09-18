@@ -1,526 +1,70 @@
 <template>
   <VContainer :fluid="true" class="pa-0 pa-sm-2">
-    <VRow density="compact" id="cmm-header-row">
+    <VRow id="cmm-header-row" density="compact">
       <VCol cols="12">
-        <VSheet rounded color="white" class="pa-2 pa-sm-3">
-          <div class="text-subtitle-1 font-weight-medium d-flex align-center">
-            <VIcon start size="small" color="primary">mdi-account</VIcon>
-            <span class="text-subtitle-2 text-truncate">{{ member.name }}</span>
-            <VSpacer />
-            <VChip
-              size="small"
-              variant="elevated"
-              :color="statusColor(member.status)"
-            >
-              {{ statusLabel(member.status) }}
-            </VChip>
-            <VBtn
-              id="cmm-status-edit-btn"
-              variant="text"
-              color="primary"
-              rounded="circle"
-              icon="mdi-pencil"
-              title="Cambiar estado"
-              aria-label="Cambiar estado del miembro"
-              @click="statusDialog = true"
-            />
-          </div>
-          <VDivider class="my-2" />
-
-          <div>
-            <VRow density="compact"
-              v-if="medals.length> 0"
-              id="cmm-medals-row"
-              >
-              <VCol cols="12" class="d-flex flex-wrap align-center">
-                <VIcon size="small" color="primary">mdi-medal-outline</VIcon>
-                <template v-for="medal in medals" :key="medal.id">
-                  <VTooltip location="top">
-                    <template #activator="{ props: tp }">
-                      <VChip
-                        v-bind="tp"
-                        size="small"
-                        variant="tonal"
-                        class="cursor-pointer"
-                        :color="medalColor(medal.medal)"
-                      >
-                        <VIcon start size="small">{{
-                          medalIcon(medal.medal)
-                        }}</VIcon>
-                        {{ medalLabel(medal.medal) }}
-                        <template #append>
-                          <VIcon
-                            :id="'medal-info-' + medal.id"
-                            color="grey"
-                            size="small"
-                            class="cursor-pointer ml-2"
-                            :aria-label="
-                              'Información de ' + medalLabel(medal.medal)
-                            "
-                            >mdi-help-circle-outline</VIcon
-                          >
-                          <VIcon
-                            size="small"
-                            color="error"
-                            class="cursor-pointer ml-2"
-                            :aria-label="
-                              'Eliminar medalla ' + medalLabel(medal.medal)
-                            "
-                            @click.stop="confirmDeleteMedal(medal)"
-                            >mdi-close</VIcon
-                          >
-                        </template>
-                      </VChip>
-                    </template>
-                    <span
-                      >{{ medalLabel(medal.medal) }}
-                      {{ medalDetail(medal) }}</span
-                    >
-                  </VTooltip>
-                  <VMenu location="top" :activator="'#medal-info-' + medal.id">
-                    <VCard class="pa-2" max-width="220">
-                      <div class="text-caption">
-                        {{ medalLabel(medal.medal) }} {{ medalDetail(medal) }}
-                      </div>
-                    </VCard>
-                  </VMenu>
-                </template>
-                <VBtn
-                  id="cmm-medal-add-btn"
-                  icon
-                  size="x-small"
-                  variant="text"
-                  color="primary"
-                  title="Agregar medalla"
-                  aria-label="Agregar medalla"
-                  @click="medalDialog = true"
-                >
-                  <VIcon size="x-small">mdi-plus</VIcon>
-                </VBtn>
-              </VCol>
-            </VRow>
-            <VRow density="compact" v-else id="cmm-medals-empty-row">
-              <VCol cols="12" class="d-flex align-center">
-                <VBtn
-                  id="cmm-medal-add-btn"
-                  size="x-small"
-                  variant="text"
-                  color="primary"
-                  prepend-icon="mdi-medal-outline"
-                  @click="medalDialog = true"
-                >
-                  Agregar medalla
-                </VBtn>
-              </VCol>
-            </VRow>
-            <VRow density="compact" id="cmm-info-row">
-              <VCol
-                md="5"
-                cols="12"
-                class="d-flex justify-center align-center order-md-2"
-              >
-                <VAvatar
-                  v-if="member.url_image_s3"
-                  size="80"
-                  rounded="circle"
-                  class="cursor-pointer"
-                  @click="editDialog = true"
-                >
-                  <VImg
-                    cover
-                    alt="Foto del miembro"
-                    :src="member.url_image_s3"
-                  />
-                </VAvatar>
-                <VIcon
-                  v-else
-                  size="64"
-                  class="cursor-pointer"
-                  color="grey-lighten-1"
-                  @click="editDialog = true"
-                  >mdi-account-circle</VIcon
-                >
-              </VCol>
-              <VCol md="7" cols="12" class="order-md-1">
-                <div class="d-flex align-center mb-1">
-                  <VBtn
-                    id="cmm-info-toggle-btn"
-                    size="x-small"
-                    variant="text"
-                    color="primary"
-                    :prepend-icon="showInfo ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-                    @click="showInfo = !showInfo"
-                  >
-                    {{ showInfo ? "Ocultar datos" : "Ver datos" }}
-                  </VBtn>
-                </div>
-                <VExpandTransition>
-                  <VRow density="compact" v-show="showInfo">
-                    <VCol sm="6" cols="12" class="text-body-2">
-                      <VIcon start size="x-small" color="grey-darken-1"
-                        >mdi-account</VIcon
-                      >
-                      <span class="font-weight-medium">Nombre:</span>
-                      {{ fullName }}
-                    </VCol>
-                    <VCol
-                      v-if="member.cellphone"
-                      sm="6"
-                      cols="12"
-                      class="text-body-2"
-                    >
-                      <VIcon start size="x-small" color="grey-darken-1"
-                        >mdi-phone</VIcon
-                      >
-                      <span class="font-weight-medium">Celular:</span>
-                      {{ member.cellphone }}
-                    </VCol>
-                    <VCol
-                      v-if="member.years_old != null"
-                      sm="6"
-                      cols="12"
-                      class="text-body-2"
-                    >
-                      <VIcon start size="x-small" color="grey-darken-1"
-                        >mdi-calendar-account</VIcon
-                      >
-                      <span class="font-weight-medium">Edad:</span>
-                      {{ member.years_old }}
-                    </VCol>
-                    <VCol
-                      v-if="member.number_of_children != null"
-                      sm="6"
-                      cols="12"
-                      class="text-body-2"
-                    >
-                      <VIcon start size="x-small" color="grey-darken-1"
-                        >mdi-account-multiple</VIcon
-                      >
-                      <span class="font-weight-medium">Hijos:</span>
-                      {{ member.number_of_children }}
-                    </VCol>
-                    <VCol
-                      v-if="member.marriage_status"
-                      sm="6"
-                      cols="12"
-                      class="text-body-2"
-                    >
-                      <VIcon start size="x-small" color="grey-darken-1"
-                        >mdi-ring</VIcon
-                      >
-                      <span class="font-weight-medium">Estado civil:</span>
-                      {{ member.marriage_status }}
-                    </VCol>
-                    <VCol
-                      v-if="creatorName"
-                      sm="6"
-                      cols="12"
-                      class="text-body-2"
-                    >
-                      <VIcon start size="x-small" color="grey-darken-1"
-                        >mdi-account-check</VIcon
-                      >
-                      <span class="font-weight-medium">Creado por:</span>
-                      {{ creatorName }}
-                    </VCol>
-                    <VCol
-                      v-if="member.address"
-                      cols="12"
-                      class="text-body-2 d-none d-sm-flex"
-                    >
-                      <VIcon start size="x-small" color="grey-darken-1"
-                        >mdi-map-marker</VIcon
-                      >
-                      <span class="font-weight-medium">Dirección:</span>
-                      {{ member.address }}
-                    </VCol>
-                  </VRow>
-                </VExpandTransition>
-              </VCol>
-            </VRow>
-
-            <VRow density="compact"
-              v-if="member.address"
-              id="cmm-address-mobile-row"
-              
-              class="d-flex d-sm-none">
-              <VCol cols="12" class="text-body-2 py-1">
-                <VIcon start size="x-small" color="grey-darken-1"
-                  >mdi-map-marker</VIcon
-                >
-                <span class="font-weight-medium">Dirección:</span>
-                {{ member.address }}
-              </VCol>
-            </VRow>
-            <VRow density="compact" id="cmm-edit-row" class="mt-1">
-              <VCol cols="12" class="d-flex justify-end">
-                <VBtn
-                  id="cmm-edit-btn"
-                  color="primary"
-                  variant="elevated"
-                  prepend-icon="mdi-pencil"
-                  @click="editDialog = true"
-                >
-                  Editar
-                </VBtn>
-              </VCol>
-            </VRow>
-          </div>
-
-          <VDivider class="my-2" />
-        </VSheet>
+        <ChurchMemberHeader
+          :medals="medals"
+          :member="member"
+          @edit="editDialog = true"
+          @medal-add="medalDialog = true"
+          @medal-delete="confirmDeleteMedal"
+          @status-edit="statusDialog = true"
+        />
       </VCol>
     </VRow>
 
-    <VRow density="compact" id="cmm-interactions-section" class="mt-2">
+    <VRow id="cmm-interactions-section" class="mt-2" density="compact">
       <VCol cols="12">
-        <VSheet rounded color="white" class="pa-2 pa-sm-3">
-          <div class="text-subtitle-1 font-weight-medium d-flex align-center">
-            <VIcon start size="small" color="primary">mdi-history</VIcon>
-            Interacciones
-          </div>
-          <VDivider class="my-2" />
-          <div>
-            <VRow density="compact"
-              id="cmm-logs-controls-row"
-              class="w-100 align-center">
-              <VCol cols="12" sm="auto">
-                <VBtn
-                  id="cmm-refresh-logs-btn"
-                  color="primary"
-                  variant="outlined"
-                  :loading="loadingLogs"
-                  @click="fetchTrackingLogs"
-                >
-                  <VIcon start>mdi-reload</VIcon>
-                  Refrescar
-                </VBtn>
-              </VCol>
-              <VCol v-if="phoneDigits" sm="4" cols="12">
-                <VTextField
-                  id="cmm-message-input"
-                  v-model="message"
-                  clearable
-                  hide-details
-                  density="compact"
-                  variant="outlined"
-                  placeholder="Mensaje para WhatsApp / SMS"
-                  append-inner-icon="mdi-message-text-outline"
-                />
-              </VCol>
-
-              <VCol
-                cols="12"
-                sm="auto"
-                class="d-flex justify-center justify-sm-end ga-2"
-              >
-                <VTooltip location="top">
-                  <template #activator="{ props }">
-                    <VBtn
-                      v-if="phoneDigits"
-                      id="cmm-whatsapp-btn"
-                      icon
-                      color="green"
-                      variant="outlined"
-                      v-bind="props"
-                      @click="openContact('whatsapp', whatsappHref)"
-                    >
-                      <VIcon>mdi-whatsapp</VIcon>
-                    </VBtn>
-                  </template>
-                  <span>WhatsApp</span>
-                </VTooltip>
-                <VTooltip location="top">
-                  <template #activator="{ props }">
-                    <VBtn
-                      v-if="phoneDigits"
-                      id="cmm-sms-btn"
-                      icon
-                      color="teal"
-                      variant="outlined"
-                      v-bind="props"
-                      @click="openContact('sms', smsHref)"
-                    >
-                      <VIcon>mdi-message-text</VIcon>
-                    </VBtn>
-                  </template>
-                  <span>Mensaje</span>
-                </VTooltip>
-                <VTooltip location="top">
-                  <template #activator="{ props }">
-                    <VBtn
-                      v-if="phoneDigits"
-                      id="cmm-call-btn"
-                      icon
-                      color="primary"
-                      variant="outlined"
-                      v-bind="props"
-                      @click="openContact('llamada', telHref)"
-                    >
-                      <VIcon>mdi-phone</VIcon>
-                    </VBtn>
-                  </template>
-                  <span>Llamar</span>
-                </VTooltip>
-                <VTooltip location="top">
-                  <template #activator="{ props }">
-                    <VBtn
-                      id="cmm-face-to-face-btn"
-                      icon
-                      variant="outlined"
-                      color="deep-orange"
-                      v-bind="props"
-                      @click="openContact('presencial')"
-                    >
-                      <VIcon>mdi-account-group</VIcon>
-                    </VBtn>
-                  </template>
-                  <span>Presencial</span>
-                </VTooltip>
-              </VCol>
-            </VRow>
-          </div>
-          <div>
-            <ChurchMemberTrackingLogTable
-              id="cmm-tracking-log-table"
-              :loading="loadingLogs"
-              :response="logsResponse"
-              @edit="editTrackingLog"
-              @delete="deleteTrackingLog"
-              @sorting="onLogsUpdateOptions"
-            />
-          </div>
-        </VSheet>
+        <ChurchMemberInteractions
+          :member="member"
+          :loading-logs="loadingLogs"
+          :logs-response="logsResponse"
+          @contact="onContact"
+          @edit-log="editTrackingLog"
+          @refresh="fetchTrackingLogs"
+          @sorting="onLogsUpdateOptions"
+          @delete-log="deleteTrackingLog"
+        />
       </VCol>
     </VRow>
 
-    <VRow density="compact"
+    <VRow
       v-if="
-        currentConsolidators.length> 0 ||
+        currentConsolidators.length > 0 ||
         auth.hasPermission('church-member-consolidator-assign')
       "
       id="cmm-consolidators-section"
       class="mt-2"
+      density="compact"
     >
       <VCol cols="12">
-        <VSheet rounded color="white" class="pa-2 pa-sm-3">
-          <div class="text-subtitle-1 font-weight-medium d-flex align-center">
-            <VIcon start size="small" color="primary"
-              >mdi-account-multiple</VIcon
-            >
-            Consolidadores
-          </div>
-          <VDivider class="my-2" />
-          <div>
-            <template
-              v-if="auth.hasPermission('church-member-consolidator-assign')"
-            >
-              <ConsolidationConsolidatorCombobox
-                id="cmm-consolidator-combobox"
-                :org-id="member.org_id"
-                label="Asignar consolidadores"
-                :disabled="savingConsolidators"
-                :consolidatorsx="currentConsolidators"
-                @model-change="onPendingConsolidatorsChange"
-              />
-              <div class="d-flex justify-end mt-2">
-                <VBtn
-                  v-if="hasConsolidatorChanges"
-                  id="cmm-consolidator-save-btn"
-                  color="primary"
-                  variant="elevated"
-                  :loading="savingConsolidators"
-                  @click="saveConsolidators"
-                >
-                  <VIcon start>mdi-content-save</VIcon>
-                  Guardar
-                </VBtn>
-              </div>
-            </template>
-            <template v-else>
-              <div class="text-body-2 d-flex flex-wrap ga-1">
-                <VChip
-                  v-for="c in currentConsolidators"
-                  :key="c.id"
-                  size="small"
-                  color="primary"
-                  variant="outlined"
-                >
-                  <VIcon start size="x-small">mdi-account</VIcon>
-                  {{ c.name }} {{ c.last_name }}
-                  <span
-                    v-if="c.assigned_by"
-                    class="text-caption text-medium-emphasis ms-1"
-                  >
-                    — por {{ c.assigned_by }}
-                  </span>
-                </VChip>
-              </div>
-            </template>
-          </div>
-        </VSheet>
+        <ChurchMemberConsolidators
+          :member="member"
+          :saving="savingConsolidators"
+          :consolidators="currentConsolidators"
+          :has-changes="hasConsolidatorChanges"
+          :can-assign="auth.hasPermission('church-member-consolidator-assign')"
+          @save="saveConsolidators"
+          @update:consolidators="onPendingConsolidatorsChange"
+        />
       </VCol>
     </VRow>
 
-    <VRow density="compact"
+    <VRow
       v-if="
-        consolidatorLogs.length> 0 &&
+        consolidatorLogs.length > 0 &&
         auth.hasPermission('church-member-consolidator-assign')
       "
       id="cmm-consolidator-logs-section"
       class="mt-2"
+      density="compact"
     >
       <VCol cols="12">
-        <VSheet rounded color="white" class="pa-2 pa-sm-3">
-          <div class="text-subtitle-1 font-weight-medium d-flex align-center">
-            <VIcon start size="small" color="primary">mdi-history</VIcon>
-            Historial de Consolidadores
-          </div>
-          <VDivider class="my-2" />
-          <div>
-            <VTimeline side="end" align="start" density="compact">
-              <VTimelineItem
-                v-for="log in consolidatorLogs"
-                :key="log.id"
-                size="small"
-                :dot-color="log.action === 'assigned' ? 'success' : 'error'"
-                :icon="
-                  log.action === 'assigned'
-                    ? 'mdi-account-plus'
-                    : 'mdi-account-minus'
-                "
-              >
-                <div class="text-body-2">
-                  <strong
-                    >{{ log.consolidator?.name }}
-                    {{ log.consolidator?.last_name }}</strong
-                  >
-                  <VChip
-                    class="ms-1"
-                    size="x-small"
-                    variant="flat"
-                    :color="log.action === 'assigned' ? 'success' : 'error'"
-                  >
-                    {{ log.action === "assigned" ? "Asignado" : "Desasignado" }}
-                  </VChip>
-                  <span class="text-medium-emphasis ms-1">
-                    por {{ log.changer?.name }} {{ log.changer?.last_name }}
-                  </span>
-                </div>
-                <div
-                  v-if="log.created_at"
-                  class="text-caption text-medium-emphasis"
-                >
-                  {{ new Date(log.created_at).toLocaleString() }}
-                </div>
-              </VTimelineItem>
-            </VTimeline>
-          </div>
-        </VSheet>
+        <ChurchMemberConsolidatorHistory :logs="consolidatorLogs" />
       </VCol>
     </VRow>
 
-    <VRow density="compact" id="cmm-back-row" class="mt-2">
+    <VRow id="cmm-back-row" class="mt-2" density="compact">
       <VCol cols="12">
         <VSheet rounded color="white" class="pa-2 pa-sm-3 d-flex justify-end">
           <VBtn
@@ -610,7 +154,6 @@
 <script setup lang="ts">
 import { useAsyncData } from "#app";
 import { buildApiParams } from "~/utils/buildApiParams";
-import { computed } from "vue";
 
 definePageMeta({
   title: "Detalle Consolidado",
@@ -623,10 +166,8 @@ const route = useRoute();
 const { ChurchMember, ChurchMemberTrackingLog } = useRepository();
 const notify = useNotifyStore();
 const auth = useAuthStore();
-const { statusLabel, statusColor } = useChurchMemberStatus();
 
 const member = ref<Record<string, unknown>>({});
-const showInfo = ref(false);
 const statusDialog = ref(false);
 const editDialog = ref(false);
 const saving = ref(false);
@@ -642,6 +183,7 @@ const lastLogOptions = ref<Record<string, unknown>>({
   itemsPerPage: 10,
   sortBy: [{ key: "contact_datetime", order: "desc" }],
 });
+
 const currentConsolidators = computed<
   {
     id: number | string;
@@ -719,75 +261,16 @@ const hasConsolidatorChanges = computed(() => {
   return currentIds !== pendingIds;
 });
 
-const medalOptions = [
+const MEDAL_OPTIONS = [
   { title: "Bautizo", value: "bautizo" },
   { title: "EDIN", value: "edin" },
   { title: "Servicio", value: "servicio" },
 ];
-const medalColors: Record<string, string> = {
-  bautizo: "blue",
-  edin: "green",
-  servicio: "orange",
-};
-const medalIcons: Record<string, string> = {
-  bautizo: "mdi-water",
-  edin: "mdi-school",
-  servicio: "mdi-hand-heart",
-};
-const monthNames: Record<string, string> = {
-  "01": "Ene",
-  "02": "Feb",
-  "03": "Mar",
-  "04": "Abr",
-  "05": "May",
-  "06": "Jun",
-  "07": "Jul",
-  "08": "Ago",
-  "09": "Sep",
-  "10": "Oct",
-  "11": "Nov",
-  "12": "Dic",
-};
 
 function medalLabel(medal: unknown): string {
-  const found = medalOptions.find((m) => m.value === medal);
-  return found ? found.title : String(medal ?? "");
-}
-function medalColor(medal: unknown): string {
-  return medalColors[String(medal)] ?? "grey";
-}
-function medalIcon(medal: unknown): string {
-  return medalIcons[String(medal)] ?? "mdi-medal";
-}
-function medalMonthLabel(month: unknown): string {
-  return monthNames[String(month)] ?? String(month);
-}
-function medalDetail(medal: {
-  medal: string;
-  description: Record<string, unknown> | string | null;
-}): string {
-  const d = medal.description;
-  if (!d) return medalLabel(medal.medal);
-  if (typeof d === "string") return d;
-  if (medal.medal === "bautizo" && (d.month || d.year))
-    return `${medalMonthLabel(d.month)} ${d.year ?? ""}`.trim();
-  if (medal.medal === "edin") {
-    const level = d.level != null ? `Nivel ${d.level}` : "";
-    const date =
-      d.month || d.year
-        ? `${medalMonthLabel(d.month)} ${d.year ?? ""}`.trim()
-        : "";
-    return [level, date].filter(Boolean).join(" ") || medalLabel(medal.medal);
-  }
-  if (medal.medal === "servicio") {
-    const area = d.area != null ? String(d.area) : "";
-    const date =
-      d.month || d.year
-        ? `${medalMonthLabel(d.month)} ${d.year ?? ""}`.trim()
-        : "";
-    return [area, date].filter(Boolean).join(" ") || medalLabel(medal.medal);
-  }
-  return medalLabel(medal.medal);
+  return (
+    MEDAL_OPTIONS.find((m) => m.value === medal)?.title ?? String(medal ?? "")
+  );
 }
 
 const backRoute = computed(() => {
@@ -803,7 +286,8 @@ const backRoute = computed(() => {
 {
   const { data: initialMember, error: memberError } = await useAsyncData(
     `church-member-${route.params.id}`,
-    () => ChurchMember.show<Record<string, unknown>>(route.params.id as string),
+    () =>
+      ChurchMember.show<Record<string, unknown>>(route.params.id as string),
     { default: () => ({}) as Record<string, unknown> },
   );
 
@@ -927,127 +411,6 @@ const backRoute = computed(() => {
   medalLogs.value = initialMedalLogs.value;
 }
 
-const loading = ref(false);
-
-const fullName = computed(
-  () =>
-    [member.value.name, member.value.last_name, member.value.second_last_name]
-      .filter(Boolean)
-      .join(" ") || "Miembro",
-);
-
-const creatorName = computed(() => {
-  const creator = member.value.creator as
-    | { name?: string; last_name?: string }
-    | undefined;
-  if (!creator) return null;
-  return [creator.name, creator.last_name].filter(Boolean).join(" ") || null;
-});
-
-const phoneDigits = computed(() =>
-  String(member.value.cellphone || "").replace(/\D/g, ""),
-);
-const message = ref("");
-const whatsappHref = computed(() => {
-  if (!phoneDigits.value) return null;
-  const msg = encodeURIComponent(message.value.trim());
-  return msg
-    ? `https://wa.me/${phoneDigits.value}?text=${msg}`
-    : `https://wa.me/${phoneDigits.value}`;
-});
-
-function isIOSDevice(): boolean {
-  if (typeof navigator === "undefined") return false;
-  const ua = navigator.userAgent || "";
-  return (
-    /iPad|iPhone|iPod/i.test(ua) ||
-    (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1)
-  );
-}
-const smsHref = computed(() => {
-  if (!phoneDigits.value) return null;
-  const msg = encodeURIComponent(message.value.trim());
-  if (!msg) return `sms:${phoneDigits.value}`;
-  const separator = isIOSDevice() ? "&" : "?";
-  return `sms:${phoneDigits.value}${separator}body=${msg}`;
-});
-const telHref = computed(() =>
-  phoneDigits.value ? `tel:${phoneDigits.value}` : null,
-);
-
-async function openContact(
-  medium: "whatsapp" | "sms" | "llamada" | "presencial",
-  url?: string | null,
-) {
-  const id = route.params.id as string;
-  const currentMessage = message.value.trim();
-  if (medium === "whatsapp" && url) {
-    triggerWhatsApp(currentMessage);
-  } else if ((medium === "sms" || medium === "llamada") && url) {
-    window.location.href = url;
-  }
-  try {
-    const res = await ChurchMemberTrackingLog.create<Record<string, unknown>>(
-      id,
-      {
-        contact_datetime: localDateTimeString(),
-        medium,
-        classification: medium === "presencial" ? "CONTESTA" : null,
-        description: currentMessage || undefined,
-      },
-    );
-    const newLog = res?.data ?? res;
-    logsResponse.value.data.unshift(newLog);
-    logsResponse.value.total += 1;
-  } catch (error) {
-    notify.notify({
-      error:
-        (error as { response?: { data?: { message?: string } } }).response?.data
-          ?.message || "Error al registrar la interacción",
-    });
-  }
-}
-
-function triggerWhatsApp(currentMessage: string) {
-  const digits = phoneDigits.value;
-  if (!digits) return;
-  const encoded = encodeURIComponent(currentMessage);
-  const appUrl = encoded
-    ? `whatsapp://send?phone=${digits}&text=${encoded}`
-    : `whatsapp://send?phone=${digits}`;
-  const webUrl = encoded
-    ? `https://wa.me/${digits}?text=${encoded}`
-    : `https://wa.me/${digits}`;
-
-  let fallback: ReturnType<typeof window.setTimeout> | null = null;
-  function cancelFallback() {
-    if (fallback !== null) {
-      window.clearTimeout(fallback);
-      fallback = null;
-    }
-    window.removeEventListener("pagehide", onHide);
-    document.removeEventListener("visibilitychange", onVis);
-    window.removeEventListener("blur", onHide);
-  }
-  function onHide() {
-    cancelFallback();
-  }
-  function onVis() {
-    if (document.hidden) cancelFallback();
-  }
-  window.addEventListener("pagehide", onHide);
-  document.addEventListener("visibilitychange", onVis);
-  window.addEventListener("blur", onHide);
-
-  window.location.href = appUrl;
-
-  fallback = window.setTimeout(() => {
-    fallback = null;
-    cancelFallback();
-    if (!document.hidden) window.open(webUrl, "_blank", "noopener");
-  }, 1200);
-}
-
 function localDateTimeString(date = new Date()): string {
   const pad = (value: number) => String(value).padStart(2, "0");
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
@@ -1130,6 +493,34 @@ async function deleteTrackingLog(log: Record<string, unknown>) {
     });
   } finally {
     saving.value = false;
+  }
+}
+
+async function onContact(payload: {
+  medium: string;
+  url?: string | null;
+  message: string;
+}) {
+  const id = route.params.id as string;
+  try {
+    const res = await ChurchMemberTrackingLog.create<Record<string, unknown>>(
+      id,
+      {
+        contact_datetime: localDateTimeString(),
+        medium: payload.medium,
+        classification: payload.medium === "presencial" ? "CONTESTA" : null,
+        description: payload.message || undefined,
+      },
+    );
+    const newLog = res?.data ?? res;
+    logsResponse.value.data.unshift(newLog);
+    logsResponse.value.total += 1;
+  } catch (error) {
+    notify.notify({
+      error:
+        (error as { response?: { data?: { message?: string } } }).response?.data
+          ?.message || "Error al registrar la interacción",
+    });
   }
 }
 

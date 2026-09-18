@@ -6,19 +6,19 @@
       <div v-if="showContent" class="pa-4">
 
         <!-- SECCIÓN 1: La Consagración — Separado para Sonar -->
-        <CoursesSection outlined title="La Consagración — Separado para Sonar" icon="mdi-star-circle-outline" text-class="">
+        <CoursesSection outlined text-class="" icon="mdi-star-circle-outline" title="La Consagración — Separado para Sonar">
           <p class="text-body-1 text-grey-darken-3 mb-4">
             Un instrumento consagrado es un instrumento apartado. En el AT los levitas y sus instrumentos
             servían en la función para la que habían sido dedicados (1 Cr 15:16-22): eso los definía.
             La consagración del creyente no es un nivel de espiritualidad para pocos elegidos; es la
             vocación de todo aquel redimido por la sangre de Cristo.
           </p>
-          <VRow density="compact" class="mb-3">
-            <VCol cols="12" md="6" class="d-flex">
+          <VRow class="mb-3" density="compact">
+            <VCol md="6" cols="12" class="d-flex">
               <VCard id="card-cours-ukele-theol-day6-lighten-5-1" variant="outlined" class="pa-4 bg-grey-lighten-5 w-100 d-flex flex-column justify-space-between">
                 <div>
                   <div class="d-flex align-center mb-2">
-                    <VIcon color="primary" class="mr-2">mdi-book-open-variant</VIcon>
+                    <VIcon class="mr-2" color="primary">mdi-book-open-variant</VIcon>
                     <span class="font-weight-bold text-grey-darken-4">Romanos 12:1</span>
                   </div>
                   <p class="text-body-2 italic text-grey-darken-3 mb-0">
@@ -29,11 +29,11 @@
                 <div class="text-caption text-primary font-weight-bold mt-2 text-right">RVR1960</div>
               </VCard>
             </VCol>
-            <VCol cols="12" md="6" class="d-flex">
+            <VCol md="6" cols="12" class="d-flex">
               <VCard id="card-cours-ukele-theol-day6-lighten-5-2" variant="outlined" class="pa-4 bg-grey-lighten-5 w-100 d-flex flex-column justify-space-between">
                 <div>
                   <div class="d-flex align-center mb-2">
-                    <VIcon color="primary" class="mr-2">mdi-book-open-variant</VIcon>
+                    <VIcon class="mr-2" color="primary">mdi-book-open-variant</VIcon>
                     <span class="font-weight-bold text-grey-darken-4">1 Pedro 2:9</span>
                   </div>
                   <p class="text-body-2 italic text-grey-darken-3 mb-0">
@@ -51,7 +51,7 @@
               </VCard>
             </VCol>
           </VRow>
-          <VAlert type="info" border="left" colored-border elevation="1" class="mb-0">
+          <VAlert type="info" class="mb-0" border="left" elevation="1" colored-border>
             <div class="text-body-2 font-weight-medium text-grey-darken-4">
               "Sacrificio vivo" es una paradoja deliberada. En el AT el sacrificio cesaba al morir.
               Pablo invierte la lógica: el creyente <em>permanece</em> sobre el altar porque vive.
@@ -62,14 +62,14 @@
         </CoursesSection>
 
         <!-- SECCIÓN 2: El Instrumento en las Manos del Maestro -->
-        <CoursesSection outlined title="El Instrumento en las Manos del Maestro" icon="mdi-guitar-pick-outline" text-class="">
+        <CoursesSection outlined text-class="" icon="mdi-guitar-pick-outline" title="El Instrumento en las Manos del Maestro">
           <p class="text-body-1 text-grey-darken-3 mb-4">
             Un ukelele perfectamente afinado pero sin músico permanece en silencio. La consagración
             es el acto por el cual el creyente se pone en las manos de Dios: <em>"Soy tuyo. Tócame.
             Haz sonar en mí lo que tú quieras."</em> El don humano se convierte en vehículo de lo divino.
           </p>
 
-          <VCard id="card-cours-ukele-theol-day6-3" variant="outlined" class="pa-4 mb-3" style="border-radius:10px; border-left: 4px solid #1976D2;">
+          <VCard id="card-cours-ukele-theol-day6-3" class="pa-4 mb-3" variant="outlined" style="border-radius:10px; border-left: 4px solid #1976D2;">
             <div class="d-flex align-start">
               <VIcon size="36" color="primary" class="mr-3 mt-1 flex-shrink-0">mdi-account-music-outline</VIcon>
               <div>
@@ -88,9 +88,9 @@
           </VCard>
 
           <VRow density="compact">
-            <VCol v-for="dim in dimensions" :key="dim.label" cols="12" md="6">
-              <VCard variant="outlined" class="pa-3 mb-2 d-flex align-start" style="border-radius:10px;">
-                <VIcon :color="dim.color" size="32" class="mr-3 mt-1 flex-shrink-0">{{ dim.icon }}</VIcon>
+            <VCol v-for="dim in dimensions" :key="dim.label" md="6" cols="12">
+              <VCard variant="outlined" style="border-radius:10px;" class="pa-3 mb-2 d-flex align-start">
+                <VIcon size="32" :color="dim.color" class="mr-3 mt-1 flex-shrink-0">{{ dim.icon }}</VIcon>
                 <div>
                   <div class="text-subtitle-2 font-weight-bold text-grey-darken-4 mb-1">{{ dim.label }}</div>
                   <p class="text-body-2 text-grey-darken-3 mb-1">{{ dim.desc }}</p>
@@ -103,8 +103,8 @@
         </CoursesSection>
 
         <!-- SECCIÓN 3: Aplicación Práctica -->
-        <CoursesSection outlined title="Aplicación Práctica" icon="mdi-hand-pointing-right" text-class="">
-          <VAlert type="warning" border="left" colored-border elevation="1" class="mb-0">
+        <CoursesSection outlined text-class="" title="Aplicación Práctica" icon="mdi-hand-pointing-right">
+          <VAlert class="mb-0" border="left" elevation="1" colored-border type="warning">
             <div class="text-body-2 font-weight-medium text-grey-darken-4">
               Antes de tu próxima sesión de práctica, toma un momento para consagrar ese tiempo a Dios:
               <em>"Señor, este tiempo es tuyo. Este don es tuyo. Que lo que aprendo aquí sea para tu

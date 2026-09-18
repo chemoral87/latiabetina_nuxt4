@@ -1,24 +1,24 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VSheet color="white" rounded>
+    <VSheet rounded color="white">
       <VRow density="compact">
       <!-- Filter -->
-      <VCol cols="12" md="3">
+      <VCol md="3" cols="12">
         <VTextField
           id="poss-filter-tf-1"
           v-model="filterInput"
-          append-inner-icon="mdi-magnify"
-          variant="outlined"
-          density="compact"
           clearable
           hide-details
+          density="compact"
+          variant="outlined"
           placeholder="Buscar venta..."
+          append-inner-icon="mdi-magnify"
         />
       </VCol>
 
       <!-- Action buttons -->
       <VCol cols="auto" class="d-flex align-center">
-        <VBtn id="poss-refresh-btn" variant="outlined" color="primary" :loading="loading" class="mr-4" @click="refreshSales">
+        <VBtn id="poss-refresh-btn" class="mr-4" color="primary" :loading="loading" variant="outlined" @click="refreshSales">
           <VIcon start>mdi-reload</VIcon>
           Refrescar
         </VBtn>
@@ -32,15 +32,15 @@
       <VCol cols="12">
         <SaleTable
           v-model:dialog-delete="saleDialogDelete"
-          :response="response"
           :loading="loading"
-          :highlight-id="highlightId"
+          :response="response"
           :removing-id="removingId"
+          :highlight-id="highlightId"
           :initial-sort-by="(lastOptions.sortBy as any)"
-          @sorting="handleSorting"
-          @view="viewDetail"
           @edit="editSale"
+          @view="viewDetail"
           @delete="deleteSale"
+          @sorting="handleSorting"
         />
       </VCol>
     </VRow>

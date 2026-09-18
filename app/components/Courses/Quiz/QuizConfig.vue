@@ -8,7 +8,7 @@
     <VCardText>
       <!-- Levels Selection -->
       <p class="text-subtitle-1 font-weight-medium mb-2">{{ t("selectLevels") }}</p>
-      <VRow density="compact" class="mb-4">
+      <VRow class="mb-4" density="compact">
         <VCol v-for="lv in levels" :key="lv.key" sm="4" cols="12">
           <VCheckbox
             :id="`crsqi-level-${lv.key}`"

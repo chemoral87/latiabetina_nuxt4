@@ -1,25 +1,37 @@
-import { acceptHMRUpdate, defineStore } from "pinia"
+import { acceptHMRUpdate, defineStore } from 'pinia'
 
 /**
  * Pinia port of the AUI `pitcher_store` Vuex module (store/pitcher_store.js),
  * including the localStorage persistence that aui's plugins/localstorage.js
  * provided (key `adminaui_v1` → `pitcher_v1`). Tuner settings survive reloads.
  */
-const STORAGE_KEY = "pitcher_v1"
+const STORAGE_KEY = 'pitcher_v1'
 
 // Opciones de columnas (cols) para las notaciones de instrumento del tuner
 export const NOTATION_COLS_OPTIONS: (string | number)[] = [
-  "auto", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+  'auto',
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
 ]
 
 function clamp(v: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, v))
 }
 
-export const usePitcherStore = defineStore("pitcher", () => {
+export const usePitcherStore = defineStore('pitcher', () => {
   // ---- state (same defaults as aui) ----
   const sensitivity = ref(0.003)
-  const selectedRootNote = ref("C")
+  const selectedRootNote = ref('C')
   const latinNotation = ref(false)
   const showMicrotones = ref(true)
   // 2 líneas intermedias por semitono (tercios). Mutuamente excluyente con
@@ -53,11 +65,13 @@ export const usePitcherStore = defineStore("pitcher", () => {
   const showUkeleleNotation = ref(true)
   const showTrumpetNotation = ref(true)
   const showPianoNotation = ref(true)
+  const showBassNotation = ref(true)
   // Columnas (cols) de cada notación de instrumento en el tuner (persistido)
   const ukeleleCols = ref<string | number>(6)
   const guitarCols = ref<string | number>(6)
   const trumpetCols = ref<string | number>(6)
   const pianoCols = ref<string | number>(6)
+  const bassCols = ref<string | number>(6)
 
   // ---- mutations → setters (same clamping as aui) ----
   function setRootNote(note: string) {
@@ -150,6 +164,10 @@ export const usePitcherStore = defineStore("pitcher", () => {
     showPianoNotation.value = !!value
   }
 
+  function setShowBassNotation(value: boolean) {
+    showBassNotation.value = !!value
+  }
+
   function setUkeleleCols(value: string | number) {
     if (NOTATION_COLS_OPTIONS.includes(value)) ukeleleCols.value = value
   }
@@ -164,6 +182,10 @@ export const usePitcherStore = defineStore("pitcher", () => {
 
   function setPianoCols(value: string | number) {
     if (NOTATION_COLS_OPTIONS.includes(value)) pianoCols.value = value
+  }
+
+  function setBassCols(value: string | number) {
+    if (NOTATION_COLS_OPTIONS.includes(value)) bassCols.value = value
   }
 
   // ---- localStorage persistence (client-only, debounced 300ms like aui) ----
@@ -195,11 +217,13 @@ export const usePitcherStore = defineStore("pitcher", () => {
           showUkeleleNotation: showUkeleleNotation.value,
           showTrumpetNotation: showTrumpetNotation.value,
           showPianoNotation: showPianoNotation.value,
+          showBassNotation: showBassNotation.value,
           ukeleleCols: ukeleleCols.value,
           guitarCols: guitarCols.value,
           trumpetCols: trumpetCols.value,
           pianoCols: pianoCols.value,
-        }),
+          bassCols: bassCols.value,
+        })
       )
     } catch {
       // Ignore storage errors (private mode, quota, ...)
@@ -208,17 +232,46 @@ export const usePitcherStore = defineStore("pitcher", () => {
 
   let saveTimer: ReturnType<typeof setTimeout> | null = null
   watch(
-    [sensitivity, selectedRootNote, latinNotation, showMicrotones, showTricrotones, ghostQuarterNote, maxHistory, totalNotes, histogramHeight, histogramMinWidth, dbCalibrationOffset, showScaleOnFretboard, scaleRingOpacity, ghostNoteOpacity, showStaffNotation, showHistogram, showDbMeter, showTuningRange, showGuitarNotation, showUkeleleNotation, showTrumpetNotation, showPianoNotation, ukeleleCols, guitarCols, trumpetCols, pianoCols],
+    [
+      sensitivity,
+      selectedRootNote,
+      latinNotation,
+      showMicrotones,
+      showTricrotones,
+      ghostQuarterNote,
+      maxHistory,
+      totalNotes,
+      histogramHeight,
+      histogramMinWidth,
+      dbCalibrationOffset,
+      showScaleOnFretboard,
+      scaleRingOpacity,
+      ghostNoteOpacity,
+      showStaffNotation,
+      showHistogram,
+      showDbMeter,
+      showTuningRange,
+      showGuitarNotation,
+      showUkeleleNotation,
+      showTrumpetNotation,
+      showPianoNotation,
+      showBassNotation,
+      ukeleleCols,
+      guitarCols,
+      trumpetCols,
+      pianoCols,
+      bassCols,
+    ],
     () => {
       if (!import.meta.client) return
       if (saveTimer) clearTimeout(saveTimer)
       saveTimer = setTimeout(persist, 300)
-    },
+    }
   )
 
   // Guardar pendiente al cerrar/recargar la pestaña para no perder el último cambio
   if (import.meta.client) {
-    window.addEventListener("pagehide", () => {
+    window.addEventListener('pagehide', () => {
       if (saveTimer) clearTimeout(saveTimer)
       persist()
     })
@@ -230,40 +283,62 @@ export const usePitcherStore = defineStore("pitcher", () => {
       const saved = localStorage.getItem(STORAGE_KEY)
       if (!saved) return
       const data = JSON.parse(saved) as Record<string, unknown>
-      if (typeof data.sensitivity === "number") sensitivity.value = data.sensitivity
-      if (typeof data.selectedRootNote === "string") selectedRootNote.value = data.selectedRootNote
-      if (typeof data.latinNotation === "boolean") latinNotation.value = data.latinNotation
-      if (typeof data.showMicrotones === "boolean") showMicrotones.value = data.showMicrotones
-      if (typeof data.showTricrotones === "boolean") showTricrotones.value = data.showTricrotones
-      if (typeof data.ghostQuarterNote === "boolean") ghostQuarterNote.value = data.ghostQuarterNote
-      if (typeof data.maxHistory === "number") maxHistory.value = data.maxHistory
-      if (typeof data.totalNotes === "number") totalNotes.value = data.totalNotes
-      if (typeof data.histogramHeight === "number") histogramHeight.value = data.histogramHeight
-      if (typeof data.histogramMinWidth === "number") histogramMinWidth.value = data.histogramMinWidth
-      if (typeof data.dbCalibrationOffset === "number") dbCalibrationOffset.value = data.dbCalibrationOffset
-      if (typeof data.showScaleOnFretboard === "boolean") showScaleOnFretboard.value = data.showScaleOnFretboard
-      if (typeof data.showStaffNotation === "boolean") showStaffNotation.value = data.showStaffNotation
-      if (typeof data.showHistogram === "boolean") showHistogram.value = data.showHistogram
-      if (typeof data.showDbMeter === "boolean") showDbMeter.value = data.showDbMeter
-      if (typeof data.showTuningRange === "boolean") showTuningRange.value = data.showTuningRange
-      if (typeof data.scaleRingOpacity === "number") scaleRingOpacity.value = data.scaleRingOpacity
-      if (typeof data.ghostNoteOpacity === "number") ghostNoteOpacity.value = data.ghostNoteOpacity
-      if (typeof data.showGuitarNotation === "boolean") showGuitarNotation.value = data.showGuitarNotation
-      if (typeof data.showUkeleleNotation === "boolean") showUkeleleNotation.value = data.showUkeleleNotation
-      if (typeof data.showTrumpetNotation === "boolean") showTrumpetNotation.value = data.showTrumpetNotation
-      if (typeof data.showPianoNotation === "boolean") showPianoNotation.value = data.showPianoNotation
-      if (data.ukeleleCols === "auto" || typeof data.ukeleleCols === "number") ukeleleCols.value = data.ukeleleCols
-      if (data.guitarCols === "auto" || typeof data.guitarCols === "number") guitarCols.value = data.guitarCols
-      if (data.trumpetCols === "auto" || typeof data.trumpetCols === "number") trumpetCols.value = data.trumpetCols
-      if (data.pianoCols === "auto" || typeof data.pianoCols === "number") pianoCols.value = data.pianoCols
+      if (typeof data.sensitivity === 'number') sensitivity.value = data.sensitivity
+      if (typeof data.selectedRootNote === 'string') selectedRootNote.value = data.selectedRootNote
+      if (typeof data.latinNotation === 'boolean') latinNotation.value = data.latinNotation
+      if (typeof data.showMicrotones === 'boolean') showMicrotones.value = data.showMicrotones
+      if (typeof data.showTricrotones === 'boolean') showTricrotones.value = data.showTricrotones
+      if (typeof data.ghostQuarterNote === 'boolean') ghostQuarterNote.value = data.ghostQuarterNote
+      if (typeof data.maxHistory === 'number') maxHistory.value = data.maxHistory
+      if (typeof data.totalNotes === 'number') totalNotes.value = data.totalNotes
+      if (typeof data.histogramHeight === 'number') histogramHeight.value = data.histogramHeight
+      if (typeof data.histogramMinWidth === 'number')
+        histogramMinWidth.value = data.histogramMinWidth
+      if (typeof data.dbCalibrationOffset === 'number')
+        dbCalibrationOffset.value = data.dbCalibrationOffset
+      if (typeof data.showScaleOnFretboard === 'boolean')
+        showScaleOnFretboard.value = data.showScaleOnFretboard
+      if (typeof data.showStaffNotation === 'boolean')
+        showStaffNotation.value = data.showStaffNotation
+      if (typeof data.showHistogram === 'boolean') showHistogram.value = data.showHistogram
+      if (typeof data.showDbMeter === 'boolean') showDbMeter.value = data.showDbMeter
+      if (typeof data.showTuningRange === 'boolean') showTuningRange.value = data.showTuningRange
+      if (typeof data.scaleRingOpacity === 'number') scaleRingOpacity.value = data.scaleRingOpacity
+      if (typeof data.ghostNoteOpacity === 'number') ghostNoteOpacity.value = data.ghostNoteOpacity
+      if (typeof data.showGuitarNotation === 'boolean')
+        showGuitarNotation.value = data.showGuitarNotation
+      if (typeof data.showUkeleleNotation === 'boolean')
+        showUkeleleNotation.value = data.showUkeleleNotation
+      if (typeof data.showTrumpetNotation === 'boolean')
+        showTrumpetNotation.value = data.showTrumpetNotation
+      if (typeof data.showPianoNotation === 'boolean')
+        showPianoNotation.value = data.showPianoNotation
+      if (typeof data.showBassNotation === 'boolean') showBassNotation.value = data.showBassNotation
+      if (data.ukeleleCols === 'auto' || typeof data.ukeleleCols === 'number')
+        ukeleleCols.value = data.ukeleleCols
+      if (data.guitarCols === 'auto' || typeof data.guitarCols === 'number')
+        guitarCols.value = data.guitarCols
+      if (data.trumpetCols === 'auto' || typeof data.trumpetCols === 'number')
+        trumpetCols.value = data.trumpetCols
+      if (data.pianoCols === 'auto' || typeof data.pianoCols === 'number')
+        pianoCols.value = data.pianoCols
+      if (data.bassCols === 'auto' || typeof data.bassCols === 'number')
+        bassCols.value = data.bassCols
       // Migración: versiones previas guardaban un único `notationCols` compartido
-      if (typeof data.ukeleleCols === "undefined" && typeof data.guitarCols === "undefined" && typeof data.trumpetCols === "undefined" && typeof data.pianoCols === "undefined") {
+      if (
+        typeof data.ukeleleCols === 'undefined' &&
+        typeof data.guitarCols === 'undefined' &&
+        typeof data.trumpetCols === 'undefined' &&
+        typeof data.pianoCols === 'undefined' &&
+        typeof data.bassCols === 'undefined'
+      ) {
         const legacy = data.notationCols
-        if (legacy === "auto" || typeof legacy === "number") {
+        if (legacy === 'auto' || typeof legacy === 'number') {
           ukeleleCols.value = legacy
           guitarCols.value = legacy
           trumpetCols.value = legacy
           pianoCols.value = legacy
+          bassCols.value = legacy
         }
       }
     } catch {
@@ -299,10 +374,12 @@ export const usePitcherStore = defineStore("pitcher", () => {
     showUkeleleNotation,
     showTrumpetNotation,
     showPianoNotation,
+    showBassNotation,
     ukeleleCols,
     guitarCols,
     trumpetCols,
     pianoCols,
+    bassCols,
     loadFromStorage,
     setRootNote,
     setSensitivity,
@@ -326,10 +403,12 @@ export const usePitcherStore = defineStore("pitcher", () => {
     setShowUkeleleNotation,
     setShowTrumpetNotation,
     setShowPianoNotation,
+    setShowBassNotation,
     setUkeleleCols,
     setGuitarCols,
     setTrumpetCols,
     setPianoCols,
+    setBassCols,
   }
 })
 

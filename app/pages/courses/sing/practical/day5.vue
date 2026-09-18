@@ -41,7 +41,7 @@
         <!-- SECCION 2: Simulador de staccato/legato -->
         <CoursesSection title="Modos de Articulación" icon="mdi-music-note-half-dotted">
           <div class="text-center my-3">
-            <VBtnToggle v-model="mode" mandatory color="primary" variant="outlined" density="compact">
+            <VBtnToggle v-model="mode" mandatory color="primary" density="compact" variant="outlined">
               <VBtn id="btn-singp5-mode-staccato" value="staccato" :prepend-icon="mode === 'staccato' ? 'mdi-check' : ''">
                 Staccato
               </VBtn>
@@ -81,7 +81,7 @@
             </div>
             <p class="text-subtitle-1 font-weight-bold text-grey-darken-4 mb-4">{{ currentQuestion.question }}</p>
 
-            <VRow density="compact" class="mb-4">
+            <VRow class="mb-4" density="compact">
               <VCol v-for="(option, idx) in currentQuestion.options" :key="idx" sm="6" cols="12">
                 <VBtn id="btn-singp5-quiz-option" block variant="outlined" :disabled="answered"
                   :color="getOptionColor(idx)" class="py-4 text-left justify-start" @click="checkAnswer(idx)">

@@ -15,13 +15,13 @@
           <VCol cols="12">
             <VTextField id="usr-dialo-item-password-tf-1"
               v-model="item.password"
+              hide-details
               label="Contraseña"
               variant="outlined"
-              :type="showPassword ? 'text' : 'password'"
-              hide-details
-              :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
-              autocomplete="new-password"
               class="password-field"
+              autocomplete="new-password"
+              :type="showPassword ? 'text' : 'password'"
+              :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
               @keyup.enter="save"
               @click:append-inner="showPassword = !showPassword"
             />
@@ -29,13 +29,13 @@
           <VCol cols="12">
             <VTextField id="tf-user-dialo-item-confirm_password-2"
               v-model="item.confirm_password"
-              label="Confirme Contraseña"
               variant="outlined"
+              class="password-field"
+              autocomplete="new-password"
+              label="Confirme Contraseña"
               :error-messages="localError.confirm_password"
               :type="showConfirmPassword ? 'text' : 'password'"
               :append-inner-icon="showConfirmPassword ? 'mdi-eye-off' : 'mdi-eye'"
-              autocomplete="new-password"
-              class="password-field"
               @keyup.enter="save"
               @click:append-inner="showConfirmPassword = !showConfirmPassword"
             />
@@ -44,7 +44,7 @@
       </VCardText>
 
       <div class="d-flex justify-end px-4 pb-4">
-        <VBtn id="usr-password-cancel-btn" color="primary" variant="outlined" class="mr-4" @click="close">
+        <VBtn id="usr-password-cancel-btn" class="mr-4" color="primary" variant="outlined" @click="close">
           <VIcon start>mdi-close</VIcon>
           Cancelar
         </VBtn>

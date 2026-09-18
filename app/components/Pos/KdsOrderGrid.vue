@@ -1,14 +1,14 @@
 <template>
-  <VRow density="compact" id="cmp-pos-kds-order-grid">
+  <VRow id="cmp-pos-kds-order-grid" density="compact">
     <VCol
       v-for="order in activeOrders"
       :id="'pos-kds-order-' + order.id"
       :key="order.id"
-      cols="12"
-      sm="6"
-      md="4"
       lg="3"
+      md="4"
+      sm="6"
       xl="2"
+      cols="12"
     >
       <VCard
         variant="outlined"
@@ -35,10 +35,10 @@
         <PosKdsItemsList
           :order="order"
           :done-map="doneMap"
-          :is-item-completed="isItemCompleted"
           :status-title="statusTitle"
-          @toggle-row-done="(saleId, itemId, rowIndex) => emit('toggle-row-done', saleId, itemId, rowIndex)"
+          :is-item-completed="isItemCompleted"
           @undo-row-done="(saleId, itemId, rowIndex) => emit('undo-row-done', saleId, itemId, rowIndex)"
+          @toggle-row-done="(saleId, itemId, rowIndex) => emit('toggle-row-done', saleId, itemId, rowIndex)"
         />
 
         <!-- Mark order as delivered (completes all preparation items) -->
@@ -58,12 +58,12 @@
         <!-- Dismiss progress bar (20s countdown) -->
         <VProgressLinear
           v-if="orderTimers[order.id]"
-          :model-value="orderTimers[order.id]?.progress || 0"
+          bottom
+          absolute
           height="4"
           color="success"
-          absolute
-          bottom
           class="kds-dismiss-progress"
+          :model-value="orderTimers[order.id]?.progress || 0"
         />
       </VCard>
     </VCol>

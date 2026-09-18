@@ -3,8 +3,8 @@
     v-if="modelValue"
     id="cmp-my-drag-panel"
     ref="panel"
-    class="drag-panel elevation-8"
     :style="panelStyle"
+    class="drag-panel elevation-8"
   >
     <div :class="enterAnimClass">
       <!-- Header / Drag Handle -->
@@ -19,12 +19,12 @@
         <VSpacer />
         <VBtn
           id="mydrag-close-btn"
-          variant="outlined"
           icon
-          size="x-small"
-          color="white"
-          title="Cerrar"
           class="ml-2"
+          color="white"
+          size="x-small"
+          title="Cerrar"
+          variant="outlined"
           @click.stop="close"
         >
           <VIcon size="small">mdi-close</VIcon>

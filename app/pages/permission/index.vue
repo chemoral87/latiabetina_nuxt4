@@ -1,6 +1,6 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VSheet color="white" rounded>
+    <VSheet rounded color="white">
       <VRow density="compact">
       <!-- Filter -->
       <VCol md="2" cols="12">
@@ -22,8 +22,8 @@
           id="per-refresh-btn"
           class="mr-4"
           color="primary"
-          variant="outlined"
           :loading="loading"
+          variant="outlined"
           @click="refreshPermissions"
         >
           <VIcon start>mdi-reload</VIcon>

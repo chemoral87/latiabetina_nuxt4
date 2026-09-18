@@ -1,11 +1,11 @@
 <template>
   <VContainer :fluid="true">
     <VRow density="compact">
-      <VCol cols="12" md="8" class="mx-auto">
-        <VCard id="psed-main-card" variant="outlined" class="pa-4">
+      <VCol md="8" cols="12" class="mx-auto">
+        <VCard id="psed-main-card" class="pa-4" variant="outlined">
           <!-- Header -->
           <div class="d-flex align-center mb-4">
-            <VIcon start color="warning" class="mr-2">mdi-pencil</VIcon>
+            <VIcon start class="mr-2" color="warning">mdi-pencil</VIcon>
             <div>
               <div class="text-h6 font-weight-bold">Editar venta {{ sale.number }}</div>
               <div class="text-caption text-grey">Modifique los datos del cliente y las cantidades de los artículos</div>
@@ -16,26 +16,26 @@
 
           <!-- Customer info -->
           <VRow density="compact">
-            <VCol cols="12" sm="6">
+            <VCol sm="6" cols="12">
               <VTextField
                 id="psed-customer-name-tf"
                 v-model="form.customer_name"
-                label="Cliente"
-                prepend-inner-icon="mdi-account"
-                variant="outlined"
-                density="compact"
                 hide-details
+                label="Cliente"
+                density="compact"
+                variant="outlined"
+                prepend-inner-icon="mdi-account"
               />
             </VCol>
-            <VCol cols="12" sm="6">
+            <VCol sm="6" cols="12">
               <VTextField
                 id="psed-customer-phone-tf"
                 v-model="form.customer_phone"
-                label="Teléfono"
-                prepend-inner-icon="mdi-phone"
-                variant="outlined"
-                density="compact"
                 hide-details
+                label="Teléfono"
+                density="compact"
+                variant="outlined"
+                prepend-inner-icon="mdi-phone"
               />
             </VCol>
           </VRow>
@@ -44,7 +44,7 @@
 
           <!-- Items -->
           <div class="text-subtitle-2 font-weight-bold mb-2 d-flex align-center">
-            <VIcon start size="small" class="mr-1">mdi-cart</VIcon>
+            <VIcon start class="mr-1" size="small">mdi-cart</VIcon>
             Artículos
           </div>
 
@@ -66,11 +66,11 @@
                 <td class="text-center">
                   <VTextField
                     v-model.number="item.quantity"
-                    type="number"
                     min="0"
-                    variant="outlined"
-                    density="compact"
                     hide-details
+                    type="number"
+                    density="compact"
+                    variant="outlined"
                     class="quantity-input"
                     style="max-width: 80px; margin: 0 auto"
                     @update:model-value="recalculateItem(index)"
@@ -108,21 +108,21 @@
 
           <!-- Product selector grid -->
           <div class="text-subtitle-2 font-weight-bold mb-2 d-flex align-center">
-            <VIcon start size="small" class="mr-1">mdi-plus-circle</VIcon>
+            <VIcon start class="mr-1" size="small">mdi-plus-circle</VIcon>
             Agregar producto
           </div>
 
           <div v-if="productsStore.loading" class="text-center py-4">
-            <VProgressCircular indeterminate color="primary" size="36" />
+            <VProgressCircular size="36" indeterminate color="primary" />
           </div>
 
-          <VRow density="compact" v-else>
+          <VRow v-else density="compact">
             <VCol
               v-for="product in availableProducts"
               :key="product.id"
-              cols="4"
-              sm="3"
               md="3"
+              sm="3"
+              cols="4"
             >
               <VCard
                 :id="`card-psed-product-${product.id}`"
@@ -130,10 +130,10 @@
                 class="add-product-card"
                 @click="addProduct(product)"
               >
-                <VImg :src="product.image_s3 || ''" height="80px" contain class="bg-grey-lighten-4">
+                <VImg contain height="80px" class="bg-grey-lighten-4" :src="product.image_s3 || ''">
                   <template #placeholder>
-                    <VRow density="compact" class="fill-height ma-0" align="center" justify="center">
-                      <VIcon color="grey-lighten-1" size="28">mdi-package-variant</VIcon>
+                    <VRow align="center" justify="center" density="compact" class="fill-height ma-0">
+                      <VIcon size="28" color="grey-lighten-1">mdi-package-variant</VIcon>
                     </VRow>
                   </template>
                 </VImg>
@@ -145,7 +145,7 @@
               </VCard>
             </VCol>
             <VCol v-if="availableProducts.length === 0" cols="12" class="text-center py-4">
-              <VIcon color="grey-lighten-1" size="40">mdi-package-variant-closed</VIcon>
+              <VIcon size="40" color="grey-lighten-1">mdi-package-variant-closed</VIcon>
               <div class="text-caption text-grey mt-1">Todos los productos ya están en la lista</div>
             </VCol>
           </VRow>
@@ -154,7 +154,7 @@
 
           <!-- Actions -->
           <div class="d-flex justify-end gap-2">
-            <VBtn id="psed-cancel-btn" variant="outlined" color="grey" class="mr-2" :disabled="saving" @click="goBack">
+            <VBtn id="psed-cancel-btn" class="mr-2" color="grey" :disabled="saving" variant="outlined" @click="goBack">
               <VIcon start size="small">mdi-arrow-left</VIcon>
               Cancelar
             </VBtn>

@@ -1,6 +1,6 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VSheet color="white" rounded>
+    <VSheet rounded color="white">
       <VRow density="compact">
       <VCol md="2" cols="12">
         <VTextField
@@ -20,8 +20,8 @@
           id="aud-refresh-btn"
           class="mr-4"
           color="primary"
-          variant="outlined"
           :loading="loading"
+          variant="outlined"
           @click="refresh"
         >
           <VIcon start>mdi-reload</VIcon>

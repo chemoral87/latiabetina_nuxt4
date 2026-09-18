@@ -12,9 +12,9 @@
       density="compact"
       :headers="headers"
       :loading="loading"
+      class="elevation-1"
       :items-length="total"
       :row-props="rowProps"
-      class="elevation-1"
       :items-per-page-options="[10, 15, 30]"
       items-per-page-text="Filas por página"
       @update:options="onUpdateOptions">
@@ -33,8 +33,8 @@
       <template #[`item.action`]="{ item }">
         <VChip
           size="small"
-          :color="item.action === 'assigned' ? 'success' : 'error'"
           variant="flat"
+          :color="item.action === 'assigned' ? 'success' : 'error'"
         >
           <VIcon start size="small">
             {{ item.action === 'assigned' ? 'mdi-account-plus' : 'mdi-account-minus' }}
