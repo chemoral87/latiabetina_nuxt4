@@ -41,6 +41,16 @@
         </VCol>
 
         <VCol cols="auto" class="d-flex align-center">
+          <VCheckbox
+            id="seg-has-phone-chk"
+            v-model="filterHasPhone"
+            hide-details
+            density="compact"
+            label="Con teléfono"
+          />
+        </VCol>
+
+        <VCol cols="auto" class="d-flex align-center">
           <VBtn
             id="seg-refresh-btn"
             color="primary"
@@ -85,6 +95,7 @@ const filterInput = ref("");
 const filterTerm = ref("");
 const filterStatus = ref("ACTIVO");
 const filterOrgId = ref<string | number | null>(null);
+const filterHasPhone = ref(true);
 const loading = ref(false);
 const members = ref<Record<string, unknown>[]>([]);
 const sortBy = ref<{ key: string; order: string }[]>([
@@ -130,6 +141,7 @@ async function fetchData() {
   if (filterStatus.value) params.status = filterStatus.value;
   if (filterTerm.value) params.filter = filterTerm.value;
   if (filterOrgId.value) params.org_id = filterOrgId.value;
+  if (filterHasPhone.value) params.has_phone = true;
 
   if (sortBy.value.length) {
     params["sortBy"] = sortBy.value.map((s) => s.key);
@@ -156,6 +168,7 @@ async function fetchData() {
 watch(filterStatus, fetchData);
 watch(filterOrgId, fetchData);
 watch(filterTerm, fetchData);
+watch(filterHasPhone, fetchData);
 </script>
 
 <style scoped></style>

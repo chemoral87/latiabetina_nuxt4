@@ -23,7 +23,7 @@
             Refrescar
           </VBtn>
         </VCol>
-        <VCol v-if="phoneDigits" sm="4" cols="12">
+        <VCol sm="4" cols="12">
           <VTextField
             id="cmm-message-input"
             v-model="message"
@@ -31,7 +31,7 @@
             hide-details
             density="compact"
             variant="outlined"
-            placeholder="Mensaje para WhatsApp / SMS"
+            placeholder="Mensaje..."
             append-inner-icon="mdi-message-text-outline"
           />
         </VCol>
