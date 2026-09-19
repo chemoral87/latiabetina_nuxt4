@@ -15,15 +15,23 @@
 
 All helpers are **string-based** — they do not construct `new Date()`, so there is no timezone shift.
 
+## Date and Time Display Rules
+
+- Use `formatHourTime(value)` for standalone service or event times stored as `HH:mm`/`HH:mm:ss`; display as `h:mm am/pm` (for example, `09:45` → `9:45 am` and `20:00` → `8:00 pm`).
+- Keep native time inputs and API payloads in 24-hour `HH:mm` format; format only when rendering.
+- Import the shared helper from `~/utils/date`; never format a time inline in a component or table slot.
+
 ## Required Pattern
 
 ```ts
-import { formatShortDateTime12h } from "~/utils/date"
+import { formatHourTime } from "~/utils/date"
 
-function formatDate(value: unknown): string {
-  return formatShortDateTime12h(String(value ?? "")) || "—"
+function displayTime(value: unknown): string {
+  return formatHourTime(String(value ?? ""))
 }
 ```
+
+For a date and time together, use `formatShortDateTime12h(value)` instead of combining date and time manually.
 
 ## Anti-patterns
 

@@ -15,6 +15,10 @@
         {{ item.name }} {{ item.last_name }}
       </template>
 
+      <template #[`item.cellphone`]="{ item }">
+        {{ maskedCellphone(item.cellphone) }}
+      </template>
+
       <template #[`item.years_old`]="{ item }">
         {{ item.years_old ?? "—" }}
       </template>
@@ -129,6 +133,11 @@ function orgLabel(id: unknown): string {
   return found ? found.name : "—";
 }
 
+function maskedCellphone(value: unknown): string {
+  const digits = String(value ?? "").replace(/\D/g, "");
+  return digits ? `-${digits.slice(-6)}` : "—";
+}
+
 const headers = computed<Header[]>(() => {
   const cols: Header[] = [
     {
@@ -139,6 +148,7 @@ const headers = computed<Header[]>(() => {
       width: "60px",
     },
     { title: "Nombre", value: "name" },
+    { title: "Teléfono", value: "cellphone", sortable: false },
     { title: "Edad", value: "years_old", sortable: false },
     { title: "Estado", value: "status", sortable: false, align: "center" },
     { title: "Último contacto", value: "last_contacted", sortable: true },

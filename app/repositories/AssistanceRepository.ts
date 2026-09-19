@@ -9,5 +9,8 @@ export function createAssistanceRepository(api: ApiFn) {
     chart<T = unknown>(params?: Record<string, unknown>) {
       return api<T>('/assistance/chart', { params })
     },
+    bulk<T = unknown>(rows: unknown[]) {
+      return api<T>('/assistance/bulk', { method: 'POST', body: { rows } })
+    },
   }
 }

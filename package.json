@@ -31,7 +31,8 @@
     "vue-konva": "^3.4.0",
     "vue-router": "^5.2.0",
     "vuetify": "^4.1.6",
-    "vuetify-nuxt-module": "^1.0.0-rc.3"
+    "vuetify-nuxt-module": "^1.0.0-rc.3",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@babel/core": "^8.0.1",

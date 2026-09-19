@@ -37,6 +37,16 @@
             <VIcon start>mdi-plus</VIcon>
             Nuevo
           </VBtn>
+          <VBtn
+            v-if="canBulk"
+            id="ass-bulk-btn"
+            color="primary"
+            variant="outlined"
+            @click="bulkDialog = true"
+          >
+            <VIcon start>mdi-file-excel</VIcon>
+            Importar
+          </VBtn>
         </VCol>
 
         <VCol v-if="!orgFilterHidden" lg="1" md="3" sm="4" cols="6">
@@ -94,6 +104,35 @@
       @ok="deleteAssistance"
       @close="assistanceDialogDelete = false"
     />
+
+    <VDialog v-model="bulkDialog" max-width="500">
+      <VCard>
+        <VCardTitle class="d-flex align-center">
+          <VIcon start>mdi-file-excel</VIcon>
+          Importar Excel
+          <VSpacer />
+          <VBtn variant="text" icon="mdi-close" @click="bulkDialog = false" />
+        </VCardTitle>
+        <VCardText>
+          <VFileInput
+            id="ass-bulk-file"
+            v-model="bulkFile"
+            clearable
+            hide-details
+            density="compact"
+            variant="outlined"
+            accept=".xlsx,.xls"
+            label="Archivo Excel"
+          />
+        </VCardText>
+        <VCardText>
+          <div class="d-flex justify-end">
+            <VBtn id="ass-bulk-cancel-btn" class="mr-2" variant="outlined" @click="bulkDialog = false">Cancelar</VBtn>
+            <VBtn id="ass-bulk-save-btn" color="primary" variant="elevated" :loading="bulkLoading" @click="processBulk">Importar</VBtn>
+          </div>
+        </VCardText>
+      </VCard>
+    </VDialog>
   </VContainer>
 </template>
 
@@ -130,6 +169,10 @@
   const { clearErrors, extractFromError } = useValidationErrors()
 
   const canCreate = computed(() => auth.hasPermission('assistance-create'))
+  const canBulk = computed(() => auth.hasPermission('assistance-insert'))
+  const bulkDialog = ref(false)
+  const bulkFile = ref<File[]>([])
+  const bulkLoading = ref(false)
 
   const lastOptions = ref<Record<string, unknown>>({
     page: 1,
@@ -279,6 +322,7 @@
       teens: 0,
       kids: 0,
       babies: 0,
+      newcomers: 0,
       notes: '',
     }
   }
@@ -311,6 +355,61 @@
     skipFilterWatch,
     filterAssistances,
   })
+
+  async function processBulk() {
+    if (!bulkFile.value?.[0]) {
+      notify.notify({ error: 'Seleccione un archivo' })
+      return
+    }
+
+    try {
+      bulkLoading.value = true
+      const file = bulkFile.value[0]
+      const XLSX = await import('xlsx')
+      const arrayBuffer = await file.arrayBuffer()
+      const workbook = XLSX.read(arrayBuffer, { type: 'array', cellDates: true })
+      const sheet = workbook.Sheets[workbook.SheetNames[0]]
+      const json = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, { defval: '' })
+
+      const rows = json.map((row: Record<string, unknown>) => {
+        const date = row.fecha || row.date || row.assistance_date
+        const time = row.hora || row.time || row.service_time
+        return {
+          org_id: effectiveOrgId.value || filterOrgId.value,
+          assistance_date: typeof date === 'number' ? excelDateToISO(date) : date,
+          service_time: typeof time === 'number' ? excelTimeToHHMM(time) : time,
+          adults: Number(row.adults || row.adultos || 0),
+          teens: Number(row.teens || row.jovenes || 0),
+          kids: Number(row.kids || row.ninos || 0),
+          babies: Number(row.babies || row.bebes || 0),
+          newcomers: Number(row.newcomers || row.nuevos || 0),
+          notes: row.notes || row.notas || '',
+        }
+      })
+
+      await Assistance.bulk(rows)
+      bulkDialog.value = false
+      bulkFile.value = []
+      await loadAssistances()
+    } catch (error) {
+      console.error(error)
+      notify.notify({ error: 'Error al importar' })
+    } finally {
+      bulkLoading.value = false
+    }
+  }
+
+  function excelDateToISO(serial: number): string {
+    const epoch = new Date(1900, 0, serial - 1)
+    return epoch.toISOString().slice(0, 10)
+  }
+
+  function excelTimeToHHMM(serial: number): string {
+    const totalMinutes = Math.round(serial * 1440)
+    const h = Math.floor(totalMinutes / 60)
+    const m = totalMinutes % 60
+    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
+  }
 </script>
 
 <style scoped></style>

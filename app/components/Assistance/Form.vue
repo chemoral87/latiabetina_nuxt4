@@ -110,6 +110,21 @@
                 @keyup.enter="save"
               />
             </VCol>
+            <VCol md="3" cols="12">
+              <VTextField
+                id="ass-form-newcomers"
+                v-model.number="item.newcomers"
+                min="0"
+                type="number"
+                label="Nuevos"
+                density="compact"
+                variant="outlined"
+                :disabled="disabled"
+                :error-messages="errors?.newcomers"
+                :rules="[vrules.minValue(0, 'Nuevos')]"
+                @keyup.enter="save"
+              />
+            </VCol>
             <VCol md="6" cols="12">
               <VTextarea
                 v-model="item.notes"
@@ -165,6 +180,7 @@
     teens: number
     kids: number
     babies: number
+    newcomers: number
     notes?: string | null
   }
 
@@ -197,6 +213,7 @@
     teens: 0,
     kids: 0,
     babies: 0,
+    newcomers: 0,
     notes: undefined,
   })
 

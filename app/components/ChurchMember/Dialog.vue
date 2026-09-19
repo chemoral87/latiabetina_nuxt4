@@ -1,5 +1,11 @@
 <template>
-  <VDialog :id="id" persistent max-width="600px" :model-value="true">
+  <VDialog
+    :id="id"
+    persistent
+    scrollable
+    max-width="600px"
+    :model-value="true"
+  >
     <VCard>
       <VCardTitle
         class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center"
@@ -18,7 +24,7 @@
         </VBtn>
       </VCardTitle>
 
-      <VCardText class="py-1">
+      <VCardText class="py-1 church-member-dialog-content">
         <VForm ref="formRef" @submit.prevent="save">
           <VRow density="compact">
             <VCol cols="6">
@@ -124,7 +130,11 @@
                     @update:model-value="onAddressText"
                   />
                 </template>
-                <VList density="compact">
+                 <VList
+                   max-height="240"
+                   density="compact"
+                   class="overflow-y-auto"
+                 >
                   <VListItem
                     v-for="(suggestion, i) in addressSuggestions"
                     :key="i"

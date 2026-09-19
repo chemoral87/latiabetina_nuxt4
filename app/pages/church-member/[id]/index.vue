@@ -237,17 +237,6 @@ const medals = ref<
     created_at?: string;
   }[]
 >([]);
-const medalLogs = ref<
-  {
-    id: number;
-    medal: string;
-    description: Record<string, unknown> | null;
-    action: string;
-    changer?: { id: number; name: string; last_name?: string };
-    created_at?: string;
-  }[]
->([]);
-
 const hasConsolidatorChanges = computed(() => {
   if (pendingConsolidators.value === null) return false;
   const currentIds = currentConsolidators.value
@@ -382,33 +371,6 @@ const backRoute = computed(() => {
   );
   medals.value = initialMedals.value;
 
-  const { data: initialMedalLogs } = await useAsyncData(
-    `church-member-medal-logs-${route.params.id}`,
-    async () => {
-      return await ChurchMember.medalLogs<
-        {
-          id: number;
-          medal: string;
-          description: Record<string, unknown> | null;
-          action: string;
-          changer?: { id: number; name: string; last_name?: string };
-          created_at?: string;
-        }[]
-      >(route.params.id as string).catch(() => []);
-    },
-    {
-      default: () =>
-        [] as {
-          id: number;
-          medal: string;
-          description: Record<string, unknown> | null;
-          action: string;
-          changer?: { id: number; name: string; last_name?: string };
-          created_at?: string;
-        }[],
-    },
-  );
-  medalLogs.value = initialMedalLogs.value;
 }
 
 function localDateTimeString(date = new Date()): string {
@@ -606,12 +568,9 @@ async function onMedalSaved() {
   const id = route.params.id as string;
   if (!id) return;
   try {
-    const [updatedMedals, updatedLogs] = await Promise.all([
-      ChurchMember.medals<typeof medals.value>(id).catch(() => []),
-      ChurchMember.medalLogs<typeof medalLogs.value>(id).catch(() => []),
-    ]);
-    medals.value = updatedMedals;
-    medalLogs.value = updatedLogs;
+    medals.value = await ChurchMember.medals<typeof medals.value>(id).catch(
+      () => [],
+    );
   } catch {
     // errors already surfaced by withNotify
   }

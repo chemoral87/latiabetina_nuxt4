@@ -267,7 +267,7 @@ const props = defineProps<{
   medals: Medal[];
 }>();
 
-defineEmits<{
+const emit = defineEmits<{
   edit: [];
   statusEdit: [];
   medalAdd: [];

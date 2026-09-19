@@ -22,7 +22,7 @@
       </template>
 
       <template #[`item.service_time`]="{ item }">
-        {{ (item as Record<string, unknown>).service_time as string }}
+        {{ formatHourTime((item as Record<string, unknown>).service_time as string | null) }}
       </template>
 
       <template #[`item.total`]="{ item }">
@@ -82,7 +82,7 @@
 
 <script setup lang="ts">
 import { useAuthStore } from "~/composables/useAuth";
-import { formatShortDate } from "~/utils/date";
+import { formatHourTime, formatShortDate } from "~/utils/date";
 
 interface Header {
   title: string
@@ -138,6 +138,7 @@ const headers = computed<Header[]>(() => {
     { title: "Adolescentes", value: "teens", sortable: true },
     { title: "Niños", value: "kids", sortable: true },
     { title: "Bebés", value: "babies", sortable: true },
+    { title: "Nuevos", value: "newcomers", sortable: true },
     { title: "Total", value: "total", sortable: false },
   ]
   if (showOrgColumn.value) {
