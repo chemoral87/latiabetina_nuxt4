@@ -38,6 +38,10 @@
         {{ item.church_member ? `${item.church_member.name} ${item.church_member.last_name}` : "N/A" }}
       </template>
 
+      <template #[`item.church_member_phone`]="{ item }">
+        {{ item.church_member?.cellphone || "—" }}
+      </template>
+
       <template #[`item.medium`]="{ item }">
         <VChip size="small" variant="flat" :color="mediumColor(item.medium as string)">
           <VIcon start size="small">{{ mediumIcon(item.medium as string) }}</VIcon>
@@ -106,6 +110,7 @@ const sortBy = ref<{ key: string; order: string }[]>([...props.initialSortBy]);
 const headers: Header[] = [
   { title: "", value: "actions", sortable: false, align: "center", width: "60px" },
   { title: "Miembro", value: "church_member", sortable: false },
+  { title: "Telefono", value: "church_member_phone", sortable: false },
   { title: "Medio", value: "medium", sortable: true },
   { title: "Fecha contacto", value: "contact_datetime", sortable: true },
   { title: "Descripción", value: "description", sortable: false },
