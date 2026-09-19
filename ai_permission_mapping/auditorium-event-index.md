@@ -6,6 +6,7 @@ Archivos que referencian el permiso `auditorium-event-index`.
 
 - `app\pages\auditorium-event\index.vue`
 - `app\components\AuditoriumEvent\Dialog.vue`
+- `app\components\AuditoriumEvent\Table.vue` (oculta la columna "Organización" cuando el usuario tiene una sola org para este permiso, vía `hasSingleOrgFor`)
 
 ## Also referenced in
 

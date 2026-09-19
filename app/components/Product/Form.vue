@@ -1,13 +1,11 @@
 <template>
   <div id="cmp-product-form">
     <VForm ref="formRef" @submit.prevent="save">
-      <!-- Section 1: Informaci�n b�sica -->
+      <!-- Section 1: Información básica -->
       <VCard id="prd-form-card-1" variant="outlined">
         <VCardTitle class="text-subtitle-1 font-weight-medium pb-2">
-          <VIcon start size="small" color="primary"
-            >mdi-information-outline</VIcon
-          >
-          Informaci�n del producto
+          <VIcon start size="small" color="primary">mdi-information-outline</VIcon>
+          Información del producto
         </VCardTitle>
         <VCardText>
           <VRow density="compact">
@@ -58,7 +56,7 @@
                 density="compact"
                 variant="outlined"
                 :disabled="loading"
-                label="Descripci�n"
+                label="Descripción"
                 :error-messages="errors?.description"
               />
             </VCol>
@@ -128,9 +126,7 @@
 
                 <VCol sm="6" cols="12">
                   <div class="d-flex align-center">
-                    <VIcon class="mr-2" size="small" color="grey-darken-1"
-                      >mdi-eye</VIcon
-                    >
+                    <VIcon class="mr-2" size="small" color="grey-darken-1">mdi-eye</VIcon>
                     <VSwitch
                       v-model="item.hidden"
                       hide-details
@@ -142,9 +138,7 @@
 
                 <VCol sm="6" cols="12">
                   <div class="d-flex align-center">
-                    <VIcon class="mr-2" size="small" color="grey-darken-1"
-                      >mdi-chef-hat</VIcon
-                    >
+                    <VIcon class="mr-2" size="small" color="grey-darken-1">mdi-chef-hat</VIcon>
                     <VSwitch
                       v-model="item.requires_preparation"
                       hide-details
@@ -158,9 +152,7 @@
 
             <!-- Right column: image -->
             <VCol md="6" cols="12">
-              <div
-                class="text-caption font-weight-medium mb-1 text-grey-darken-1"
-              >
+              <div class="text-caption font-weight-medium mb-1 text-grey-darken-1">
                 <VIcon class="mr-1" size="small">mdi-image-outline</VIcon>
                 Imagen del producto
               </div>
@@ -217,155 +209,153 @@
 </template>
 
 <script setup lang="ts">
-import { useValidationErrors } from "~/composables/useValidationErrors";
-import { useVrules } from "~/composables/useVrules";
-import { useAuthStore } from "~/composables/useAuth";
+  import { useValidationErrors } from '~/composables/useValidationErrors'
+  import { useVrules } from '~/composables/useVrules'
+  import { useAuthStore } from '~/composables/useAuth'
 
-interface ProductItem {
-  id?: number | null;
-  org_id?: number | string | null;
-  name: string;
-  sku: string;
-  description: string;
-  hidden: boolean;
-  requires_preparation: boolean;
-  price: number | string;
-  stock: number | string;
-  order: number | string;
-  image: string;
-  image_s3?: string;
-  image_file?: unknown;
-}
-
-const props = withDefaults(
-  defineProps<{
-    product?: Record<string, unknown>;
-    loading?: boolean;
-    permission?: string;
-    title?: string;
-    icon?: string;
-  }>(),
-  {
-    product: () => ({}),
-    loading: false,
-    permission: "product-create",
-    title: "",
-    icon: "mdi-package-variant",
-  },
-);
-
-const emit = defineEmits<{
-  (e: "close"): void;
-  (e: "save", val: Record<string, unknown>): void;
-}>();
-
-const { vrules } = useVrules();
-const { errors: validationErrors, clearErrors } = useValidationErrors();
-const auth = useAuthStore();
-
-const formRef = ref();
-const imageLoading = ref(false);
-
-const item = ref<ProductItem>({
-  id: null,
-  org_id: null,
-  name: "",
-  sku: "",
-  description: "",
-  hidden: false,
-  requires_preparation: false,
-  price: 0,
-  stock: 0,
-  order: 0,
-  image: "",
-  image_s3: "",
-  image_file: null,
-});
-
-const errors = computed(() =>
-  validationErrors.value ? { ...validationErrors.value } : {},
-);
-
-const showOrgSelect = computed(() => {
-  const orgIds = auth.permissionsOrg[props.permission] ?? [];
-  return Array.isArray(orgIds) && orgIds.length > 1;
-});
-
-const previewImage = computed(() => {
-  if (
-    item.value.image &&
-    typeof item.value.image === "string" &&
-    item.value.image.startsWith("data:")
-  ) {
-    return item.value.image;
+  interface ProductItem {
+    id?: number | null
+    org_id?: number | string | null
+    name: string
+    sku: string
+    description: string
+    hidden: boolean
+    requires_preparation: boolean
+    price: number | string
+    stock: number | string
+    order: number | string
+    image: string
+    image_s3?: string
+    image_file?: unknown
   }
-  return item.value.image_s3 || item.value.image || "";
-});
 
-const isValid = computed(
-  () =>
-    !!item.value.org_id &&
-    !!item.value.name &&
-    item.value.name.trim().length > 0 &&
-    !props.loading &&
-    !imageLoading.value,
-);
-
-watch(
-  () => props.product,
-  (val) => {
-    if (val && Object.keys(val).length > 0) {
-      item.value = { ...item.value, ...val } as ProductItem;
+  const props = withDefaults(
+    defineProps<{
+      product?: Record<string, unknown>
+      loading?: boolean
+      permission?: string
+      title?: string
+      icon?: string
+    }>(),
+    {
+      product: () => ({}),
+      loading: false,
+      permission: 'product-create',
+      title: '',
+      icon: 'mdi-package-variant',
     }
-  },
-  { immediate: true, deep: true },
-);
+  )
 
-onMounted(() => {
-  initializeForm();
-});
+  const emit = defineEmits<{
+    (e: 'close'): void
+    (e: 'save', val: Record<string, unknown>): void
+  }>()
 
-function initializeForm() {
-  if (props.product && Object.keys(props.product).length > 0) {
-    item.value = { ...item.value, ...props.product } as ProductItem;
-  }
-  // Auto-set org_id when the user only has access to one org
-  if (!item.value.org_id && !showOrgSelect.value) {
-    const orgIds = auth.permissionsOrg[props.permission] ?? [];
-    if (Array.isArray(orgIds) && orgIds.length === 1) {
-      item.value.org_id = orgIds[0];
+  const { vrules } = useVrules()
+  const { errors: validationErrors, clearErrors } = useValidationErrors()
+  const auth = useAuthStore()
+
+  const formRef = ref()
+  const imageLoading = ref(false)
+
+  const item = ref<ProductItem>({
+    id: null,
+    org_id: null,
+    name: '',
+    sku: '',
+    description: '',
+    hidden: false,
+    requires_preparation: false,
+    price: 0,
+    stock: 0,
+    order: 0,
+    image: '',
+    image_s3: '',
+    image_file: null,
+  })
+
+  const errors = computed(() => (validationErrors.value ? { ...validationErrors.value } : {}))
+
+  const showOrgSelect = computed(() => {
+    const orgIds = auth.permissionsOrg[props.permission] ?? []
+    return Array.isArray(orgIds) && orgIds.length > 1
+  })
+
+  const previewImage = computed(() => {
+    if (
+      item.value.image &&
+      typeof item.value.image === 'string' &&
+      item.value.image.startsWith('data:')
+    ) {
+      return item.value.image
     }
+    return item.value.image_s3 || item.value.image || ''
+  })
+
+  const isValid = computed(
+    () =>
+      !!item.value.org_id &&
+      !!item.value.name &&
+      item.value.name.trim().length > 0 &&
+      !props.loading &&
+      !imageLoading.value
+  )
+
+  watch(
+    () => props.product,
+    val => {
+      if (val && Object.keys(val).length > 0) {
+        item.value = { ...item.value, ...val } as ProductItem
+      }
+    },
+    { immediate: true, deep: true }
+  )
+
+  onMounted(() => {
+    initializeForm()
+  })
+
+  function initializeForm() {
+    if (props.product && Object.keys(props.product).length > 0) {
+      item.value = { ...item.value, ...props.product } as ProductItem
+    }
+    // Auto-set org_id when the user only has access to one org
+    if (!item.value.org_id && !showOrgSelect.value) {
+      const orgIds = auth.permissionsOrg[props.permission] ?? []
+      if (Array.isArray(orgIds) && orgIds.length === 1) {
+        item.value.org_id = orgIds[0]
+      }
+    }
+    clearErrors()
   }
-  clearErrors();
-}
 
-function close() {
-  emit("close");
-}
+  function close() {
+    emit('close')
+  }
 
-async function save() {
-  if (!isValid.value) return;
-  const form = formRef.value;
-  const { valid } = form ? await form.validate() : { valid: true };
-  if (!valid) return;
+  async function save() {
+    if (!isValid.value) return
+    const form = formRef.value
+    const { valid } = form ? await form.validate() : { valid: true }
+    if (!valid) return
 
-  const payload: Record<string, unknown> = {
-    ...item.value,
-    price: Number(item.value.price || 0),
-    stock: Number(item.value.stock || 0),
-    order: Number(item.value.order || 0),
-  };
-  emit("save", payload);
-}
+    const payload: Record<string, unknown> = {
+      ...item.value,
+      price: Number(item.value.price || 0),
+      stock: Number(item.value.stock || 0),
+      order: Number(item.value.order || 0),
+    }
+    emit('save', payload)
+  }
 </script>
 
 <style scoped>
-.no-spinners :deep(input[type="number"])::-webkit-outer-spin-button,
-.no-spinners :deep(input[type="number"])::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-.no-spinners :deep(input[type="number"]) {
-  -moz-appearance: textfield;
-}
+  .no-spinners :deep(input[type='number'])::-webkit-outer-spin-button,
+  .no-spinners :deep(input[type='number'])::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .no-spinners :deep(input[type='number']) {
+    -moz-appearance: textfield;
+  }
 </style>

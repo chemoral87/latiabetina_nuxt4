@@ -4,5 +4,5 @@ Archivos que referencian el permiso `song-create`.
 
 ## Files
 
-- `app\components\Song\Editor.vue` (filtrado por organización vía OrganizationSelect)
-- `app\pages\song\new.vue` (prop `permission="song-create"` sobre SongEditor)
+- `app\pages\song\new.vue` (meta `permission` y prop `permission="song-create"` sobre `SongEditor`)
+- `app\components\Song\Editor.vue` (declara la prop opcional `permission?: string` pero actualmente no la utiliza)

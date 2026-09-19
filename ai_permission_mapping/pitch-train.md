@@ -4,7 +4,7 @@ Archivos que referencian el permiso `pitch-train`.
 
 ## Files
 
-- `app\pages\pitcher\index.vue`
+- `app\pages\pitcher\index.vue` (únicamente como comentario; el meta `permission: "pitch-train"` y el middleware están comentados y la página no exige el permiso)
 
 ## Also referenced in
 

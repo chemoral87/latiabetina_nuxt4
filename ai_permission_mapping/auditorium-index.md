@@ -4,8 +4,9 @@ Archivos que referencian el permiso `auditorium-index`.
 
 ## Files
 
-- `app\pages\auditorium\index.vue`
-- `app\pages\dashboard.vue`
+- `app\pages\auditorium\index.vue` (meta `permission`)
+- `app\pages\dashboard.vue` (visibilidad del widget de auditorio)
+- `app\pages\auditorium-event\index.vue` (filtro de organizaciones vía `permissionsOrg`)
 - `app\components\Auditorium\Dialog.vue`
 
 ## Also referenced in
