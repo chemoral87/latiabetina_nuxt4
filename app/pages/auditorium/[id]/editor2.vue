@@ -104,7 +104,7 @@
    * Spacing (px) left between sections by the distribute alignment actions
    * ('dist-h' / 'dist-v'). Single definition so both axes stay in step.
    */
-  const constantGap = 30
+  const constantGap = 10
 
   const sectionDialogOpen = ref(false)
   const editingSection = ref<FloatingSection | null>(null)

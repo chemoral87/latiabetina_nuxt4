@@ -97,10 +97,10 @@
 
       <AuditoriumSeatsStageMarkPanel
         v-model="showMarkPanel"
-        :panel-top="null"
-        panel-bottom="20px"
         :count="selectedSeatIds.length"
+        :panel-top="panelVerticalPos.top"
         :status-config="activeStatusConfig"
+        :panel-bottom="panelVerticalPos.bottom"
         @set-status="setSeatsStatus"
       />
 
@@ -163,6 +163,16 @@
   const historyLog = ref<Record<string, unknown>[]>([])
   const historyUsers = ref<Record<string, unknown>[]>([])
   const historyLoading = ref(false)
+const lastClickClientY = ref<number | null>(null)
+
+const panelVerticalPos = computed(() => {
+  if (lastClickClientY.value === null || typeof window === "undefined") {
+    return { top: null as string | null, bottom: "20px" }
+  }
+  return lastClickClientY.value < window.innerHeight / 2
+    ? { top: null as string | null, bottom: "20px" }
+    : { top: "70px", bottom: null as string | null }
+})
 
   let _realtimeCleanup: (() => void) | null = null
 
@@ -347,8 +357,14 @@ const CANVAS_CHROME_Y = 28
     // section, exactly like the v1 mark page.
     if (!selectedSectionId.value) return
 
-    const seatId = payload.seat.id
-    selectedSeatIds.value = selectedSeatIds.value.includes(seatId)
+  const evt = payload.event as any
+  const nativeEvent = evt?.evt ?? evt
+  const touch = nativeEvent?.changedTouches?.[0] ?? nativeEvent?.touches?.[0]
+  const clientY = nativeEvent?.clientY ?? touch?.clientY
+  if (typeof clientY === "number") lastClickClientY.value = clientY
+
+  const seatId = payload.seat.id
+  selectedSeatIds.value = selectedSeatIds.value.includes(seatId)
       ? selectedSeatIds.value.filter(id => id !== seatId)
       : [...selectedSeatIds.value, seatId]
   }
@@ -440,9 +456,14 @@ const CANVAS_CHROME_Y = 28
 
 <style>
   html:has(#auev-mark2-page),
-  body:has(#auev-mark2-page) {
-    overflow: hidden;
-  }
+body:has(#auev-mark2-page) {
+  overflow: hidden;
+  background: #000 !important;
+}
+
+.v-main:has(#auev-mark2-page) {
+  background: #000 !important;
+}
   #auev-mark2-page {
     padding: 0 !important;
   }
