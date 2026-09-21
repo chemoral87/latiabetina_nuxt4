@@ -194,9 +194,9 @@ export const SECTION_BOX = {
 
 export const FLOATING_SECTION_BOX = {
   ...SECTION_BOX,
-  EXTRA_HEIGHT: 35,
+  EXTRA_HEIGHT: 28,
   SEAT_INSET_Y: 18,
-  COL_LABEL_BOTTOM_GAP: 24,
+  COL_LABEL_BOTTOM_GAP: 23,
 } as const
 
 // ── Default export for auto-import compatibility ──────────────────────────────
