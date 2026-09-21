@@ -31,10 +31,19 @@
   </VRow>
 
   <VSheet v-if="sections.length > 0" rounded color="white" class="pa-3 mb-3">
-    <div class="text-subtitle-2 mb-2">Alinear secciones</div>
+    <div class="d-flex align-center justify-space-between mb-2">
+      <div class="text-subtitle-2">Alinear secciones</div>
+    </div>
+
+    <div class="d-flex align-center text-caption font-weight-bold mb-1 px-1">
+      <span style="width: 28px" />
+      <span class="flex-grow-1">Sección</span>
+      <span class="text-center" style="width: 60px">Grupo</span>
+      <span style="width: 56px" />
+    </div>
 
     <div
-      v-for="section in sections"
+      v-for="(section, idx) in sections"
       :key="section.id"
       class="d-flex align-center mb-1"
     >
@@ -45,7 +54,40 @@
         :model-value="selectedIds.includes(section.id)"
         @update:model-value="toggleSection(section.id)"
       />
-      <span class="text-body-2 ml-1 text-truncate">{{ section.name }}</span>
+      <span class="text-body-2 ml-1 text-truncate flex-grow-1">{{ section.name }}</span>
+      <VTextField
+        :id="`ae2-group-${section.id}`"
+        hide-details
+        type="number"
+        density="compact"
+        variant="outlined"
+        style="width: 60px"
+        :model-value="section.group"
+        class="text-center flex-grow-0"
+        @update:model-value="updateSectionGroup(section.id, $event)"
+      />
+      <div style="width: 56px" class="d-flex flex-grow-0">
+        <VBtn
+          :id="`ae2-section-up-${section.id}`"
+          icon
+          size="x-small"
+          variant="text"
+          :disabled="idx === 0"
+          @click="emit('move-section', idx, -1)"
+        >
+          <VIcon size="16">mdi-chevron-up</VIcon>
+        </VBtn>
+        <VBtn
+          :id="`ae2-section-down-${section.id}`"
+          icon
+          size="x-small"
+          variant="text"
+          :disabled="idx === sections.length - 1"
+          @click="emit('move-section', idx, 1)"
+        >
+          <VIcon size="16">mdi-chevron-down</VIcon>
+        </VBtn>
+      </div>
     </div>
 
     <VDivider class="my-2" />
@@ -84,7 +126,14 @@ const emit = defineEmits<{
   (e: "add-tag"): void
   (e: "align", key: string): void
   (e: "toggle-section", id: string): void
+  (e: "update-section-group", id: string, group: number | undefined): void
+  (e: "move-section", fromIndex: number, direction: -1 | 1): void
 }>()
+
+function updateSectionGroup(id: string, value: string | number | null) {
+  const group = value === null || value === "" ? undefined : Number(value)
+  emit("update-section-group", id, group)
+}
 
 const { mobile, mdAndUp } = useDisplay()
 

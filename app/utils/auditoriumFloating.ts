@@ -182,3 +182,36 @@ export function getFloatingSectionWidth(section: FloatingSection): number {
 export function getFloatingSectionHeight(section: FloatingSection): number {
   return section.rows * seatSpacing() - DEFAULT_SETTINGS.SEATS_DISTANCE
 }
+
+/**
+ * Find a floating seat by its id across all sections. Returns the seat object
+ * (with a reference to its parent section) or null.
+ */
+export function findFloatingSeatById(
+  sections: FloatingSection[],
+  seatId: number | string
+): FloatingSeat | null {
+  for (const section of sections) {
+    for (const row of section.seats) {
+      for (const seat of row) {
+        if (seat && seat.id === seatId) return seat
+      }
+    }
+  }
+  return null
+}
+
+/**
+ * Apply seat statuses from event data onto floating sections, in place.
+ * seatsData shape: { status: [seatId, ...], ... }
+ */
+export function applyFloatingSeatStatuses(sections: FloatingSection[], seatsData: unknown): void {
+  if (!seatsData || Array.isArray(seatsData)) return
+  Object.entries(seatsData as Record<string, string[]>).forEach(([status, seatIds]) => {
+    if (!Array.isArray(seatIds)) return
+    seatIds.forEach(seatId => {
+      const seat = findFloatingSeatById(sections, seatId)
+      if (seat) seat.status = status
+    })
+  })
+}

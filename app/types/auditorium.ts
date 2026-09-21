@@ -46,6 +46,7 @@ export interface FloatingSeat {
   row: number
   col: number
   category?: string | null
+  status?: string | null
 }
 
 export interface FloatingSection {
@@ -56,6 +57,7 @@ export interface FloatingSection {
   rows: number
   cols: number
   seats: (FloatingSeat | null)[][]
+  group?: number
 }
 
 export interface FloatingTag {

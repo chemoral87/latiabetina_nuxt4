@@ -1,7 +1,9 @@
 <template>
   <v-group :config="{ x: 0, y: 0, id: 'cmp-auditorium-seat-grid' }">
     <v-rect :config="rectConfig" />
-    <v-text v-if="title" :config="titleConfig" />
+    <v-text v-if="showStats" :config="statsCountConfig" />
+    <v-text v-if="showStats" :config="statsPercentConfig" />
+    <v-text v-if="title" :config="titleConfig" style="position: absolute; top: calc(SECTION_BOX.STATS_Y + 15px); transform: translateY(calc(flatSeats[0]?.y * 0.5));"/>
 
     <template v-if="showLabels">
       <v-text
@@ -54,13 +56,21 @@
  * shape — e.g. Seats.vue's parseSeatId + getSectionConfig/getSubsectionPosition
  * tooltip math — keep working unchanged).
  */
-import { CLASS_STROKE_MAP, COLORS, type StageCategory } from "~/constants/auditorium"
+import {
+  CLASS_STROKE_MAP,
+  COLORS,
+  getPercentageColor,
+  SECTION_BOX,
+  STATUS_COLORS,
+  type StageCategory,
+} from "~/constants/auditorium"
 
 interface Seat {
   id: string
   row: number
   col: number
   state?: string
+  status?: string | null
   category?: string | null
   x?: number
   y?: number
@@ -74,11 +84,31 @@ const props = withDefaults(
     categories?: StageCategory[]
     title?: string
     showLabels?: boolean
+    borderColor?: string
+    borderWidth?: number
+    showStats?: boolean
+    /**
+     * Draw the section/subsection box (v1 SeatsStageSubsection style): a black
+     * rect larger than the grid, giving the stats line a top band, the row
+     * numbers a left band and the column letters a bottom band. Off by default
+     * so the editor canvas (Editor2Canvas.vue) keeps its tight grey box.
+     */
+    boxed?: boolean
+    /** Seat ids picked by the user; rendered blinking until they are assigned. */
+    selectedSeatIds?: (number | string)[]
+    /** Toggled every ~330 ms by the parent to make selected seats blink. */
+    blinkState?: boolean
   }>(),
   {
     categories: () => [],
     title: undefined,
     showLabels: true,
+    borderColor: "green",
+    borderWidth: 2,
+    showStats: false,
+    boxed: false,
+    selectedSeatIds: () => [],
+    blinkState: false,
   },
 )
 
@@ -111,29 +141,75 @@ const gridHeight = computed(() => {
 
 defineExpose({ gridWidth, gridHeight })
 
+// Box geometry (see SECTION_BOX): only applied in `boxed` mode, so the default
+// rendering stays the tight grid-sized rect the editor expects.
+const boxW = computed(
+  () => gridWidth.value + (props.boxed ? SECTION_BOX.EXTRA_WIDTH : 0),
+)
+const boxH = computed(
+  () => gridHeight.value + (props.boxed ? SECTION_BOX.EXTRA_HEIGHT : 0),
+)
+const seatInsetX = computed(() => (props.boxed ? SECTION_BOX.SEAT_INSET_X : 0))
+const seatInsetY = computed(() => (props.boxed ? SECTION_BOX.SEAT_INSET_Y : 0))
+
 const rectConfig = computed(() => ({
-  width: gridWidth.value,
-  height: gridHeight.value,
-  fill: COLORS.SUBSECTION_BG,
-  stroke: "green",
-  strokeWidth: 2,
+  x: 0,
+  y: props.boxed ? SECTION_BOX.RECT_Y : 0,
+  width: boxW.value,
+  height: boxH.value,
+  fill: props.boxed ? SECTION_BOX.FILL : COLORS.SUBSECTION_BG,
+  stroke: props.borderColor,
+  strokeWidth: props.borderWidth,
 }))
 
+const stats = computed(() => {
+  const seats = flatSeats.value
+  const total = seats.length
+  const withStatus = seats.filter((seat) => seat.status).length
+  return { withStatus, total, percent: total ? Math.round((withStatus / total) * 100) : 0 }
+})
+
+const statsCountConfig = computed(() => ({
+  x: SECTION_BOX.STATS_X,
+  y: SECTION_BOX.STATS_Y,
+  text: `${stats.value.withStatus}/${stats.value.total}`,
+  fontSize: 10,
+  fill: "white",
+  fontStyle: "bold",
+  fontFamily: "Arial",
+}))
+
+const statsPercentConfig = computed(() => ({
+  x: SECTION_BOX.STATS_PERCENT_X,
+  y: SECTION_BOX.STATS_Y,
+  text: `${stats.value.percent}%`,
+  fontSize: 10,
+  fill: getPercentageColor(stats.value.percent),
+  fontStyle: "bold",
+  fontFamily: "Arial",
+}))
+
+// In `boxed` mode the name sits inside the box, in the free space between the
+// stats line (SECTION_BOX.STATS_Y = 5) and the seat block (which starts at
+// SECTION_BOX.SEAT_INSET_Y = 35) — same position as v1's subsection title.
 const titleConfig = computed(() => ({
-  x: 0,
-  y: -15,
+  x: props.boxed ? SECTION_BOX.TITLE_X : 0,
+  y: props.boxed ? SECTION_BOX.TITLE_Y : -15,
   text: props.title ?? "",
   fontSize: 11,
   fill: "#fff",
   fontFamily: "Arial",
   align: "left",
-  width: gridWidth.value,
+  width: props.boxed
+    ? gridWidth.value + SECTION_BOX.TITLE_EXTRA_WIDTH
+    : gridWidth.value,
 }))
 
 function getRowLabelConfig(rowIdx: number) {
   return {
-    x: -12,
-    y: rowIdx * seatSpacing.value + props.seatSize / 2,
+    x: props.boxed ? 0 : -12,
+    y: rowIdx * seatSpacing.value + props.seatSize / 2 + seatInsetY.value,
+    width: props.boxed ? SECTION_BOX.ROW_LABEL_WIDTH : undefined,
     text: (rowIdx + 1).toString(),
     fontSize: 8,
     fill: "yellow",
@@ -146,14 +222,21 @@ function getRowLabelConfig(rowIdx: number) {
 
 function getColLabelConfig(colIdx: number) {
   return {
-    x: colIdx * seatSpacing.value + props.seatSize / 2,
-    y: gridHeight.value + 5,
+    x:
+      colIdx * seatSpacing.value +
+      props.seatSize / 2 +
+      (props.boxed ? SECTION_BOX.COL_LABEL_X_OFFSET : 0),
+    y: props.boxed
+      ? gridHeight.value +
+        SECTION_BOX.EXTRA_HEIGHT -
+        SECTION_BOX.COL_LABEL_BOTTOM_GAP
+      : gridHeight.value + 5,
     text: String.fromCharCode(65 + colIdx),
     fontSize: 8,
     fill: "yellow",
     fontFamily: "Arial",
     align: "center",
-    offsetX: 3,
+    offsetX: props.boxed ? 0 : 3,
   }
 }
 
@@ -164,8 +247,8 @@ const flatSeats = computed<Seat[]>(() => {
       if (seat && seat.state !== "invisible") {
         allSeats.push({
           ...seat,
-          x: colIdx * seatSpacing.value + props.seatSize / 2,
-          y: rowIdx * seatSpacing.value + props.seatSize / 2,
+          x: colIdx * seatSpacing.value + props.seatSize / 2 + seatInsetX.value,
+          y: rowIdx * seatSpacing.value + props.seatSize / 2 + seatInsetY.value,
         })
       }
     })
@@ -204,11 +287,30 @@ function getSeatConfig(seat: Seat) {
     }
   }
 
+  let fill = isSelected
+    ? COLORS.SEAT_SELECTED
+    : isReserved
+      ? COLORS.SEAT_RESERVED
+      : COLORS.SEAT_FREE
+
+  // Picked seats blink between their status colour and grey (same as the v1
+  // mark page), so the user can see what is about to be assigned.
+  if ((props.selectedSeatIds ?? []).includes(seat.id)) {
+    const baseColor =
+      seat.status && STATUS_COLORS[seat.status]
+        ? STATUS_COLORS[seat.status]
+        : COLORS.SEAT_FREE
+    fill = props.blinkState ? baseColor : "#808080"
+    strokeWidth = 0
+  } else if (seat.status && STATUS_COLORS[seat.status]) {
+    fill = STATUS_COLORS[seat.status]
+  }
+
   return {
     x: seat.x,
     y: seat.y,
     radius: props.seatSize / 2,
-    fill: isSelected ? COLORS.SEAT_SELECTED : isReserved ? COLORS.SEAT_RESERVED : COLORS.SEAT_FREE,
+    fill,
     stroke,
     strokeWidth,
     opacity: isReserved ? 0.6 : 1,

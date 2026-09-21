@@ -12,15 +12,21 @@
       <VIcon size="small" color="yellow">mdi-chart-bar</VIcon>
     </VBtn>
 
-    <MyDragPanel v-model="statsPanel" title="Desglose de asientos">
+    <MyDragPanel
+      v-model="statsPanel"
+      top="48px"
+      right="8px"
+      mode="fixed"
+      title="Desglose de asientos"
+    >
       <div class="stats-panel-body">
         <div
           v-for="(cfg, key) in stats.activeStatusCfg"
           :key="key"
           class="stats-row"
         >
-          <span class="stats-dot" :style="{ background: cfg.color }"></span>
-          <span class="stats-label">{{ cfg.label }}</span>
+          <span class="stats-dot" :style="{ background: cfg?.color ?? '#9e9e9e' }"></span>
+          <span class="stats-label">{{ cfg?.label ?? key }}</span>
           <span class="stats-count">
             {{ stats.statusBreakdown[key] || 0 }}
             <span class="grey-text mx-1 font-weight-thin">|</span>

@@ -5,10 +5,10 @@
     <v-rect
       :config="{
         x: 0,
-        y: 3,
-        width: subsectionWidth + 18,
-        height: subsectionHeight + DEFAULT_SETTINGS.SUBSECTION_RECT_EXTRA,
-        fill: 'black',
+        y: SECTION_BOX.RECT_Y,
+        width: subsectionWidth + SECTION_BOX.EXTRA_WIDTH,
+        height: subsectionHeight + SECTION_BOX.EXTRA_HEIGHT,
+        fill: SECTION_BOX.FILL,
         stroke: borderColor,
         strokeWidth: borderWidth,
       }"
@@ -95,6 +95,7 @@ import {
   COLORS,
   getPercentageColor,
   DEFAULT_SETTINGS,
+  SECTION_BOX,
 } from "~/constants/auditorium";
 import { useUAParser } from "~/utils/userAgent";
 
@@ -176,14 +177,14 @@ const maxColumns = computed(() => {
 
 const subsectionTitleConfig = computed(() => {
   return {
-    x: 4,
-    y: 20,
+    x: SECTION_BOX.TITLE_X,
+    y: SECTION_BOX.TITLE_Y,
     text: props.subsection.n || props.subsection.name,
     fontSize: 11,
     fill: "#fff",
     fontFamily: "Arial",
     align: "left",
-    width: subsectionWidth.value + 13,
+    width: subsectionWidth.value + SECTION_BOX.TITLE_EXTRA_WIDTH,
   };
 });
 
@@ -236,8 +237,14 @@ const seats = computed<SeatRender[]>(() => {
             row: seat.r !== undefined ? seat.r : seat.row,
             col: seat.c !== undefined ? seat.c : seat.col,
             category: seat.k || seat.category,
-            x: colIdx * seatSpacing.value + DEFAULT_SETTINGS.SEAT_SIZE / 2 + 14,
-            y: rowIdx * seatSpacing.value + DEFAULT_SETTINGS.SEAT_SIZE / 2 + 35,
+            x:
+              colIdx * seatSpacing.value +
+              DEFAULT_SETTINGS.SEAT_SIZE / 2 +
+              SECTION_BOX.SEAT_INSET_X,
+            y:
+              rowIdx * seatSpacing.value +
+              DEFAULT_SETTINGS.SEAT_SIZE / 2 +
+              SECTION_BOX.SEAT_INSET_Y,
             config: getSeatConfig(seat),
           };
 
@@ -329,9 +336,12 @@ onBeforeUnmount(() => {
 function getRowLabelConfig(rowIdx: number) {
   return {
     x: 0,
-    y: rowIdx * seatSpacing.value + DEFAULT_SETTINGS.SEAT_SIZE / 2 + 35,
+    y:
+      rowIdx * seatSpacing.value +
+      DEFAULT_SETTINGS.SEAT_SIZE / 2 +
+      SECTION_BOX.SEAT_INSET_Y,
     text: (rowIdx + 1).toString(),
-    width: 12,
+    width: SECTION_BOX.ROW_LABEL_WIDTH,
     fontSize: 8,
     fill: "yellow",
     fontFamily: "Arial",
@@ -344,8 +354,14 @@ function getRowLabelConfig(rowIdx: number) {
 function getColLabelConfig(colIdx: number) {
   const labelSpacing = seatSpacing.value;
   return {
-    x: colIdx * labelSpacing + DEFAULT_SETTINGS.SEAT_SIZE / 2 + 11,
-    y: subsectionHeight.value + DEFAULT_SETTINGS.SUBSECTION_RECT_EXTRA - 6,
+    x:
+      colIdx * labelSpacing +
+      DEFAULT_SETTINGS.SEAT_SIZE / 2 +
+      SECTION_BOX.COL_LABEL_X_OFFSET,
+    y:
+      subsectionHeight.value +
+      SECTION_BOX.EXTRA_HEIGHT -
+      SECTION_BOX.COL_LABEL_BOTTOM_GAP,
     text: String.fromCharCode(65 + colIdx),
     fontSize: 8,
     fill: "yellow",

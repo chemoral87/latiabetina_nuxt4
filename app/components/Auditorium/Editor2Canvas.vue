@@ -195,6 +195,7 @@ const emit = defineEmits<{
   (e: "section-edit", section: FloatingSection): void
   (e: "tag-delete", tag: FloatingTag): void
   (e: "tag-rename", tag: FloatingTag, text: string): void
+  (e: "move-group", groupNumber: number, dx: number, dy: number): void
 }>()
 
 const uaParser = useUAParser()
@@ -236,9 +237,9 @@ function getSectionGroupConfig(section: FloatingSection) {
     y: section.y,
     draggable: true,
     id: `ae2-section-${section.id}`,
+    ae2Group: section.group ?? null,
   }
 }
-
 function getSectionPencilConfig(section: FloatingSection) {
   const w = getFloatingSectionWidth(section)
   return {
@@ -297,12 +298,22 @@ function isControlNode(node: any): boolean {
 }
 
 function onSectionDragEnd(section: FloatingSection, e: any) {
-  // Ignore dragend that followed a cancelled control interaction
   if (isControlNode(e?.target)) return
   const node = e?.currentTarget ?? e?.target
   if (!node || typeof node.x !== "function") return
-  section.x = Math.round(node.x())
-  section.y = Math.round(node.y())
+
+  const newX = Math.round(node.x())
+  const newY = Math.round(node.y())
+  const dx = newX - section.x
+  const dy = newY - section.y
+
+  if (dx !== 0 || dy !== 0) {
+    if (section.group !== undefined) {
+      emit("move-group", section.group, dx, dy)
+    }
+    section.x = newX
+    section.y = newY
+  }
 }
 
 function onSectionEdit(section: FloatingSection, e: any) {

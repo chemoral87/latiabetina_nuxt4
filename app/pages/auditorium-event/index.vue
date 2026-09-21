@@ -269,7 +269,9 @@ async function downloadAuditoriumEvent(item: unknown) {
 
 function markAuditoriumEvent(item: unknown) {
   const event = item as Record<string, unknown>;
-  navigateTo(`/auditorium-event/${event.id}/mark`);
+  const layoutVersion = Number(event.layout_version ?? 1);
+  const target = layoutVersion === 2 ? "mark2" : "mark";
+  navigateTo(`/auditorium-event/${event.id}/${target}`);
 }
 
 function beforeDeleteAuditoriumEvent(item: unknown) {
