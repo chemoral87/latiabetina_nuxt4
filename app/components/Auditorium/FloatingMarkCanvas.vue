@@ -3,8 +3,8 @@
     id="ae2-mark-canvas-sheet"
     color="black"
     elevation="2"
-    style="overflow: hidden"
-    class="pa-2 stage-container"
+     class="pa-0 ma-0 stage-container"
+     style="overflow: hidden; width: 100%"
   >
     <VStage
       ref="konvaStage"
@@ -32,8 +32,12 @@
             // Tapping anywhere on a section (its box, its padding or one of its
             // seats) drills into it. Seat clicks bubble up to here, which is
             // what makes the whole box a hit target in the overview.
-            onClick: () => emit('section-click', section),
-            onTap: () => emit('section-click', section),
+            onClick: () => {
+              if (!props.selectedSectionId) emit('section-click', section)
+            },
+            onTap: () => {
+              if (!props.selectedSectionId) emit('section-click', section)
+            },
           }"
         >
           <AuditoriumSeatGrid
@@ -249,7 +253,10 @@ function centerContent() {
 }
 
 onMounted(() => {
-  nextTick(() => centerContent())
+  nextTick(() => {
+    centerContent()
+    setTimeout(centerContent, 100)
+  })
 })
 
 // The layout arrives with the event payload, but re-center if sections are
