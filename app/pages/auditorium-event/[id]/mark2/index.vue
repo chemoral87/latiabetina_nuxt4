@@ -288,7 +288,7 @@ const panelVerticalPos = computed(() => {
   // stage was narrower than the window, so Fit Height zoomed the content past the
   // stage edge and cropped the outer sections.
 const CANVAS_CHROME_X = 0
-const CANVAS_CHROME_Y = 28
+const CANVAS_CHROME_Y = 0
 
   function updateStageSize() {
     const appBarHeight = mainRect.value?.top ?? 0

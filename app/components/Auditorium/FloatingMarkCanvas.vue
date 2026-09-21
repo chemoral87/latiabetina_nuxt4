@@ -4,7 +4,7 @@
     color="black"
     elevation="2"
      class="pa-0 ma-0 stage-container"
-     style="overflow: hidden; width: 100%"
+     :style="{ height: '100%', width: '100%', overflow: 'hidden' }"
   >
     <VStage
       ref="konvaStage"
@@ -287,7 +287,10 @@ watch(
   () => props.selectedSectionId,
   () => {
     userAdjusted.value = false
-    nextTick(() => centerContent())
+    nextTick(() => {
+      centerContent()
+      setTimeout(centerContent, 100)
+    })
   },
 )
 

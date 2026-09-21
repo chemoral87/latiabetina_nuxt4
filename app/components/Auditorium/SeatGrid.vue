@@ -204,7 +204,7 @@ const statsPercentConfig = computed(() => ({
 // SECTION_BOX.SEAT_INSET_Y = 35) — same position as v1's subsection title.
 const titleConfig = computed(() => ({
   x: props.boxed ? FLOATING_SECTION_BOX.TITLE_X : 0,
-  y: props.boxed ? FLOATING_SECTION_BOX.RECT_Y : -15,
+  y: props.boxed ? FLOATING_SECTION_BOX.RECT_Y + 3 : -15,
    text: props.title ?? "",
    fontSize: props.compact ? 9 : 11,
   fill: "#fff",
