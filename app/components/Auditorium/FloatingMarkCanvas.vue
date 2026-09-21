@@ -50,6 +50,7 @@
             :seats="section.seats as any"
             :seats-distance="seatsDistance"
             :selected-seat-ids="selectedSeatIds"
+            :compact="Boolean(selectedSectionId)"
             :border-width="SUBSECTION_BORDER_WIDTH"
             :border-color="getSectionBorderColor(sectionOrderIndex(section))"
             @seat-click="(p: any) => emit('seat-click', p)"
@@ -73,7 +74,7 @@
 import {
   COLORS,
   DEFAULT_SETTINGS,
-  SECTION_BOX,
+  FLOATING_SECTION_BOX,
   STAGE_CATEGORIES,
   SUBSECTION_BORDER_COLORS,
   SUBSECTION_BORDER_WIDTH,
@@ -172,15 +173,15 @@ function getContentBBox() {
   }
   let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity
   for (const s of sections) {
-    // Section boxes are SECTION_BOX.EXTRA_WIDTH/EXTRA_HEIGHT larger than the
+    // Section boxes are FLOATING_SECTION_BOX.EXTRA_WIDTH/EXTRA_HEIGHT larger than the
     // seat grid and start at RECT_Y, so the bbox must include that chrome or
     // Fit would leave the outermost borders outside the viewport.
-    const w = s.cols * seatSpacing - seatsDistance + SECTION_BOX.EXTRA_WIDTH
+    const w = s.cols * seatSpacing - seatsDistance + FLOATING_SECTION_BOX.EXTRA_WIDTH
     const h =
       s.rows * seatSpacing -
       seatsDistance +
-      SECTION_BOX.EXTRA_HEIGHT +
-      SECTION_BOX.RECT_Y
+      FLOATING_SECTION_BOX.EXTRA_HEIGHT +
+      FLOATING_SECTION_BOX.RECT_Y
     minX = Math.min(minX, s.x)
     minY = Math.min(minY, s.y)
     maxX = Math.max(maxX, s.x + w)

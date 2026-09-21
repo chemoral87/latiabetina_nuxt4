@@ -175,9 +175,9 @@ export const SUBSECTION_BORDER_WIDTH = 2
 export const SECTION_BOX = {
   RECT_Y: 3,
   EXTRA_WIDTH: 18,
-  EXTRA_HEIGHT: DEFAULT_SETTINGS.SUBSECTION_RECT_EXTRA, // 43
-  SEAT_INSET_X: 14, // width of the left band (row numbers)
-  SEAT_INSET_Y: 35, // height of the top band (stats)
+  EXTRA_HEIGHT: DEFAULT_SETTINGS.SUBSECTION_RECT_EXTRA,
+  SEAT_INSET_X: 14,
+  SEAT_INSET_Y: 35,
   FILL: 'black',
   ROW_LABEL_WIDTH: 12,
   COL_LABEL_X_OFFSET: 11,
@@ -187,11 +187,16 @@ export const SECTION_BOX = {
   STATS_X: 2,
   STATS_PERCENT_X: 36,
   STATS_Y: 5,
-  // Section/subsection name lives *inside* the box, between the stats line
-  // (y 5) and the seat block (starts at SEAT_INSET_Y = 35).
   TITLE_X: 4,
   TITLE_Y: 20,
   TITLE_EXTRA_WIDTH: 13,
+} as const
+
+export const FLOATING_SECTION_BOX = {
+  ...SECTION_BOX,
+  EXTRA_HEIGHT: 35,
+  SEAT_INSET_Y: 18,
+  COL_LABEL_BOTTOM_GAP: 24,
 } as const
 
 // ── Default export for auto-import compatibility ──────────────────────────────

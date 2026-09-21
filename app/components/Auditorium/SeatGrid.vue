@@ -61,6 +61,7 @@ import {
   CLASS_STROKE_MAP,
   COLORS,
   getPercentageColor,
+  FLOATING_SECTION_BOX,
   SECTION_BOX,
   STATUS_COLORS,
   STATUS_CONFIG,
@@ -100,7 +101,8 @@ const props = withDefaults(
     /** Seat ids picked by the user; rendered blinking until they are assigned. */
     selectedSeatIds?: (number | string)[]
     /** Toggled every ~330 ms by the parent to make selected seats blink. */
-    blinkState?: boolean
+     blinkState?: boolean
+    compact?: boolean
   }>(),
   {
     categories: () => [],
@@ -112,6 +114,7 @@ const props = withDefaults(
     boxed: false,
     selectedSeatIds: () => [],
     blinkState: false,
+    compact: false,
   },
 )
 
@@ -147,17 +150,17 @@ defineExpose({ gridWidth, gridHeight })
 // Box geometry (see SECTION_BOX): only applied in `boxed` mode, so the default
 // rendering stays the tight grid-sized rect the editor expects.
 const boxW = computed(
-  () => gridWidth.value + (props.boxed ? SECTION_BOX.EXTRA_WIDTH : 0),
+  () => gridWidth.value + (props.boxed ? FLOATING_SECTION_BOX.EXTRA_WIDTH : 0),
 )
 const boxH = computed(
-  () => gridHeight.value + (props.boxed ? SECTION_BOX.EXTRA_HEIGHT : 0),
+  () => gridHeight.value + (props.boxed ? FLOATING_SECTION_BOX.EXTRA_HEIGHT : 0),
 )
 const seatInsetX = computed(() => (props.boxed ? SECTION_BOX.SEAT_INSET_X : 0))
-const seatInsetY = computed(() => (props.boxed ? SECTION_BOX.SEAT_INSET_Y : 0))
+const seatInsetY = computed(() => (props.boxed ? FLOATING_SECTION_BOX.SEAT_INSET_Y : 0))
 
 const rectConfig = computed(() => ({
   x: 0,
-  y: props.boxed ? SECTION_BOX.RECT_Y : 0,
+  y: props.boxed ? FLOATING_SECTION_BOX.RECT_Y : 0,
   width: boxW.value,
   height: boxH.value,
   fill: props.boxed ? SECTION_BOX.FILL : COLORS.SUBSECTION_BG,
@@ -173,38 +176,42 @@ const stats = computed(() => {
 })
 
 const statsCountConfig = computed(() => ({
-  x: SECTION_BOX.STATS_X,
-  y: SECTION_BOX.STATS_Y,
+  x: props.boxed ? 0 : FLOATING_SECTION_BOX.STATS_X,
+  y: props.boxed ? -22 : FLOATING_SECTION_BOX.STATS_Y,
+  width: props.boxed ? 54 : undefined,
+  align: props.boxed ? "left" : undefined,
   text: `${stats.value.withStatus}/${stats.value.total}`,
-  fontSize: 10,
-  fill: "white",
+  fontSize: props.compact ? 7 : 10,
+   fill: "white",
   fontStyle: "bold",
   fontFamily: "Arial",
 }))
 
 const statsPercentConfig = computed(() => ({
-  x: SECTION_BOX.STATS_PERCENT_X,
-  y: SECTION_BOX.STATS_Y,
+  x: props.boxed ? 0 : FLOATING_SECTION_BOX.STATS_PERCENT_X,
+  y: props.boxed ? -12 : FLOATING_SECTION_BOX.STATS_Y,
+  width: props.boxed ? 54 : undefined,
+  align: props.boxed ? "left" : undefined,
   text: `${stats.value.percent}%`,
-  fontSize: 10,
+  fontSize: props.compact ? 7 : 10,
   fill: getPercentageColor(stats.value.percent),
   fontStyle: "bold",
   fontFamily: "Arial",
 }))
 
 // In `boxed` mode the name sits inside the box, in the free space between the
-// stats line (SECTION_BOX.STATS_Y = 5) and the seat block (which starts at
+// stats line (FLOATING_SECTION_BOX.STATS_Y = 5) and the seat block (which starts at
 // SECTION_BOX.SEAT_INSET_Y = 35) — same position as v1's subsection title.
 const titleConfig = computed(() => ({
-  x: props.boxed ? SECTION_BOX.TITLE_X : 0,
-  y: props.boxed ? SECTION_BOX.TITLE_Y : -15,
-  text: props.title ?? "",
-  fontSize: 11,
+  x: props.boxed ? FLOATING_SECTION_BOX.TITLE_X : 0,
+  y: props.boxed ? FLOATING_SECTION_BOX.RECT_Y : -15,
+   text: props.title ?? "",
+   fontSize: props.compact ? 9 : 11,
   fill: "#fff",
   fontFamily: "Arial",
   align: "left",
   width: props.boxed
-    ? gridWidth.value + SECTION_BOX.TITLE_EXTRA_WIDTH
+    ? gridWidth.value + FLOATING_SECTION_BOX.TITLE_EXTRA_WIDTH
     : gridWidth.value,
 }))
 
@@ -212,7 +219,7 @@ function getRowLabelConfig(rowIdx: number) {
   return {
     x: props.boxed ? 0 : -12,
     y: rowIdx * seatSpacing.value + props.seatSize / 2 + seatInsetY.value,
-    width: props.boxed ? SECTION_BOX.ROW_LABEL_WIDTH : undefined,
+    width: props.boxed ? FLOATING_SECTION_BOX.ROW_LABEL_WIDTH : undefined,
     text: (rowIdx + 1).toString(),
     fontSize: 8,
     fill: "yellow",
@@ -228,11 +235,11 @@ function getColLabelConfig(colIdx: number) {
     x:
       colIdx * seatSpacing.value +
       props.seatSize / 2 +
-      (props.boxed ? SECTION_BOX.COL_LABEL_X_OFFSET : 0),
+      (props.boxed ? FLOATING_SECTION_BOX.COL_LABEL_X_OFFSET : 0),
     y: props.boxed
       ? gridHeight.value +
         SECTION_BOX.EXTRA_HEIGHT -
-        SECTION_BOX.COL_LABEL_BOTTOM_GAP
+        FLOATING_SECTION_BOX.COL_LABEL_BOTTOM_GAP
       : gridHeight.value + 5,
     text: String.fromCharCode(65 + colIdx),
     fontSize: 8,
