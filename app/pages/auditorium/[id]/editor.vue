@@ -97,13 +97,19 @@ const openSections = ref<Record<number, boolean>>({})
 const id = route.params.id as string
 const loaded = (await Auditorium.show(id).catch(() => ({}))) as Record<string, unknown>
 auditorium.value = loaded
-loadConfiguration()
 
-if (auditorium.value.name) {
-  route.meta.title = `Editor Auditorio: ${auditorium.value.name}`
-  route.meta.icon = "mdi-seat-outline"
-  route.meta.back = "/auditorium"
-  route.meta.showDrawer = false
+// Defense in depth: v2 layouts must use editor2 (wrong parser would silently corrupt)
+if (Number(auditorium.value.layout_version) === 2) {
+  await navigateTo(`/auditorium/${id}/editor2`, { replace: true })
+} else {
+  loadConfiguration()
+
+  if (auditorium.value.name) {
+    route.meta.title = `Editor Auditorio: ${auditorium.value.name}`
+    route.meta.icon = "mdi-seat-outline"
+    route.meta.back = "/auditorium"
+    route.meta.showDrawer = false
+  }
 }
 
 onMounted(() => {

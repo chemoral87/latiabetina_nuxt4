@@ -204,6 +204,8 @@ async function saveAuditorium(item: Record<string, unknown>) {
   } else {
     payload.org_id =
       (item.org_id as Record<string, unknown>)?.id ?? item.org_id;
+    // New auditoriums use the floating editor (editor2.vue)
+    payload.layout_version = 2;
   }
 
   try {
@@ -237,7 +239,10 @@ function closeDialog() {
 }
 
 function goToLayout(item: Record<string, unknown>) {
-  navigateTo(`/auditorium/${item.id}/editor`);
+  const version = Number(item.layout_version ?? 1);
+  navigateTo(
+    `/auditorium/${item.id}/${version === 2 ? "editor2" : "editor"}`,
+  );
 }
 </script>
 

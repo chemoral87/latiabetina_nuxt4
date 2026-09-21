@@ -1,15 +1,13 @@
-import type { Seat, Section, Subsection } from "~/types/auditorium"
+import type { Seat, Section, Subsection } from '~/types/auditorium'
 
 /**
  * True when the raw auditorium config is the legacy CSV-string format
  * (either a header line "csv_format" or an old-style "type,id,name,...").
  */
 export function isCsvConfig(raw: unknown): boolean {
-  if (typeof raw !== "string") return false
+  if (typeof raw !== 'string') return false
   const trimmed = raw.trimStart()
-  return (
-    trimmed.startsWith("csv_format") || trimmed.startsWith("type,id,name,")
-  )
+  return trimmed.startsWith('csv_format') || trimmed.startsWith('type,id,name,')
 }
 
 /**
@@ -18,14 +16,14 @@ export function isCsvConfig(raw: unknown): boolean {
  */
 export function parseAuditoriumConfig(csvString: string): Section[] {
   const lines = csvString
-    .split("|")
-    .map((l) => l.trim())
+    .split('|')
+    .map(l => l.trim())
     .filter(Boolean)
   if (lines.length < 2) return []
 
   const parseCsvLine = (line: string): string[] => {
     const fields: string[] = []
-    let current = ""
+    let current = ''
     let inQuotes = false
     for (let i = 0; i < line.length; i++) {
       const ch = line[i]
@@ -36,9 +34,9 @@ export function parseAuditoriumConfig(csvString: string): Section[] {
         } else {
           inQuotes = !inQuotes
         }
-      } else if (ch === "," && !inQuotes) {
+      } else if (ch === ',' && !inQuotes) {
         fields.push(current)
-        current = ""
+        current = ''
       } else {
         current += ch
       }
@@ -47,10 +45,10 @@ export function parseAuditoriumConfig(csvString: string): Section[] {
     return fields
   }
 
-  const isNewFormat = lines[0].trim() === "csv_format"
+  const isNewFormat = lines[0].trim() === 'csv_format'
 
   if (!isNewFormat) {
-    const header = lines[0].split(",")
+    const header = lines[0].split(',')
     const idx: Record<string, number> = {}
     header.forEach((h, i) => {
       idx[h.trim()] = i
@@ -62,33 +60,21 @@ export function parseAuditoriumConfig(csvString: string): Section[] {
 
     for (let li = 1; li < lines.length; li++) {
       const f = parseCsvLine(lines[li])
-      const type = f[idx.type] || ""
-      const id = f[idx.id] || ""
-      const name = f[idx.name] || ""
-      const level = parseInt(f[idx.level] || "0", 10)
-      const tr =
-        f[idx.tr] !== "" && f[idx.tr] !== undefined
-          ? parseInt(f[idx.tr], 10)
-          : undefined
-      const tc =
-        f[idx.tc] !== "" && f[idx.tc] !== undefined
-          ? parseInt(f[idx.tc], 10)
-          : undefined
-      const r =
-        f[idx.r] !== "" && f[idx.r] !== undefined
-          ? parseInt(f[idx.r], 10)
-          : undefined
-      const c =
-        f[idx.c] !== "" && f[idx.c] !== undefined
-          ? parseInt(f[idx.c], 10)
-          : undefined
-      const k = (f[idx.k] || "").trim()
+      const type = f[idx.type] || ''
+      const id = f[idx.id] || ''
+      const name = f[idx.name] || ''
+      const level = parseInt(f[idx.level] || '0', 10)
+      const tr = f[idx.tr] !== '' && f[idx.tr] !== undefined ? parseInt(f[idx.tr], 10) : undefined
+      const tc = f[idx.tc] !== '' && f[idx.tc] !== undefined ? parseInt(f[idx.tc], 10) : undefined
+      const r = f[idx.r] !== '' && f[idx.r] !== undefined ? parseInt(f[idx.r], 10) : undefined
+      const c = f[idx.c] !== '' && f[idx.c] !== undefined ? parseInt(f[idx.c], 10) : undefined
+      const k = (f[idx.k] || '').trim()
 
-      if (type === "s") {
+      if (type === 's') {
         currentSection = { id, name, isLabel: level === 1, subsections: [] }
         currentSub = null
         sectionsOut.push(currentSection)
-      } else if (type === "ss" && currentSection) {
+      } else if (type === 'ss' && currentSection) {
         currentSub = { id, name, isLabel: level === 1 }
         if (currentSub.isLabel) {
           currentSub.width = 100
@@ -96,7 +82,7 @@ export function parseAuditoriumConfig(csvString: string): Section[] {
           currentSub.seats = []
         }
         currentSection.subsections!.push(currentSub)
-      } else if (type === "seat" && currentSub && !currentSub.isLabel) {
+      } else if (type === 'seat' && currentSub && !currentSub.isLabel) {
         const seats = currentSub.seats || []
         while (seats.length <= r!) {
           seats.push([])
@@ -118,13 +104,13 @@ export function parseAuditoriumConfig(csvString: string): Section[] {
 
   for (let li = 1; li < lines.length; li++) {
     const f = parseCsvLine(lines[li])
-    const type = f[0] || ""
+    const type = f[0] || ''
 
-    if (type === "s") {
+    if (type === 's') {
       sectionCounter++
       subCounter = 0
-      const name = f[1] || ""
-      const isLabel = f[2] === "1"
+      const name = f[1] || ''
+      const isLabel = f[2] === '1'
       currentSection = {
         id: String(sectionCounter),
         name,
@@ -133,10 +119,10 @@ export function parseAuditoriumConfig(csvString: string): Section[] {
       }
       currentSub = null
       sectionsOut.push(currentSection)
-    } else if (type === "ss" && currentSection) {
+    } else if (type === 'ss' && currentSection) {
       subCounter++
-      const name = f[1] || ""
-      const isLabel = f[4] === "1"
+      const name = f[1] || ''
+      const isLabel = f[4] === '1'
       const subId = `${currentSection.id}-${subCounter}`
       currentSub = { id: subId, name, isLabel }
       if (isLabel) {
@@ -145,11 +131,11 @@ export function parseAuditoriumConfig(csvString: string): Section[] {
         currentSub.seats = []
       }
       currentSection.subsections!.push(currentSub)
-    } else if (type === "z" && currentSub && !currentSub.isLabel) {
-      const id = f[1] || ""
-      const r = f[2] !== "" && f[2] !== undefined ? parseInt(f[2], 10) : 0
-      const c = f[3] !== "" && f[3] !== undefined ? parseInt(f[3], 10) : 0
-      const k = (f[4] || "").trim()
+    } else if (type === 'z' && currentSub && !currentSub.isLabel) {
+      const id = f[1] || ''
+      const r = f[2] !== '' && f[2] !== undefined ? parseInt(f[2], 10) : 0
+      const c = f[3] !== '' && f[3] !== undefined ? parseInt(f[3], 10) : 0
+      const k = (f[4] || '').trim()
       const seats = currentSub.seats || []
       while (seats.length <= r) {
         seats.push([])
@@ -165,11 +151,18 @@ export function parseAuditoriumConfig(csvString: string): Section[] {
 }
 
 /**
- * Normalize a JSON config ({ s|sections }) into the shared Section[] shape
- * used by the stage components. Returns [] when there is nothing to render.
+ * Normalize a JSON config ({ s|sections } or floating v:2) into the shared
+ * Section[] shape used by the stage / mark components. Returns [] when there
+ * is nothing to render.
+ *
+ * Floating layout (layout_version=2 / `v: 2`) has flat sections that own seats
+ * directly (no subsection level). The mark page and SeatsStageCanvas still
+ * expect section → subsection → seats, so each floating section is wrapped as
+ * a single-subsection section. Seat ids and per-seat fields are preserved so
+ * event marking keeps working. Tags become label-only sections.
  */
 export function normalizeSections(raw: unknown): Section[] {
-  if (typeof raw === "string") {
+  if (typeof raw === 'string') {
     try {
       raw = JSON.parse(raw)
     } catch (e) {
@@ -178,44 +171,59 @@ export function normalizeSections(raw: unknown): Section[] {
   }
 
   const cfg = raw as {
+    v?: number
     s?: unknown
     sections?: unknown
+    tags?: unknown
   }
+
+  // Floating layout v2 — convert to the mark-page Section[] shape
+  if (cfg.v === 2 && Array.isArray(cfg.sections)) {
+    return floatingLayoutToSections(
+      cfg as {
+        sections: Record<string, unknown>[]
+        tags?: Record<string, unknown>[]
+      }
+    )
+  }
+
   const rawSections = (cfg.s || cfg.sections) as Record<string, unknown>[]
   if (!Array.isArray(rawSections)) return []
 
+  // Heuristic: a section with top-level `seats` / `rows` and no subsections is
+  // also treated as floating (covers configs that omit `v: 2`).
+  if (
+    rawSections.length > 0 &&
+    rawSections.every(
+      section => Array.isArray(section.seats) && !(section.ss || section.subsections)
+    )
+  ) {
+    return floatingLayoutToSections({
+      sections: rawSections,
+      tags: Array.isArray(cfg.tags) ? (cfg.tags as Record<string, unknown>[]) : [],
+    })
+  }
+
   return rawSections.map((section, sIdx) => {
     const s: Section = {
-      id:
-        (section.i as number | string) ||
-        (section.id as number | string) ||
-        `${sIdx + 1}`,
+      id: (section.i as number | string) || (section.id as number | string) || `${sIdx + 1}`,
       name: (section.n as string) || (section.name as string),
       isLabel: !!(section.l || section.isLabel),
       subsections: [],
     }
 
     if (section.ss || section.subsections) {
-      const rawSubs = (section.ss || section.subsections) as Record<
-        string,
-        unknown
-      >[]
+      const rawSubs = (section.ss || section.subsections) as Record<string, unknown>[]
       s.subsections = rawSubs.map((sub, subIdx) => {
         const ss: Subsection = {
-          id:
-            (sub.i as number | string) ||
-            (sub.id as number | string) ||
-            `${s.id}-${subIdx + 1}`,
+          id: (sub.i as number | string) || (sub.id as number | string) || `${s.id}-${subIdx + 1}`,
           name: (sub.n as string) || (sub.name as string),
           isLabel: !!(sub.l || sub.isLabel),
         }
         if (ss.isLabel) {
           ss.width = (sub.w as number) || (sub.width as number)
         } else {
-          const rawSeats = (sub.s || sub.seats) as (Record<
-            string,
-            unknown
-          > | null)[][]
+          const rawSeats = (sub.s || sub.seats) as (Record<string, unknown> | null)[][]
           if (rawSeats) {
             ss.seats = rawSeats.map((row, rowIdx) => {
               return row.map((seat, colIdx) => {
@@ -233,8 +241,7 @@ export function normalizeSections(raw: unknown): Section[] {
                     seat.c !== undefined
                       ? (seat.c as number | string)
                       : (seat.col as number | string),
-                  category:
-                    (seat.k as string) || (seat.category as string),
+                  category: (seat.k as string) || (seat.category as string),
                 } as Seat
               })
             })
@@ -248,12 +255,77 @@ export function normalizeSections(raw: unknown): Section[] {
 }
 
 /**
+ * Map floating-layout sections/tags into the nested Section[] the mark stage
+ * already understands. Seat ids are kept as stored in the floating config.
+ */
+function floatingLayoutToSections(cfg: {
+  sections: Record<string, unknown>[]
+  tags?: Record<string, unknown>[]
+}): Section[] {
+  const out: Section[] = []
+
+  cfg.sections.forEach((section, sIdx) => {
+    const id = (section.id as number | string) || (section.i as number | string) || `${sIdx + 1}`
+    const name = (section.name as string) || (section.n as string) || `Sección ${sIdx + 1}`
+    const rawSeats = (section.seats || section.s) as
+      (Record<string, unknown> | null)[][] | undefined
+
+    const seats: (Seat | null)[][] | undefined = rawSeats
+      ? rawSeats.map((row, rowIdx) =>
+          row.map((seat, colIdx) => {
+            if (!seat) return null
+            return {
+              id:
+                (seat.id as number | string) ||
+                (seat.i as number | string) ||
+                `${id}-${rowIdx + 1}-${colIdx + 1}`,
+              row:
+                seat.row !== undefined
+                  ? (seat.row as number | string)
+                  : (seat.r as number | string),
+              col:
+                seat.col !== undefined
+                  ? (seat.col as number | string)
+                  : (seat.c as number | string),
+              category: (seat.category as string) || (seat.k as string),
+            } as Seat
+          })
+        )
+      : undefined
+
+    out.push({
+      id,
+      name,
+      isLabel: false,
+      subsections: [
+        {
+          // Synthetic single subsection — mark UI zooms into subsections
+          id: `${id}-1`,
+          name,
+          isLabel: false,
+          seats,
+        },
+      ],
+    })
+  })
+
+  const tags = Array.isArray(cfg.tags) ? cfg.tags : []
+  tags.forEach((tag, tIdx) => {
+    out.push({
+      id: (tag.id as number | string) || `tag-${tIdx + 1}`,
+      name: (tag.text as string) || (tag.name as string) || 'Etiqueta',
+      isLabel: true,
+      subsections: [],
+    })
+  })
+
+  return out
+}
+
+/**
  * Find a seat by its id across every section/subsection in the config.
  */
-export function findSeatById(
-  sections: Section[],
-  seatId: number | string,
-): Seat | null {
+export function findSeatById(sections: Section[], seatId: number | string): Seat | null {
   for (const section of sections) {
     const rawSubs = section.ss || section.subsections
     if (!rawSubs) continue
@@ -275,18 +347,13 @@ export function findSeatById(
  * Apply the event's initial `seats` map ({ status: [seatIds] }) onto the
  * parsed sections, in place.
  */
-export function applySeatStatuses(
-  sections: Section[],
-  seatsData: unknown,
-): void {
+export function applySeatStatuses(sections: Section[], seatsData: unknown): void {
   if (!seatsData || Array.isArray(seatsData)) return
-  Object.entries(seatsData as Record<string, string[]>).forEach(
-    ([status, seatIds]) => {
-      if (!Array.isArray(seatIds)) return
-      seatIds.forEach((seatId) => {
-        const seat = findSeatById(sections, seatId)
-        if (seat) seat.status = status
-      })
-    },
-  )
+  Object.entries(seatsData as Record<string, string[]>).forEach(([status, seatIds]) => {
+    if (!Array.isArray(seatIds)) return
+    seatIds.forEach(seatId => {
+      const seat = findSeatById(sections, seatId)
+      if (seat) seat.status = status
+    })
+  })
 }

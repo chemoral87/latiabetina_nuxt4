@@ -1,0 +1,453 @@
+<template>
+  <div class="editor2-canvas-wrap">
+    <VSheet
+      id="ae2-canvas-sheet"
+      color="black"
+      elevation="2"
+      class="pa-2 stage-container"
+      style="min-height: 500px; overflow: hidden"
+    >
+      <VStage
+        ref="konvaStage"
+        :config="adjustedStageConfig"
+        style="background-color: #000"
+        @wheel="handleWheel"
+        @dragend="handleDragEnd"
+        @touchend="handleTouchEnd"
+        @dragstart="handleDragStart"
+        @touchmove="handleTouchMove"
+        @touchstart="handleTouchStart"
+      >
+        <VLayer
+          :config="{
+            scaleX: zoomLevel,
+            scaleY: zoomLevel,
+          }"
+        >
+          <!-- Sections -->
+          <VGroup
+            v-for="section in config.sections"
+            :key="`section-${section.id}`"
+            :config="getSectionGroupConfig(section)"
+            @dragstart="onItemDragStart"
+            @dragend="(e) => onSectionDragEnd(section, e)"
+          >
+            <AuditoriumSeatGrid
+              :seat-size="seatSize"
+              :title="section.name"
+              :seats="section.seats"
+              :categories="categories"
+              :seats-distance="seatsDistance"
+            />
+            <!-- Pencil hit-target (top-right); marked as control so it doesn't drag the section -->
+            <VGroup :config="getSectionPencilConfig(section)">
+              <VCircle
+                :config="controlCircleConfig('#1976d2', (e) => onSectionEdit(section, e))"
+              />
+              <VText
+                :config="{
+                  x: 0,
+                  y: 0,
+                  text: '✎',
+                  fontSize: 14,
+                  fill: '#fff',
+                  align: 'center',
+                  verticalAlign: 'middle',
+                  offsetX: 5,
+                  offsetY: 7,
+                  listening: false,
+                }"
+              />
+            </VGroup>
+          </VGroup>
+
+          <!-- Tags -->
+          <VGroup
+            v-for="tag in config.tags"
+            :key="`tag-${tag.id}`"
+            :config="getTagGroupConfig(tag)"
+            @dragstart="onItemDragStart"
+            @dragend="(e) => onTagDragEnd(tag, e)"
+          >
+            <VRect :config="getTagBgConfig(tag)" />
+            <VText :config="getTagTextConfig(tag)" />
+            <!-- Pencil / rename -->
+            <VGroup :config="{ x: getTagWidth(tag) + 4, y: -4 }">
+              <VCircle
+                :config="controlCircleConfig('#1976d2', (e) => openTagRename(tag, e))"
+              />
+              <VText
+                :config="{
+                  x: 0,
+                  y: 0,
+                  text: '✎',
+                  fontSize: 12,
+                  fill: '#fff',
+                  offsetX: 4,
+                  offsetY: 6,
+                  listening: false,
+                }"
+              />
+            </VGroup>
+            <!-- Trash / delete -->
+            <VGroup :config="{ x: getTagWidth(tag) + 4, y: TAG_HEIGHT + 4 }">
+              <VCircle
+                :config="controlCircleConfig('#c62828', (e) => onTagDelete(tag, e))"
+              />
+              <VText
+                :config="{
+                  x: 0,
+                  y: 0,
+                  text: '✕',
+                  fontSize: 12,
+                  fill: '#fff',
+                  offsetX: 5,
+                  offsetY: 6,
+                  listening: false,
+                }"
+              />
+            </VGroup>
+          </VGroup>
+        </VLayer>
+      </VStage>
+    </VSheet>
+
+    <!-- Tag rename dialog (lightweight; task 4 may refine to an inline overlay) -->
+    <VDialog
+      id="ae2-tag-rename-dlg"
+      v-model="tagRenameOpen"
+      max-width="360"
+    >
+      <VCard id="ae2-tag-rename-card">
+        <VCardTitle class="d-flex align-center justify-space-between">
+          <span class="d-flex align-center">
+            <VIcon start color="primary">mdi-tag</VIcon>
+            Renombrar etiqueta
+          </span>
+          <VBtn
+            id="ae2-tag-rename-close-btn"
+            icon
+            variant="text"
+            @click="tagRenameOpen = false"
+          >
+            <VIcon>mdi-close</VIcon>
+          </VBtn>
+        </VCardTitle>
+        <VCardText>
+          <VTextField
+            id="ae2-tag-rename"
+            v-model="tagRenameText"
+            autofocus
+            hide-details
+            label="Texto"
+            density="compact"
+            @keyup.enter="confirmTagRename"
+          />
+        </VCardText>
+        <div class="d-flex justify-end ga-2 pa-4 pt-0">
+          <VBtn
+            id="ae2-tag-rename-cancel-btn"
+            variant="outlined"
+            @click="tagRenameOpen = false"
+          >
+            Cancelar
+          </VBtn>
+          <VBtn
+            id="ae2-tag-rename-save-btn"
+            color="primary"
+            variant="elevated"
+            @click="confirmTagRename"
+          >
+            Guardar
+          </VBtn>
+        </div>
+      </VCard>
+    </VDialog>
+  </div>
+</template>
+
+<script setup lang="ts">
+/**
+ * Overview canvas for Auditorium Editor v2: every floating section and tag as
+ * a freely draggable Konva group on a pan/zoom stage. Section pencil emits
+ * `section-edit` (task 4/6 wires the rows/cols dialog). Tag rename/delete are
+ * handled here with a small dialog + emit.
+ */
+import { COLORS, DEFAULT_SETTINGS, STAGE_CATEGORIES } from "~/constants/auditorium"
+import type { FloatingLayoutConfig, FloatingSection, FloatingTag } from "~/types/auditorium"
+import {
+  getFloatingSectionHeight,
+  getFloatingSectionWidth,
+} from "~/utils/auditoriumFloating"
+import { useUAParser } from "~/utils/userAgent"
+
+const ICON_HIT_DESKTOP = 14
+const ICON_HIT_MOBILE = 20
+const TAG_HEIGHT = 36
+const TAG_PAD_X = 16
+
+const props = defineProps<{
+  config: FloatingLayoutConfig
+  stageConfig: { width: number; height: number }
+}>()
+
+const emit = defineEmits<{
+  (e: "section-edit", section: FloatingSection): void
+  (e: "tag-delete", tag: FloatingTag): void
+  (e: "tag-rename", tag: FloatingTag, text: string): void
+}>()
+
+const uaParser = useUAParser()
+const categories = STAGE_CATEGORIES
+const seatSize = DEFAULT_SETTINGS.SEAT_SIZE
+const seatsDistance = DEFAULT_SETTINGS.SEATS_DISTANCE
+/** Touch-friendly hit radius (see Auditorium/README.md dragDistance guidance). */
+const iconHit = computed(() =>
+  uaParser.isMobile() ? ICON_HIT_MOBILE : ICON_HIT_DESKTOP,
+)
+
+const {
+  konvaStage,
+  zoomLevel,
+  isTwoFingerGesture,
+  handleWheel,
+  handleTouchStart,
+  handleTouchMove,
+  handleTouchEnd,
+  handleDragStart,
+  handleDragEnd,
+} = useKonvaStagePanZoom()
+
+const adjustedStageConfig = computed(() => ({
+  width: props.stageConfig.width,
+  height: props.stageConfig.height,
+  draggable: !isTwoFingerGesture.value,
+  dragDistance: uaParser.isMobile() ? 12 : 5,
+}))
+
+// ── Tag rename dialog state ──────────────────────────────────────────────────
+const tagRenameOpen = ref(false)
+const tagRenameText = ref("")
+const tagBeingRenamed = ref<FloatingTag | null>(null)
+
+function getSectionGroupConfig(section: FloatingSection) {
+  return {
+    x: section.x,
+    y: section.y,
+    draggable: true,
+    id: `ae2-section-${section.id}`,
+  }
+}
+
+function getSectionPencilConfig(section: FloatingSection) {
+  const w = getFloatingSectionWidth(section)
+  return {
+    x: w + 4,
+    y: -4,
+  }
+}
+
+/**
+ * Shared config for pencil/delete hit circles. Marked with `ae2Control` so a
+ * parent group's dragstart can abort when the pointer started on a control
+ * (Konva 10 pointer events still bubble into the draggable ancestor).
+ */
+function controlCircleConfig(fill: string, onActivate: (e: any) => void) {
+  return {
+    x: 0,
+    y: 0,
+    radius: iconHit.value,
+    fill,
+    opacity: 0.9,
+    ae2Control: true,
+    name: "ae2-control",
+    onMousedown: blockControlPointer,
+    onTouchstart: blockControlPointer,
+    onPointerdown: blockControlPointer,
+    onClick: onActivate,
+    onTap: onActivate,
+    onPointerclick: onActivate,
+    onMouseenter: setPointerCursor,
+    onMouseleave: clearCursor,
+  }
+}
+
+/** Abort group/stage drag when the gesture started on a control icon. */
+function onItemDragStart(e: any) {
+  try {
+    const origin = e?.target
+    if (isControlNode(origin)) {
+      e.cancelBubble = true
+      // currentTarget is the draggable group that began dragging
+      e.currentTarget?.stopDrag?.()
+      origin?.stopDrag?.()
+    }
+  } catch {
+    // ignore
+  }
+}
+
+function isControlNode(node: any): boolean {
+  let n = node
+  while (n) {
+    if (n.getAttr?.("ae2Control") || n.name?.() === "ae2-control") return true
+    n = n.getParent?.()
+  }
+  return false
+}
+
+function onSectionDragEnd(section: FloatingSection, e: any) {
+  // Ignore dragend that followed a cancelled control interaction
+  if (isControlNode(e?.target)) return
+  const node = e?.currentTarget ?? e?.target
+  if (!node || typeof node.x !== "function") return
+  section.x = Math.round(node.x())
+  section.y = Math.round(node.y())
+}
+
+function onSectionEdit(section: FloatingSection, e: any) {
+  blockControlPointer(e)
+  emit("section-edit", section)
+}
+
+function getTagWidth(tag: FloatingTag) {
+  const approx = (tag.text?.length || 1) * 8 + TAG_PAD_X * 2
+  return Math.max(80, approx)
+}
+
+function getTagGroupConfig(tag: FloatingTag) {
+  return {
+    x: tag.x,
+    y: tag.y,
+    draggable: true,
+    id: `ae2-tag-${tag.id}`,
+  }
+}
+
+function getTagBgConfig(tag: FloatingTag) {
+  return {
+    width: getTagWidth(tag),
+    height: TAG_HEIGHT,
+    fill: "#424242",
+    opacity: 0.3,
+    strokeWidth: 2,
+    stroke: COLORS.LABEL_TEXT,
+    dash: [5, 5],
+  }
+}
+
+function getTagTextConfig(tag: FloatingTag) {
+  const w = getTagWidth(tag)
+  return {
+    x: w / 2,
+    y: TAG_HEIGHT / 2,
+    text: tag.text,
+    fontSize: 14,
+    fill: COLORS.LABEL_TEXT,
+    fontStyle: "bold",
+    fontFamily: "Arial",
+    align: "center",
+    verticalAlign: "middle",
+    offsetX: getTextWidth(tag.text, 14) / 2,
+    offsetY: 7,
+  }
+}
+
+function onTagDragEnd(tag: FloatingTag, e: any) {
+  if (isControlNode(e?.target)) return
+  const node = e?.currentTarget ?? e?.target
+  if (!node || typeof node.x !== "function") return
+  tag.x = Math.round(node.x())
+  tag.y = Math.round(node.y())
+}
+
+function openTagRename(tag: FloatingTag, e: any) {
+  blockControlPointer(e)
+  tagBeingRenamed.value = tag
+  tagRenameText.value = tag.text
+  tagRenameOpen.value = true
+}
+
+function confirmTagRename() {
+  const tag = tagBeingRenamed.value
+  if (!tag) {
+    tagRenameOpen.value = false
+    return
+  }
+  const text = (tagRenameText.value || "").trim() || "Etiqueta"
+  tag.text = text
+  emit("tag-rename", tag, text)
+  tagRenameOpen.value = false
+  tagBeingRenamed.value = null
+}
+
+function onTagDelete(tag: FloatingTag, e: any) {
+  blockControlPointer(e)
+  emit("tag-delete", tag)
+}
+
+function blockControlPointer(e: any) {
+  try {
+    if (e?.evt) {
+      e.evt.stopPropagation?.()
+      e.evt.preventDefault?.()
+    }
+    if (e) e.cancelBubble = true
+    // Stop any ancestor that already began dragging from this pointer
+    let node = e?.target
+    while (node) {
+      if (typeof node.draggable === "function" && node.draggable()) {
+        node.stopDrag?.()
+      }
+      node = node.getParent?.()
+    }
+  } catch {
+    // ignore
+  }
+}
+
+function setPointerCursor(e: any) {
+  try {
+    e.target.getStage().container().style.cursor = "pointer"
+  } catch {
+    // ignore
+  }
+}
+
+function clearCursor(e: any) {
+  try {
+    e.target.getStage().container().style.cursor = "default"
+  } catch {
+    // ignore
+  }
+}
+
+let _textMeasureCtx: CanvasRenderingContext2D | null = null
+function getTextWidth(text: string, fontSize = 14, fontFamily = "Arial") {
+  try {
+    if (typeof document === "undefined") return text.length * (fontSize * 0.6)
+    if (!_textMeasureCtx) {
+      const canvas = document.createElement("canvas")
+      _textMeasureCtx = canvas.getContext("2d")
+    }
+    if (!_textMeasureCtx) return text.length * (fontSize * 0.6)
+    _textMeasureCtx.font = `${fontSize}px ${fontFamily}`
+    return _textMeasureCtx.measureText(text || "").width
+  } catch {
+    return (text || "").length * (fontSize * 0.6)
+  }
+}
+</script>
+
+<style scoped>
+.stage-container {
+  position: relative;
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .stage-container {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+</style>

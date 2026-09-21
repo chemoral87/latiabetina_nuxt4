@@ -39,38 +39,16 @@
               </template>
 
               <template v-else>
-                <v-text
-                  v-for="rowIdx in getRowCount(sub)"
-                  :key="`row-label-${rowIdx}`"
-                  :config="getRowLabelConfig(rowIdx - 1)"
+                <AuditoriumSeatGrid
+                  :title="sub.name"
+                  :categories="categories"
+                  :seats="sub.seats ?? []"
+                  :seat-size="settings.SEAT_SIZE"
+                  :seats-distance="settings.SEATS_DISTANCE"
+                  @seat-click="handleSeatClick"
+                  @seat-hover="handleSeatHover"
+                  @seat-leave="handleSeatLeave"
                 />
-                <v-text
-                  v-for="colIdx in getMaxColumns(sub)"
-                  :key="`col-label-${colIdx}`"
-                  :config="getColLabelConfig(colIdx - 1, sub)"
-                />
-                <v-rect :config="getSubsectionRectConfig(sub)" />
-                <v-text :config="getSubsectionTitleConfig(sub)" />
-
-                <template
-                  v-for="seat in getSubsectionSeats(sub)"
-                  :key="seat.id"
-                >
-                  <v-group :config="{ x: seat.x, y: seat.y }">
-                    <v-circle
-                      :config="
-                        Object.assign({}, getSeatConfig(seat), {
-                          x: 0,
-                          y: 0,
-                          onMouseenter: handleSeatHover,
-                          onMouseleave: handleSeatLeave,
-                          onClick: (e) => handleSeatClick(seat, e),
-                          onTap: (e) => handleSeatClick(seat, e),
-                        })
-                      "
-                    />
-                  </v-group>
-                </template>
               </template>
             </v-group>
           </template>
@@ -308,29 +286,6 @@ function getSubsectionPosition(section: Section, subIdx: number) {
   return { x, y: props.settings.SECTION_TOP_PADDING };
 }
 
-function getSubsectionRectConfig(sub: Subsection) {
-  return {
-    width: getSubsectionWidth(sub),
-    height: getSubsectionHeight(sub),
-    fill: COLORS.SUBSECTION_BG,
-    stroke: "green",
-    strokeWidth: 2,
-  };
-}
-
-function getSubsectionTitleConfig(sub: Subsection) {
-  return {
-    x: 0,
-    y: -15,
-    text: sub.name,
-    fontSize: 11,
-    fill: "#fff",
-    fontFamily: "Arial",
-    align: "left",
-    width: getSubsectionWidth(sub),
-  };
-}
-
 function getSubsectionLabelBgConfig(sub: Subsection, section: Section) {
   return {
     width: sub.width || 100,
@@ -363,112 +318,6 @@ function getSubsectionLabelTextConfig(sub: Subsection, section: Section) {
     align: "center",
     offsetX: width / 2 - 5,
     offsetY: 7,
-  };
-}
-
-function getRowLabelConfig(rowIdx: number) {
-  return {
-    x: -12,
-    y: rowIdx * seatSpacing.value + props.settings.SEAT_SIZE / 2,
-    text: (rowIdx + 1).toString(),
-    fontSize: 8,
-    fill: "yellow",
-    fontFamily: "Arial",
-    align: "right",
-    verticalAlign: "middle",
-    offsetY: 3,
-  };
-}
-
-function getRowCount(sub: Subsection) {
-  return sub.seats?.length ?? 0;
-}
-
-function getMaxColumns(sub: Subsection) {
-  if (!sub || !Array.isArray(sub.seats) || sub.seats.length === 0) return 0;
-  return Math.max(...sub.seats.map((row) => (row ? row.length : 0)));
-}
-
-function getColLabelConfig(colIdx: number, sub: Subsection) {
-  const labelSpacing = seatSpacing.value; // small extra gap between column letters
-  return {
-    x: colIdx * labelSpacing + props.settings.SEAT_SIZE / 2,
-    y: getSubsectionHeight(sub) + 5,
-    text: String.fromCharCode(65 + colIdx),
-    fontSize: 8,
-    fill: "yellow",
-    fontFamily: "Arial",
-    align: "center",
-    offsetX: 3,
-  };
-}
-
-function getSubsectionSeats(sub: Subsection) {
-  const allSeats: Seat[] = [];
-  sub.seats?.forEach((row, rowIdx) => {
-    row.forEach((seat, colIdx) => {
-      if (seat && seat.state !== "invisible") {
-        allSeats.push({
-          ...seat,
-          x: colIdx * seatSpacing.value + props.settings.SEAT_SIZE / 2,
-          y: rowIdx * seatSpacing.value + props.settings.SEAT_SIZE / 2,
-        });
-      }
-    });
-  });
-  return allSeats;
-}
-
-function getSeatConfig(seat: Seat) {
-  const isReserved = seat.state === "reserved";
-  const isSelected = seat.state === "selected";
-  const category = seat.category ? String(seat.category).toLowerCase() : null;
-  const classStrokeMap = CLASS_STROKE_MAP;
-
-  let stroke = isSelected ? COLORS.SEAT_SELECTED : "#757575";
-  let strokeWidth = 1;
-
-  if (category) {
-    // prefer category color from passed `categories` prop when available
-    try {
-      const def = categories.value.find(
-        (c) =>
-          String(c.label).toLowerCase() === category ||
-          String(c.value).toLowerCase() === category,
-      );
-      // Do NOT apply border when the matched category represents "Ninguno" (value === null)
-      if (
-        def &&
-        typeof def.value !== "undefined" &&
-        def.value !== null &&
-        def.fill
-      ) {
-        stroke = def.fill;
-        strokeWidth = 4;
-      } else if (classStrokeMap[category]) {
-        stroke = classStrokeMap[category];
-        strokeWidth = 4;
-      }
-    } catch (err) {
-      if (classStrokeMap[category]) {
-        stroke = classStrokeMap[category];
-        strokeWidth = 4;
-      }
-    }
-  }
-
-  return {
-    x: seat.x,
-    y: seat.y,
-    radius: props.settings.SEAT_SIZE / 2,
-    fill: isSelected
-      ? COLORS.SEAT_SELECTED
-      : isReserved
-        ? COLORS.SEAT_RESERVED
-        : COLORS.SEAT_FREE,
-    stroke,
-    strokeWidth,
-    opacity: isReserved ? 0.6 : 1,
   };
 }
 
@@ -524,7 +373,8 @@ function getSectionHeight(section: Section) {
 }
 
 // Events & interactions
-function handleSeatClick(seat: Seat, e: KonvaEvent) {
+function handleSeatClick(payload: { seat: Seat; event?: KonvaEvent }) {
+  const { seat, event: e } = payload;
   // stop Konva/native event propagation so stage click doesn't immediately close the tooltip
   try {
     if (e && e.evt && typeof e.evt.stopPropagation === "function") {
