@@ -3,7 +3,7 @@
     <v-rect :config="rectConfig" />
     <v-text v-if="showStats" :config="statsCountConfig" />
     <v-text v-if="showStats" :config="statsPercentConfig" />
-    <v-text v-if="title" :config="titleConfig" style="position: absolute; top: calc(SECTION_BOX.STATS_Y + 15px); transform: translateY(calc(flatSeats[0]?.y * 0.5));"/>
+    <v-text v-if="title" :config="titleConfig" />
 
     <template v-if="showLabels">
       <v-text
@@ -32,6 +32,7 @@
             })
           "
         />
+        <v-path v-if="getIconPathConfig(seat)" :config="getIconPathConfig(seat)" />
       </v-group>
     </template>
   </v-group>
@@ -62,6 +63,8 @@ import {
   getPercentageColor,
   SECTION_BOX,
   STATUS_COLORS,
+  STATUS_CONFIG,
+  STATUS_ICONS,
   type StageCategory,
 } from "~/constants/auditorium"
 
@@ -255,6 +258,26 @@ const flatSeats = computed<Seat[]>(() => {
   })
   return allSeats
 })
+
+function getIconPathConfig(seat: Seat) {
+  const status = seat.status ? String(seat.status).toLowerCase() : null
+  const path = status ? STATUS_ICONS[status] : ""
+  if (!path) return null
+
+  const radius = props.seatSize / 2
+  const iconScale = STATUS_CONFIG[status]?.icon_scale || 1.8
+  const scale = (radius * iconScale) / 24
+  const offset = (24 * scale) / 2
+  return {
+    data: path,
+    fill: "#fff",
+    scaleX: scale,
+    scaleY: scale,
+    x: -offset,
+    y: -offset,
+    listening: false,
+  }
+}
 
 function getSeatConfig(seat: Seat) {
   const isReserved = seat.state === "reserved"

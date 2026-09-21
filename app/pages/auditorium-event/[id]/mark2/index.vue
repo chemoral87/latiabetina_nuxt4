@@ -24,7 +24,10 @@
         <VSpacer />
         <span class="text-subtitle-2">{{ totalSeatsWithStatus }}/{{ totalSeats }}</span>
         <span class="text-subtitle-2 ml-1" :style="{ color: percentageColor }">{{ percentageTotalSeats }}%</span>
-        <AuditoriumEventMarkStatsPanel :sections="statsSections" />
+        <AuditoriumEventMarkStatsPanel
+          v-if="!selectedSectionId"
+          :sections="statsSections"
+        />
 
         <!-- Icon only: the header must stay on one line on phones. -->
         <VBtn
@@ -61,6 +64,18 @@
           <VIcon>mdi-arrow-expand-vertical</VIcon>
           Fit
         </VBtn>
+        <VBtn
+          v-if="selectedSectionId"
+          id="aud-stageop-history-btn"
+          class="ml-1"
+          size="small"
+          color="success"
+          title="Historial de asientos"
+          @click="openHistory"
+        >
+          <VIcon start>mdi-history</VIcon>
+          Hist
+        </VBtn>
       </div>
 
       <div :style="{ height: `${headerHeight}px` }" />
@@ -85,6 +100,14 @@
         :count="selectedSeatIds.length"
         :status-config="activeStatusConfig"
         @set-status="setSeatsStatus"
+      />
+
+      <AuditoriumSeatsHistory
+        id="cmp-auditorium-seats-history"
+        v-model="historyDialog"
+        :history-log="historyLog"
+        :history-users="historyUsers"
+        :history-loading="historyLoading"
       />
     </div>
   </VContainer>
@@ -111,7 +134,7 @@ definePageMeta({
 })
 
 const route = useRoute()
-const { AuditoriumEvent, AuditoriumEventSeat } = useRepository()
+const { AuditoriumEvent, AuditoriumEventSeat, AuditoriumEventSeatLog } = useRepository()
 const { mainRect } = useLayout()
 const { $echo } = useNuxtApp()
 
@@ -134,6 +157,10 @@ const eventAuditorium = ref<Record<string, unknown>>({})
 const config = ref<FloatingLayoutConfig>({ v: 2, sections: [], tags: [] })
 const stageConfig = ref({ width: 900, height: 700 })
 const last_timestamp = ref<string | number | null>(null)
+const historyDialog = ref(false)
+const historyLog = ref<Record<string, unknown>[]>([])
+const historyUsers = ref<Record<string, unknown>[]>([])
+const historyLoading = ref(false)
 
 let _realtimeCleanup: (() => void) | null = null
 
@@ -293,6 +320,25 @@ function onSectionClick(section: { id: string }) {
 function exitSection() {
   selectedSectionId.value = null
   selectedSeatIds.value = []
+}
+
+async function openHistory() {
+  historyDialog.value = true
+  historyLoading.value = true
+  historyLog.value = []
+  const prefix = selectedSectionId.value
+  try {
+    const response = await AuditoriumEventSeatLog.index({
+      auditorium_event_id: eventAuditorium.value.id,
+      section_prefix: prefix ? `${prefix}-` : null,
+    })
+    historyLog.value = (response as any)?.seatsLog || []
+    historyUsers.value = (response as any)?.users || []
+  } catch {
+    /* ignore */
+  } finally {
+    historyLoading.value = false
+  }
 }
 
 function onSeatClick(payload: {
