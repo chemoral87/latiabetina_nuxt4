@@ -39,7 +39,7 @@
       </template>
 
       <template #[`item.church_member_phone`]="{ item }">
-        {{ item.church_member?.cellphone || "—" }}
+        {{ maskedCellphone(item.church_member?.cellphone) }}
       </template>
 
       <template #[`item.medium`]="{ item }">
@@ -147,16 +147,21 @@ function mediumIcon(medium: string): string {
 }
 
 function mediumLabel(medium: string): string {
-  const labels: Record<string, string> = {
-    whatsapp: "WhatsApp",
-    llamada: "Llamada",
-    presencial: "Presencial",
-    sms: "SMS",
-  };
-  return labels[medium] || medium;
-}
+    const labels: Record<string, string> = {
+      whatsapp: "WhatsApp",
+      llamada: "Llamada",
+      presencial: "Presencial",
+      sms: "SMS",
+    };
+    return labels[medium] || medium;
+  }
 
-function onUpdateOptions(val: Record<string, unknown>) {
+  function maskedCellphone(value: unknown): string {
+    const digits = String(value ?? "").replace(/\D/g, "");
+    return digits ? `-${digits.slice(-6)}` : "—";
+  }
+
+  function onUpdateOptions(val: Record<string, unknown>) {
   emit("sorting", val);
 }
 </script>
