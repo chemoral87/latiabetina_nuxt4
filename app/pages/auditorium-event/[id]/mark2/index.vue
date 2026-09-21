@@ -27,6 +27,9 @@
           <span class="text-subtitle-2 ml-1" :style="{ color: percentageColor }"
             >{{ percentageTotalSeats }}%</span
           >
+        </div>
+
+        <div class="d-flex align-center justify-end mt-1">
           <VBtn
             v-if="selectedSectionId"
             id="auev-mark2-main-btn"
@@ -37,12 +40,10 @@
             title="Volver a todas las secciones"
             @click="exitSection"
           >
-            <VIcon>mdi-arrow-left</VIcon>
+            <VIcon>mdi-bird</VIcon>
           </VBtn>
-        </div>
+          <VSpacer />
 
-        <div class="d-flex align-center justify-end mt-1">
-          <AuditoriumEventMarkStatsPanel v-if="!selectedSectionId" :sections="statsSections" />
           <VBtn
             id="auev-mark2-fit-width-btn"
             class="ml-2"
@@ -77,6 +78,7 @@
             <VIcon start>mdi-history</VIcon>
             Hist
           </VBtn>
+          <AuditoriumEventMarkStatsPanel v-if="!selectedSectionId" :sections="statsSections" />
         </div>
       </div>
 
@@ -163,16 +165,16 @@
   const historyLog = ref<Record<string, unknown>[]>([])
   const historyUsers = ref<Record<string, unknown>[]>([])
   const historyLoading = ref(false)
-const lastClickClientY = ref<number | null>(null)
+  const lastClickClientY = ref<number | null>(null)
 
-const panelVerticalPos = computed(() => {
-  if (lastClickClientY.value === null || typeof window === "undefined") {
-    return { top: null as string | null, bottom: "20px" }
-  }
-  return lastClickClientY.value < window.innerHeight / 2
-    ? { top: null as string | null, bottom: "20px" }
-    : { top: "70px", bottom: null as string | null }
-})
+  const panelVerticalPos = computed(() => {
+    if (lastClickClientY.value === null || typeof window === 'undefined') {
+      return { top: null as string | null, bottom: '20px' }
+    }
+    return lastClickClientY.value < window.innerHeight / 2
+      ? { top: null as string | null, bottom: '20px' }
+      : { top: '70px', bottom: null as string | null }
+  })
 
   let _realtimeCleanup: (() => void) | null = null
 
@@ -287,8 +289,8 @@ const panelVerticalPos = computed(() => {
   // what keeps the content inside the screen — the old fixed 900x700 desktop
   // stage was narrower than the window, so Fit Height zoomed the content past the
   // stage edge and cropped the outer sections.
-const CANVAS_CHROME_X = 0
-const CANVAS_CHROME_Y = 0
+  const CANVAS_CHROME_X = 0
+  const CANVAS_CHROME_Y = 0
 
   function updateStageSize() {
     const appBarHeight = mainRect.value?.top ?? 0
@@ -357,14 +359,14 @@ const CANVAS_CHROME_Y = 0
     // section, exactly like the v1 mark page.
     if (!selectedSectionId.value) return
 
-  const evt = payload.event as any
-  const nativeEvent = evt?.evt ?? evt
-  const touch = nativeEvent?.changedTouches?.[0] ?? nativeEvent?.touches?.[0]
-  const clientY = nativeEvent?.clientY ?? touch?.clientY
-  if (typeof clientY === "number") lastClickClientY.value = clientY
+    const evt = payload.event as any
+    const nativeEvent = evt?.evt ?? evt
+    const touch = nativeEvent?.changedTouches?.[0] ?? nativeEvent?.touches?.[0]
+    const clientY = nativeEvent?.clientY ?? touch?.clientY
+    if (typeof clientY === 'number') lastClickClientY.value = clientY
 
-  const seatId = payload.seat.id
-  selectedSeatIds.value = selectedSeatIds.value.includes(seatId)
+    const seatId = payload.seat.id
+    selectedSeatIds.value = selectedSeatIds.value.includes(seatId)
       ? selectedSeatIds.value.filter(id => id !== seatId)
       : [...selectedSeatIds.value, seatId]
   }
@@ -456,14 +458,14 @@ const CANVAS_CHROME_Y = 0
 
 <style>
   html:has(#auev-mark2-page),
-body:has(#auev-mark2-page) {
-  overflow: hidden;
-  background: #000 !important;
-}
+  body:has(#auev-mark2-page) {
+    overflow: hidden;
+    background: #000 !important;
+  }
 
-.v-main:has(#auev-mark2-page) {
-  background: #000 !important;
-}
+  .v-main:has(#auev-mark2-page) {
+    background: #000 !important;
+  }
   #auev-mark2-page {
     padding: 0 !important;
   }

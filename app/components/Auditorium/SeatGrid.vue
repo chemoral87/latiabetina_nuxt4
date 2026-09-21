@@ -188,7 +188,7 @@
   }))
 
   const statsPercentConfig = computed(() => ({
-    x: props.boxed ? 84 : FLOATING_SECTION_BOX.STATS_PERCENT_X,
+    x: props.boxed ? 45 : FLOATING_SECTION_BOX.STATS_PERCENT_X,
     y: props.boxed ? -8 : FLOATING_SECTION_BOX.STATS_Y,
     width: props.boxed ? 54 : undefined,
     align: props.boxed ? 'left' : undefined,
