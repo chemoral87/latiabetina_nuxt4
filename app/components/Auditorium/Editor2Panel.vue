@@ -29,18 +29,77 @@
       </VBtn>
     </VCol>
   </VRow>
+
+  <VSheet v-if="sections.length > 0" rounded color="white" class="pa-3 mb-3">
+    <div class="text-subtitle-2 mb-2">Alinear secciones</div>
+
+    <div
+      v-for="section in sections"
+      :key="section.id"
+      class="d-flex align-center mb-1"
+    >
+      <VCheckbox
+        hide-details
+        density="compact"
+        class="flex-grow-0"
+        :model-value="selectedIds.includes(section.id)"
+        @update:model-value="toggleSection(section.id)"
+      />
+      <span class="text-body-2 ml-1 text-truncate">{{ section.name }}</span>
+    </div>
+
+    <VDivider class="my-2" />
+
+    <div class="d-flex flex-wrap ga-1">
+      <VTooltip v-for="action in alignActions" :key="action.key" location="top">
+        <template #activator="{ props: tipProps }">
+          <VBtn
+            :id="`ae2-align-${action.key}-btn`"
+            v-bind="tipProps"
+            icon
+            size="small"
+            variant="text"
+            :disabled="selectedIds.length < 2"
+            @click="emit('align', action.key)"
+          >
+            <VIcon size="18">{{ action.icon }}</VIcon>
+          </VBtn>
+        </template>
+        <span>{{ action.label }}</span>
+      </VTooltip>
+    </div>
+  </VSheet>
 </template>
 
 <script setup lang="ts">
-/**
- * Trimmed side-panel controls for Auditorium Editor v2.
- * Only add-section / add-tag — no CSV/JSON toggle, no global seat sliders,
- * no clear-categories (those belonged to the v1 stacking editor).
- */
+import type { FloatingSection } from "~/types/auditorium"
+
+const props = defineProps<{
+  sections: FloatingSection[]
+  selectedIds: string[]
+}>()
+
 const emit = defineEmits<{
   (e: "add-section"): void
   (e: "add-tag"): void
+  (e: "align", key: string): void
+  (e: "toggle-section", id: string): void
 }>()
 
 const { mobile, mdAndUp } = useDisplay()
+
+const alignActions = [
+  { key: "left", icon: "mdi-format-align-left", label: "Bordes izquierdos" },
+  { key: "center-h", icon: "mdi-format-align-center", label: "Centros horizontales" },
+  { key: "right", icon: "mdi-format-align-right", label: "Bordes derechos" },
+  { key: "top", icon: "mdi-format-align-top", label: "Bordes superiores" },
+  { key: "center-v", icon: "mdi-format-align-middle", label: "Centros verticales" },
+  { key: "bottom", icon: "mdi-format-align-bottom", label: "Bordes inferiores" },
+  { key: "dist-h", icon: "mdi-view-column", label: "Distribuir horizontal" },
+  { key: "dist-v", icon: "mdi-view-split-vertical", label: "Distribuir vertical" },
+]
+
+function toggleSection(id: string) {
+  emit("toggle-section", id)
+}
 </script>

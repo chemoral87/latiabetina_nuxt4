@@ -37,8 +37,12 @@
 
       <VCol :md="3" cols="12" :order="mdAndUp ? 1 : 2">
         <AuditoriumEditor2Panel
+          :sections="config.sections"
+          :selected-ids="selectedSectionIds"
           @add-tag="addTag"
+          @align="alignSections"
           @add-section="addSection"
+          @toggle-section="toggleSection"
         />
       </VCol>
     </VRow>
@@ -97,6 +101,64 @@ const sectionDialogOpen = ref(false)
 const editingSection = ref<FloatingSection | null>(null)
 const sectionDeleteDialog = ref(false)
 const sectionPendingDelete = ref<FloatingSection | null>(null)
+const selectedSectionIds = ref<string[]>([])
+
+function toggleSection(id: string) {
+  const idx = selectedSectionIds.value.indexOf(id)
+  if (idx >= 0) selectedSectionIds.value.splice(idx, 1)
+  else selectedSectionIds.value.push(id)
+}
+
+function alignSections(key: string) {
+  const all = config.value.sections
+  const sel = selectedSectionIds.value.map((id) => all.find((s) => s.id === id)).filter(Boolean) as FloatingSection[]
+  if (sel.length < 2) return
+
+  type BBox = { left: number; right: number; top: number; bottom: number; cx: number; cy: number }
+  const box = (s: FloatingSection): BBox => {
+    const w = getFloatingSectionWidth(s)
+    const h = getFloatingSectionHeight(s)
+    return { left: s.x, right: s.x + w, top: s.y, bottom: s.y + h, cx: s.x + w / 2, cy: s.y + h / 2 }
+  }
+
+  const boxes = sel.map(box)
+
+  if (key === "left") {
+    const target = Math.min(...boxes.map((b) => b.left))
+    sel.forEach((s, i) => { s.x = target })
+  } else if (key === "center-h") {
+    const avgCx = boxes.reduce((sum, b) => sum + b.cx, 0) / boxes.length
+    sel.forEach((s, i) => { s.x = avgCx - getFloatingSectionWidth(s) / 2 })
+  } else if (key === "right") {
+    const target = Math.max(...boxes.map((b) => b.right))
+    sel.forEach((s, i) => { s.x = target - getFloatingSectionWidth(s) })
+  } else if (key === "top") {
+    const target = Math.min(...boxes.map((b) => b.top))
+    sel.forEach((s, i) => { s.y = target })
+  } else if (key === "center-v") {
+    const avgCy = boxes.reduce((sum, b) => sum + b.cy, 0) / boxes.length
+    sel.forEach((s, i) => { s.y = avgCy - getFloatingSectionHeight(s) / 2 })
+  } else if (key === "bottom") {
+    const target = Math.max(...boxes.map((b) => b.bottom))
+    sel.forEach((s, i) => { s.y = target - getFloatingSectionHeight(s) })
+  } else if (key === "dist-h") {
+    const constantGap = 40 // Fixed gap between sections
+    const sorted = [...sel].sort((a, b) => a.x - b.x)
+    let cursor = sorted[0].x + getFloatingSectionWidth(sorted[0]) + constantGap
+    for (let i = 1; i < sorted.length; i++) {
+      sorted[i].x = cursor
+      cursor += getFloatingSectionWidth(sorted[i]) + constantGap
+    }
+  } else if (key === "dist-v") {
+    const constantGap = 40 // Fixed gap between sections
+    const sorted = [...sel].sort((a, b) => a.y - b.y)
+    let cursor = sorted[0].y + getFloatingSectionHeight(sorted[0]) + constantGap
+    for (let i = 1; i < sorted.length; i++) {
+      sorted[i].y = cursor
+      cursor += getFloatingSectionHeight(sorted[i]) + constantGap
+    }
+  }
+}
 
 const sectionDeleteDialogProp = computed(() => ({
   title: "Eliminar sección",
@@ -239,7 +301,7 @@ async function saveAuditorium() {
       config: configString,
     }
     saving.value = true
-    await withNotify(Auditorium.update(auditorium.value.id as number, payload))
+    await Auditorium.update(auditorium.value.id as number, payload)
   } catch (e) {
     console.error(e)
   } finally {
