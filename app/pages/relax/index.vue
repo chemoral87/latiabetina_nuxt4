@@ -11,7 +11,6 @@
     <VRow class="mb-1" justify="center" density="compact">
       <VCol md="7" cols="12">
         <RelaxAnimation
-          ref="animationRef"
           :expansion="expansion"
           :immobile1="immobile1"
           :immobile2="immobile2"
@@ -83,9 +82,6 @@
   const phaseStartedAt = ref(0)
   const phaseDuration = ref(0)
   const stepRemaining = ref(0)
-  const animationRef = ref<{ circleEl: HTMLElement | null; innerCircleEl: HTMLElement | null } | null>(null)
-  const circleEl = computed(() => animationRef.value?.circleEl ?? null)
-  const innerCircleEl = computed(() => animationRef.value?.innerCircleEl ?? null)
 
   const exerciseOptions: { title: string; value: string }[] = [
     { title: 'Relax', value: 'relax' },
@@ -193,27 +189,12 @@
     stepRemaining.value = 0
   }
 
-  function resetCircle() {
-    const circle = circleEl.value
-    const innerCircle = innerCircleEl.value
-    if (circle) {
-      circle.style.transitionDuration = '0.5s'
-      circle.style.backgroundColor = '#2E7D32'
-      circle.style.transform = 'scale(1)'
-    }
-    if (innerCircle) {
-      innerCircle.style.transitionDuration = '0.5s'
-      innerCircle.style.transform = 'scale(1)'
-    }
-  }
-
   function completeAnimation() {
     isPlaying.value = false
     clearInterval(timerInterval.value ?? undefined)
     timerInterval.value = null
     stopCountdown()
     animationState.value = 'idle'
-    resetCircle()
     const { playRelaxSuccess } = useRelaxAudio()
     void playRelaxSuccess()
     showCompletionDialog.value = true
@@ -252,7 +233,6 @@
     elapsedSeconds.value = 0
     stopCountdown()
     animationState.value = 'idle'
-    resetCircle()
   }
 
   function playBeep() {
@@ -270,44 +250,10 @@
     }[state] ?? 'initialContract'
   }
 
-function applyCircleStyle(transitionDuration: string, timing: string, backgroundColor: string, transform: string, innerTransform: string) {
-     const circle = circleEl.value
-     const innerCircle = innerCircleEl.value
-     if (!circle || !innerCircle) return
-     circle.style.transitionProperty = 'transform, background-color'
-     circle.style.webkitTransitionProperty = 'transform, background-color'
-     circle.style.transitionDuration = transitionDuration
-     circle.style.webkitTransitionDuration = transitionDuration
-     circle.style.transitionTimingFunction = timing
-     circle.style.webkitTransitionTimingFunction = timing
-     innerCircle.style.transitionProperty = 'transform'
-     innerCircle.style.webkitTransitionProperty = 'transform'
-     innerCircle.style.transitionDuration = transitionDuration
-     innerCircle.style.webkitTransitionDuration = transitionDuration
-     innerCircle.style.transitionTimingFunction = timing
-     innerCircle.style.webkitTransitionTimingFunction = timing
-     void circle.offsetHeight
-     circle.style.backgroundColor = backgroundColor
-     circle.style.transform = transform
-     circle.style.webkitTransform = transform
-     innerCircle.style.transform = innerTransform
-     innerCircle.style.webkitTransform = innerTransform
-   }
-
   function animateCircle(nextState: string) {
     if (!isPlaying.value) return
     setPhase(nextState)
     playBeep()
-    const duration = phaseDuration.value
-    const styles: Record<string, [string, string, string, string]> = {
-      initialContract: ['ease-in', '#FF9800', 'scale(0.75)', 'scale(1.3)'],
-      expansion: ['ease-out', '#1565C0', 'scale(3)', 'scale(0.777)'],
-      immobile1: ['linear', '#2E7D32', 'scale(3)', 'scale(0.777)'],
-      contraction: ['ease-in-out', '#C62828', 'scale(1)', 'scale(1)'],
-      immobile2: ['linear', '#2E7D32', 'scale(1)', 'scale(1)'],
-    }
-    const [timing, color, transform, innerTransform] = styles[nextState]
-    applyCircleStyle(`${duration}s`, timing, color, transform, innerTransform)
   }
 
   let visibilityCleanup: (() => void) | null = null

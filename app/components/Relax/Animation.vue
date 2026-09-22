@@ -48,8 +48,8 @@
 
       <VCol cols="5">
         <div class="animation-wrapper">
-          <div :ref="circleEl" class="circle-animation">
-            <div :ref="innerCircleEl" class="inner-circle-animation"></div>
+          <div :style="circleStyle" class="circle-animation">
+            <div :style="innerCircleStyle" class="inner-circle-animation"></div>
           </div>
         </div>
       </VCol>
@@ -58,8 +58,6 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue'
-
   const props = defineProps<{
     isPlaying: boolean
     initialContract: number
@@ -73,8 +71,6 @@
   }>()
 
   const emit = defineEmits<{ toggle: [] }>()
-  const circleEl = ref<HTMLElement | null>(null)
-  const innerCircleEl = ref<HTMLElement | null>(null)
 
   const statuses = computed(() => [
     { key: 'initialContract', duration: props.initialContract, icon: 'mdi-arrow-collapse-all', label: 'Contracción inicial', activeColor: 'orange-darken-2' },
@@ -84,7 +80,48 @@
     { key: 'immobile2', duration: props.immobile2, icon: 'mdi-timer-sand', label: 'Inmóvil 2', activeColor: 'green-darken-2' },
   ])
 
-  defineExpose({ circleEl, innerCircleEl })
+  const phaseDurationMap: Record<string, () => number> = {
+    initialContract: () => props.initialContract,
+    expansion: () => props.expansion,
+    immobile1: () => props.immobile1,
+    contraction: () => props.contraction,
+    immobile2: () => props.immobile2,
+  }
+
+  const phaseStyles: Record<string, { timing: string; color: string; transform: string; innerTransform: string }> = {
+    initialContract: { timing: 'ease-in', color: '#FF9800', transform: 'scale(0.75)', innerTransform: 'scale(1.3)' },
+    expansion: { timing: 'ease-out', color: '#1565C0', transform: 'scale(3)', innerTransform: 'scale(0.777)' },
+    immobile1: { timing: 'linear', color: '#2E7D32', transform: 'scale(3)', innerTransform: 'scale(0.777)' },
+    contraction: { timing: 'ease-in-out', color: '#C62828', transform: 'scale(1)', innerTransform: 'scale(1)' },
+    immobile2: { timing: 'linear', color: '#2E7D32', transform: 'scale(1)', innerTransform: 'scale(1)' },
+  }
+
+  const circleStyle = computed(() => {
+    const state = props.animationState
+    const phase = phaseStyles[state]
+    if (!phase) return { transitionDuration: '0.5s', backgroundColor: '#2E7D32', transform: 'scale(1)' }
+    const duration = phaseDurationMap[state]?.() ?? 0
+    return {
+      transitionProperty: 'transform, background-color',
+      transitionDuration: `${duration}s`,
+      transitionTimingFunction: phase.timing,
+      backgroundColor: phase.color,
+      transform: phase.transform,
+    }
+  })
+
+  const innerCircleStyle = computed(() => {
+    const state = props.animationState
+    const phase = phaseStyles[state]
+    if (!phase) return {}
+    const duration = phaseDurationMap[state]?.() ?? 0
+    return {
+      transitionProperty: 'transform',
+      transitionDuration: `${duration}s`,
+      transitionTimingFunction: phase.timing,
+      transform: phase.innerTransform,
+    }
+  })
 </script>
 
 <style scoped>
