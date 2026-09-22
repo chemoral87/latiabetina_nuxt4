@@ -274,10 +274,14 @@ function applyCircleStyle(transitionDuration: string, timing: string, background
      const circle = circleEl.value
      const innerCircle = innerCircleEl.value
      if (!circle || !innerCircle) return
+     circle.style.transitionProperty = 'transform, background-color'
+     circle.style.webkitTransitionProperty = 'transform, background-color'
      circle.style.transitionDuration = transitionDuration
      circle.style.webkitTransitionDuration = transitionDuration
      circle.style.transitionTimingFunction = timing
      circle.style.webkitTransitionTimingFunction = timing
+     innerCircle.style.transitionProperty = 'transform'
+     innerCircle.style.webkitTransitionProperty = 'transform'
      innerCircle.style.transitionDuration = transitionDuration
      innerCircle.style.webkitTransitionDuration = transitionDuration
      innerCircle.style.transitionTimingFunction = timing

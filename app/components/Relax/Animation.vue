@@ -88,9 +88,56 @@
 </script>
 
 <style scoped>
-  .animation-wrapper { width: 100%; aspect-ratio: 1 / 1; display: flex; justify-content: center; align-items: center; clip-path: inset(0); }
-  .circle-animation { width: 30%; height: 30%; border-radius: 50%; background-color: #2E7D32; position: relative; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition-property: transform, background-color; transition-duration: 0.5s; transition-timing-function: ease-out; will-change: transform; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-  .inner-circle-animation { width: 50%; height: 50%; border-radius: 50%; background-color: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition-property: transform; transition-duration: 0.5s; transition-timing-function: ease-out; will-change: transform; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+  .animation-wrapper {
+    width: min(52vw, 220px);
+    height: min(52vw, 220px);
+    max-width: 220px;
+    max-height: 220px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-inline: auto;
+    overflow: visible;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .circle-animation {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #2E7D32;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition-property: transform, background-color;
+    transition-duration: 0.5s;
+    transition-timing-function: ease-out;
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform-origin: center center;
+    transform: scale(1);
+    -webkit-transform: scale(1);
+  }
+
+  .inner-circle-animation {
+    width: 50%;
+    height: 50%;
+    border-radius: 50%;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition-property: transform;
+    transition-duration: 0.5s;
+    transition-timing-function: ease-out;
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform-origin: center center;
+  }
+
   .rel-countdown { font-size: 0.75rem; font-weight: 600; opacity: 0.9; margin-left: 4px; font-variant-numeric: tabular-nums; }
   @supports not (aspect-ratio: 1/1) { .animation-wrapper { padding-bottom: 100%; height: 0; } }
 </style>

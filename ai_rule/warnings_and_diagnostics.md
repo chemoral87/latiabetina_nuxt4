@@ -127,3 +127,14 @@ See section 5 above.
 7. Pages with `VDataTableServer` must not manually call the same fetch that `@update:options` triggers
 8. Never run `migrate:fresh` — always `php artisan migrate`
 9. In `<script setup>` functions, always access props via `props.xxx`
+10. For CSS transitions/transforms that must animate in Safari (especially on iOS), always set `-webkit-` prefixed versions of `transitionProperty`, `transitionDuration`, `transitionTimingFunction`, `transform`, and `webkitTransform`. Example:
+    ```ts
+    circle.style.transitionProperty = 'transform, background-color';
+    circle.style.webkitTransitionProperty = 'transform, background-color';
+    circle.style.transitionDuration = duration;
+    circle.style.webkitTransitionDuration = duration;
+    circle.style.transitionTimingFunction = timing;
+    circle.style.webkitTransitionTimingFunction = timing;
+    // ... set transform and webkitTransform
+    ```
+    Missing these prefixes causes silent failure of animations in mobile Safari.
