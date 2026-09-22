@@ -1,12 +1,64 @@
 <template>
   <VContainer :fluid="true" class="page-consolidation-details">
     <VRow density="compact">
+       <VCol cols="12">
+        <VCard id="con-detai-card-2" class="mb-3" variant="outlined">
+            <VCardTitle class="text-subtitle-1 font-weight-bold d-flex align-center">
+            <VIcon start>mdi-clipboard-list</VIcon>
+            Folio #{{ sheet.folio_number }}
+          </VCardTitle>
+          <VCardText>
+            <VRow density="compact">
+              <VCol md="3"  cols="12">
+                <VTextField
+                  id="con-detai-filterterm-tf-2"
+                  v-model="filterTerm"
+                  clearable
+                  hide-details
+                  label="Filtro"
+                  density="compact"
+                  variant="outlined"
+                  placeholder="Filtro"
+                  append-inner-icon="mdi-magnify"
+                />
+              </VCol>
+              <VCol md="4" cols="12">
+                <VBtn id="cnsld-new-member-btn" class="mr-1" color="success" @click="newMember">
+                  <VIcon start>mdi-plus</VIcon>
+                  Nuevo Miembro
+                </VBtn>
+                <VBtn id="cnsld-refresh-btn" color="primary" :loading="loading" variant="outlined" @click="fetchMembers">
+                  <VIcon start>mdi-reload</VIcon>
+                  Refrescar
+                </VBtn>
+              </VCol>
+            </VRow>
+            <VRow density="compact">
+              <VCol cols="12">
+                <ConsolidationMemberTable
+                  id="det-members-dt"
+                  :loading="loading"
+                  :members="filteredMembers"
+                  @delete="deleteMemberPrompt"
+                  @status-change="onInlineStatusChange"
+                />
+              </VCol>
+            </VRow>
+            <VRow density="compact">
+              <VCol cols="12" class="d-flex justify-end">
+                <VBtn id="cnsld-back-btn" color="primary" variant="outlined" @click="navigateTo('/consolidation')">
+                  <VIcon start>mdi-arrow-left</VIcon>
+                  Volver
+                </VBtn>
+              </VCol>
+            </VRow>
+          </VCardText>
+        </VCard>
+      </VCol>
+     
       <VCol cols="12">
         <VCard id="con-detai-card-1" class="mb-3" variant="outlined">
-          <VCardTitle class="text-subtitle-1 font-weight-bold d-flex align-center">
-            <VIcon start>mdi-clipboard-list</VIcon>
-            Consolidado #{{ sheet.folio_number }}
-          </VCardTitle>
+        
           <VCardText>
             <VRow  align="center" density="compact">
               <VCol md="2" cols="12">
@@ -127,56 +179,7 @@
         </VCard>
       </VCol>
 
-      <VCol cols="12">
-        <VCard id="con-detai-card-2" class="mb-3" variant="outlined">
-          <VCardText>
-            <VRow density="compact">
-              <VCol md="4" cols="12">
-                <VTextField
-                  id="con-detai-filterterm-tf-2"
-                  v-model="filterTerm"
-                  clearable
-                  hide-details
-                  label="Filtro"
-                  density="compact"
-                  variant="outlined"
-                  placeholder="Filtro"
-                  append-inner-icon="mdi-magnify"
-                />
-              </VCol>
-              <VCol md="4" cols="12">
-                <VBtn id="cnsld-new-member-btn" class="mr-1" color="success" @click="newMember">
-                  <VIcon start>mdi-plus</VIcon>
-                  Nuevo Miembro
-                </VBtn>
-                <VBtn id="cnsld-refresh-btn" color="primary" :loading="loading" variant="outlined" @click="fetchMembers">
-                  <VIcon start>mdi-reload</VIcon>
-                  Refrescar
-                </VBtn>
-              </VCol>
-            </VRow>
-            <VRow density="compact">
-              <VCol cols="12">
-                <ConsolidationMemberTable
-                  id="det-members-dt"
-                  :loading="loading"
-                  :members="filteredMembers"
-                  @delete="deleteMemberPrompt"
-                  @status-change="onInlineStatusChange"
-                />
-              </VCol>
-            </VRow>
-            <VRow density="compact">
-              <VCol cols="12" class="d-flex justify-end">
-                <VBtn id="cnsld-back-btn" color="primary" variant="outlined" @click="navigateTo('/consolidation')">
-                  <VIcon start>mdi-arrow-left</VIcon>
-                  Volver
-                </VBtn>
-              </VCol>
-            </VRow>
-          </VCardText>
-        </VCard>
-      </VCol>
+    
     </VRow>
 
     <ChurchMemberDialog v-if="dialog" id="det-member-dlg" :member="member" :loading="saving" @save="saveMember" @close="closeDialog" />

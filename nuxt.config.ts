@@ -14,7 +14,10 @@ function gitShortHash(): string {
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
+  // ponytail: disabled — devtools' fs scan is slow on this SMB-mounted drive
+  // (same root cause as vite usePolling below); flip to true when you need
+  // the devtools panel for a debugging session
+  devtools: { enabled: false },
   devServer: { host: '0.0.0.0', port: 3003 },
   // Project lives on a mapped network drive (Z:\). Chokidar's native OS
   // file-system events are unreliable over SMB/network shares, which can

@@ -33,6 +33,44 @@ export class MenuService {
           title: 'Permisos',
           to: '/permission',
         })
+
+      if (this.hasPermission('conso-sheet-index')) {
+        menu.push({
+          icon: 'mdi-account-multiple',
+          title: 'Consolidación',
+          to: '/consolidation',
+        })
+        menu.push({
+          icon: 'mdi-account-search',
+          title: 'Seguimiento',
+          to: '/tracking',
+        })
+      }
+
+      if (this.hasPermission('church-member-consolidator-logs-index')) {
+        menu.push({
+          icon: 'mdi-history',
+          title: 'Historial Consolidadores',
+          to: '/church-member/consolidator-logs',
+        })
+      }
+
+      if (this.hasPermission('church-member-tracking-logs-index')) {
+        menu.push({
+          icon: 'mdi-clock-outline',
+          title: 'Mi Actividad',
+          to: '/church-member/tracking-logs',
+        })
+      }
+
+      if (this.hasPermission('church-member-tracking-logs-all')) {
+        menu.push({
+          icon: 'mdi-chart-box-outline',
+          title: 'Actividad General',
+          to: '/church-member/tracking-logs/all',
+        })
+      }
+
       if (this.hasPermission('auditorium-index'))
         menu.push({ icon: 'mdi-seat', title: 'Auditorio', to: '/auditorium' })
       if (this.hasPermission('auditorium-event-index'))
@@ -127,43 +165,6 @@ export class MenuService {
           icon: 'mdi-calendar',
           title: 'Eventos  Iglesia',
           to: '/church-event',
-        })
-      }
-
-      if (this.hasPermission('conso-sheet-index')) {
-        menu.push({
-          icon: 'mdi-account-multiple',
-          title: 'Consolidación',
-          to: '/consolidation',
-        })
-        menu.push({
-          icon: 'mdi-account-search',
-          title: 'Seguimiento',
-          to: '/tracking',
-        })
-      }
-
-      if (this.hasPermission('church-member-consolidator-logs-index')) {
-        menu.push({
-          icon: 'mdi-history',
-          title: 'Historial Consolidadores',
-          to: '/church-member/consolidator-logs',
-        })
-      }
-
-      if (this.hasPermission('church-member-tracking-logs-index')) {
-        menu.push({
-          icon: 'mdi-clock-outline',
-          title: 'Mi Actividad',
-          to: '/church-member/tracking-logs',
-        })
-      }
-
-      if (this.hasPermission('church-member-tracking-logs-all')) {
-        menu.push({
-          icon: 'mdi-chart-box-outline',
-          title: 'Actividad General',
-          to: '/church-member/tracking-logs/all',
         })
       }
 
