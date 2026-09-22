@@ -280,8 +280,10 @@
     innerCircle.style.transitionTimingFunction = timing
     void circle.offsetHeight
     circle.style.backgroundColor = backgroundColor
-    circle.style.transform = transform
-    innerCircle.style.transform = innerTransform
+        circle.style.transform = transform
+        circle.style.webkitTransform = transform
+        innerCircle.style.transform = innerTransform
+        innerCircle.style.webkitTransform = innerTransform
   }
 
   function animateCircle(nextState: string) {
