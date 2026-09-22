@@ -227,6 +227,13 @@ const pageBg = computed(() => {
   return colors[c];
 });
 const pageStyle = computed(() => pageBg.value ? { backgroundColor: pageBg.value, minHeight: "100vh" } : undefined);
+
+// Keep Safari's status-bar tint (theme-color) in sync with the current
+// route's app-bar color instead of the static fallback in nuxt.config.ts.
+// Chrome for iOS ignores theme-color entirely, so this only affects Safari.
+useHead(() => ({
+  meta: [{ name: "theme-color", content: pageBg.value || "#E8EAF6" }],
+}));
 const userName = computed(() => {
   const u = auth.user;
   if (!u) return "";

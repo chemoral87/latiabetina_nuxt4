@@ -3,6 +3,24 @@
   --row-remove-animation-ms: 1000ms;
 }
 
+/* With viewport-fit=cover (nuxt.config.ts) the page now extends under the
+   iOS notch/Dynamic Island and home-indicator areas. Push the fixed app bar
+   and the bottom snackbar stack clear of those insets; env() resolves to 0
+   on devices/browsers without a safe area, so this is a no-op elsewhere. */
+#lay-app-bar {
+  padding-top: env(safe-area-inset-top, 0px) !important;
+}
+.snackbar-wrapper {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Match the default app-bar background so the strip under the status bar
+   (before Vue hydrates route.meta.color) isn't a mismatched flash. */
+html,
+body {
+  background-color: #e8eaf6;
+}
+
 /* Global VContainer padding — equivalent to pa-1 (4px) on all pages */
 .v-container {
   padding: 8px !important;

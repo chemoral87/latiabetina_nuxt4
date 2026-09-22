@@ -1,14 +1,14 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import { execSync } from "node:child_process"
-import { es } from "vuetify/locale"
+import { execSync } from 'node:child_process'
+import { es } from 'vuetify/locale'
 
 // Short git commit hash (last 7 chars) for the build version. Falls back to
 // "nogit" when the build runs outside a git checkout.
 function gitShortHash(): string {
   try {
-    return execSync("git rev-parse --short HEAD", { encoding: "utf8" }).trim()
+    return execSync('git rev-parse --short HEAD', { encoding: 'utf8' }).trim()
   } catch {
-    return "nogit"
+    return 'nogit'
   }
 }
 
@@ -34,6 +34,17 @@ export default defineNuxtConfig({
   app: {
     head: {
       htmlAttrs: { lang: 'es' },
+      meta: [
+        // viewport-fit=cover lets the page paint under the iOS notch/Dynamic
+        // Island instead of leaving it to the browser's default background;
+        // theme-color (Safari-only — Chrome for iOS ignores it) colors that
+        // area. The default here matches the default app-bar color
+        // ("blue-lighten-5" -> #E8EAF6, see layouts/default.vue pageBg);
+        // pages with a different route.meta.color override this in the
+        // layout so the status bar tint always matches the app bar.
+        { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
+        { name: 'theme-color', content: '#E8EAF6' },
+      ],
     },
   },
   routeRules: {
@@ -44,7 +55,14 @@ export default defineNuxtConfig({
   css: ['@/assets/css/global.css'],
   vuetify: {
     moduleOptions: {
-      importComposables: ['useDate', 'useLocale', 'useDefaults', 'useDisplay', 'useRtl', 'useTheme'],
+      importComposables: [
+        'useDate',
+        'useLocale',
+        'useDefaults',
+        'useDisplay',
+        'useRtl',
+        'useTheme',
+      ],
     },
     vuetifyOptions: {
       theme: {
@@ -62,14 +80,27 @@ export default defineNuxtConfig({
             ...es,
             date: {
               months: {
-                short: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
+                short: [
+                  'Ene',
+                  'Feb',
+                  'Mar',
+                  'Abr',
+                  'May',
+                  'Jun',
+                  'Jul',
+                  'Ago',
+                  'Sep',
+                  'Oct',
+                  'Nov',
+                  'Dic',
+                ],
               },
               weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-              weekdaysShort: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa']
-            }
-          }
-        }
-      }
+              weekdaysShort: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+            },
+          },
+        },
+      },
     },
   },
   runtimeConfig: {
