@@ -47,9 +47,9 @@
       </VCol>
 
       <VCol cols="5">
-        <div :style="wrapperStyle" class="animation-wrapper">
+        <div class="animation-wrapper">
           <div :style="circleStyle" class="circle-animation">
-            <div :style="innerCircleStyle" class="inner-circle-animation"></div>
+            <div class="inner-circle-animation"></div>
           </div>
         </div>
       </VCol>
@@ -88,64 +88,22 @@
     immobile2: () => props.immobile2,
   }
 
-  // --- Tamaño del anillo, medido en JS (no CSS `vw`) --------------------------------------
-  // `vw` se calcula distinto entre motores (Chrome vs Safari cuentan la scrollbar/toolbar
-  // dinámica de forma distinta), así que el tamaño de reposo se fija en px vía JS para que
-  // sea idéntico en ambos navegadores. `maxScale` limita la expansión al espacio real
-  // disponible en el viewport, para que el anillo nunca se salga de la pantalla en móvil.
-  const REST_RATIO = 0.52 // equivalente al `52vw` anterior
-  const REST_MAX_PX = 220 // equivalente al `220px` anterior
-  const BASE_MAX_SCALE = 3 // factor de expansión original (deseado cuando hay espacio de sobra)
-  const SAFETY_MARGIN = 0.92 // deja un pequeño margen para que el anillo no toque el borde de la pantalla
+  // ponytail: fixed 0.5 rest ratio — expansion is scale(1) so the ring never leaves
+  // the wrapper; measure the column again if rest size must track the viewport
+  const REST_SCALE = 0.5
 
-  const restDiameter = ref(REST_MAX_PX)
-  const maxScale = ref(BASE_MAX_SCALE)
-  let resizeTimeout: ReturnType<typeof setTimeout> | null = null
-
-  function computeSizes() {
-    const viewportWidth = document.documentElement.clientWidth
-    const viewportHeight = document.documentElement.clientHeight
-    const rest = Math.min(viewportWidth * REST_RATIO, REST_MAX_PX)
-    const available = Math.min(viewportWidth, viewportHeight) * SAFETY_MARGIN
-    restDiameter.value = rest
-    maxScale.value = rest > 0 ? Math.max(1, Math.min(BASE_MAX_SCALE, available / rest)) : BASE_MAX_SCALE
-  }
-
-  function scheduleComputeSizes() {
-    if (resizeTimeout) clearTimeout(resizeTimeout)
-    resizeTimeout = setTimeout(computeSizes, 150)
-  }
-
-  onMounted(() => {
-    computeSizes()
-    window.addEventListener('resize', scheduleComputeSizes)
-    window.addEventListener('orientationchange', scheduleComputeSizes)
-  })
-
-  onBeforeUnmount(() => {
-    window.removeEventListener('resize', scheduleComputeSizes)
-    window.removeEventListener('orientationchange', scheduleComputeSizes)
-    if (resizeTimeout) clearTimeout(resizeTimeout)
-  })
-
-  const wrapperStyle = computed(() => ({
-    width: `${restDiameter.value}px`,
-    height: `${restDiameter.value}px`,
-  }))
-  // -----------------------------------------------------------------------------------------
-
-  const phaseStyles = computed<Record<string, { timing: string; color: string; transform: string; innerTransform: string }>>(() => ({
-    initialContract: { timing: 'ease-in', color: '#FF9800', transform: 'scale(0.75)', innerTransform: 'scale(1.3)' },
-    expansion: { timing: 'ease-out', color: '#1565C0', transform: `scale(${maxScale.value})`, innerTransform: 'scale(0.777)' },
-    immobile1: { timing: 'linear', color: '#2E7D32', transform: `scale(${maxScale.value})`, innerTransform: 'scale(0.777)' },
-    contraction: { timing: 'ease-in-out', color: '#C62828', transform: 'scale(1)', innerTransform: 'scale(1)' },
-    immobile2: { timing: 'linear', color: '#2E7D32', transform: 'scale(1)', innerTransform: 'scale(1)' },
+  const phaseStyles = computed<Record<string, { timing: string; color: string; transform: string }>>(() => ({
+    initialContract: { timing: 'ease-in', color: '#FF9800', transform: `scale(${REST_SCALE * 0.75})` },
+    expansion: { timing: 'ease-out', color: '#1565C0', transform: 'scale(1)' },
+    immobile1: { timing: 'linear', color: '#2E7D32', transform: 'scale(1)' },
+    contraction: { timing: 'ease-in-out', color: '#C62828', transform: `scale(${REST_SCALE})` },
+    immobile2: { timing: 'linear', color: '#2E7D32', transform: `scale(${REST_SCALE})` },
   }))
 
   const circleStyle = computed(() => {
     const state = props.animationState
     const phase = phaseStyles.value[state]
-    if (!phase) return { transitionDuration: '0.5s', backgroundColor: '#2E7D32', transform: 'scale(1)' }
+    if (!phase) return { transitionDuration: '0.5s', backgroundColor: '#2E7D32', transform: `scale(${REST_SCALE})` }
     const duration = phaseDurationMap[state]?.() ?? 0
     return {
       transitionProperty: 'transform, background-color',
@@ -155,30 +113,16 @@
       transform: phase.transform,
     }
   })
-
-  const innerCircleStyle = computed(() => {
-    const state = props.animationState
-    const phase = phaseStyles.value[state]
-    if (!phase) return {}
-    const duration = phaseDurationMap[state]?.() ?? 0
-    return {
-      transitionProperty: 'transform',
-      transitionDuration: `${duration}s`,
-      transitionTimingFunction: phase.timing,
-      transform: phase.innerTransform,
-    }
-  })
 </script>
 
 <style scoped>
   .animation-wrapper {
-    max-width: 220px;
-    max-height: 220px;
+    width: min(100%, 220px);
+    aspect-ratio: 1;
     display: flex;
     justify-content: center;
     align-items: center;
     margin-inline: auto;
-    overflow: visible;
     position: relative;
     flex-shrink: 0;
   }
@@ -200,8 +144,9 @@
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     transform-origin: center center;
-    transform: scale(1);
-    -webkit-transform: scale(1);
+    /* keep in sync with REST_SCALE in script */
+    transform: scale(0.5);
+    -webkit-transform: scale(0.5);
   }
 
   .inner-circle-animation {
@@ -210,9 +155,6 @@
     border-radius: 50%;
     background-color: white;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition-property: transform;
-    transition-duration: 0.5s;
-    transition-timing-function: ease-out;
     will-change: transform;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
