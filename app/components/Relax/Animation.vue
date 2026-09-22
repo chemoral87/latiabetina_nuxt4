@@ -47,7 +47,7 @@
       </VCol>
 
       <VCol cols="5">
-        <div class="animation-wrapper">
+        <div :style="wrapperStyle" class="animation-wrapper">
           <div :style="circleStyle" class="circle-animation">
             <div :style="innerCircleStyle" class="inner-circle-animation"></div>
           </div>
@@ -88,17 +88,63 @@
     immobile2: () => props.immobile2,
   }
 
-  const phaseStyles: Record<string, { timing: string; color: string; transform: string; innerTransform: string }> = {
+  // --- Tamaño del anillo, medido en JS (no CSS `vw`) --------------------------------------
+  // `vw` se calcula distinto entre motores (Chrome vs Safari cuentan la scrollbar/toolbar
+  // dinámica de forma distinta), así que el tamaño de reposo se fija en px vía JS para que
+  // sea idéntico en ambos navegadores. `maxScale` limita la expansión al espacio real
+  // disponible en el viewport, para que el anillo nunca se salga de la pantalla en móvil.
+  const REST_RATIO = 0.52 // equivalente al `52vw` anterior
+  const REST_MAX_PX = 220 // equivalente al `220px` anterior
+  const BASE_MAX_SCALE = 3 // factor de expansión original (deseado cuando hay espacio de sobra)
+  const SAFETY_MARGIN = 0.92 // deja un pequeño margen para que el anillo no toque el borde de la pantalla
+
+  const restDiameter = ref(REST_MAX_PX)
+  const maxScale = ref(BASE_MAX_SCALE)
+  let resizeTimeout: ReturnType<typeof setTimeout> | null = null
+
+  function computeSizes() {
+    const viewportWidth = document.documentElement.clientWidth
+    const viewportHeight = document.documentElement.clientHeight
+    const rest = Math.min(viewportWidth * REST_RATIO, REST_MAX_PX)
+    const available = Math.min(viewportWidth, viewportHeight) * SAFETY_MARGIN
+    restDiameter.value = rest
+    maxScale.value = rest > 0 ? Math.max(1, Math.min(BASE_MAX_SCALE, available / rest)) : BASE_MAX_SCALE
+  }
+
+  function scheduleComputeSizes() {
+    if (resizeTimeout) clearTimeout(resizeTimeout)
+    resizeTimeout = setTimeout(computeSizes, 150)
+  }
+
+  onMounted(() => {
+    computeSizes()
+    window.addEventListener('resize', scheduleComputeSizes)
+    window.addEventListener('orientationchange', scheduleComputeSizes)
+  })
+
+  onBeforeUnmount(() => {
+    window.removeEventListener('resize', scheduleComputeSizes)
+    window.removeEventListener('orientationchange', scheduleComputeSizes)
+    if (resizeTimeout) clearTimeout(resizeTimeout)
+  })
+
+  const wrapperStyle = computed(() => ({
+    width: `${restDiameter.value}px`,
+    height: `${restDiameter.value}px`,
+  }))
+  // -----------------------------------------------------------------------------------------
+
+  const phaseStyles = computed<Record<string, { timing: string; color: string; transform: string; innerTransform: string }>>(() => ({
     initialContract: { timing: 'ease-in', color: '#FF9800', transform: 'scale(0.75)', innerTransform: 'scale(1.3)' },
-    expansion: { timing: 'ease-out', color: '#1565C0', transform: 'scale(3)', innerTransform: 'scale(0.777)' },
-    immobile1: { timing: 'linear', color: '#2E7D32', transform: 'scale(3)', innerTransform: 'scale(0.777)' },
+    expansion: { timing: 'ease-out', color: '#1565C0', transform: `scale(${maxScale.value})`, innerTransform: 'scale(0.777)' },
+    immobile1: { timing: 'linear', color: '#2E7D32', transform: `scale(${maxScale.value})`, innerTransform: 'scale(0.777)' },
     contraction: { timing: 'ease-in-out', color: '#C62828', transform: 'scale(1)', innerTransform: 'scale(1)' },
     immobile2: { timing: 'linear', color: '#2E7D32', transform: 'scale(1)', innerTransform: 'scale(1)' },
-  }
+  }))
 
   const circleStyle = computed(() => {
     const state = props.animationState
-    const phase = phaseStyles[state]
+    const phase = phaseStyles.value[state]
     if (!phase) return { transitionDuration: '0.5s', backgroundColor: '#2E7D32', transform: 'scale(1)' }
     const duration = phaseDurationMap[state]?.() ?? 0
     return {
@@ -112,7 +158,7 @@
 
   const innerCircleStyle = computed(() => {
     const state = props.animationState
-    const phase = phaseStyles[state]
+    const phase = phaseStyles.value[state]
     if (!phase) return {}
     const duration = phaseDurationMap[state]?.() ?? 0
     return {
@@ -126,8 +172,6 @@
 
 <style scoped>
   .animation-wrapper {
-    width: min(52vw, 220px);
-    height: min(52vw, 220px);
     max-width: 220px;
     max-height: 220px;
     display: flex;
@@ -176,5 +220,4 @@
   }
 
   .rel-countdown { font-size: 0.75rem; font-weight: 600; opacity: 0.9; margin-left: 4px; font-variant-numeric: tabular-nums; }
-  @supports not (aspect-ratio: 1/1) { .animation-wrapper { padding-bottom: 100%; height: 0; } }
 </style>
