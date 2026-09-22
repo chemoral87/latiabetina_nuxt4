@@ -270,21 +270,25 @@
     }[state] ?? 'initialContract'
   }
 
-  function applyCircleStyle(transitionDuration: string, timing: string, backgroundColor: string, transform: string, innerTransform: string) {
-    const circle = circleEl.value
-    const innerCircle = innerCircleEl.value
-    if (!circle || !innerCircle) return
-    circle.style.transitionDuration = transitionDuration
-    circle.style.transitionTimingFunction = timing
-    innerCircle.style.transitionDuration = transitionDuration
-    innerCircle.style.transitionTimingFunction = timing
-    void circle.offsetHeight
-    circle.style.backgroundColor = backgroundColor
-        circle.style.transform = transform
-        circle.style.webkitTransform = transform
-        innerCircle.style.transform = innerTransform
-        innerCircle.style.webkitTransform = innerTransform
-  }
+function applyCircleStyle(transitionDuration: string, timing: string, backgroundColor: string, transform: string, innerTransform: string) {
+     const circle = circleEl.value
+     const innerCircle = innerCircleEl.value
+     if (!circle || !innerCircle) return
+     circle.style.transitionDuration = transitionDuration
+     circle.style.webkitTransitionDuration = transitionDuration
+     circle.style.transitionTimingFunction = timing
+     circle.style.webkitTransitionTimingFunction = timing
+     innerCircle.style.transitionDuration = transitionDuration
+     innerCircle.style.webkitTransitionDuration = transitionDuration
+     innerCircle.style.transitionTimingFunction = timing
+     innerCircle.style.webkitTransitionTimingFunction = timing
+     void circle.offsetHeight
+     circle.style.backgroundColor = backgroundColor
+     circle.style.transform = transform
+     circle.style.webkitTransform = transform
+     innerCircle.style.transform = innerTransform
+     innerCircle.style.webkitTransform = innerTransform
+   }
 
   function animateCircle(nextState: string) {
     if (!isPlaying.value) return
