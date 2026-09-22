@@ -165,6 +165,12 @@
   }
 
   function setPhase(nextState: string) {
+    // ponytail: skip 0s phases so the ring always expands/contracts from the rest
+    // position; drop the loop if a 0s phase ever needs to render its transform
+    let guard = 5
+    while (getPhaseDuration(nextState) <= 0 && guard-- > 0) {
+      nextState = getNextPhase(nextState)
+    }
     animationState.value = nextState
     phaseDuration.value = getPhaseDuration(nextState)
     phaseStartedAt.value = Date.now()
