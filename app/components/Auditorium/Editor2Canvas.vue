@@ -411,12 +411,13 @@
   .stage-container {
     position: relative;
     width: auto;
-    margin-right: 15px;
+    margin-right: 30px;
+    touch-action: none;
+    user-select: none;
   }
 
-  @media (max-width: 600px) {
-    .stage-container {
-      -webkit-overflow-scrolling: touch;
-    }
+  .stage-container :deep(.konvajs-content),
+  .stage-container :deep(canvas) {
+    touch-action: none;
   }
 </style>
