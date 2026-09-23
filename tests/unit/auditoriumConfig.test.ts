@@ -1,10 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { normalizeSections, findSeatById } from './auditoriumConfig'
-import {
-  createFloatingSection,
-  createFloatingTag,
-  serializeFloatingConfig,
-} from './auditoriumFloating'
+import { normalizeSections, findSeatById } from '~/utils/auditoriumConfig'
+import { createFloatingSection, createFloatingTag, serializeFloatingConfig } from '~/utils/auditoriumFloating'
 
 describe('normalizeSections — floating v2', () => {
   it('wraps each floating section as a single subsection preserving seat ids/categories', () => {

@@ -6,7 +6,7 @@ import {
   sortPermissionNamesForDisplay,
   sortPermissionsForDisplay,
   hashColorForName,
-} from './permissionChipColor'
+} from '~/utils/permissionChipColor'
 
 describe('permissionGroupKey', () => {
   describe('hyphen index evaluation and boundary cases', () => {
@@ -33,17 +33,13 @@ describe('permissionGroupKey', () => {
     })
 
     it('drops only the last segment for 5-segment names', () => {
-      expect(permissionGroupKey('church-member-tracking-logs-index')).toBe(
-        'church-member-tracking-logs'
-      )
+      expect(permissionGroupKey('church-member-tracking-logs-index')).toBe('church-member-tracking-logs')
     })
 
     it('produces distinct group keys for different variants', () => {
       expect(permissionGroupKey('church-member-update')).toBe('church-member')
       expect(permissionGroupKey('church-member-medal-update')).toBe('church-member-medal')
-      expect(permissionGroupKey('church-member-tracking-logs-index')).toBe(
-        'church-member-tracking-logs'
-      )
+      expect(permissionGroupKey('church-member-tracking-logs-index')).toBe('church-member-tracking-logs')
     })
   })
 })
@@ -92,15 +88,7 @@ describe('buildPermissionColorMap', () => {
   })
 
   it('correctly separates singletons and clustered groups in mixed sets', () => {
-    const names = [
-      'user-index',
-      'role-index',
-      'conso-sheet-index',
-      'conso-sheet-create',
-      'auditorium-index',
-      'auditorium-event-create',
-      'auditorium-event-update',
-    ]
+    const names = ['user-index', 'role-index', 'conso-sheet-index', 'conso-sheet-create', 'auditorium-index', 'auditorium-event-create', 'auditorium-event-update']
     const map = buildPermissionColorMap(names)
     expect(map['user-index']).toBe('primary')
     expect(map['role-index']).toBe('primary')
@@ -122,32 +110,20 @@ describe('hashColorForName', () => {
   })
 
   it('differentiates diverse name inputs', () => {
-    const colors = new Set(
-      ['admin-alpha', 'consolidador-manager', 'life-group-leader', 'user', 'role'].map(
-        hashColorForName
-      )
-    )
+    const colors = new Set(['admin-alpha', 'consolidador-manager', 'life-group-leader', 'user', 'role'].map(hashColorForName))
     expect(colors.size).toBeGreaterThan(1)
   })
 })
 
 describe('comparePermissionNames', () => {
   it('sorts by group alphabetically before depth', () => {
-    expect(
-      comparePermissionNames('auditorium-index', 'church-member-consolidator-assign')
-    ).toBeLessThan(0)
-    expect(
-      comparePermissionNames('church-member-consolidator-assign', 'auditorium-index')
-    ).toBeGreaterThan(0)
+    expect(comparePermissionNames('auditorium-index', 'church-member-consolidator-assign')).toBeLessThan(0)
+    expect(comparePermissionNames('church-member-consolidator-assign', 'auditorium-index')).toBeGreaterThan(0)
   })
 
   it('sorts shallower (more general) permissions before deeper ones within a group', () => {
-    expect(
-      comparePermissionNames('church-member-index', 'church-member-consolidator-assign')
-    ).toBeLessThan(0)
-    expect(
-      comparePermissionNames('church-member-consolidator-assign', 'church-member-index')
-    ).toBeGreaterThan(0)
+    expect(comparePermissionNames('church-member-index', 'church-member-consolidator-assign')).toBeLessThan(0)
+    expect(comparePermissionNames('church-member-consolidator-assign', 'church-member-index')).toBeGreaterThan(0)
   })
 
   it('uses full-name alphabetical order as final tiebreak within same group and depth', () => {
@@ -159,14 +135,7 @@ describe('comparePermissionNames', () => {
 
 describe('sortPermissionNamesForDisplay', () => {
   it('sorts strings by group alphabetically, then by segment count within group', () => {
-    const input = [
-      'church-member-all',
-      'church-member-consolidator-assign',
-      'church-member-index',
-      'church-member-delete',
-      'church-member-update',
-      'church-member-create',
-    ]
+    const input = ['church-member-all', 'church-member-consolidator-assign', 'church-member-index', 'church-member-delete', 'church-member-update', 'church-member-create']
     const result = sortPermissionNamesForDisplay(input)
     expect(result).toEqual([
       'church-member-all',
@@ -179,19 +148,9 @@ describe('sortPermissionNamesForDisplay', () => {
   })
 
   it('clusters different groups alphabetically', () => {
-    const input = [
-      'church-member-update',
-      'auditorium-event-create',
-      'auditorium-index',
-      'church-member-index',
-    ]
+    const input = ['church-member-update', 'auditorium-event-create', 'auditorium-index', 'church-member-index']
     const result = sortPermissionNamesForDisplay(input)
-    expect(result).toEqual([
-      'auditorium-index',
-      'auditorium-event-create',
-      'church-member-index',
-      'church-member-update',
-    ])
+    expect(result).toEqual(['auditorium-index', 'auditorium-event-create', 'church-member-index', 'church-member-update'])
   })
 
   it('does not mutate the input array', () => {

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { base64UrlDecode, getJwtExp, isTokenExpired } from './jwt'
+import { base64UrlDecode, getJwtExp, isTokenExpired } from '~/utils/jwt'
 
 describe('base64UrlDecode', () => {
   it('decodes regular base64 string', () => {
@@ -28,10 +28,7 @@ describe('getJwtExp', () => {
       .replace(/\+/g, '-')
       .replace(/\//g, '_')
       .replace(/=+$/, '')
-    const body = btoa(JSON.stringify(payload))
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=+$/, '')
+    const body = btoa(JSON.stringify(payload)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
     const signature = 'dummy-signature'
     return `${header}.${body}.${signature}`
   }
@@ -64,10 +61,7 @@ describe('isTokenExpired', () => {
       .replace(/\+/g, '-')
       .replace(/\//g, '_')
       .replace(/=+$/, '')
-    const body = btoa(JSON.stringify({ exp }))
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=+$/, '')
+    const body = btoa(JSON.stringify({ exp })).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
     return `${header}.${body}.sig`
   }
 

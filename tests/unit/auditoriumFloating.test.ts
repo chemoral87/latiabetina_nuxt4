@@ -8,7 +8,7 @@ import {
   duplicateFloatingSection,
   getFloatingSectionWidth,
   getFloatingSectionHeight,
-} from './auditoriumFloating'
+} from '~/utils/auditoriumFloating'
 
 describe('parseFloatingConfig', () => {
   it('returns an empty valid config for null/undefined/empty-string config', () => {
