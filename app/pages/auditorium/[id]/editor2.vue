@@ -221,13 +221,13 @@
   function updateStageSize() {
     const width = window.innerWidth
     if (width < 600) {
-      stageConfig.value.width = Math.max(width - 48, 280)
-      stageConfig.value.height = 450
+      stageConfig.value.width = width
+      stageConfig.value.height = 500
     } else if (width < 960) {
-      stageConfig.value.width = Math.min(width - 64, 700)
+      stageConfig.value.width = width
       stageConfig.value.height = 600
     } else {
-      stageConfig.value.width = 900
+      stageConfig.value.width = width
       stageConfig.value.height = 700
     }
   }
