@@ -29,8 +29,6 @@
             v-for="section in config.sections"
             :key="`section-${section.id}`"
             :config="getSectionGroupConfig(section)"
-            @dragstart="onItemDragStart"
-            @dragend="(e) => onSectionDragEnd(section, e)"
           >
             <AuditoriumSeatGrid
               :seat-size="seatSize"
@@ -66,8 +64,6 @@
             v-for="tag in config.tags"
             :key="`tag-${tag.id}`"
             :config="getTagGroupConfig(tag)"
-            @dragstart="onItemDragStart"
-            @dragend="(e) => onTagDragEnd(tag, e)"
           >
             <VRect :config="getTagBgConfig(tag)" />
             <VText :config="getTagTextConfig(tag)" />
@@ -89,51 +85,32 @@
                 }"
               />
             </VGroup>
-            <!-- Trash / delete -->
-            <VGroup :config="{ x: getTagWidth(tag) + 4, y: TAG_HEIGHT + 4 }">
-              <VCircle
-                :config="controlCircleConfig('#c62828', (e) => onTagDelete(tag, e))"
-              />
-              <VText
-                :config="{
-                  x: 0,
-                  y: 0,
-                  text: '✕',
-                  fontSize: 12,
-                  fill: '#fff',
-                  offsetX: 5,
-                  offsetY: 6,
-                  listening: false,
-                }"
-              />
-            </VGroup>
           </VGroup>
         </VLayer>
       </VStage>
     </VSheet>
 
-    <!-- Tag rename dialog (lightweight; task 4 may refine to an inline overlay) -->
+    <!-- Tag rename dialog -->
     <VDialog
       id="ae2-tag-rename-dlg"
       v-model="tagRenameOpen"
-      max-width="360"
+      max-width="400"
     >
       <VCard id="ae2-tag-rename-card">
-        <VCardTitle class="d-flex align-center justify-space-between">
-          <span class="d-flex align-center">
-            <VIcon start color="primary">mdi-tag</VIcon>
-            Renombrar etiqueta
-          </span>
+        <VCardTitle class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center">
+          <VIcon start size="small" color="primary">mdi-tag</VIcon>
+          Editar etiqueta
+          <VSpacer />
           <VBtn
             id="ae2-tag-rename-close-btn"
             icon
-            variant="text"
+            size="x-small"
             @click="tagRenameOpen = false"
           >
             <VIcon>mdi-close</VIcon>
           </VBtn>
         </VCardTitle>
-        <VCardText>
+        <VCardText class="pt-0">
           <VTextField
             id="ae2-tag-rename"
             v-model="tagRenameText"
@@ -141,25 +118,38 @@
             hide-details
             label="Texto"
             density="compact"
+            variant="outlined"
             @keyup.enter="confirmTagRename"
           />
         </VCardText>
-        <div class="d-flex justify-end ga-2 pa-4 pt-0">
+        <div class="d-flex justify-space-between align-center px-4 pb-4">
           <VBtn
-            id="ae2-tag-rename-cancel-btn"
-            variant="outlined"
-            @click="tagRenameOpen = false"
+            id="ae2-tag-delete-btn"
+            size="small"
+            color="error"
+            variant="flat"
+            @click="confirmTagDelete"
           >
-            Cancelar
+            <VIcon start size="small">mdi-delete</VIcon>
+            Eliminar
           </VBtn>
-          <VBtn
-            id="ae2-tag-rename-save-btn"
-            color="primary"
-            variant="elevated"
-            @click="confirmTagRename"
-          >
-            Guardar
-          </VBtn>
+          <div class="d-flex ga-2">
+            <VBtn
+              id="ae2-tag-rename-cancel-btn"
+              variant="outlined"
+              @click="tagRenameOpen = false"
+            >
+              Cancelar
+            </VBtn>
+            <VBtn
+              id="ae2-tag-rename-save-btn"
+              color="primary"
+              variant="elevated"
+              @click="confirmTagRename"
+            >
+              Guardar
+            </VBtn>
+          </div>
         </div>
       </VCard>
     </VDialog>
@@ -238,6 +228,8 @@ function getSectionGroupConfig(section: FloatingSection) {
     draggable: true,
     id: `ae2-section-${section.id}`,
     ae2Group: section.group ?? null,
+    onDragstart: onItemDragStart,
+    onDragend: (e: any) => onSectionDragEnd(section, e),
   }
 }
 function getSectionPencilConfig(section: FloatingSection) {
@@ -332,6 +324,8 @@ function getTagGroupConfig(tag: FloatingTag) {
     y: tag.y,
     draggable: true,
     id: `ae2-tag-${tag.id}`,
+    onDragstart: onItemDragStart,
+    onDragend: (e: any) => onTagDragEnd(tag, e),
   }
 }
 
@@ -388,6 +382,15 @@ function confirmTagRename() {
   const text = (tagRenameText.value || "").trim() || "Etiqueta"
   tag.text = text
   emit("tag-rename", tag, text)
+  tagRenameOpen.value = false
+  tagBeingRenamed.value = null
+}
+
+function confirmTagDelete() {
+  const tag = tagBeingRenamed.value
+  if (tag) {
+    emit("tag-delete", tag)
+  }
   tagRenameOpen.value = false
   tagBeingRenamed.value = null
 }

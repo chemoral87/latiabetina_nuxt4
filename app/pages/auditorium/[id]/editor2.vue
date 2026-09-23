@@ -6,15 +6,7 @@
           <span v-if="auditorium && auditorium.name" class="text-h6 text-md-h5">
             {{ auditorium.name }}
           </span>
-          <VBtn
-            id="ae2-save-btn"
-            color="primary"
-            :loading="saving"
-            :disabled="saving"
-            variant="elevated"
-            :size="mobile ? 'small' : undefined"
-            @click="saveAuditorium"
-          >
+          <VBtn id="ae2-save-btn" color="primary" :loading="saving" :disabled="saving" variant="elevated" :size="mobile ? 'small' : undefined" @click="saveAuditorium">
             <VIcon :start="!mobile">mdi-content-save</VIcon>
             <span v-if="!mobile">Guardar</span>
           </VBtn>
@@ -50,20 +42,11 @@
       </VCol>
     </VRow>
 
-    <AuditoriumEditor2SectionDialog
-      v-model="sectionDialogOpen"
-      :section="editingSection"
-      @delete="requestSectionDelete"
-      @duplicate="onSectionDuplicate"
-    />
+    <ClientOnly>
+      <AuditoriumEditor2SectionDialog v-model="sectionDialogOpen" :section="editingSection" @delete="requestSectionDelete" @duplicate="onSectionDuplicate" />
+    </ClientOnly>
 
-    <DialogDelete
-      v-if="sectionDeleteDialog"
-      id="ae2-section-delete-dlg"
-      :dialog="sectionDeleteDialogProp"
-      @ok="confirmSectionDelete"
-      @close="sectionDeleteDialog = false"
-    />
+    <DialogDelete v-if="sectionDeleteDialog" id="ae2-section-delete-dlg" :dialog="sectionDeleteDialogProp" @ok="confirmSectionDelete" @close="sectionDeleteDialog = false" />
   </VContainer>
 </template>
 
@@ -104,7 +87,7 @@
    * Spacing (px) left between sections by the distribute alignment actions
    * ('dist-h' / 'dist-v'). Single definition so both axes stay in step.
    */
-  const constantGap = 10
+  const constantGap = 25
 
   const sectionDialogOpen = ref(false)
   const editingSection = ref<FloatingSection | null>(null)
@@ -133,9 +116,7 @@
 
   function alignSections(key: string) {
     const all = config.value.sections
-    const sel = selectedSectionIds.value
-      .map(id => all.find(s => s.id === id))
-      .filter(Boolean) as FloatingSection[]
+    const sel = selectedSectionIds.value.map(id => all.find(s => s.id === id)).filter(Boolean) as FloatingSection[]
     if (sel.length < 2) return
 
     type BBox = { left: number; right: number; top: number; bottom: number; cx: number; cy: number }

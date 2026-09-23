@@ -306,7 +306,7 @@ async function saveAuditoriumEvent(item: Record<string, unknown>) {
       const updated = (res as Record<string, unknown>)?.data as
         | Record<string, unknown>
         | undefined;
-      updateRow(response, updated ?? item);
+      updateRow(response, updated ? { ...item, ...updated } : item);
       auditoriumEventDialog.value = false;
       flash(item.id as number);
     } else {
