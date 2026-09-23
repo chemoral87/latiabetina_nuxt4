@@ -50,7 +50,7 @@
         <ChurchMemberAllTrackingLogTable
           :loading="detailLoading"
           :response="detailResponse"
-          :initial-sort-by="detailOptions.sortBy as { key: string; order: string }[]"
+          :initial-sort-by="detailOptions.sortBy"
           @sorting="handleDetailSorting"
         />
       </div>
@@ -104,7 +104,7 @@ const summary = ref<SummaryItem[]>([]);
 const selectedConsolidator = ref<SummaryItem | null>(null);
 const detailLoading = ref(false);
 const detailResponse = ref<{ data: ActivityLog[]; total: number }>({ data: [], total: 0 });
-const detailOptions = ref<Record<string, unknown>>({
+const detailOptions = ref<{ page: number; itemsPerPage: number; sortBy: { key: string; order: string }[] }>({
   page: 1,
   itemsPerPage: 10,
   sortBy: [{ key: "created_at", order: "desc" }],

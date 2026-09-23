@@ -48,7 +48,7 @@
             :response="response"
             :search="filterTerm"
             :highlight-id="highlightId"
-            :initial-sort-by="lastOptions.sortBy as any"
+            :initial-sort-by="lastOptions.sortBy"
             @view="viewMember"
             @sorting="handleSorting"
           />
@@ -83,7 +83,7 @@
     data: [],
     total: 0,
   })
-  const lastOptions = ref<Record<string, unknown>>({
+  const lastOptions = ref<{ page: number; itemsPerPage: number; sortBy: { key: string; order: string }[] }>({
     page: 1,
     itemsPerPage: 10,
     sortBy: [{ key: 'created_at', order: 'desc' }],
@@ -134,7 +134,7 @@
   async function deleteTrackingLog(item: unknown) {
     const log = item as Record<string, unknown>
     const memberId = (log.church_member as { id?: number | string } | undefined)?.id
-    const logId = log.id
+    const logId = log.id as string | number
     if (!memberId || !logId) return
     if (!confirm('¿Desea eliminar esta interacción?')) return
     try {

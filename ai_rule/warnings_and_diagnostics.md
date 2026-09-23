@@ -116,6 +116,30 @@ See section 5 above.
 
 ---
 
+## 9. Never cast props with `as` in templates
+
+TypeScript casts (`as SomeType` or `as any`) in template bindings hide real type mismatches and cause silent runtime bugs.
+
+**Fix:** Type the source ref precisely so the binding is already the correct type.
+
+```ts
+// ❌ WRONG — masks the mismatch
+const lastOptions = ref<Record<string, unknown>>({ sortBy: [...] })
+// template: :initial-sort-by="lastOptions.sortBy as any"
+
+// ✅ CORRECT — ref is typed to match the prop
+const lastOptions = ref<{ page: number; itemsPerPage: number; sortBy: { key: string; order: string }[] }>({
+  sortBy: [{ key: 'created_at', order: 'desc' }],
+})
+// template: :initial-sort-by="lastOptions.sortBy"
+```
+
+The same applies to non-`any` casts (`as { key: string; order: string }[]`). Prefer a typed ref over a cast prop.
+
+**Pre-merge check:** `grep -rn " as any\| as {" app/` → **0 hits** in template bindings.
+
+---
+
 ## Pre-Merge Checklist
 
 1. `grep -rn "statusMessage" app/` → **0 hits**
