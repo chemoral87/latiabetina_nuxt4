@@ -16,14 +16,7 @@
         </VCol>
 
         <VCol cols="auto" class="d-flex align-center">
-          <VBtn
-            id="org-refresh-btn"
-            class="mr-4"
-            color="primary"
-            :loading="loading"
-            variant="outlined"
-            @click="refresh"
-          >
+          <VBtn id="org-refresh-btn" class="mr-4" color="primary" :loading="loading" variant="outlined" @click="refresh">
             <VIcon start>mdi-reload</VIcon>
             Refrescar
           </VBtn>
@@ -41,7 +34,7 @@
             :removing-id="removingId"
             :highlight-id="highlightId"
             :search="filterOrganization"
-            :initial-sort-by="lastOptions.sortBy as any"
+            :initial-sort-by="lastOptions.sortBy"
             @config="goConfig"
             @edit="editOrganization"
             @sorting="handleSorting"
@@ -51,13 +44,7 @@
       </VRow>
     </VSheet>
 
-    <OrganizationFormDialog
-      v-if="organizationFormDialog"
-      :loading="saving"
-      :organization="organization"
-      @save="saveOrganization"
-      @close="closeFormDialog()"
-    />
+    <OrganizationFormDialog v-if="organizationFormDialog" :loading="saving" :organization="organization" @save="saveOrganization" @close="closeFormDialog()" />
   </VContainer>
 </template>
 
@@ -80,12 +67,11 @@
   const loading = ref(false)
   const saving = ref(false)
   const organization = ref<Record<string, unknown> | null>(null)
-  const { highlightId, prependCreated, updateRow, removingId, removeWithAnimation } =
-    useRowHighlight()
+  const { highlightId, prependCreated, updateRow, removingId, removeWithAnimation } = useRowHighlight()
 
   const { Organization } = useRepository()
 
-  const lastOptions = ref<Record<string, unknown>>({
+  const lastOptions = ref<{ page: number; itemsPerPage: number; sortBy: { key: string; order: string }[] }>({
     page: 1,
     itemsPerPage: 5,
     sortBy: [{ key: 'name', order: 'asc' }],
@@ -104,7 +90,7 @@
   // Debounced filter — shared useDebouncedFilter (300ms immediate clear)
   useDebouncedFilter(filterInput, filterOrganization)
 
-  async function indexOrganizations(opts: Record<string, unknown>) {
+  async function indexOrganizations(opts: { page: number; itemsPerPage: number; sortBy: { key: string; order: string }[] }) {
     lastOptions.value = opts
     const params = buildApiParams(opts)
     if (filterOrganization.value && !params.filter) params.filter = filterOrganization.value
@@ -124,7 +110,7 @@
       initialLoaded = true
       return
     }
-    indexOrganizations(opts)
+    indexOrganizations(opts as { page: number; itemsPerPage: number; sortBy: { key: string; order: string }[] })
   }
 
   function refresh() {
@@ -133,8 +119,8 @@
     }
   }
 
-  function goConfig(item: Record<string, unknown>) {
-    navigateTo(`/organization/${item.id}/config`)
+  function goConfig(item: unknown) {
+    navigateTo(`/organization/${(item as Record<string, unknown>).id}/config`)
   }
 
   function newOrganization() {
@@ -143,17 +129,18 @@
     organizationFormDialog.value = true
   }
 
-  function editOrganization(item: Record<string, unknown>) {
+  function editOrganization(item: unknown) {
     useValidationErrors().clearErrors()
-    organization.value = { ...item }
+    organization.value = { ...(item as Record<string, unknown>) }
     organizationFormDialog.value = true
   }
 
-  async function deleteOrganization(item: Record<string, unknown>) {
+  async function deleteOrganization(item: unknown) {
+    const organization = item as Record<string, unknown>
     try {
-      await Organization.delete(item.id as number)
+      await Organization.delete(organization.id as number)
       dialogDeleteOrganization.value = false
-      await removeWithAnimation(response, item.id as number)
+      await removeWithAnimation(response, organization.id as number)
     } catch (e) {
       console.error(e)
     }
@@ -164,17 +151,13 @@
     try {
       if (item.id) {
         const res = await Organization.update<Record<string, unknown>>(item.id as number, item)
-        const updated = (res as Record<string, unknown>)?.data as
-          | Record<string, unknown>
-          | undefined
+        const updated = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined
         if (updated) {
           updateRow(response, updated)
         }
       } else {
         const res = await Organization.create<Record<string, unknown>>(item)
-        const created = (res as Record<string, unknown>)?.data as
-          | Record<string, unknown>
-          | undefined
+        const created = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined
         if (created) {
           prependCreated(response, created)
         }

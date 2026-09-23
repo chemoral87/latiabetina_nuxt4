@@ -45,7 +45,7 @@
               :search="filterRole"
               :removing-id="removingId"
               :highlight-id="highlightId"
-              :initial-sort-by="lastOptions.sortBy as any"
+              :initial-sort-by="lastOptions.sortBy"
               @edit="editRole"
               @delete="deleteRole"
               @sorting="handleSorting"
@@ -85,7 +85,7 @@ const { loadCatalog } = usePermissionCatalog();
 const filterInput = ref("");
 const filterRole = ref("");
 const role = ref<Record<string, unknown> | null>(null);
-const response = ref({ data: [], total: 0 });
+const response = ref<{ data: unknown[]; total: number }>({ data: [], total: 0 });
 const loading = ref(false);
 const saving = ref(false);
 const roleDialog = ref(false);
@@ -98,7 +98,7 @@ const {
   removeWithAnimation,
 } = useRowHighlight();
 
-const lastOptions = ref<Record<string, unknown>>({
+const lastOptions = ref<{ page: number; itemsPerPage: number; sortBy: { key: string; order: string }[] }>({
   page: 1,
   itemsPerPage: 10,
   sortBy: [{ key: "name", order: "asc" }],
@@ -130,7 +130,7 @@ const lastOptions = ref<Record<string, unknown>>({
 // Debounced filter — shared useDebouncedFilter (300ms immediate clear)
 useDebouncedFilter(filterInput, filterRole);
 
-async function loadRoles(opts: Record<string, unknown>) {
+async function loadRoles(opts: { page: number; itemsPerPage: number; sortBy: { key: string; order: string }[] }) {
   try {
     loading.value = true;
     lastOptions.value = opts;
@@ -162,7 +162,7 @@ function handleSorting(opts: Record<string, unknown>) {
     initialLoaded = true;
     return;
   }
-  loadRoles(opts);
+  loadRoles(opts as { page: number; itemsPerPage: number; sortBy: { key: string; order: string }[] });
 }
 
 function newRole() {
@@ -171,26 +171,27 @@ function newRole() {
   roleDialog.value = true;
 }
 
-function editRole(item: Record<string, unknown>) {
+function editRole(item: unknown) {
   useValidationErrors().clearErrors();
-  role.value = { ...item };
+  role.value = { ...(item as Record<string, unknown>) };
   roleDialog.value = true;
 }
 
-function editRolePermissions(item: Record<string, unknown>) {
-  navigateTo(`/role/${item.id}/children`);
+function editRolePermissions(item: unknown) {
+  navigateTo(`/role/${(item as Record<string, unknown>).id}/children`);
 }
 
-function distributeRole(item: Record<string, unknown>) {
-  navigateTo(`/role/${item.id}/distribution`);
+function distributeRole(item: unknown) {
+  navigateTo(`/role/${(item as Record<string, unknown>).id}/distribution`);
 }
 
-async function deleteRole(item: Record<string, unknown>) {
+async function deleteRole(item: unknown) {
+  const row = item as Record<string, unknown>;
   try {
     saving.value = true;
-    await Role.delete(item.id as number);
+    await Role.delete(row.id as number);
     roleDialogDelete.value = false;
-    await removeWithAnimation(response, item.id as number);
+    await removeWithAnimation(response, row.id as number);
   } catch (e) {
     console.error("Error al eliminar el rol", e);
   } finally {

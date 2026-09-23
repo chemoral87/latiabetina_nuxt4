@@ -41,7 +41,7 @@
             :search="filterUser"
             :removing-id="removingId"
             :highlight-id="highlightId"
-            :initial-sort-by="lastOptions.sortBy as any"
+            :initial-sort-by="lastOptions.sortBy"
             @edit="editUser"
             @delete="deleteUser"
             @sorting="handleSorting"
@@ -90,7 +90,9 @@ const {
 
 const { User } = useRepository();
 
-const lastOptions = ref<Record<string, unknown>>({
+type SortBy = { key: string; order: string }[];
+
+const lastOptions = ref<Record<string, unknown> & { sortBy: SortBy }>({
   page: 1,
   itemsPerPage: 10,
   sortBy: [{ key: "name", order: "asc" }],

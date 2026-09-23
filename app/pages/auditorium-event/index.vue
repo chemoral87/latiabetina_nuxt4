@@ -52,9 +52,7 @@
             :response="response"
             :removing-id="removingId"
             :highlight-id="highlightId"
-            :initial-sort-by="
-              (options.sortBy as any) ?? (initialOptions.sortBy as any)
-            "
+            :initial-sort-by="options.sortBy ?? initialOptions.sortBy"
             @sorting="handleSorting"
             @edit="editAuditoriumEvent"
             @mark="markAuditoriumEvent"
@@ -105,7 +103,9 @@ const response = ref<{ data: unknown[]; total: number }>({
   data: [],
   total: 0,
 });
-const options = ref<Record<string, unknown>>({});
+type SortBy = { key: string; order: string }[];
+
+const options = ref<Record<string, unknown> & { sortBy?: SortBy }>({});
 const loading = ref(false);
 const auditoriumEventDialog = ref(false);
 const auditoriumEventDialogDelete = ref(false);
@@ -132,7 +132,7 @@ const effectiveOrgId = computed(() => {
   return null;
 });
 
-const initialOptions: Record<string, unknown> = {
+const initialOptions: Record<string, unknown> & { sortBy: SortBy } = {
   page: 1,
   itemsPerPage: 10,
   sortBy: [{ key: "event_date", order: "desc" }],

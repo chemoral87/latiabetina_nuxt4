@@ -36,7 +36,7 @@
           :response="response"
           :removing-id="removingId"
           :highlight-id="highlightId"
-          :initial-sort-by="(lastOptions.sortBy as any)"
+          :initial-sort-by="lastOptions.sortBy"
           @edit="editSale"
           @view="viewDetail"
           @delete="deleteSale"
@@ -72,7 +72,9 @@ const saving = ref(false)
 const saleDialogDelete = ref(false)
 const { highlightId, removingId, removeWithAnimation } = useRowHighlight()
 
-const lastOptions = ref<Record<string, unknown>>({
+type SortBy = { key: string; order: string }[]
+
+const lastOptions = ref<Record<string, unknown> & { sortBy: SortBy }>({
   page: 1,
   itemsPerPage: 10,
   sortBy: [{ key: "created_at", order: "desc" }],

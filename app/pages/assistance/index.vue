@@ -30,7 +30,7 @@
             :loading="loading"
             :response="response"
             :search="filterAssistances"
-            :initial-sort-by="lastOptions.sortBy as any"
+            :initial-sort-by="lastOptions.sortBy"
             @edit="openEditDialog"
             @sorting="handleSorting"
             @delete="beforeDeleteAssistance"
@@ -113,7 +113,9 @@
   const bulkFile = ref<File[]>([])
   const bulkLoading = ref(false)
 
-  const lastOptions = ref<Record<string, unknown>>({
+  type SortBy = { key: string; order: string }[]
+
+  const lastOptions = ref<Record<string, unknown> & { sortBy: SortBy }>({
     page: 1,
     itemsPerPage: 10,
     sortBy: [{ key: 'assistance_date', order: 'desc' }],

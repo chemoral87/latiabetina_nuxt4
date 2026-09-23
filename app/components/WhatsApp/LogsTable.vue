@@ -13,32 +13,32 @@
       items-per-page-text="Filas por página"
       :items-per-page-options="[10, 15, 25, 50]"
       @update:options="onUpdateOptions">
-      <template #[`item.sender`]="{ item }">
-        <span class="text-body-2">{{ (item as any).sender || '—' }}</span>
+      <template #[`item.sender`]="{ item }: { item: WhatsAppLog }">
+        <span class="text-body-2">{{ item.sender || '—' }}</span>
       </template>
 
-      <template #[`item.receiver`]="{ item }">
+      <template #[`item.receiver`]="{ item }: { item: WhatsAppLog }">
         <VChip size="small" color="primary" variant="tonal">
-          {{ (item as any).receiver || '—' }}
+          {{ item.receiver || '—' }}
         </VChip>
       </template>
 
-      <template #[`item.body`]="{ item }">
+      <template #[`item.body`]="{ item }: { item: WhatsAppLog }">
         <span
           class="text-body-2"
-          :title="(item as any).body"
+          :title="item.body ?? undefined"
           style="display:inline-block; max-width: 360px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
         >
-          {{ (item as any).body || '—' }}
+          {{ item.body || '—' }}
         </span>
       </template>
 
-      <template #[`item.media_url`]="{ item }">
+      <template #[`item.media_url`]="{ item }: { item: WhatsAppLog }">
         <a
-          v-if="(item as any).media_url"
+          v-if="item.media_url"
           rel="noopener"
           target="_blank"
-          :href="(item as any).media_url"
+          :href="item.media_url"
           class="text-primary text-caption"
         >
           <VIcon size="small">mdi-link</VIcon> ver
@@ -46,45 +46,45 @@
         <span v-else class="text-grey">—</span>
       </template>
 
-      <template #[`item.success`]="{ item }">
+      <template #[`item.success`]="{ item }: { item: WhatsAppLog }">
         <VChip
           size="small"
           variant="tonal"
-          :color="(item as any).success ? 'green' : 'red'"
+          :color="item.success ? 'green' : 'red'"
         >
-          <VIcon start size="small">{{ (item as any).success ? 'mdi-check-circle' : 'mdi-close-circle' }}</VIcon>
-          {{ (item as any).success ? 'Enviado' : 'Fallido' }}
+          <VIcon start size="small">{{ item.success ? 'mdi-check-circle' : 'mdi-close-circle' }}</VIcon>
+          {{ item.success ? 'Enviado' : 'Fallido' }}
         </VChip>
       </template>
 
-      <template #[`item.error_message`]="{ item }">
+      <template #[`item.error_message`]="{ item }: { item: WhatsAppLog }">
         <span
-          v-if="(item as any).error_message"
+          v-if="item.error_message"
+          :title="item.error_message"
           class="text-caption text-red"
-          :title="(item as any).error_message"
           style="display:inline-block; max-width: 260px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
         >
-          {{ (item as any).error_message }}
+          {{ item.error_message }}
         </span>
         <span v-else class="text-grey">—</span>
       </template>
 
-      <template #[`item.created_at`]="{ item }">
-        {{ formatShortDateTime12h(String((item as any).created_at ?? '')) || '—' }}
+      <template #[`item.created_at`]="{ item }: { item: WhatsAppLog }">
+        {{ formatShortDateTime12h(String(item.created_at ?? '')) || '—' }}
       </template>
 
-      <template #[`item.creator`]="{ item }">
-        {{ ((item as any).creator as any)?.name || 'Sistema' }}
+      <template #[`item.creator`]="{ item }: { item: WhatsAppLog }">
+        {{ item.creator?.name || 'Sistema' }}
       </template>
 
-      <template #[`item.actions`]="{ item }">
+      <template #[`item.actions`]="{ item }: { item: WhatsAppLog }">
         <VBtn
           size="small"
           variant="tonal"
           :disabled="isResent(item)"
-          :color="isResent(item) ? 'grey' : (item as any).success ? 'grey' : 'primary'"
-          :title="isResent(item) ? 'Ya reenviado (solo 1 vez)' : (item as any).success ? 'Reenviar de nuevo' : 'Reenviar mensaje fallido'"
-          @click="emit('resend', item as Record<string, unknown>)"
+          :color="isResent(item) ? 'grey' : item.success ? 'grey' : 'primary'"
+          :title="isResent(item) ? 'Ya reenviado (solo 1 vez)' : item.success ? 'Reenviar de nuevo' : 'Reenviar mensaje fallido'"
+          @click="emit('resend', item)"
         >
           <VIcon size="small">{{ isResent(item) ? 'mdi-check' : 'mdi-send' }}</VIcon>
           <span class="ml-1 d-none d-md-inline">{{ isResent(item) ? 'Enviado' : 'Reenviar' }}</span>
@@ -113,8 +113,19 @@ interface Header {
   width?: string
 }
 
+interface WhatsAppLog extends Record<string, unknown> {
+  sender?: string | null
+  receiver?: string | null
+  body?: string | null
+  media_url?: string | null
+  success?: boolean
+  error_message?: string | null
+  created_at?: string | null
+  creator?: { name?: string | null } | null
+}
+
 const props = withDefaults(defineProps<{
-  response?: { data?: unknown[]; total?: number; current_page?: number; last_page?: number } | null
+  response?: { data?: WhatsAppLog[]; total?: number; current_page?: number; last_page?: number } | null
   loading?: boolean
 }>(), {
   response: () => ({ data: [], total: 0 }),
@@ -131,7 +142,7 @@ const itemsPerPage = ref(15)
 const sortBy = ref<{ key: string; order: string }[]>([{ key: 'created_at', order: 'desc' }])
 
 const total = computed(() => props.response?.total ?? 0)
-const items = computed(() => (props.response as any)?.data ?? [])
+const items = computed<WhatsAppLog[]>(() => props.response?.data ?? [])
 
 const headers = computed<Header[]>(() => [
   { title: 'ID', value: 'id', sortable: true, width: '70px' },

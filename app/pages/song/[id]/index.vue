@@ -113,7 +113,7 @@
             </div>
             <SongViewer
               :columns="columns"
-              :content="song.content as any"
+              :content="song.content"
               :expand-repeats="expandRepeats"
             />
           </VCardText>
@@ -146,6 +146,7 @@
 </template>
 
 <script setup lang="ts">
+import type { SongContent } from "~/types/song";
 import { normalizeContent } from "~/utils/songSerializer";
 
 definePageMeta({
@@ -158,7 +159,7 @@ const route = useRoute();
 const { Song } = useRepository();
 
 const loadingItem = ref(true);
-const song = ref<Record<string, unknown>>({});
+const song = ref<Record<string, unknown> & { content?: SongContent }>({});
 const expandRepeats = ref(true);
 const columns = ref<1 | 2 | 3>(1);
 
