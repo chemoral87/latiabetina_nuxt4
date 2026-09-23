@@ -22,6 +22,10 @@ export default [
   },
   {
     rules: {
+      'vue/no-mutating-props': ['error', { shallowOnly: true }],
+      'vue/no-side-effects-in-computed-properties': 'error',
+      'vue/require-v-for-key': 'error',
+      'vue/no-use-v-if-with-v-for': 'error',
       'vue/no-restricted-syntax': [
         'error',
         {

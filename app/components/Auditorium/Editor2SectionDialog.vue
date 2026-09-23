@@ -1,11 +1,5 @@
 <template>
-  <VDialog
-    id="ae2-section-edit-dlg"
-    persistent
-    max-width="560px"
-    :model-value="modelValue"
-    @update:model-value="emit('update:modelValue', $event)"
-  >
+  <VDialog id="ae2-section-edit-dlg" persistent max-width="560px" :model-value="modelValue" @update:model-value="emit('update:modelValue', $event)">
     <VCard v-if="section" id="ae2-section-edit-card">
       <VCardTitle class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center">
         <VIcon start size="small" color="primary">mdi-seat-outline</VIcon>
@@ -17,51 +11,19 @@
       </VCardTitle>
 
       <VCardText class="pt-0">
-        <VTextField
-          id="ae2-section-name"
-          v-model="section.name"
-          class="mb-3"
-          hide-details
-          label="Nombre"
-          density="compact"
-          variant="outlined"
-        />
+        <VTextField id="ae2-section-name" v-model="section.name" class="mb-3" hide-details label="Nombre" density="compact" variant="outlined" />
 
         <VRow class="mb-3" density="compact">
           <VCol sm="4" cols="6">
-            <VTextField
-              id="ae2-section-rows"
-              v-model.number="tempRows"
-              type="text"
-              hide-details
-              label="Filas"
-              density="compact"
-              variant="outlined"
-            />
+            <VTextField id="ae2-section-rows" v-model.number="tempRows" type="text" hide-details label="Filas" density="compact" variant="outlined" />
           </VCol>
           <VCol sm="4" cols="6">
-            <VTextField
-              id="ae2-section-cols"
-              v-model.number="tempCols"
-              type="text"
-              hide-details
-              label="Columnas"
-              density="compact"
-              variant="outlined"
-            />
+            <VTextField id="ae2-section-cols" v-model.number="tempCols" type="text" hide-details label="Columnas" density="compact" variant="outlined" />
           </VCol>
         </VRow>
 
-        <div class="text-caption text-medium-emphasis mb-1">
-          Clic en un asiento para asignar categoría
-        </div>
-        <VSheet
-          id="ae2-section-mini-stage"
-          rounded
-          color="black"
-          class="pa-2 mb-3"
-          style="overflow: auto; height: 250px"
-        >
+        <div class="text-caption text-medium-emphasis mb-1">Clic en un asiento para asignar categoría</div>
+        <VSheet id="ae2-section-mini-stage" rounded color="black" class="pa-2 mb-3" style="overflow: auto; height: 250px">
           <ClientOnly>
             <VStage :config="miniStageConfig" @tap="handleStageClick" @click="handleStageClick">
               <VLayer>
@@ -128,23 +90,11 @@
         </VSheet>
 
         <div class="d-flex flex-wrap ga-2">
-          <VBtn
-            id="ae2-section-dup-btn"
-            size="small"
-            color="secondary"
-            variant="outlined"
-            @click="emit('duplicate', section)"
-          >
+          <VBtn id="ae2-section-dup-btn" size="small" color="secondary" variant="outlined" @click="emit('duplicate', section)">
             <VIcon start size="small">mdi-content-copy</VIcon>
             Duplicar
           </VBtn>
-          <VBtn
-            id="ae2-section-delete-btn"
-            size="small"
-            color="error"
-            variant="flat"
-            @click="emit('delete', section)"
-          >
+          <VBtn id="ae2-section-delete-btn" size="small" color="error" variant="flat" @click="emit('delete', section)">
             <VIcon start size="small">mdi-delete</VIcon>
             Eliminar
           </VBtn>
@@ -152,9 +102,7 @@
       </VCardText>
 
       <div class="d-flex justify-end ga-2 px-4 pb-4">
-        <VBtn id="ae2-section-edit-cancel-btn" color="secondary" variant="outlined" @click="cancel">
-          Cancelar
-        </VBtn>
+        <VBtn id="ae2-section-edit-cancel-btn" color="secondary" variant="outlined" @click="cancel"> Cancelar </VBtn>
         <VBtn id="ae2-section-edit-done-btn" color="primary" variant="elevated" @click="save">
           <VIcon start>mdi-check</VIcon>
           Listo
@@ -172,11 +120,7 @@
    */
   import { DEFAULT_SETTINGS, STAGE_CATEGORIES, type StageCategory } from '~/constants/auditorium'
   import type { FloatingSeat, FloatingSection } from '~/types/auditorium'
-  import {
-    getFloatingSectionHeight,
-    getFloatingSectionWidth,
-    resizeFloatingSectionGrid,
-  } from '~/utils/auditoriumFloating'
+  import { getFloatingSectionHeight, getFloatingSectionWidth, resizeFloatingSectionGrid } from '~/utils/auditoriumFloating'
 
   const GRID_PAD_X = 24
   const GRID_PAD_Y = 20
@@ -302,10 +246,7 @@
     close()
   }
 
-  function handleSeatClick(payload: {
-    seat: FloatingSeat & { x?: number; y?: number }
-    event?: any
-  }) {
+  function handleSeatClick(payload: { seat: FloatingSeat & { x?: number; y?: number }; event?: any }) {
     const { seat, event: e } = payload
     try {
       if (e?.evt?.stopPropagation) e.evt.stopPropagation()
