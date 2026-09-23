@@ -1,17 +1,4 @@
-export const MONTHS_SHORT = [
-  'Ene',
-  'Feb',
-  'Mar',
-  'Abr',
-  'May',
-  'Jun',
-  'Jul',
-  'Ago',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dic',
-]
+export const MONTHS_SHORT = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
 
 const pad = (n: number) => String(n).padStart(2, '0')
 
@@ -102,4 +89,8 @@ export function formatHourTime(time?: string | null): string {
   const h12 = h % 12 || 12
   const ampm = h < 12 ? 'am' : 'pm'
   return `${h12}:${pad(m)} ${ampm}`
+}
+
+export function localDateTimeString(date = new Date()): string {
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`
 }

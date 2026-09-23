@@ -22,7 +22,7 @@
                 density="compact"
                 variant="outlined"
                 :disabled="loading"
-                :rules="[v => !!v || 'Nombre es requerido']"
+                :rules="[vrules.requiredField('Nombre')]"
               />
             </VCol>
             <VCol cols="6">
@@ -34,7 +34,7 @@
                 variant="outlined"
                 :disabled="loading"
                 label="Apellido Paterno"
-                :rules="[v => !!v || 'Apellido es requerido']"
+                :rules="[vrules.requiredField('Apellido')]"
               />
             </VCol>
             <VCol cols="6">
@@ -57,8 +57,8 @@
                 variant="outlined"
                 :disabled="loading"
                 inputmode="numeric"
-                :rules="numericRules"
-                @keypress="onlyDigits"
+                :rules="[vrules.integer]"
+                @keypress="vrules.onlyDigits"
               />
             </VCol>
             <VCol cols="6">
@@ -72,43 +72,17 @@
               />
             </VCol>
             <VCol cols="12">
-              <VMenu
-                v-model="addressMenu"
-                max-height="310"
-                location="bottom start"
-                :disabled="!addressSuggestions.length"
-              >
-                <template #activator="{ props: activatorProps }">
-                  <VTextField
-                    id="cmm-dialog-address"
-                    v-model="addressText"
-                    v-bind="activatorProps"
-                    clearable
-                    density="compact"
-                    label="Dirección"
-                    variant="outlined"
-                    :disabled="loading"
-                    :loading="addressSearching"
-                    @click:clear="onAddressClear"
-                    @update:model-value="onAddressText"
-                  />
-                </template>
-                <VList max-height="240" density="compact" class="overflow-y-auto">
-                  <VListItem
-                    v-for="(suggestion, i) in addressSuggestions"
-                    :key="i"
-                    :active="false"
-                    @click="onAddressPick(suggestion)"
-                  >
-                    <span class="text-body-2 font-weight-medium">{{ suggestion.displayName }}</span>
-                  </VListItem>
-                </VList>
-              </VMenu>
+              <MyAddressCompletion
+                id="cmm-dialog-address"
+                v-model="item.address"
+                :disabled="loading"
+              />
             </VCol>
             <VCol cols="6">
               <VSelect
                 id="cmm-dialog-marriage-status"
                 v-model="item.marriage_status"
+                clearable
                 density="compact"
                 variant="outlined"
                 :disabled="loading"
@@ -125,8 +99,8 @@
                 variant="outlined"
                 :disabled="loading"
                 inputmode="numeric"
-                :rules="numericRules"
-                @keypress="onlyDigits"
+                :rules="[vrules.integer]"
+                @keypress="vrules.onlyDigits"
               />
             </VCol>
 
@@ -175,11 +149,8 @@
 </template>
 
 <script setup lang="ts">
-  import {
-    searchAddresses,
-    buildAddressWithCity,
-    type AddressSuggestion,
-  } from '~/services/address-service'
+  import { vrules } from '~/utils/vrules'
+  import { MARRIAGE_STATUSES } from '~/constants/churchMember'
 
   interface MemberItem {
     id?: number | null
@@ -190,7 +161,7 @@
     cellphone?: string
     years_old?: number | null
     number_of_children?: number | null
-    marriage_status?: string
+    marriage_status?: string | null
     address?: string
     url_image?: string
     url_image_s3?: string
@@ -223,60 +194,13 @@
     cellphone: '',
     years_old: null,
     number_of_children: null,
-    marriage_status: '',
+    marriage_status: null,
     address: '',
     url_image: '',
     url_image_s3: '',
   })
 
-  const marriageStatuses = ['Soltero/a', 'Casado/a', 'Divorciado/a', 'Viudo/a', 'Unión Libre']
-
-  /* ── Address autocomplete ─────────────────────────────────── */
-
-  const addressSuggestions = ref<AddressSuggestion[]>([])
-  const addressText = ref('')
-  const addressMenu = ref(false)
-  const addressSearching = ref(false)
-  let addressDebounce: ReturnType<typeof setTimeout> | null = null
-
-  function onAddressText(query: string) {
-    if (addressDebounce) clearTimeout(addressDebounce)
-    if (!query || query.trim().length < 3) {
-      addressSuggestions.value = []
-      addressMenu.value = false
-      return
-    }
-    addressDebounce = setTimeout(async () => {
-      try {
-        addressSearching.value = true
-        addressSuggestions.value = await searchAddresses(query)
-        addressMenu.value = true
-      } catch {
-        addressSuggestions.value = []
-        addressMenu.value = false
-      } finally {
-        addressSearching.value = false
-      }
-    }, 500)
-  }
-
-  function onAddressPick(suggestion: AddressSuggestion) {
-    item.value.address = buildAddressWithCity(suggestion)
-    addressMenu.value = false
-  }
-
-  function onAddressClear() {
-    item.value.address = ''
-    addressSuggestions.value = []
-    addressMenu.value = false
-  }
-
-  watch(
-    () => item.value.address,
-    val => {
-      if (typeof val === 'string') addressText.value = val || ''
-    }
-  )
+  const marriageStatuses = MARRIAGE_STATUSES
 
   /* ── Computed ─────────────────────────────────────────────── */
 
@@ -296,21 +220,6 @@
     { immediate: true, deep: true }
   )
 
-  /* ── Validation ───────────────────────────────────────────── */
-
-  function onlyDigits(e: KeyboardEvent) {
-    if (!/\d/.test(e.key)) e.preventDefault()
-  }
-
-  const numericRules = [
-    (v: string | number | null) =>
-      v === null ||
-      v === '' ||
-      String(v).trim() === '' ||
-      /^\d+$/.test(String(v)) ||
-      'Solo se permiten números',
-  ]
-
   /* ── Actions ──────────────────────────────────────────────── */
 
   function close() {
@@ -323,9 +232,6 @@
     if (form) {
       const { valid } = await form.validate()
       if (!valid) return
-    }
-    if (item.value.address !== addressText.value) {
-      item.value.address = addressText.value
     }
     const { url_image, url_image_s3, ...rest } = item.value as Record<string, unknown>
     const payload = { ...rest }

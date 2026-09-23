@@ -102,7 +102,7 @@
       v-if="trackingLogDialog"
       id="cmm-tracking-log-dlg"
       :loading="saving"
-      :log="editingLog"
+      :log="editingLog ?? undefined"
       @save="saveTrackingLog"
       @close="trackingLogDialog = false"
     />
@@ -115,45 +115,20 @@
       @close="medalDialog = false"
     />
 
-    <VDialog
+    <ChurchMemberMedalDeleteDialog
+      v-if="medalDeleteDialog"
       v-model="medalDeleteDialog"
-      max-width="400"
-      role="alertdialog"
-      aria-describedby="medal-delete-desc"
-      aria-labelledby="medal-delete-title"
-    >
-      <VCard>
-        <VCardTitle
-          id="medal-delete-title"
-          class="text-subtitle-1 font-weight-medium"
-        >
-          <VIcon start color="warning">mdi-alert-outline</VIcon>
-          Confirmar eliminación
-        </VCardTitle>
-        <VCardText id="medal-delete-desc">
-          ¿Desea remover la medalla
-          <strong v-if="medalToDelete">{{
-            medalLabel(medalToDelete.medal)
-          }}</strong
-          >?
-        </VCardText>
-        <VCardActions>
-          <VSpacer />
-          <VBtn variant="text" @click="medalDeleteDialog = false"
-            >Cancelar</VBtn
-          >
-          <VBtn color="error" variant="flat" @click="removeMedal"
-            >Eliminar</VBtn
-          >
-        </VCardActions>
-      </VCard>
-    </VDialog>
+      :medal="medalToDelete"
+      :member-id="route.params.id as string"
+      @deleted="onMedalSaved"
+    />
   </VContainer>
 </template>
 
 <script setup lang="ts">
 import { useAsyncData } from "#app";
 import { buildApiParams } from "~/utils/buildApiParams";
+import { localDateTimeString } from "~/utils/date";
 
 definePageMeta({
   title: "Detalle Consolidado",
@@ -250,17 +225,6 @@ const hasConsolidatorChanges = computed(() => {
   return currentIds !== pendingIds;
 });
 
-const MEDAL_OPTIONS = [
-  { title: "Bautizo", value: "bautizo" },
-  { title: "EDIN", value: "edin" },
-  { title: "Servicio", value: "servicio" },
-];
-
-function medalLabel(medal: unknown): string {
-  return (
-    MEDAL_OPTIONS.find((m) => m.value === medal)?.title ?? String(medal ?? "")
-  );
-}
 
 const backRoute = computed(() => {
   const from = route.query.from as string | undefined;
@@ -373,11 +337,6 @@ const backRoute = computed(() => {
 
 }
 
-function localDateTimeString(date = new Date()): string {
-  const pad = (value: number) => String(value).padStart(2, "0");
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
-}
-
 async function fetchTrackingLogs(overrides: Record<string, unknown> = {}) {
   const id = route.params.id as string;
   if (!id) return;
@@ -421,7 +380,7 @@ async function saveTrackingLog(payload: Record<string, unknown>) {
     saving.value = true;
     await ChurchMemberTrackingLog.update<Record<string, unknown>>(
       id,
-      logId,
+      logId as string | number,
       payload,
     );
     editingLog.value = null;
@@ -445,7 +404,7 @@ async function deleteTrackingLog(log: Record<string, unknown>) {
   if (!confirm("¿Desea eliminar esta interacción?")) return;
   try {
     saving.value = true;
-    await ChurchMemberTrackingLog.delete<Record<string, unknown>>(id, logId);
+    await ChurchMemberTrackingLog.delete<Record<string, unknown>>(id, logId as string | number);
     await fetchTrackingLogs();
   } catch (error) {
     notify.notify({
@@ -539,7 +498,7 @@ async function saveConsolidators() {
     const ids = pendingConsolidators.value.map((c) => c.id);
     const updated = await ChurchMember.syncConsolidators<{
       data: { id: number | string; name: string; last_name?: string }[];
-    }>(id, { consolidator_ids: ids });
+    }>(id, ids);
     member.value = { ...member.value, consolidators: updated.data };
     pendingConsolidators.value = null;
     const logs = await ChurchMember.consolidatorLogs<
@@ -579,19 +538,5 @@ async function onMedalSaved() {
 function confirmDeleteMedal(medal: { id: number; medal: string }) {
   medalToDelete.value = medal;
   medalDeleteDialog.value = true;
-}
-async function removeMedal() {
-  const id = route.params.id as string;
-  const medal = medalToDelete.value;
-  if (!id || !medal) return;
-  medalDeleteDialog.value = false;
-  try {
-    await ChurchMember.deleteMedal(id, medal.id);
-    await onMedalSaved();
-  } catch {
-    // withNotify already surfaced the error
-  } finally {
-    medalToDelete.value = null;
-  }
 }
 </script>

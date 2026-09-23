@@ -27,7 +27,7 @@ body {
 }
 
 /* v-container: top padding for VSheet inside the container */
-.v-container > .v-sheet {
+.v-container .v-sheet {
   padding-top: 8px !important;
 }
 

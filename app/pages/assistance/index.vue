@@ -3,64 +3,26 @@
     <VSheet rounded color="white">
       <VRow density="compact">
         <VCol md="2" cols="12">
-          <VTextField
-            id="ass-index-filter"
-            v-model="filterInput"
-            clearable
-            hide-details
-            density="compact"
-            variant="outlined"
-            append-inner-icon="mdi-magnify"
-            placeholder="Buscar asistencia..."
-          />
+          <VTextField id="ass-index-filter" v-model="filterInput" clearable hide-details density="compact" variant="outlined" append-inner-icon="mdi-magnify" placeholder="Buscar asistencia..." />
         </VCol>
 
         <VCol cols="auto" class="d-flex align-center">
-          <VBtn
-            id="ass-refresh-btn"
-            class="mr-1"
-            color="primary"
-            :loading="loading"
-            variant="outlined"
-            @click="refreshAssistances"
-          >
+          <VBtn id="ass-refresh-btn" class="mr-1" color="primary" :loading="loading" variant="outlined" @click="refreshAssistances">
             <VIcon start>mdi-reload</VIcon>
             Refrescar
           </VBtn>
-          <VBtn
-            v-if="canCreate"
-            id="ass-new-btn"
-            class="mr-1"
-            color="success"
-            @click="newAssistance"
-          >
+          <VBtn v-if="canCreate" id="ass-new-btn" class="mr-1" color="success" @click="newAssistance">
             <VIcon start>mdi-plus</VIcon>
             Nuevo
           </VBtn>
-          <VBtn
-            v-if="canBulk"
-            id="ass-bulk-btn"
-            color="primary"
-            variant="outlined"
-            @click="bulkDialog = true"
-          >
+          <VBtn v-if="canBulk" id="ass-bulk-btn" color="primary" variant="outlined" @click="bulkDialog = true">
             <VIcon start>mdi-file-excel</VIcon>
             Importar
           </VBtn>
         </VCol>
 
         <VCol v-if="!orgFilterHidden" lg="1" md="3" sm="4" cols="6">
-          <OrganizationSelect
-            v-model="filterOrgId"
-            v-model:hidden="orgFilterHidden"
-            hide-one
-            clearable
-            hide-details
-            density="compact"
-            variant="outlined"
-            prevent-auto-select
-            permission="assistance-index"
-          />
+          <OrganizationSelect v-model="filterOrgId" v-model:hidden="orgFilterHidden" hide-one clearable hide-details density="compact" variant="outlined" prevent-auto-select permission="assistance-index" />
         </VCol>
 
         <VCol cols="12">
@@ -87,23 +49,9 @@
       @close="closeAssistanceDialog"
     />
 
-    <AssistanceForm
-      v-if="editDialog"
-      :dialog="true"
-      :loading="savingAssistance"
-      permission="assistance-update"
-      :assistance="editAssistanceRecord"
-      @close="closeEditDialog"
-      @save="saveEditAssistance"
-    />
+    <AssistanceForm v-if="editDialog" :dialog="true" :loading="savingAssistance" permission="assistance-update" :assistance="editAssistanceRecord" @close="closeEditDialog" @save="saveEditAssistance" />
 
-    <DialogDelete
-      v-if="assistanceDialogDelete"
-      :loading="deleting"
-      :dialog="dialogDelete"
-      @ok="deleteAssistance"
-      @close="assistanceDialogDelete = false"
-    />
+    <DialogDelete v-if="assistanceDialogDelete" :loading="deleting" :dialog="dialogDelete" @ok="deleteAssistance" @close="assistanceDialogDelete = false" />
 
     <VDialog v-model="bulkDialog" max-width="500">
       <VCard>
@@ -114,16 +62,7 @@
           <VBtn variant="text" icon="mdi-close" @click="bulkDialog = false" />
         </VCardTitle>
         <VCardText>
-          <VFileInput
-            id="ass-bulk-file"
-            v-model="bulkFile"
-            clearable
-            hide-details
-            density="compact"
-            variant="outlined"
-            accept=".xlsx,.xls"
-            label="Archivo Excel"
-          />
+          <VFileInput id="ass-bulk-file" v-model="bulkFile" clearable hide-details density="compact" variant="outlined" accept=".xlsx,.xls" label="Archivo Excel" />
         </VCardText>
         <VCardText>
           <div class="d-flex justify-end">
@@ -182,9 +121,10 @@
 
   const effectiveOrgId = computed(() => {
     const orgPermission = auth.permissionsOrg['assistance-index'] ?? []
-    const orgs = auth.user?.orgs ?? []
-    if (orgs.length === 1 && orgPermission.includes((orgs[0] as { id: unknown }).id)) {
-      return (orgs[0] as { id: unknown }).id
+    const orgs = Array.isArray(auth.user?.orgs) ? auth.user.orgs as Array<{ id: number }> : []
+    const org = orgs[0]
+    if (orgs.length === 1 && org && orgPermission.includes(org.id)) {
+      return org.id
     }
     return null
   })
@@ -311,9 +251,7 @@
 
   function createNewAssistance(): Record<string, unknown> {
     const now = new Date()
-    const localToday = new Date(now.getTime() - now.getTimezoneOffset() * 60_000)
-      .toISOString()
-      .slice(0, 10)
+    const localToday = new Date(now.getTime() - now.getTimezoneOffset() * 60_000).toISOString().slice(0, 10)
 
     return {
       assistance_date: localToday,
@@ -365,10 +303,14 @@
     try {
       bulkLoading.value = true
       const file = bulkFile.value[0]
+      if (!file) return
       const XLSX = await import('xlsx')
       const arrayBuffer = await file.arrayBuffer()
       const workbook = XLSX.read(arrayBuffer, { type: 'array', cellDates: true })
-      const sheet = workbook.Sheets[workbook.SheetNames[0]]
+      const sheetName = workbook.SheetNames[0]
+      if (!sheetName) return
+      const sheet = workbook.Sheets[sheetName]
+      if (!sheet) return
       const json = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, { defval: '' })
 
       const rows = json.map((row: Record<string, unknown>) => {

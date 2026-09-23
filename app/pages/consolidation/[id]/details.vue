@@ -2,10 +2,10 @@
   <VContainer :fluid="true" class="page-consolidation-details">
     <VRow density="compact">
        <VCol cols="12">
-        <VSheet id="con-detai-card-2" rounded class="mb-3" color="white">
+        <VSheet id="con-detai-card-2" rounded color="white">
 <div class="text-subtitle-1 font-weight-bold d-flex align-center py-3">
-          <VIcon start>mdi-clipboard-list</VIcon>
-          Folio #{{ sheet.folio_number }}
+          <VIcon start>mdi-account-group</VIcon>
+          Miembros
         </div>
         <div>
           <VRow density="compact">
@@ -44,22 +44,14 @@
               />
             </VCol>
           </VRow>
-          <VRow density="compact">
-            <VCol cols="12" class="d-flex justify-end">
-              <VBtn id="cnsld-back-btn" color="primary" variant="outlined" @click="navigateTo('/consolidation')">
-                <VIcon start>mdi-arrow-left</VIcon>
-                Volver
-              </VBtn>
-            </VCol>
-          </VRow>
 </div>
         </VSheet>
        </VCol>
      
 <VCol cols="12">
-         <VSheet id="con-detai-card-1" rounded class="mb-3" color="white">
-         
-           <VCardText>
+         <VSheet id="con-detai-card-1" rounded color="white">
+          
+           <div>
             <VRow  align="center" density="compact">
               <VCol md="2" cols="12">
                 <div class="d-flex align-center">
@@ -160,23 +152,28 @@
                 />
               </VCol>
 
-              <VCol cols="12" class="d-flex justify-end mt-2">
-                <VBtn
+                 <VCol cols="12" class="d-flex justify-end mt-2">
+                   <VBtn
                   id="cnsld-save-sheet-btn"
-                  size="small"
+               class="mr-4"
                   color="primary"
                   variant="elevated"
                   :loading="savingSheet"
                   :disabled="!isDirty || savingSheet"
                   @click="saveSheet"
                 >
-                  <VIcon start size="small">mdi-content-save</VIcon>
+                  <VIcon start >mdi-content-save</VIcon>
                   Guardar
                 </VBtn>
+                <VBtn id="cnsld-back-btn"  color="primary" variant="outlined" @click="navigateTo('/consolidation')">
+                  <VIcon start>mdi-arrow-left</VIcon>
+                  Volver
+                </VBtn>   
+             
               </VCol>
             </VRow>
-          </VCardText>
-        </VCard>
+          </div>
+        </VSheet>
       </VCol>
 
     
@@ -270,6 +267,10 @@ const { data: membersData, pending: membersPending } = await useAsyncData(
 sheet.value = sheetData.value as Record<string, unknown>
 originalSheet.value = JSON.parse(JSON.stringify(sheet.value))
 members.value = Array.isArray(membersData.value) ? membersData.value : (membersData.value as { data?: unknown[] })?.data || []
+
+if (sheet.value.folio_number) {
+  route.meta.title = `Folio #${sheet.value.folio_number}`
+}
 
 const loading = computed(
   () => sheetPending.value || membersPending.value || refreshingMembers.value,
@@ -484,17 +485,3 @@ function confirmAbort() {
 }
 </script>
 
-<style scoped>
-#con-detai-card-1,
-#con-detai-card-2 {
-  margin: 0;
-  padding: 0;
-  border: none;
-  background-color: #FFFFFF !important;
-}
-#con-detai-card-1 :deep(.v-card-text),
-#con-detai-card-2 :deep(.v-card-text) {
-  padding: 0;
-  margin: 0;
-}
-</style>

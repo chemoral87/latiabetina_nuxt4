@@ -39,10 +39,7 @@ export const vrules = {
 
   numeric: (value: unknown) => {
     if (value === null || value === undefined || value === '') return true
-    return (
-      (!isNaN(parseFloat(String(value))) && isFinite(Number(value))) ||
-      'El campo debe ser un número.'
-    )
+    return (!isNaN(parseFloat(String(value))) && isFinite(Number(value))) || 'El campo debe ser un número.'
   },
 
   integer: (value: unknown) => {
@@ -52,17 +49,12 @@ export const vrules = {
 
   alpha: (value: unknown) => {
     if (!value) return true
-    return (
-      /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/.test(String(value)) || 'El campo sólo debe contener letras.'
-    )
+    return /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/.test(String(value)) || 'El campo sólo debe contener letras.'
   },
 
   alphaNum: (value: unknown) => {
     if (!value) return true
-    return (
-      /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9\s]+$/.test(String(value)) ||
-      'El campo sólo debe contener letras y números.'
-    )
+    return /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9\s]+$/.test(String(value)) || 'El campo sólo debe contener letras y números.'
   },
 
   url: (value: unknown) => {
@@ -89,10 +81,7 @@ export const vrules = {
 
   phone: (value: unknown) => {
     if (!value) return true
-    return (
-      /^\+?[\d\s()-]{7,15}$/.test(String(value)) ||
-      'El campo debe ser un número de teléfono válido.'
-    )
+    return /^\+?[\d\s()-]{7,15}$/.test(String(value)) || 'El campo debe ser un número de teléfono válido.'
   },
 
   min: (min: number) => (value: unknown) => {
@@ -110,8 +99,7 @@ export const vrules = {
     return Number(value) >= min || `El campo debe ser mayor o igual a ${min}.`
   },
 
-  maxValue: (max: number) => (value: unknown) => {
-    if (value === null || value === undefined || value === '') return true
-    return Number(value) <= max || `El campo debe ser menor o igual a ${max}.`
+  onlyDigits: (e: KeyboardEvent) => {
+    if (!/\d/.test(e.key)) e.preventDefault()
   },
 }
