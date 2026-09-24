@@ -87,4 +87,6 @@ npx playwright test tests/e2e/login.spec.ts
 ```bash
 
 npx playwright test tests/e2e/role.spec.ts
+
+npx playwright test tests/e2e
 ```
