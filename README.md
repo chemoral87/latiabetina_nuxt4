@@ -73,3 +73,18 @@ bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+#E2E Tests
+
+## Login
+
+```bash
+npx playwright test tests/e2e/login.spec.ts
+```
+
+## Role
+
+```bash
+
+npx playwright test tests/e2e/role.spec.ts
+```
