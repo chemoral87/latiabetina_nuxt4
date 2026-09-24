@@ -28,3 +28,4 @@ graphify-out/*
 .claude/settings.json
 CLAUDE.md
 app/components/Assistance/graphify-out/.graphify_analysis.json
+test-results/*

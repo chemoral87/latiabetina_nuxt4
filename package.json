@@ -12,6 +12,9 @@
     "lint": "eslint app",
     "lint:fix": "eslint app --fix",
     "test": "vitest run",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
     "bump:version": "npm version patch --no-git-tag-version",
     "prepare": "husky",
     "postinstall": "nuxt prepare"
@@ -38,6 +41,7 @@
     "@babel/core": "^8.0.1",
     "@babel/eslint-parser": "^8.0.1",
     "@babel/preset-typescript": "^8.0.1",
+    "@playwright/test": "^1.63.0",
     "eslint": "^9.39.5",
     "eslint-plugin-vue": "^10.10.0",
     "husky": "^9.1.7",
