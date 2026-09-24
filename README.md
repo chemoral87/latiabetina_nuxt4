@@ -85,8 +85,8 @@ npx playwright test tests/e2e/login.spec.ts
 ## Role
 
 ```bash
-
+export E2E_EMAIL="chemoral87@hotmail.com"
+export E2E_PASSWORD=""
 npx playwright test tests/e2e/role.spec.ts
-
 npx playwright test tests/e2e
 ```
