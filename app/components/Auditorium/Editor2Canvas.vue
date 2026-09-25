@@ -26,7 +26,17 @@
       >
         <!-- Sections -->
         <VGroup v-for="section in config.sections" :key="`section-${section.id}`" :config="getSectionGroupConfig(section)">
-          <AuditoriumSeatGrid :seat-size="seatSize" :title="section.name" :seats="section.seats" :categories="categories" :seats-distance="seatsDistance" />
+          <AuditoriumSeatGrid
+            boxed
+            :show-stats="true"
+            :seat-size="seatSize"
+            :title="section.name"
+            :seats="section.seats"
+            :categories="categories"
+            :seats-distance="seatsDistance"
+            :border-width="SUBSECTION_BORDER_WIDTH"
+            :border-color="SUBSECTION_BORDER_COLORS[config.sections.indexOf(section) % SUBSECTION_BORDER_COLORS.length]"
+          />
           <!-- Pencil hit-target (top-right); marked as control so it doesn't drag the section -->
           <VGroup :config="getSectionPencilConfig(section)">
             <VCircle :config="controlCircleConfig('#1976d2', e => onSectionEdit(section, e))" />
@@ -107,7 +117,7 @@
    * `section-edit` (task 4/6 wires the rows/cols dialog). Tag rename/delete are
    * handled here with a small dialog + emit.
    */
-  import { COLORS, DEFAULT_SETTINGS, STAGE_CATEGORIES } from '~/constants/auditorium'
+  import { COLORS, DEFAULT_SETTINGS, STAGE_CATEGORIES, SUBSECTION_BORDER_COLORS, SUBSECTION_BORDER_WIDTH } from '~/constants/auditorium'
   import type { FloatingLayoutConfig, FloatingSection, FloatingTag } from '~/types/auditorium'
   import { getFloatingSectionHeight, getFloatingSectionWidth } from '~/utils/auditoriumFloating'
   import { useUAParser } from '~/utils/userAgent'
