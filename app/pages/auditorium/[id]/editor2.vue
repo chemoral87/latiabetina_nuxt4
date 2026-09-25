@@ -6,10 +6,21 @@
           <span v-if="auditorium && auditorium.name" class="text-h6 text-md-h5">
             {{ auditorium.name }}
           </span>
-          <VBtn id="ae2-save-btn" color="primary" :loading="saving" :disabled="saving" variant="elevated" :size="mobile ? 'small' : undefined" @click="saveAuditorium">
-            <VIcon :start="!mobile">mdi-content-save</VIcon>
-            <span v-if="!mobile">Guardar</span>
-          </VBtn>
+          <div class="d-flex ga-2">
+            <VBtn id="ae2-import-btn" variant="outlined" :size="mobile ? 'small' : undefined" @click="triggerImport">
+              <VIcon :start="!mobile">mdi-import</VIcon>
+              <span v-if="!mobile">Importar JSON</span>
+            </VBtn>
+            <VBtn id="ae2-export-btn" variant="outlined" :size="mobile ? 'small' : undefined" @click="exportConfig">
+              <VIcon :start="!mobile">mdi-export</VIcon>
+              <span v-if="!mobile">Exportar JSON</span>
+            </VBtn>
+            <VBtn id="ae2-save-btn" color="primary" :loading="saving" :disabled="saving" variant="elevated" :size="mobile ? 'small' : undefined" @click="saveAuditorium">
+              <VIcon :start="!mobile">mdi-content-save</VIcon>
+              <span v-if="!mobile">Guardar</span>
+            </VBtn>
+          </div>
+          <input ref="importFileInput" type="file" accept=".json" style="display: none" @change="onImportFile" />
         </div>
       </VCol>
     </VRow>
@@ -320,6 +331,38 @@
 
   function onTagRename(_tag: FloatingTag, _text: string) {
     // Canvas mutates tag.text in place; emit kept for future listeners.
+  }
+
+  const importFileInput = ref<HTMLInputElement | null>(null)
+
+  function exportConfig() {
+    const json = serializeFloatingConfig(config.value)
+    const blob = new Blob([json], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `auditorium-${id}-config.json`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  function triggerImport() {
+    importFileInput.value?.click()
+  }
+
+  function onImportFile(e: Event) {
+    const file = (e.target as HTMLInputElement).files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = ev => {
+      try {
+        config.value = parseFloatingConfig(ev.target?.result as string)
+      } catch {
+        // invalid json — silently ignore
+      }
+    }
+    reader.readAsText(file)
+    ;(e.target as HTMLInputElement).value = ''
   }
 
   async function saveAuditorium() {
