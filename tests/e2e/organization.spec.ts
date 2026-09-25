@@ -18,6 +18,7 @@ test.describe.serial('Organization CRUD', () => {
   test('logs in as admin', async ({ page }) => await expect(page).toHaveURL(/\/dashboard/))
   test('verifies permissions', async ({ page }) => {
     await page.goto('/account')
+    await page.waitForLoadState('networkidle')
     const account = page.locator('#acc-permissions-card')
     await expect(account).toBeVisible()
     await expect(account.getByText('organization-index', { exact: true })).toBeVisible()
@@ -38,6 +39,7 @@ test.describe.serial('Organization CRUD', () => {
     await page.goto('/organization')
     await page.waitForLoadState('networkidle')
     await page.getByPlaceholder('Filtro').fill(name)
+    await page.waitForTimeout(500)
     await page.getByRole('row').filter({ hasText: name }).getByTitle('Editar').click()
     await page.getByRole('textbox', { name: 'Nombre' }).fill(edited)
     await page.locator('#org-dialog-save-btn').click()

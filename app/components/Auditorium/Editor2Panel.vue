@@ -23,6 +23,7 @@
       <span style="width: 28px" />
       <span class="flex-grow-1">Sección</span>
       <span class="text-center" style="width: 60px">Grupo</span>
+      <span style="width: 28px" />
       <span style="width: 56px" />
     </div>
 
@@ -50,6 +51,18 @@
         :aria-label="`Grupo ${section.name}`"
         @update:model-value="updateSectionGroup(section.id, $event)"
       />
+      <VCheckbox
+        v-if="isFirstInGroup(section.id, section.group)"
+        :id="`ae2-group-check-${section.group}`"
+        hide-details
+        density="compact"
+        class="flex-grow-0"
+        style="width: 28px"
+        :model-value="isGroupSelected(section.group)"
+        :aria-label="`Seleccionar grupo ${section.group}`"
+        @update:model-value="toggleGroup(section.group)"
+      />
+      <span v-else style="width: 28px" />
       <div style="width: 56px" class="d-flex flex-grow-0">
         <VBtn :id="`ae2-section-up-${section.id}`" icon size="x-small" variant="text" :disabled="idx === 0" @click="emit('move-section', idx, -1)">
           <VIcon size="16">mdi-chevron-up</VIcon>
@@ -61,6 +74,19 @@
     </div>
 
     <VDivider class="my-2" />
+
+    <VTextField
+      id="ae2-gap-input"
+      min="0"
+      class="mb-2"
+      hide-details
+      type="number"
+      density="compact"
+      :model-value="gap"
+      variant="outlined"
+      label="Espacio entre secciones (px)"
+      @update:model-value="emit('update:gap', Number($event))"
+    />
 
     <div class="d-flex flex-wrap ga-1">
       <VTooltip v-for="action in alignActions" :key="action.key" location="top">
@@ -81,6 +107,7 @@
   const props = defineProps<{
     sections: FloatingSection[]
     selectedIds: string[]
+    gap: number
   }>()
 
   const emit = defineEmits<{
@@ -90,6 +117,7 @@
     (e: 'toggle-section', id: string): void
     (e: 'update-section-group', id: string, group: number | undefined): void
     (e: 'move-section', fromIndex: number, direction: -1 | 1): void
+    (e: 'update:gap', value: number): void
   }>()
 
   function updateSectionGroup(id: string, value: string | number | null) {
@@ -112,5 +140,30 @@
 
   function toggleSection(id: string) {
     emit('toggle-section', id)
+  }
+
+  function isFirstInGroup(sectionId: string, group: number | undefined): boolean {
+    if (group === undefined) return false
+    const idx = props.sections.findIndex(s => s.group === group)
+    return idx >= 0 && props.sections[idx].id === sectionId
+  }
+
+  function isGroupSelected(group: number | undefined): boolean {
+    if (group === undefined) return false
+    const groupSections = props.sections.filter(s => s.group === group)
+    return groupSections.length > 0 && groupSections.every(s => props.selectedIds.includes(s.id))
+  }
+
+  function toggleGroup(group: number | undefined) {
+    if (group === undefined) return
+    const groupSections = props.sections.filter(s => s.group === group)
+    const allSelected = groupSections.every(s => props.selectedIds.includes(s.id))
+    for (const section of groupSections) {
+      if (allSelected && props.selectedIds.includes(section.id)) {
+        emit('toggle-section', section.id)
+      } else if (!allSelected && !props.selectedIds.includes(section.id)) {
+        emit('toggle-section', section.id)
+      }
+    }
   }
 </script>

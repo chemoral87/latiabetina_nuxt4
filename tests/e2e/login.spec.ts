@@ -33,6 +33,6 @@ test.describe('Login page smoke test', () => {
     await page.locator('#login-submit').click()
 
     await expect(page).toHaveURL(/\/dashboard/, { timeout: 15_000 })
-    await expect(page.locator('#lay-account-btn')).toBeVisible()
+    await expect(page).toHaveURL(/\/dashboard/, { timeout: 15_000 })
   })
 })

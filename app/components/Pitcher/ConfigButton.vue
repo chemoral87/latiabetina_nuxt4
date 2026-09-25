@@ -489,7 +489,7 @@
               <VSlider
                 id="pit-config-sensitivity"
                 v-model="sensitivity"
-                :max="0.01"
+                :max="0.05"
                 thumb-label
                 hide-details
                 :min="0.0001"

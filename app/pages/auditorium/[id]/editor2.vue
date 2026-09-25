@@ -30,6 +30,7 @@
 
       <VCol :md="3" cols="12" :order="mdAndUp ? 1 : 2">
         <AuditoriumEditor2Panel
+          :gap="constantGap"
           :sections="config.sections"
           :selected-ids="selectedSectionIds"
           @add-tag="addTag"
@@ -37,6 +38,7 @@
           @add-section="addSection"
           @move-section="moveSection"
           @toggle-section="toggleSection"
+          @update:gap="constantGap = $event"
           @update-section-group="updateSectionGroup"
         />
       </VCol>
@@ -87,7 +89,7 @@
    * Spacing (px) left between sections by the distribute alignment actions
    * ('dist-h' / 'dist-v'). Single definition so both axes stay in step.
    */
-  const constantGap = 25
+  const constantGap = ref(25)
 
   const sectionDialogOpen = ref(false)
   const editingSection = ref<FloatingSection | null>(null)
@@ -171,7 +173,7 @@
       let cursor = ordered[0].x
       for (const s of ordered) {
         s.x = cursor
-        cursor += getFloatingSectionWidth(s) + constantGap
+        cursor += getFloatingSectionWidth(s) + constantGap.value
       }
     } else if (key === 'dist-v') {
       const all = config.value.sections
@@ -179,7 +181,7 @@
       let cursor = ordered[0].y
       for (const s of ordered) {
         s.y = cursor
-        cursor += getFloatingSectionHeight(s) + constantGap
+        cursor += getFloatingSectionHeight(s) + constantGap.value
       }
     }
   }
