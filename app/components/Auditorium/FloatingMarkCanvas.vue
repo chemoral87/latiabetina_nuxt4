@@ -29,15 +29,14 @@
           :config="{
             x: section.x,
             y: section.y,
-            // Tapping anywhere on a section (its box, its padding or one of its
-            // seats) drills into it. Seat clicks bubble up to here, which is
-            // what makes the whole box a hit target in the overview.
             onClick: () => {
               if (!props.selectedSectionId) emit('section-click', section)
             },
             onTap: () => {
               if (!props.selectedSectionId) emit('section-click', section)
             },
+            onMouseenter: (e: any) => showTooltip(e, section.id),
+            onMouseleave: hideTooltip,
           }"
         >
           <AuditoriumSeatGrid
@@ -67,6 +66,13 @@
           <VRect :config="getTagBgConfig(tag)" />
           <VText :config="getTagTextConfig(tag)" />
         </VGroup>
+      </VLayer>
+
+      <VLayer v-if="tooltip.visible">
+        <VLabel :config="{ x: tooltip.x, y: tooltip.y, opacity: 0.9 }">
+          <VTag :config="{ fill: '#222', cornerRadius: 4, pointerDirection: 'down', pointerWidth: 8, pointerHeight: 6 }" />
+          <VText :config="{ text: tooltip.text, fontSize: 13, fill: '#fff', fontFamily: 'Arial', padding: 6 }" />
+        </VLabel>
       </VLayer>
     </VStage>
   </VSheet>
@@ -136,6 +142,25 @@ const adjustedStageConfig = computed(() => ({
   draggable: !isTwoFingerGesture.value,
   dragDistance: uaParser.isMobile() ? 12 : 5,
 }))
+
+const tooltip = reactive({ visible: false, x: 0, y: 0, text: '' })
+
+function showTooltip(e: any, text: string) {
+  if (props.selectedSectionId) return
+  try {
+    const stage = e.target.getStage()
+    const pos = stage.getPointerPosition()
+    if (!pos) return
+    tooltip.x = pos.x / zoomLevel.value
+    tooltip.y = (pos.y / zoomLevel.value) - 12
+    tooltip.text = text
+    tooltip.visible = true
+  } catch { /* ignore */ }
+}
+
+function hideTooltip() {
+  tooltip.visible = false
+}
 
 /** Only the drilled-in section (when one is selected), otherwise all of them. */
 const visibleSections = computed<FloatingSection[]>(() => {
