@@ -8,6 +8,7 @@ import {
   duplicateFloatingSection,
   getFloatingSectionWidth,
   getFloatingSectionHeight,
+  applyFloatingSeatStatuses,
 } from '~/utils/auditoriumFloating'
 
 describe('parseFloatingConfig', () => {
@@ -236,5 +237,21 @@ describe('getFloatingSectionWidth / getFloatingSectionHeight', () => {
     // width should scale with cols, height with rows
     const wider = createFloatingSection('Dos', 0, 0, 3, 10)
     expect(getFloatingSectionWidth(wider)).toBeGreaterThan(getFloatingSectionWidth(section))
+  })
+})
+
+describe('applyFloatingSeatStatuses', () => {
+  it('applies grouped shape { status: { letter: ["r-c"] } }', () => {
+    const config = parseFloatingConfig(serializeFloatingConfig({ v: 2, sections: [createFloatingSection('Uno', 0, 0, 2, 2)], tags: [] }))
+    applyFloatingSeatStatuses(config.sections, { h: { A: ['1-1', '2-2'] } })
+    expect(config.sections[0].seats[0][0]!.status).toBe('h')
+    expect(config.sections[0].seats[1][1]!.status).toBe('h')
+    expect(config.sections[0].seats[0][1]!.status).toBeUndefined()
+  })
+
+  it('still accepts legacy flat shape { status: ["A-1-1"] }', () => {
+    const config = parseFloatingConfig(serializeFloatingConfig({ v: 2, sections: [createFloatingSection('Uno', 0, 0, 2, 2)], tags: [] }))
+    applyFloatingSeatStatuses(config.sections, { m: ['A-1-2'] })
+    expect(config.sections[0].seats[0][1]!.status).toBe('m')
   })
 })

@@ -69,7 +69,7 @@
    * Sections and tags are freely positioned on a Konva canvas (JSON-only config).
    * Section pencil opens Editor2SectionDialog (rows/cols, categories, dup/delete).
    */
-  import { withNotify } from '~/repositories/factory/withNotify'
+
   import type { FloatingLayoutConfig, FloatingSection, FloatingTag } from '~/types/auditorium'
   import {
     createFloatingSection,

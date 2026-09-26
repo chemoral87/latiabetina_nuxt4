@@ -281,15 +281,38 @@ export function findFloatingSeatById(sections: FloatingSection[], seatId: number
 
 /**
  * Apply seat statuses from event data onto floating sections, in place.
- * seatsData shape: { status: [seatId, ...], ... }
+ * seatsData shapes:
+ *   { status: { letter: ["r-c", ...], ... }, ... }  (grouped by section)
+ *   { status: ["A-1-1", ...], ... }                (legacy flat arrays)
  */
 export function applyFloatingSeatStatuses(sections: FloatingSection[], seatsData: unknown): void {
   if (!seatsData || Array.isArray(seatsData)) return
-  Object.entries(seatsData as Record<string, string[]>).forEach(([status, seatIds]) => {
-    if (!Array.isArray(seatIds)) return
-    seatIds.forEach(seatId => {
-      const seat = findFloatingSeatById(sections, seatId)
-      if (seat) seat.status = status
-    })
+  const byId = new Map<string, FloatingSeat>()
+  for (const section of sections) {
+    for (const row of section.seats) {
+      for (const seat of row) {
+        if (seat) byId.set(seat.id, seat)
+      }
+    }
+  }
+  Object.entries(seatsData as Record<string, unknown>).forEach(([status, value]) => {
+    if (Array.isArray(value)) {
+      // legacy flat: ["A-1-1", ...]
+      value.forEach(seatId => {
+        const seat = byId.get(String(seatId))
+        if (seat) seat.status = status
+      })
+      return
+    }
+    if (value && typeof value === 'object') {
+      // grouped: { A: ["1-6", ...], ... }
+      Object.entries(value as Record<string, string[]>).forEach(([letter, rest]) => {
+        if (!Array.isArray(rest)) return
+        rest.forEach(rc => {
+          const seat = byId.get(`${letter}-${rc}`)
+          if (seat) seat.status = status
+        })
+      })
+    }
   })
 }

@@ -431,13 +431,23 @@
         last_timestamp.value = timestamp
       }
 
-      if (seatIds && Array.isArray(seatIds)) {
+      if (Array.isArray(seatIds)) {
+        // legacy flat: ["A-1-6", ...]
         seatIds.forEach((item: any) => {
           const sid = typeof item === 'string' ? item : item.z || item.seat_id
           const seatStatus =
             typeof item === 'object' && item !== null ? item.s || item.status || status : status
           const s = findFloatingSeatById(config.value.sections, sid)
           if (s) s.status = seatStatus
+        })
+      } else if (seatIds && typeof seatIds === 'object') {
+        // grouped by section letter: { A: ["1-6", ...], ... }
+        Object.entries(seatIds as Record<string, string[]>).forEach(([letter, rest]) => {
+          if (!Array.isArray(rest)) return
+          rest.forEach(rc => {
+            const s = findFloatingSeatById(config.value.sections, `${letter}-${rc}`)
+            if (s) s.status = status
+          })
         })
       }
     }
