@@ -70,24 +70,16 @@
       <VBtn
         id="auev-mark2-fullscreen-btn"
         icon
-        size="small"
+        size="large"
         color="white"
         variant="text"
         class="auev-fs-btn"
         :title="fullscreen ? 'Salir de pantalla completa' : 'Pantalla completa'"
         @click="emit('toggle-fullscreen')"
       >
-        <VIcon>{{ fullscreen ? 'mdi-fullscreen-exit' : 'mdi-fullscreen' }}</VIcon>
+        <VIcon size="x-large">{{ fullscreen ? 'mdi-fullscreen-exit' : 'mdi-fullscreen' }}</VIcon>
       </VBtn>
-      <VBtn
-        v-if="fullscreen && selectedSectionId"
-        id="auev-mark2-main-btn"
-        icon
-        size="small"
-        color="primary"
-        title="Volver a todas las secciones"
-        @click="emit('exit-section')"
-      >
+      <VBtn v-if="fullscreen && selectedSectionId" id="auev-mark2-main-btn" icon size="small" color="primary" title="Volver a todas las secciones" @click="emit('exit-section')">
         <VIcon>mdi-bird</VIcon>
       </VBtn>
     </div>
@@ -375,7 +367,7 @@
       fontFamily: 'Arial',
       align: 'center',
       verticalAlign: 'middle',
-      offsetX: (tag.text?.length || 1) * fs * 0.57 / 2,
+      offsetX: ((tag.text?.length || 1) * fs * 0.57) / 2,
       offsetY: fs / 2,
     }
   }
