@@ -57,19 +57,21 @@ function buildSeatsGrid(letter: string, rows: number, cols: number, prevSeats?: 
 function serializeV3(config: FloatingLayoutConfig): string {
   const sc = config.sections.map((s, idx) => {
     const letter = indexToLetter(idx)
-    const se = s.seats.map(row =>
-      row.map(seat => {
-        if (!seat) return null
-        return seat.category ? { i: makeSeatId(letter, seat.row, seat.col), ca: seat.category } : makeSeatId(letter, seat.row, seat.col)
-      })
-    )
-    const o: Record<string, unknown> = { i: letter, nm: s.name, x: s.x, y: s.y, ro: s.rows, co: s.cols, se }
+    // Collect only seats that have a category — store as [{r, c, ca}]
+    const cats: { r: number; c: number; ca: string }[] = []
+    for (const row of s.seats) {
+      for (const seat of row) {
+        if (seat?.category) cats.push({ r: seat.row, c: seat.col, ca: seat.category })
+      }
+    }
+    const o: Record<string, unknown> = { i: letter, nm: s.name, x: s.x, y: s.y, ro: s.rows, co: s.cols }
+    if (cats.length) o.ca = cats
     if (s.group !== undefined) o.gr = s.group
     if (s.hideRowNumbers) o.hr = true
     if (s.rowStart !== undefined && s.rowStart !== 1) o.rs = s.rowStart
     return o
   })
-  const tg = config.tags.map(t => ({ i: t.id, tx: t.text, x: t.x, y: t.y }))
+  const tg = config.tags.map((t, idx) => ({ i: `_tag${idx + 1}`, tx: t.text, x: t.x, y: t.y }))
   return JSON.stringify({ v: 3, sc, tg })
 }
 
@@ -79,18 +81,24 @@ function parseV3(cfg: Record<string, unknown>): FloatingLayoutConfig {
     const letter = s.i as string
     const rows = Number(s.ro) || 1
     const cols = Number(s.co) || 1
-    const rawSeats: (FloatingSeat | null)[][] = Array.isArray(s.se)
-      ? s.se.map((row: any[], r: number) =>
-          Array.isArray(row)
-            ? row.map((cell: any, c: number) => {
-                if (!cell) return null
-                const id = typeof cell === 'string' ? cell : (cell.i as string)
-                const category = typeof cell === 'object' && cell.ca ? cell.ca : undefined
-                return { id, row: r, col: c, ...(category ? { category } : {}) }
-              })
-            : []
-        )
-      : buildSeatsGrid(letter, rows, cols)
+    // Rebuild full grid, then apply category overrides
+    const seats = buildSeatsGrid(letter, rows, cols)
+    if (Array.isArray(s.ca)) {
+      for (const { r, c, ca } of s.ca) {
+        if (seats[r]?.[c]) seats[r][c]!.category = ca
+      }
+    }
+    // Legacy: se array (old v3 format before this optimization)
+    if (!s.ca && Array.isArray(s.se)) {
+      s.se.forEach((row: any[], r: number) => {
+        if (!Array.isArray(row)) return
+        row.forEach((cell: any, c: number) => {
+          if (!cell) return
+          const category = typeof cell === 'object' && cell.ca ? cell.ca : undefined
+          if (category && seats[r]?.[c]) seats[r][c]!.category = category
+        })
+      })
+    }
     return {
       id: letter,
       name: String(s.nm ?? ''),
@@ -98,7 +106,7 @@ function parseV3(cfg: Record<string, unknown>): FloatingLayoutConfig {
       y: Number(s.y) || 0,
       rows,
       cols,
-      seats: rawSeats,
+      seats,
       ...(s.gr !== undefined ? { group: Number(s.gr) } : {}),
       ...(s.hr ? { hideRowNumbers: true } : {}),
       ...(s.rs !== undefined ? { rowStart: Number(s.rs) } : {}),
@@ -233,7 +241,7 @@ export function duplicateFloatingSection(section: FloatingSection, x: number, y:
  */
 export function createFloatingTag(text: string, x: number, y: number): FloatingTag {
   return {
-    id: nextLocalId('tag'),
+    id: `_tag${Date.now() % 100000}`,
     text,
     x,
     y,
