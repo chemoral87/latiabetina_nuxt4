@@ -2,13 +2,13 @@
   <div>
     <VCard
       v-for="event in events"
-      :id="`card-dashb-conso-${event.id}`"
+      :id="`card-dashb-auev-${event.id}`"
       :key="event.id"
       hover
       variant="outlined"
       class="mb-3 text-center"
       :style="{ cursor: 'pointer', border: `6px solid ${getEventColor(event.time)}` }"
-      @click="goToEvent(event.id)"
+      @click="goToEvent(event)"
     >
       <VCardText v-if="event.auditorium_name" class="d-flex flex-column align-center">
         <VIcon large class="mb-2">mdi-theater</VIcon>
@@ -50,7 +50,8 @@ function getEventColor(time?: string | null) {
   return "#87ceeb"
 }
 
-function goToEvent(eventId: number | string) {
-  navigateTo(`/auditorium-event/${eventId}/mark`)
+function goToEvent(event: Record<string, unknown>) {
+  const path = event.layout_version === 2 ? 'mark2' : 'mark'
+  navigateTo(`/auditorium-event/${event.id}/${path}`)
 }
 </script>

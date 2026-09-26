@@ -5,7 +5,7 @@
       <VRow density="compact">
         <ClientOnly>
           <VCol v-if="canViewAuditorium" lg="4" md="6" cols="12">
-            <DashboardConsolidacion />
+            <DashboardAuditoriumEvent />
           </VCol>
           <VCol v-if="canViewAssistanceDashboard" lg="8" md="6" cols="12">
             <DashboardAssistencia />
