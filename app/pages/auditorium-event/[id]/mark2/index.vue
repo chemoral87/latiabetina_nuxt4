@@ -13,7 +13,7 @@
           zIndex: 20,
         }"
       >
-        <div class="d-flex align-center">
+        <div v-if="!fullscreen" class="d-flex align-center">
           <span class="text-subtitle-2">{{ eventAuditorium.auditorium_name }}</span>
           <template v-if="selectedSectionId">
             |<span class="text-subtitle-2">{{ selectedSection?.name }}</span>
@@ -29,7 +29,7 @@
           >
         </div>
 
-        <div class="d-flex align-center justify-end mt-1">
+        <div v-if="!fullscreen" class="d-flex align-center justify-end mt-1">
           <VBtn
             v-if="selectedSectionId"
             id="auev-mark2-main-btn"
@@ -88,12 +88,15 @@
         <AuditoriumFloatingMarkCanvas
           ref="canvasRef"
           :config="config"
+          :fullscreen="fullscreen"
           :blink-state="blinkState"
           :stage-config="stageConfig"
           :selected-seat-ids="selectedSeatIds"
           :selected-section-id="selectedSectionId"
           @seat-click="onSeatClick"
+          @exit-section="exitSection"
           @section-click="onSectionClick"
+          @toggle-fullscreen="toggleFullscreen"
         />
       </ClientOnly>
 
@@ -160,6 +163,9 @@
   const eventAuditorium = ref<Record<string, unknown>>({})
   const config = ref<FloatingLayoutConfig>({ v: 2, sections: [], tags: [] })
   const stageConfig = ref({ width: 900, height: 700 })
+  const fullscreen = ref(false)
+  /** Shared with the default layout: hides the VAppBar while fullscreen. */
+  const navHidden = useState('layout-nav-hidden', () => false)
   const last_timestamp = ref<string | number | null>(null)
   const historyDialog = ref(false)
   const historyLog = ref<Record<string, unknown>[]>([])
@@ -281,7 +287,23 @@
     _realtimeCleanup = null
     if (blinkInterval) clearInterval(blinkInterval)
     blinkInterval = null
+    navHidden.value = false
   })
+
+  /** Enter/exit fullscreen: hides navbar + header chrome, canvas fills the window. */
+  function toggleFullscreen() {
+    fullscreen.value = !fullscreen.value
+    navHidden.value = fullscreen.value
+    nextTick(() => {
+      measureHeaderHeight()
+      updateStageSize()
+    })
+    // The app bar unregisters with a small delay; re-measure once it settles.
+    setTimeout(() => {
+      measureHeaderHeight()
+      updateStageSize()
+    }, 350)
+  }
 
   // Chrome around the Konva stage: VContainer padding (16 each side) + the VSheet
   // pa-2 (8 each side) horizontally; the same 16 vertically plus a small bottom

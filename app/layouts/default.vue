@@ -77,7 +77,7 @@
       </VList>
     </VNavigationDrawer>
 
-    <VAppBar id="lay-app-bar" app fixed elevation="2" :color="routeColor">
+    <VAppBar v-if="!navHidden" id="lay-app-bar" app fixed elevation="2" :color="routeColor">
       <VAppBarNavIcon
         v-if="showDrawer"
         id="lay-nav-icon"
@@ -209,6 +209,8 @@ const auth = useAuthStore();
 const notify = useNotifyStore();
 const title = computed(() => (route.meta?.title as string) || "Latiabetina");
 const showDrawer = computed(() => route.meta?.showDrawer ?? true);
+/** Shared with pages (mark2 fullscreen) to hide the app bar at runtime. */
+const navHidden = useState("layout-nav-hidden", () => false);
 const backRoute = computed(() => route.meta?.back as string | undefined);
 const icon = computed(() => route.meta?.icon as string | undefined);
 const routeColor = computed(() => (route.meta?.color as string) || "blue-lighten-5");

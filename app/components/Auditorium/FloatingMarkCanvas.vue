@@ -65,6 +65,32 @@
         </VGroup>
       </VLayer>
     </VStage>
+
+    <div class="auev-fs-controls">
+      <VBtn
+        id="auev-mark2-fullscreen-btn"
+        icon
+        size="small"
+        color="white"
+        variant="text"
+        class="auev-fs-btn"
+        :title="fullscreen ? 'Salir de pantalla completa' : 'Pantalla completa'"
+        @click="emit('toggle-fullscreen')"
+      >
+        <VIcon>{{ fullscreen ? 'mdi-fullscreen-exit' : 'mdi-fullscreen' }}</VIcon>
+      </VBtn>
+      <VBtn
+        v-if="fullscreen && selectedSectionId"
+        id="auev-mark2-main-btn"
+        icon
+        size="small"
+        color="primary"
+        title="Volver a todas las secciones"
+        @click="emit('exit-section')"
+      >
+        <VIcon>mdi-bird</VIcon>
+      </VBtn>
+    </div>
   </VSheet>
 </template>
 
@@ -90,17 +116,22 @@
       selectedSeatIds?: (number | string)[]
       /** Toggled by the parent to animate the picked seats. */
       blinkState?: boolean
+      /** Fullscreen mode: button shows the exit icon. */
+      fullscreen?: boolean
     }>(),
     {
       selectedSectionId: null,
       selectedSeatIds: () => [],
       blinkState: false,
+      fullscreen: false,
     }
   )
 
   const emit = defineEmits<{
     (e: 'seat-click', payload: { seat: { id: string; row: number; col: number }; event: unknown }): void
     (e: 'section-click', section: FloatingSection): void
+    (e: 'toggle-fullscreen'): void
+    (e: 'exit-section'): void
   }>()
 
   const uaParser = useUAParser()
@@ -354,6 +385,21 @@
   .stage-container {
     position: relative;
     width: 100%;
+  }
+
+  .auev-fs-controls {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    z-index: 5;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .auev-fs-btn {
+    background: rgba(0, 0, 0, 0.45);
+    border-radius: 4px;
   }
 
   @media (max-width: 600px) {
