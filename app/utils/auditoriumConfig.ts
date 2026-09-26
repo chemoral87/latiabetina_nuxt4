@@ -1,4 +1,5 @@
 import type { Seat, Section, Subsection } from '~/types/auditorium'
+import { parseFloatingConfig } from '~/utils/auditoriumFloating'
 
 /**
  * True when the raw auditorium config is the legacy CSV-string format
@@ -177,14 +178,13 @@ export function normalizeSections(raw: unknown): Section[] {
     tags?: unknown
   }
 
-  // Floating layout v2 — convert to the mark-page Section[] shape
-  if (cfg.v === 2 && Array.isArray(cfg.sections)) {
-    return floatingLayoutToSections(
-      cfg as {
-        sections: Record<string, unknown>[]
-        tags?: Record<string, unknown>[]
-      }
-    )
+  // Floating layout v2/v3 — convert to the mark-page Section[] shape
+  if (cfg.v === 2 || cfg.v === 3) {
+    const floating = parseFloatingConfig(raw)
+    return floatingLayoutToSections({
+      sections: floating.sections as unknown as Record<string, unknown>[],
+      tags: floating.tags as unknown as Record<string, unknown>[],
+    })
   }
 
   const rawSections = (cfg.s || cfg.sections) as Record<string, unknown>[]
@@ -192,12 +192,7 @@ export function normalizeSections(raw: unknown): Section[] {
 
   // Heuristic: a section with top-level `seats` / `rows` and no subsections is
   // also treated as floating (covers configs that omit `v: 2`).
-  if (
-    rawSections.length > 0 &&
-    rawSections.every(
-      section => Array.isArray(section.seats) && !(section.ss || section.subsections)
-    )
-  ) {
+  if (rawSections.length > 0 && rawSections.every(section => Array.isArray(section.seats) && !(section.ss || section.subsections))) {
     return floatingLayoutToSections({
       sections: rawSections,
       tags: Array.isArray(cfg.tags) ? (cfg.tags as Record<string, unknown>[]) : [],
@@ -229,18 +224,9 @@ export function normalizeSections(raw: unknown): Section[] {
               return row.map((seat, colIdx) => {
                 if (!seat) return null
                 return {
-                  id:
-                    (seat.i as number | string) ||
-                    (seat.id as number | string) ||
-                    `${ss.id}-${rowIdx + 1}-${colIdx + 1}`,
-                  row:
-                    seat.r !== undefined
-                      ? (seat.r as number | string)
-                      : (seat.row as number | string),
-                  col:
-                    seat.c !== undefined
-                      ? (seat.c as number | string)
-                      : (seat.col as number | string),
+                  id: (seat.i as number | string) || (seat.id as number | string) || `${ss.id}-${rowIdx + 1}-${colIdx + 1}`,
+                  row: seat.r !== undefined ? (seat.r as number | string) : (seat.row as number | string),
+                  col: seat.c !== undefined ? (seat.c as number | string) : (seat.col as number | string),
                   category: (seat.k as string) || (seat.category as string),
                 } as Seat
               })
@@ -258,35 +244,22 @@ export function normalizeSections(raw: unknown): Section[] {
  * Map floating-layout sections/tags into the nested Section[] the mark stage
  * already understands. Seat ids are kept as stored in the floating config.
  */
-function floatingLayoutToSections(cfg: {
-  sections: Record<string, unknown>[]
-  tags?: Record<string, unknown>[]
-}): Section[] {
+function floatingLayoutToSections(cfg: { sections: Record<string, unknown>[]; tags?: Record<string, unknown>[] }): Section[] {
   const out: Section[] = []
 
   cfg.sections.forEach((section, sIdx) => {
     const id = (section.id as number | string) || (section.i as number | string) || `${sIdx + 1}`
     const name = (section.name as string) || (section.n as string) || `Sección ${sIdx + 1}`
-    const rawSeats = (section.seats || section.s) as
-      (Record<string, unknown> | null)[][] | undefined
+    const rawSeats = (section.seats || section.s) as (Record<string, unknown> | null)[][] | undefined
 
     const seats: (Seat | null)[][] | undefined = rawSeats
       ? rawSeats.map((row, rowIdx) =>
           row.map((seat, colIdx) => {
             if (!seat) return null
             return {
-              id:
-                (seat.id as number | string) ||
-                (seat.i as number | string) ||
-                `${id}-${rowIdx + 1}-${colIdx + 1}`,
-              row:
-                seat.row !== undefined
-                  ? (seat.row as number | string)
-                  : (seat.r as number | string),
-              col:
-                seat.col !== undefined
-                  ? (seat.col as number | string)
-                  : (seat.c as number | string),
+              id: (seat.id as number | string) || (seat.i as number | string) || `${id}-${rowIdx + 1}-${colIdx + 1}`,
+              row: seat.row !== undefined ? (seat.row as number | string) : (seat.r as number | string),
+              col: seat.col !== undefined ? (seat.col as number | string) : (seat.c as number | string),
               category: (seat.category as string) || (seat.k as string),
             } as Seat
           })

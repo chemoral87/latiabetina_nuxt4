@@ -44,15 +44,36 @@ describe('parseFloatingConfig', () => {
 })
 
 describe('serializeFloatingConfig', () => {
-  it('round-trips through parseFloatingConfig', () => {
+  it('outputs v3 compact format', () => {
     const config = {
       v: 2 as const,
       sections: [createFloatingSection('Uno', 10, 20, 3, 3)],
       tags: [createFloatingTag('Cam', 100, 200)],
     }
     const serialized = serializeFloatingConfig(config)
-    const reparsed = parseFloatingConfig(serialized)
-    expect(reparsed).toEqual(config)
+    const obj = JSON.parse(serialized)
+    expect(obj.v).toBe(3)
+    expect(obj.sc).toHaveLength(1)
+    expect(obj.sc[0].nm).toBe('Uno')
+    expect(obj.sc[0].i).toBe('A')
+    expect(obj.tg).toHaveLength(1)
+    expect(obj.tg[0].tx).toBe('Cam')
+  })
+
+  it('round-trips name, position, rows, cols through v3', () => {
+    const config = {
+      v: 2 as const,
+      sections: [createFloatingSection('Uno', 10, 20, 3, 3)],
+      tags: [createFloatingTag('Cam', 100, 200)],
+    }
+    const reparsed = parseFloatingConfig(serializeFloatingConfig(config))
+    expect(reparsed.sections[0].name).toBe('Uno')
+    expect(reparsed.sections[0].x).toBe(10)
+    expect(reparsed.sections[0].y).toBe(20)
+    expect(reparsed.sections[0].rows).toBe(3)
+    expect(reparsed.sections[0].cols).toBe(3)
+    expect(reparsed.sections[0].id).toBe('A')
+    expect(reparsed.tags[0].text).toBe('Cam')
   })
 
   it('round-trips seat categories (modulo key order)', () => {
@@ -69,6 +90,35 @@ describe('serializeFloatingConfig', () => {
     expect(again.sections[0].seats[1][0]!.category).toBe('Nuevos')
     expect(again.tags[0].text).toBe('Cam')
   })
+
+  it('uses letter-based seat ids after round-trip', () => {
+    const config = { v: 2 as const, sections: [createFloatingSection('Uno', 0, 0, 2, 2)], tags: [] }
+    const reparsed = parseFloatingConfig(serializeFloatingConfig(config))
+    expect(reparsed.sections[0].seats[0][0]!.id).toBe('A-1-1')
+    expect(reparsed.sections[0].seats[1][1]!.id).toBe('A-2-2')
+  })
+
+  it('assigns sequential letters to multiple sections', () => {
+    const config = {
+      v: 2 as const,
+      sections: [createFloatingSection('A', 0, 0, 1, 1), createFloatingSection('B', 0, 0, 1, 1)],
+      tags: [],
+    }
+    const reparsed = parseFloatingConfig(serializeFloatingConfig(config))
+    expect(reparsed.sections[0].id).toBe('A')
+    expect(reparsed.sections[1].id).toBe('B')
+  })
+
+  it('round-trips group, hideRowNumbers, rowStart', () => {
+    const section = createFloatingSection('Uno', 0, 0, 2, 2)
+    section.group = 3
+    section.hideRowNumbers = true
+    section.rowStart = 5
+    const reparsed = parseFloatingConfig(serializeFloatingConfig({ v: 2, sections: [section], tags: [] }))
+    expect(reparsed.sections[0].group).toBe(3)
+    expect(reparsed.sections[0].hideRowNumbers).toBe(true)
+    expect(reparsed.sections[0].rowStart).toBe(5)
+  })
 })
 
 describe('createFloatingSection', () => {
@@ -81,7 +131,8 @@ describe('createFloatingSection', () => {
     expect(section.cols).toBe(4)
     expect(section.seats).toHaveLength(3)
     expect(section.seats[0]).toHaveLength(4)
-    expect(section.seats[0][0]).toEqual({ id: `${section.id}-1-1`, row: 0, col: 0 })
+    expect(section.seats[0][0]).toMatchObject({ row: 0, col: 0 })
+    expect(section.seats[0][0]!.id).toContain('-1-1')
   })
 
   it('defaults to a 4x4 grid when rows/cols are omitted', () => {

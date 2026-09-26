@@ -24,11 +24,99 @@ function nextLocalId(prefix: string): string {
   return `${prefix}-${Date.now()}-${idCounter}`
 }
 
+// ── v3 compact format helpers ─────────────────────────────────────────────────
+
+/**
+ * Convert a 0-based section index to a base-26 letter key: 0→A, 25→Z, 26→AA…
+ * ponytail: simple loop, upgrade to Math-based if > ~700 sections ever needed.
+ */
+function indexToLetter(n: number): string {
+  let s = ''
+  let i = n
+  do {
+    s = String.fromCharCode(65 + (i % 26)) + s
+    i = Math.floor(i / 26) - 1
+  } while (i >= 0)
+  return s
+}
+
+/** Seat id used at runtime: {sectionLetter}-{1-based-row}-{1-based-col} */
+function makeSeatId(letter: string, r: number, c: number): string {
+  return `${letter}-${r + 1}-${c + 1}`
+}
+
+function buildSeatsGrid(letter: string, rows: number, cols: number, prevSeats?: (FloatingSeat | null)[][]): (FloatingSeat | null)[][] {
+  return Array.from({ length: rows }, (_, r) =>
+    Array.from({ length: cols }, (_, c) => {
+      const prev = prevSeats?.[r]?.[c]
+      return { id: makeSeatId(letter, r, c), row: r, col: c, ...(prev?.category ? { category: prev.category } : {}) }
+    })
+  )
+}
+
+function serializeV3(config: FloatingLayoutConfig): string {
+  const sc = config.sections.map((s, idx) => {
+    const letter = indexToLetter(idx)
+    const se = s.seats.map(row =>
+      row.map(seat => {
+        if (!seat) return null
+        return seat.category ? { i: makeSeatId(letter, seat.row, seat.col), ca: seat.category } : makeSeatId(letter, seat.row, seat.col)
+      })
+    )
+    const o: Record<string, unknown> = { i: letter, nm: s.name, x: s.x, y: s.y, ro: s.rows, co: s.cols, se }
+    if (s.group !== undefined) o.gr = s.group
+    if (s.hideRowNumbers) o.hr = true
+    if (s.rowStart !== undefined && s.rowStart !== 1) o.rs = s.rowStart
+    return o
+  })
+  const tg = config.tags.map(t => ({ i: t.id, tx: t.text, x: t.x, y: t.y }))
+  return JSON.stringify({ v: 3, sc, tg })
+}
+
+function parseV3(cfg: Record<string, unknown>): FloatingLayoutConfig {
+  const sc = Array.isArray(cfg.sc) ? cfg.sc : []
+  const sections: FloatingSection[] = sc.map((s: any) => {
+    const letter = s.i as string
+    const rows = Number(s.ro) || 1
+    const cols = Number(s.co) || 1
+    const rawSeats: (FloatingSeat | null)[][] = Array.isArray(s.se)
+      ? s.se.map((row: any[], r: number) =>
+          Array.isArray(row)
+            ? row.map((cell: any, c: number) => {
+                if (!cell) return null
+                const id = typeof cell === 'string' ? cell : (cell.i as string)
+                const category = typeof cell === 'object' && cell.ca ? cell.ca : undefined
+                return { id, row: r, col: c, ...(category ? { category } : {}) }
+              })
+            : []
+        )
+      : buildSeatsGrid(letter, rows, cols)
+    return {
+      id: letter,
+      name: String(s.nm ?? ''),
+      x: Number(s.x) || 0,
+      y: Number(s.y) || 0,
+      rows,
+      cols,
+      seats: rawSeats,
+      ...(s.gr !== undefined ? { group: Number(s.gr) } : {}),
+      ...(s.hr ? { hideRowNumbers: true } : {}),
+      ...(s.rs !== undefined ? { rowStart: Number(s.rs) } : {}),
+    }
+  })
+  const tg = Array.isArray(cfg.tg) ? cfg.tg : []
+  const tags: FloatingTag[] = tg.map((t: any) => ({ id: String(t.i), text: String(t.tx ?? ''), x: Number(t.x) || 0, y: Number(t.y) || 0 }))
+  return { v: 2, sections, tags }
+}
+
+// ── public API ────────────────────────────────────────────────────────────────
+
 /**
  * Parse the raw `auditoriums.config` value for a layout_version=2 auditorium
  * into a FloatingLayoutConfig. Accepts a JSON string or an already-parsed
  * object. Returns an empty (but valid) config for a brand-new auditorium
  * (`config` is null/empty) instead of throwing.
+ * Handles both legacy v2 (uncompressed) and v3 (compact) formats.
  */
 export function parseFloatingConfig(raw: unknown): FloatingLayoutConfig {
   if (raw === null || raw === undefined || raw === '') {
@@ -44,21 +132,23 @@ export function parseFloatingConfig(raw: unknown): FloatingLayoutConfig {
     }
   }
 
-  const cfg = (parsed && typeof parsed === 'object' ? parsed : {}) as Partial<FloatingLayoutConfig>
+  const cfg = (parsed && typeof parsed === 'object' ? parsed : {}) as Record<string, unknown>
+
+  if (cfg.v === 3) return parseV3(cfg)
 
   return {
     v: 2,
-    sections: Array.isArray(cfg.sections) ? cfg.sections : [],
-    tags: Array.isArray(cfg.tags) ? cfg.tags : [],
+    sections: Array.isArray(cfg.sections) ? (cfg.sections as FloatingSection[]) : [],
+    tags: Array.isArray(cfg.tags) ? (cfg.tags as FloatingTag[]) : [],
   }
 }
 
 /**
- * Serialize a FloatingLayoutConfig back into the string stored in
- * `auditoriums.config`.
+ * Serialize a FloatingLayoutConfig into the compact v3 string stored in
+ * `auditoriums.config`. v3 uses short keys and letter-based section/seat IDs.
  */
 export function serializeFloatingConfig(config: FloatingLayoutConfig): string {
-  return JSON.stringify(config)
+  return serializeV3(config)
 }
 
 /**

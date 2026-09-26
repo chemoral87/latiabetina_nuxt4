@@ -21,7 +21,7 @@ describe('normalizeSections — floating v2', () => {
     expect(markSection.isLabel).toBeFalsy()
     expect(markSection.subsections).toHaveLength(1)
     expect(markSection.subsections![0].seats).toHaveLength(2)
-    expect(markSection.subsections![0].seats![0][0]!.id).toBe(section.seats[0][0]!.id)
+    expect(markSection.subsections![0].seats![0][0]!.id).toBe('A-1-1')
     expect(markSection.subsections![0].seats![0][0]!.category).toBe('Nuevos')
 
     const markTag = parsed[1]
