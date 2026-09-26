@@ -126,6 +126,7 @@ export function resizeFloatingSectionGrid(section: FloatingSection, rows: number
 export function duplicateFloatingSection(section: FloatingSection, x: number, y: number): FloatingSection {
   const copy = createFloatingSection(`${section.name} (copia)`, x, y, section.rows, section.cols)
   copy.hideRowNumbers = section.hideRowNumbers
+  copy.rowStart = section.rowStart
   for (let r = 0; r < section.rows; r++) {
     for (let c = 0; c < section.cols; c++) {
       const prev = section.seats?.[r]?.[c]

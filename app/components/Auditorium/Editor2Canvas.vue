@@ -34,6 +34,7 @@
             :seats="section.seats"
             :categories="categories"
             :seats-distance="seatsDistance"
+            :row-start="section.rowStart ?? 1"
             :border-width="SUBSECTION_BORDER_WIDTH"
             :hide-row-numbers="section.hideRowNumbers"
             :border-color="SUBSECTION_BORDER_COLORS[config.sections.indexOf(section) % SUBSECTION_BORDER_COLORS.length]"

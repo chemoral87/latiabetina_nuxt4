@@ -98,6 +98,7 @@
       blinkState?: boolean
       compact?: boolean
       hideRowNumbers?: boolean
+      rowStart?: number
     }>(),
     {
       categories: () => [],
@@ -111,6 +112,7 @@
       blinkState: false,
       compact: false,
       hideRowNumbers: false,
+      rowStart: 1,
     }
   )
 
@@ -221,7 +223,7 @@
       x: props.boxed ? 0 : -12,
       y: rowIdx * seatSpacing.value + props.seatSize / 2 + seatInsetY.value,
       width: props.boxed ? FLOATING_SECTION_BOX.ROW_LABEL_WIDTH : undefined,
-      text: (rowIdx + 1).toString(),
+      text: ((props.rowStart ?? 1) + rowIdx).toString(),
       fontSize: 8,
       fill: 'yellow',
       fontFamily: 'Arial',

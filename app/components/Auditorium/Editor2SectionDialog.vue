@@ -22,6 +22,18 @@
           label="Ocultar números de fila"
         />
 
+        <VTextField
+          id="ae2-section-row-start"
+          v-model.number="section.rowStart"
+          min="1"
+          class="mb-3"
+          hide-details
+          type="number"
+          density="compact"
+          label="Empezar en"
+          variant="outlined"
+        />
+
         <VRow class="mb-3" density="compact">
           <VCol sm="4" cols="6">
             <VTextField id="ae2-section-rows" v-model.number="tempRows" type="text" hide-details label="Filas" density="compact" variant="outlined" />
@@ -42,6 +54,7 @@
                     :seats="section.seats"
                     :categories="categories"
                     :seats-distance="seatsDistance"
+                    :row-start="section.rowStart ?? 1"
                     :hide-row-numbers="section.hideRowNumbers"
                     @seat-click="handleSeatClick"
                     @seat-hover="handleSeatHover"
@@ -153,7 +166,7 @@
 
   const tempRows = ref(4)
   const tempCols = ref(4)
-  const snapshot = ref<{ name: string; rows: number; cols: number; seats: any; hideRowNumbers: boolean | undefined } | null>(null)
+  const snapshot = ref<{ name: string; rows: number; cols: number; seats: any; hideRowNumbers: boolean | undefined; rowStart: number | undefined } | null>(null)
 
   const activeSeat = ref<{
     id: string
@@ -183,6 +196,7 @@
           cols: props.section.cols,
           seats: JSON.parse(JSON.stringify(props.section.seats)),
           hideRowNumbers: props.section.hideRowNumbers,
+          rowStart: props.section.rowStart,
         }
       }
       if (!open) {
@@ -253,6 +267,7 @@
     props.section.cols = snapshot.value.cols
     props.section.seats = snapshot.value.seats
     props.section.hideRowNumbers = snapshot.value.hideRowNumbers
+    props.section.rowStart = snapshot.value.rowStart
     tempRows.value = snapshot.value.rows
     tempCols.value = snapshot.value.cols
     close()

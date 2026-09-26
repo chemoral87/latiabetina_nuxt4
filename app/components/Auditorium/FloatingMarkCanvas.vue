@@ -49,6 +49,7 @@
             :categories="categories"
             :blink-state="blinkState"
             :seats-distance="seatsDistance"
+            :row-start="section.rowStart ?? 1"
             :selected-seat-ids="selectedSeatIds"
             :compact="Boolean(selectedSectionId)"
             :border-width="SUBSECTION_BORDER_WIDTH"

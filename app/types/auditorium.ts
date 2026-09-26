@@ -59,6 +59,7 @@ export interface FloatingSection {
   seats: (FloatingSeat | null)[][]
   group?: number
   hideRowNumbers?: boolean
+  rowStart?: number
 }
 
 export interface FloatingTag {
