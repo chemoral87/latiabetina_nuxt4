@@ -156,11 +156,20 @@
   const boxW = computed(
     () => gridWidth.value + (props.boxed ? (props.hideRowNumbers ? 4 : FLOATING_SECTION_BOX.EXTRA_WIDTH) : 0)
   )
-  const boxH = computed(
-    () => gridHeight.value + (props.boxed ? FLOATING_SECTION_BOX.EXTRA_HEIGHT : 0)
-  )
-  const seatInsetX = computed(() => (props.boxed && !props.hideRowNumbers ? SECTION_BOX.SEAT_INSET_X : 0))
-  const seatInsetY = computed(() => (props.boxed ? FLOATING_SECTION_BOX.SEAT_INSET_Y : 0))
+  const noTitle = computed(() => props.boxed && !props.title)
+  const boxH = computed(() => {
+    if (!props.boxed) return gridHeight.value
+    const topBand = noTitle.value ? 8 : FLOATING_SECTION_BOX.SEAT_INSET_Y
+    return gridHeight.value + topBand + (FLOATING_SECTION_BOX.EXTRA_HEIGHT - FLOATING_SECTION_BOX.SEAT_INSET_Y)
+  })
+  const seatInsetX = computed(() => {
+    if (!props.boxed) return 0
+    return props.hideRowNumbers ? 3 : SECTION_BOX.SEAT_INSET_X
+  })
+  const seatInsetY = computed(() => {
+    if (!props.boxed) return 0
+    return noTitle.value ? 8 : FLOATING_SECTION_BOX.SEAT_INSET_Y
+  })
 
   const rectConfig = computed(() => ({
     x: 0,
@@ -243,7 +252,7 @@
         props.seatSize / 2 +
         (props.boxed && !props.hideRowNumbers ? FLOATING_SECTION_BOX.COL_LABEL_X_OFFSET : 0),
       y: props.boxed
-        ? gridHeight.value + SECTION_BOX.EXTRA_HEIGHT - FLOATING_SECTION_BOX.COL_LABEL_BOTTOM_GAP
+        ? gridHeight.value + seatInsetY.value + (FLOATING_SECTION_BOX.EXTRA_HEIGHT - FLOATING_SECTION_BOX.SEAT_INSET_Y)
         : gridHeight.value + 5,
       text: String.fromCharCode(65 + colIdx),
       fontSize: 8,
