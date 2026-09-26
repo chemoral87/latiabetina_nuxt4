@@ -73,8 +73,12 @@
   import type { FloatingLayoutConfig, FloatingSection, FloatingTag } from '~/types/auditorium'
   import { useUAParser } from '~/utils/userAgent'
 
-  const TAG_HEIGHT = 36
   const TAG_PAD_X = 16
+  const TAG_PAD_Y = 5
+
+  function tagHeight(tag: FloatingTag) {
+    return (tag.fontSize ?? 14) + TAG_PAD_Y * 2
+  }
 
   const props = withDefaults(
     defineProps<{
@@ -192,7 +196,7 @@
       minX = Math.min(minX, tag.x)
       minY = Math.min(minY, tag.y)
       maxX = Math.max(maxX, tag.x + getTagWidth(tag))
-      maxY = Math.max(maxY, tag.y + TAG_HEIGHT)
+      maxY = Math.max(maxY, tag.y + tagHeight(tag))
     }
     return { minX, minY, maxX, maxY, w: maxX - minX, h: maxY - minY }
   }
@@ -310,14 +314,15 @@
   defineExpose({ fitToWidth, fitToHeight, centerContent })
 
   function getTagWidth(tag: FloatingTag) {
-    const approx = (tag.text?.length || 1) * 8 + TAG_PAD_X * 2
+    const fs = tag.fontSize ?? 14
+    const approx = (tag.text?.length || 1) * fs * 0.57 + TAG_PAD_X * 2
     return Math.max(80, approx)
   }
 
   function getTagBgConfig(tag: FloatingTag) {
     return {
       width: getTagWidth(tag),
-      height: TAG_HEIGHT,
+      height: tagHeight(tag),
       fill: '#424242',
       opacity: 0.3,
       strokeWidth: 2,
@@ -328,18 +333,19 @@
 
   function getTagTextConfig(tag: FloatingTag) {
     const w = getTagWidth(tag)
+    const fs = tag.fontSize ?? 14
     return {
       x: w / 2,
-      y: TAG_HEIGHT / 2,
+      y: tagHeight(tag) / 2,
       text: tag.text,
-      fontSize: 14,
-      fill: COLORS.LABEL_TEXT,
+      fontSize: fs,
+      fill: tag.color ?? COLORS.LABEL_TEXT,
       fontStyle: 'bold',
       fontFamily: 'Arial',
       align: 'center',
       verticalAlign: 'middle',
-      offsetX: (tag.text?.length || 1) * 4,
-      offsetY: 7,
+      offsetX: (tag.text?.length || 1) * fs * 0.57 / 2,
+      offsetY: fs / 2,
     }
   }
 </script>

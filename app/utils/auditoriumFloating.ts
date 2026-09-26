@@ -71,7 +71,7 @@ function serializeV3(config: FloatingLayoutConfig): string {
     if (s.rowStart !== undefined && s.rowStart !== 1) o.rs = s.rowStart
     return o
   })
-  const tg = config.tags.map((t, idx) => ({ i: `_tag${idx + 1}`, tx: t.text, x: t.x, y: t.y }))
+  const tg = config.tags.map((t, idx) => ({ i: `_tag${idx + 1}`, tx: t.text, x: t.x, y: t.y, ...(t.fontSize ? { fsz: t.fontSize } : {}), ...(t.color ? { col: t.color } : {}) }))
   return JSON.stringify({ v: 3, sc, tg })
 }
 
@@ -113,7 +113,14 @@ function parseV3(cfg: Record<string, unknown>): FloatingLayoutConfig {
     }
   })
   const tg = Array.isArray(cfg.tg) ? cfg.tg : []
-  const tags: FloatingTag[] = tg.map((t: any) => ({ id: String(t.i), text: String(t.tx ?? ''), x: Number(t.x) || 0, y: Number(t.y) || 0 }))
+  const tags: FloatingTag[] = tg.map((t: any) => ({
+    id: String(t.i),
+    text: String(t.tx ?? ''),
+    x: Number(t.x) || 0,
+    y: Number(t.y) || 0,
+    ...(t.fsz ? { fontSize: Number(t.fsz) } : {}),
+    ...(t.col ? { color: String(t.col) } : {}),
+  }))
   return { v: 2, sections, tags }
 }
 

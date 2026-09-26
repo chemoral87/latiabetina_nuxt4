@@ -97,6 +97,14 @@
       </VCardTitle>
       <VCardText class="pt-0">
         <VTextField id="ae2-tag-rename" v-model="tagRenameText" autofocus hide-details label="Texto" density="compact" variant="outlined" @keyup.enter="confirmTagRename" />
+        <VRow class="mt-3" density="compact">
+          <VCol cols="6" class="py-0">
+            <VSelect id="ae2-tag-fontsize" v-model="tagRenameFontSize" hide-details label="Tamaño" density="compact" variant="outlined" :items="TAG_FONT_SIZES" />
+          </VCol>
+          <VCol cols="6" class="py-0">
+            <VTextField id="ae2-tag-color" v-model="tagRenameColor" hide-details type="color" label="Color" density="compact" variant="outlined" />
+          </VCol>
+        </VRow>
       </VCardText>
       <div class="d-flex justify-space-between align-center px-4 pb-4">
         <VBtn id="ae2-tag-delete-btn" size="small" color="error" variant="flat" @click="confirmTagDelete">
@@ -126,8 +134,12 @@
 
   const ICON_HIT_DESKTOP = 14
   const ICON_HIT_MOBILE = 20
-  const TAG_HEIGHT = 36
   const TAG_PAD_X = 16
+  const TAG_PAD_Y = 5
+
+  function tagHeight(tag: FloatingTag) {
+    return (tag.fontSize ?? 14) + TAG_PAD_Y * 2
+  }
 
   const props = defineProps<{
     config: FloatingLayoutConfig
@@ -185,7 +197,10 @@
   // ── Tag rename dialog state ──────────────────────────────────────────────────
   const tagRenameOpen = ref(false)
   const tagRenameText = ref('')
+  const tagRenameFontSize = ref(14)
+  const tagRenameColor = ref(COLORS.LABEL_TEXT)
   const tagBeingRenamed = ref<FloatingTag | null>(null)
+  const TAG_FONT_SIZES = [10, 12, 14, 16, 18, 20, 24]
 
   function getSectionGroupConfig(section: FloatingSection) {
     return {
@@ -280,7 +295,8 @@
   }
 
   function getTagWidth(tag: FloatingTag) {
-    const approx = (tag.text?.length || 1) * 8 + TAG_PAD_X * 2
+    const fs = tag.fontSize ?? 14
+    const approx = (tag.text?.length || 1) * fs * 0.57 + TAG_PAD_X * 2
     return Math.max(80, approx)
   }
 
@@ -298,7 +314,7 @@
   function getTagBgConfig(tag: FloatingTag) {
     return {
       width: getTagWidth(tag),
-      height: TAG_HEIGHT,
+      height: tagHeight(tag),
       fill: '#424242',
       opacity: 0.3,
       strokeWidth: 2,
@@ -309,18 +325,19 @@
 
   function getTagTextConfig(tag: FloatingTag) {
     const w = getTagWidth(tag)
+    const fs = tag.fontSize ?? 14
     return {
       x: w / 2,
-      y: TAG_HEIGHT / 2,
+      y: tagHeight(tag) / 2,
       text: tag.text,
-      fontSize: 14,
-      fill: COLORS.LABEL_TEXT,
+      fontSize: fs,
+      fill: tag.color ?? COLORS.LABEL_TEXT,
       fontStyle: 'bold',
       fontFamily: 'Arial',
       align: 'center',
       verticalAlign: 'middle',
-      offsetX: getTextWidth(tag.text, 14) / 2,
-      offsetY: 7,
+      offsetX: getTextWidth(tag.text, fs) / 2,
+      offsetY: fs / 2,
     }
   }
 
@@ -336,6 +353,8 @@
     blockControlPointer(e)
     tagBeingRenamed.value = tag
     tagRenameText.value = tag.text
+    tagRenameFontSize.value = tag.fontSize ?? 14
+    tagRenameColor.value = tag.color ?? COLORS.LABEL_TEXT
     tagRenameOpen.value = true
   }
 
@@ -345,9 +364,10 @@
       tagRenameOpen.value = false
       return
     }
-    const text = (tagRenameText.value || '').trim() || 'Etiqueta'
-    tag.text = text
-    emit('tag-rename', tag, text)
+    tag.text = (tagRenameText.value || '').trim() || 'Etiqueta'
+    tag.fontSize = Number(tagRenameFontSize.value) || 14
+    tag.color = tagRenameColor.value || COLORS.LABEL_TEXT
+    emit('tag-rename', tag, tag.text)
     tagRenameOpen.value = false
     tagBeingRenamed.value = null
   }

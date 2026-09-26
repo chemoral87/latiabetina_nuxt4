@@ -67,6 +67,8 @@ export interface FloatingTag {
   text: string
   x: number
   y: number
+  fontSize?: number
+  color?: string
 }
 
 export interface FloatingLayoutConfig {
