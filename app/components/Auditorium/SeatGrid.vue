@@ -7,17 +7,9 @@
 
     <template v-if="showLabels">
       <template v-if="!hideRowNumbers">
-        <v-text
-          v-for="rowIdx in rowCount"
-          :key="`row-label-${rowIdx}`"
-          :config="getRowLabelConfig(rowIdx - 1)"
-        />
+        <v-text v-for="rowIdx in rowCount" :key="`row-label-${rowIdx}`" :config="getRowLabelConfig(rowIdx - 1)" />
       </template>
-      <v-text
-        v-for="colIdx in maxColumns"
-        :key="`col-label-${colIdx}`"
-        :config="getColLabelConfig(colIdx - 1)"
-      />
+      <v-text v-for="colIdx in maxColumns" :key="`col-label-${colIdx}`" :config="getColLabelConfig(colIdx - 1)" />
     </template>
 
     <template v-for="seat in flatSeats" :key="seat.id">
@@ -153,9 +145,7 @@
 
   // Box geometry (see SECTION_BOX): only applied in `boxed` mode, so the default
   // rendering stays the tight grid-sized rect the editor expects.
-  const boxW = computed(
-    () => gridWidth.value + (props.boxed ? (props.hideRowNumbers ? 4 : FLOATING_SECTION_BOX.EXTRA_WIDTH) : 0)
-  )
+  const boxW = computed(() => gridWidth.value + (props.boxed ? (props.hideRowNumbers ? 4 : FLOATING_SECTION_BOX.EXTRA_WIDTH) : 0))
   const noTitle = computed(() => props.boxed && !props.title)
   const boxH = computed(() => {
     if (!props.boxed) return gridHeight.value
@@ -223,11 +213,7 @@
     fill: '#fff',
     fontFamily: 'Arial',
     align: 'left',
-    width: props.boxed
-      ? props.hideRowNumbers
-        ? boxW.value
-        : gridWidth.value + FLOATING_SECTION_BOX.TITLE_EXTRA_WIDTH
-      : gridWidth.value,
+    width: props.boxed ? (props.hideRowNumbers ? boxW.value : gridWidth.value + FLOATING_SECTION_BOX.TITLE_EXTRA_WIDTH) : gridWidth.value,
   }))
 
   function getRowLabelConfig(rowIdx: number) {
@@ -247,13 +233,8 @@
 
   function getColLabelConfig(colIdx: number) {
     return {
-      x:
-        colIdx * seatSpacing.value +
-        props.seatSize / 2 +
-        (props.boxed && !props.hideRowNumbers ? FLOATING_SECTION_BOX.COL_LABEL_X_OFFSET : 0),
-      y: props.boxed
-        ? gridHeight.value + seatInsetY.value + (FLOATING_SECTION_BOX.EXTRA_HEIGHT - FLOATING_SECTION_BOX.SEAT_INSET_Y)
-        : gridHeight.value + 5,
+      x: colIdx * seatSpacing.value + props.seatSize / 2 + (props.boxed && !props.hideRowNumbers ? FLOATING_SECTION_BOX.COL_LABEL_X_OFFSET : 0),
+      y: props.boxed ? gridHeight.value + seatInsetY.value + (FLOATING_SECTION_BOX.EXTRA_HEIGHT - FLOATING_SECTION_BOX.SEAT_INSET_Y) - 7 : gridHeight.value + 5,
       text: String.fromCharCode(65 + colIdx),
       fontSize: 8,
       fill: 'yellow',
@@ -309,10 +290,7 @@
 
     if (category) {
       try {
-        const def = props.categories?.find(
-          c =>
-            String(c.label).toLowerCase() === category || String(c.value).toLowerCase() === category
-        )
+        const def = props.categories?.find(c => String(c.label).toLowerCase() === category || String(c.value).toLowerCase() === category)
         // Do NOT apply a border when the matched category represents "Ninguno" (value === null)
         if (def && typeof def.value !== 'undefined' && def.value !== null && def.fill) {
           stroke = def.fill
@@ -329,17 +307,12 @@
       }
     }
 
-    let fill = isSelected
-      ? COLORS.SEAT_SELECTED
-      : isReserved
-        ? COLORS.SEAT_RESERVED
-        : COLORS.SEAT_FREE
+    let fill = isSelected ? COLORS.SEAT_SELECTED : isReserved ? COLORS.SEAT_RESERVED : COLORS.SEAT_FREE
 
     // Picked seats blink between their status colour and grey (same as the v1
     // mark page), so the user can see what is about to be assigned.
     if ((props.selectedSeatIds ?? []).includes(seat.id)) {
-      const baseColor =
-        seat.status && STATUS_COLORS[seat.status] ? STATUS_COLORS[seat.status] : COLORS.SEAT_FREE
+      const baseColor = seat.status && STATUS_COLORS[seat.status] ? STATUS_COLORS[seat.status] : COLORS.SEAT_FREE
       fill = props.blinkState ? baseColor : '#808080'
       strokeWidth = 0
     } else if (seat.status && STATUS_COLORS[seat.status]) {
