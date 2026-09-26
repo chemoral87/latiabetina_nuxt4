@@ -2,6 +2,7 @@
   <VContainer id="auev-mark2-page" :fluid="true" class="pa-0 ma-0">
     <div v-if="eventAuditorium.id">
       <div
+        v-if="!fullscreen"
         ref="headerBar"
         class="pa-2 bg-grey-lighten-4 d-flex flex-column align-stretch"
         :style="{
@@ -82,7 +83,7 @@
         </div>
       </div>
 
-      <div :style="{ height: `${headerHeight}px` }" />
+      <div v-if="!fullscreen" :style="{ height: `${headerHeight}px` }" />
 
       <ClientOnly>
         <AuditoriumFloatingMarkCanvas
@@ -315,9 +316,11 @@
   const CANVAS_CHROME_Y = 0
 
   function updateStageSize() {
-    const appBarHeight = mainRect.value?.top ?? 0
+    const appBarHeight = fullscreen.value ? 0 : mainRect.value?.top ?? 0
+    // In fullscreen the headerBar/spacer are unmounted — don't reserve their height.
+    const headerSpace = fullscreen.value ? 0 : headerHeight.value
     const availableWidth = window.innerWidth - CANVAS_CHROME_X
-    const availableHeight = window.innerHeight - appBarHeight - headerHeight.value - CANVAS_CHROME_Y
+    const availableHeight = window.innerHeight - appBarHeight - headerSpace - CANVAS_CHROME_Y
 
     stageConfig.value.width = Math.max(Math.round(availableWidth), 280)
     stageConfig.value.height = Math.max(Math.round(availableHeight), 240)

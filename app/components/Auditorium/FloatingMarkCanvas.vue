@@ -66,7 +66,7 @@
       </VLayer>
     </VStage>
 
-    <div class="auev-fs-controls">
+    <div class="auev-fs-controls" :class="{ 'auev-fs-controls--fs': fullscreen }">
       <VBtn
         id="auev-mark2-fullscreen-btn"
         icon
@@ -379,6 +379,13 @@
     width: 100%;
   }
 
+  /* Full-bleed canvas: the global .v-container .v-sheet 8px top padding only
+     creates a scroll band (sheet taller than the stage). Beats the !important
+     rule via higher specificity (.v-container + .stage-container + data-v). */
+  .v-container .stage-container {
+    padding-top: 0 !important;
+  }
+
   .auev-fs-controls {
     position: absolute;
     top: 4px;
@@ -387,6 +394,16 @@
     display: flex;
     gap: 4px;
     align-items: center;
+  }
+
+  /* Fullscreen: anchor to the viewport so mobile rotation/scroll can't push
+     the controls out of view (absolute-in-sheet breaks when the sheet is
+     re-laid-out or the page gets scroll-anchored during orientation change). */
+  .auev-fs-controls--fs {
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    z-index: 30;
   }
 
   .auev-fs-btn {
