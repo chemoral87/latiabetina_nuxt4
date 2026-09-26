@@ -52,6 +52,7 @@
             :selected-seat-ids="selectedSeatIds"
             :compact="Boolean(selectedSectionId)"
             :border-width="SUBSECTION_BORDER_WIDTH"
+            :hide-row-numbers="section.hideRowNumbers"
             :border-color="getSectionBorderColor(sectionOrderIndex(section))"
             @seat-click="(p: any) => emit('seat-click', p)"
           />

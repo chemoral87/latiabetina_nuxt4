@@ -152,6 +152,7 @@ describe('duplicateFloatingSection', () => {
   it('copies name, size, categories and places at the given x/y with a new id', () => {
     const section = createFloatingSection('Uno', 10, 20, 2, 2)
     section.seats[0][1]!.category = 'Nuevos'
+    section.hideRowNumbers = true
     const copy = duplicateFloatingSection(section, 100, 200)
     expect(copy.id).not.toBe(section.id)
     expect(copy.name).toBe('Uno (copia)')
@@ -161,6 +162,7 @@ describe('duplicateFloatingSection', () => {
     expect(copy.cols).toBe(2)
     expect(copy.seats[0][1]!.category).toBe('Nuevos')
     expect(copy.seats[0][1]!.id).toContain(copy.id)
+    expect(copy.hideRowNumbers).toBe(true)
   })
 })
 

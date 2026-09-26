@@ -13,6 +13,15 @@
       <VCardText class="pt-0">
         <VTextField id="ae2-section-name" v-model="section.name" class="mb-3" hide-details label="Nombre" density="compact" variant="outlined" />
 
+        <VCheckbox
+          id="ae2-section-hide-row-numbers"
+          v-model="section.hideRowNumbers"
+          class="mb-3"
+          hide-details
+          density="compact"
+          label="Ocultar números de fila"
+        />
+
         <VRow class="mb-3" density="compact">
           <VCol sm="4" cols="6">
             <VTextField id="ae2-section-rows" v-model.number="tempRows" type="text" hide-details label="Filas" density="compact" variant="outlined" />
@@ -33,6 +42,7 @@
                     :seats="section.seats"
                     :categories="categories"
                     :seats-distance="seatsDistance"
+                    :hide-row-numbers="section.hideRowNumbers"
                     @seat-click="handleSeatClick"
                     @seat-hover="handleSeatHover"
                     @seat-leave="handleSeatLeave"
@@ -143,7 +153,7 @@
 
   const tempRows = ref(4)
   const tempCols = ref(4)
-  const snapshot = ref<{ name: string; rows: number; cols: number; seats: any } | null>(null)
+  const snapshot = ref<{ name: string; rows: number; cols: number; seats: any; hideRowNumbers: boolean | undefined } | null>(null)
 
   const activeSeat = ref<{
     id: string
@@ -172,6 +182,7 @@
           rows: props.section.rows,
           cols: props.section.cols,
           seats: JSON.parse(JSON.stringify(props.section.seats)),
+          hideRowNumbers: props.section.hideRowNumbers,
         }
       }
       if (!open) {
@@ -241,6 +252,7 @@
     props.section.rows = snapshot.value.rows
     props.section.cols = snapshot.value.cols
     props.section.seats = snapshot.value.seats
+    props.section.hideRowNumbers = snapshot.value.hideRowNumbers
     tempRows.value = snapshot.value.rows
     tempCols.value = snapshot.value.cols
     close()

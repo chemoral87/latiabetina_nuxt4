@@ -6,11 +6,13 @@
     <v-text v-if="title" :config="titleConfig" />
 
     <template v-if="showLabels">
-      <v-text
-        v-for="rowIdx in rowCount"
-        :key="`row-label-${rowIdx}`"
-        :config="getRowLabelConfig(rowIdx - 1)"
-      />
+      <template v-if="!hideRowNumbers">
+        <v-text
+          v-for="rowIdx in rowCount"
+          :key="`row-label-${rowIdx}`"
+          :config="getRowLabelConfig(rowIdx - 1)"
+        />
+      </template>
       <v-text
         v-for="colIdx in maxColumns"
         :key="`col-label-${colIdx}`"
@@ -103,6 +105,7 @@
       /** Toggled every ~330 ms by the parent to make selected seats blink. */
       blinkState?: boolean
       compact?: boolean
+      hideRowNumbers?: boolean
     }>(),
     {
       categories: () => [],
@@ -115,6 +118,7 @@
       selectedSeatIds: () => [],
       blinkState: false,
       compact: false,
+      hideRowNumbers: false,
     }
   )
 
@@ -150,12 +154,12 @@
   // Box geometry (see SECTION_BOX): only applied in `boxed` mode, so the default
   // rendering stays the tight grid-sized rect the editor expects.
   const boxW = computed(
-    () => gridWidth.value + (props.boxed ? FLOATING_SECTION_BOX.EXTRA_WIDTH : 0)
+    () => gridWidth.value + (props.boxed ? (props.hideRowNumbers ? 4 : FLOATING_SECTION_BOX.EXTRA_WIDTH) : 0)
   )
   const boxH = computed(
     () => gridHeight.value + (props.boxed ? FLOATING_SECTION_BOX.EXTRA_HEIGHT : 0)
   )
-  const seatInsetX = computed(() => (props.boxed ? SECTION_BOX.SEAT_INSET_X : 0))
+  const seatInsetX = computed(() => (props.boxed && !props.hideRowNumbers ? SECTION_BOX.SEAT_INSET_X : 0))
   const seatInsetY = computed(() => (props.boxed ? FLOATING_SECTION_BOX.SEAT_INSET_Y : 0))
 
   const rectConfig = computed(() => ({
@@ -210,7 +214,11 @@
     fill: '#fff',
     fontFamily: 'Arial',
     align: 'left',
-    width: props.boxed ? gridWidth.value + FLOATING_SECTION_BOX.TITLE_EXTRA_WIDTH : gridWidth.value,
+    width: props.boxed
+      ? props.hideRowNumbers
+        ? boxW.value
+        : gridWidth.value + FLOATING_SECTION_BOX.TITLE_EXTRA_WIDTH
+      : gridWidth.value,
   }))
 
   function getRowLabelConfig(rowIdx: number) {
@@ -233,7 +241,7 @@
       x:
         colIdx * seatSpacing.value +
         props.seatSize / 2 +
-        (props.boxed ? FLOATING_SECTION_BOX.COL_LABEL_X_OFFSET : 0),
+        (props.boxed && !props.hideRowNumbers ? FLOATING_SECTION_BOX.COL_LABEL_X_OFFSET : 0),
       y: props.boxed
         ? gridHeight.value + SECTION_BOX.EXTRA_HEIGHT - FLOATING_SECTION_BOX.COL_LABEL_BOTTOM_GAP
         : gridHeight.value + 5,

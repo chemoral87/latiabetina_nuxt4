@@ -1,10 +1,5 @@
 import { DEFAULT_SETTINGS } from '~/constants/auditorium'
-import type {
-  FloatingLayoutConfig,
-  FloatingSection,
-  FloatingSeat,
-  FloatingTag,
-} from '~/types/auditorium'
+import type { FloatingLayoutConfig, FloatingSection, FloatingSeat, FloatingTag } from '~/types/auditorium'
 
 /**
  * Editor v2 (floating layout) config helpers.
@@ -84,13 +79,7 @@ function createSeatsGrid(sectionId: string, rows: number, cols: number): (Floati
 /**
  * Create a new floating section at an explicit canvas position.
  */
-export function createFloatingSection(
-  name: string,
-  x: number,
-  y: number,
-  rows = 4,
-  cols = 4
-): FloatingSection {
+export function createFloatingSection(name: string, x: number, y: number, rows = 4, cols = 4): FloatingSection {
   const id = nextLocalId('section')
   const clampedRows = Math.max(MIN_ROWS, Math.min(MAX_ROWS, rows))
   const clampedCols = Math.max(MIN_COLS, Math.min(MAX_COLS, cols))
@@ -112,11 +101,7 @@ export function createFloatingSection(
  * after the resize are preserved — only seats beyond the new edges are
  * dropped, and new edge seats start without a category.
  */
-export function resizeFloatingSectionGrid(
-  section: FloatingSection,
-  rows: number,
-  cols: number
-): void {
+export function resizeFloatingSectionGrid(section: FloatingSection, rows: number, cols: number): void {
   const clampedRows = Math.max(MIN_ROWS, Math.min(MAX_ROWS, Math.floor(rows) || MIN_ROWS))
   const clampedCols = Math.max(MIN_COLS, Math.min(MAX_COLS, Math.floor(cols) || MIN_COLS))
   const oldSeats = section.seats
@@ -138,12 +123,9 @@ export function resizeFloatingSectionGrid(
  * Deep-copy a floating section onto a new canvas position with a fresh id
  * (and seat ids). Preserves seat categories. Name gets a " (copia)" suffix.
  */
-export function duplicateFloatingSection(
-  section: FloatingSection,
-  x: number,
-  y: number
-): FloatingSection {
+export function duplicateFloatingSection(section: FloatingSection, x: number, y: number): FloatingSection {
   const copy = createFloatingSection(`${section.name} (copia)`, x, y, section.rows, section.cols)
+  copy.hideRowNumbers = section.hideRowNumbers
   for (let r = 0; r < section.rows; r++) {
     for (let c = 0; c < section.cols; c++) {
       const prev = section.seats?.[r]?.[c]
@@ -187,10 +169,7 @@ export function getFloatingSectionHeight(section: FloatingSection): number {
  * Find a floating seat by its id across all sections. Returns the seat object
  * (with a reference to its parent section) or null.
  */
-export function findFloatingSeatById(
-  sections: FloatingSection[],
-  seatId: number | string
-): FloatingSeat | null {
+export function findFloatingSeatById(sections: FloatingSection[], seatId: number | string): FloatingSeat | null {
   for (const section of sections) {
     for (const row of section.seats) {
       for (const seat of row) {
