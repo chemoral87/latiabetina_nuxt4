@@ -695,14 +695,6 @@ function onImportError() {
 </script>
 
 <style scoped>
-.gap-1 {
-  gap: 4px;
-}
-
-.gap-2 {
-  gap: 8px;
-}
-
 /* Mejoras para mobile */
 @media (max-width: 600px) {
   :deep(.v-slider) {

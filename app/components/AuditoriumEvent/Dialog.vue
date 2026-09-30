@@ -195,8 +195,3 @@ function closeDialog() {
 }
 </script>
 
-<style scoped>
-.v-card {
-  overflow-y: auto;
-}
-</style>

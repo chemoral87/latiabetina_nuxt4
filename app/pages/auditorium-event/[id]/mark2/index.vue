@@ -491,6 +491,7 @@
   }
 </script>
 
+<!-- eslint-disable-next-line vue-scoped-css/enforce-style-type -->
 <style>
   html:has(#auev-mark2-page),
   body:has(#auev-mark2-page) {

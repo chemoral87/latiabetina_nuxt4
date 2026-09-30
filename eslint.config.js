@@ -1,11 +1,13 @@
 import vue from 'eslint-plugin-vue'
 import babelParser from '@babel/eslint-parser'
+import eslintPluginVueScopedCSS from 'eslint-plugin-vue-scoped-css'
 
 export default [
   {
     ignores: ['.nuxt/**', '.output/**', '.git/**'],
   },
   ...vue.configs['flat/base'],
+  ...eslintPluginVueScopedCSS.configs['flat/recommended'],
   {
     files: ['**/*.vue'],
     languageOptions: {
@@ -22,6 +24,7 @@ export default [
   },
   {
     rules: {
+      'vue-scoped-css/no-unused-selector': 'warn',
       'vue/no-mutating-props': ['error', { shallowOnly: true }],
       'vue/no-side-effects-in-computed-properties': 'error',
       'vue/require-v-for-key': 'error',

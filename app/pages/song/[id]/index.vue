@@ -211,6 +211,7 @@ onMounted(() => {
 }
 </style>
 
+<!-- eslint-disable-next-line vue-scoped-css/enforce-style-type -->
 <style>
 @page {
   margin: 8mm 6mm;

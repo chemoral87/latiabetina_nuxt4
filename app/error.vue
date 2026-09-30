@@ -140,6 +140,7 @@ onMounted(() => {
 }
 </style>
 
+<!-- eslint-disable-next-line vue-scoped-css/enforce-style-type -->
 <style>
 .error-message {
   color: #e53935;

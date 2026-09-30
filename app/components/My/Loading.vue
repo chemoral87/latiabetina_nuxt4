@@ -19,6 +19,7 @@ withDefaults(defineProps<{
 })
 </script>
 
+<!-- eslint-disable-next-line vue-scoped-css/enforce-style-type -->
 <style>
 .dialog.centered-dialog,
 .v-dialog.centered-dialog {

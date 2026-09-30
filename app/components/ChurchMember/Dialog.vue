@@ -1,5 +1,5 @@
 <template>
-  <VDialog :id="id" persistent scrollable class="ma-0" max-width="700px" :model-value="true">
+  <VDialog :id="id" persistent scrollable width="96%" max-width="700px" :model-value="true">
     <VCard>
       <VCardTitle class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center">
         <VIcon start size="small" color="primary">{{ iconTitle }}</VIcon>
@@ -8,7 +8,7 @@
         <DialogCloseButton id="cmm-dialog-close-btn" :disabled="loading" @close="close" />
       </VCardTitle>
 
-      <VCardText class="py-1 church-member-dialog-content">
+      <VCardText class="px-1 church-member-dialog-content">
         <VForm ref="formRef" @submit.prevent="save">
           <VRow density="compact">
             <VCol cols="6">

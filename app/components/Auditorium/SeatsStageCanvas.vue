@@ -649,14 +649,3 @@ defineExpose({
 })
 </script>
 
-<style scoped>
-.stage-container {
-  position: relative;
-}
-
-@media (max-width: 600px) {
-  .stage-container {
-    -webkit-overflow-scrolling: touch;
-  }
-}
-</style>

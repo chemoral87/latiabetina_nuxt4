@@ -136,12 +136,12 @@ function formatNumber(val: unknown): string {
   color: #ffffff !important;
 }
 
-.order-btn.v-btn--disabled {
+:deep(.order-btn.v-btn--disabled) {
   background-color: rgba(0, 0, 0, 0.18) !important;
   box-shadow: none !important;
 }
 
-.order-btn.v-btn--disabled :deep(.v-icon) {
+:deep(.order-btn.v-btn--disabled .v-icon) {
   color: rgba(255, 255, 255, 0.35) !important;
 }
 </style>

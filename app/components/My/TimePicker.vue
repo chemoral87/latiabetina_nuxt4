@@ -160,7 +160,7 @@ function clearTime() {
 }
 </script>
 
-<style>
+<style scoped>
 .tp-col {
   border-right: 1px solid rgba(0, 0, 0, 0.12);
   max-height: 220px;
