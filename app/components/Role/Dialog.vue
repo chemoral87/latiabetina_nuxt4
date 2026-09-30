@@ -5,9 +5,7 @@
         <VIcon start size="small" color="primary">mdi-redhat</VIcon>
         {{ formTitle }}
         <VSpacer />
-        <VBtn id="rol-dialog-close-btn" icon size="x-small" @click="close">
-          <VIcon>mdi-close</VIcon>
-        </VBtn>
+        <DialogCloseButton id="rol-dialog-close-btn" @close="close" />
       </VCardTitle>
 
       <VCardText class="py-1">

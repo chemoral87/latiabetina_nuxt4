@@ -87,7 +87,8 @@ npx playwright test tests/e2e/login.spec.ts
 ```bash
 export E2E_EMAIL=""
 export E2E_PASSWORD=""
+npx playwright test tests/e2e
 npx playwright test tests/e2e/role.spec.ts
 npx playwright test tests/e2e/assistance.spec.ts
-npx playwright test tests/e2e
+
 ```

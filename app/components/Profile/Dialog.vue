@@ -5,9 +5,7 @@
         <VIcon start size="small" color="primary">mdi-plus</VIcon>
         Nuevo Perfil
         <VSpacer />
-        <VBtn id="profile-dialog-close-btn" icon size="x-small" @click="close">
-          <VIcon>mdi-close</VIcon>
-        </VBtn>
+        <DialogCloseButton id="profile-dialog-close-btn" @close="close" />
       </VCardTitle>
 
       <VForm ref="formRef" @submit.prevent="saveProfile">

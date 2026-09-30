@@ -7,14 +7,7 @@
         <VIcon start size="small" color="warning">mdi-alert</VIcon>
         {{ title }}
         <VSpacer />
-        <VBtn
-          id="dialog-confirm-close-btn"
-          icon
-          size="x-small"
-          @click="emit('cancel')"
-        >
-          <VIcon>mdi-close</VIcon>
-        </VBtn>
+        <DialogCloseButton id="dialog-confirm-close-btn" @close="emit('cancel')" />
       </VCardTitle>
       <VCardText class="text-body-1 py-4">
         {{ message }}

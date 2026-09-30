@@ -5,9 +5,7 @@
         <VIcon start size="small" color="primary">mdi-comment-text-outline</VIcon>
         {{ formTitle }}
         <VSpacer />
-        <VBtn id="tes-dialog-close-btn" icon size="x-small" :disabled="saving || loading" @click="close">
-          <VIcon>mdi-close</VIcon>
-        </VBtn>
+        <DialogCloseButton id="tes-dialog-close-btn" :disabled="saving || loading" @close="close" />
       </VCardTitle>
 
       <VCardText class="py-1">

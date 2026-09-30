@@ -5,9 +5,7 @@
         <VIcon start size="small" color="primary">mdi-content-copy</VIcon>
         Copiar Evento
         <VSpacer />
-        <VBtn id="eve-copydialog-close-btn" icon size="x-small" :disabled="loading" @click="close">
-          <VIcon>mdi-close</VIcon>
-        </VBtn>
+        <DialogCloseButton id="eve-copydialog-close-btn" :disabled="loading" @close="close" />
       </VCardTitle>
 
       <VCardText>

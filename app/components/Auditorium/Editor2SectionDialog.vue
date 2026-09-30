@@ -5,9 +5,7 @@
         <VIcon start size="small" color="primary">mdi-seat-outline</VIcon>
         Editar sección
         <VSpacer />
-        <VBtn id="ae2-section-edit-close-btn" icon size="x-small" @click="close">
-          <VIcon>mdi-close</VIcon>
-        </VBtn>
+        <DialogCloseButton id="ae2-section-edit-close-btn" @close="close" />
       </VCardTitle>
 
       <VCardText class="pt-0">

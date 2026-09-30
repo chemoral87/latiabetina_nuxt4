@@ -5,9 +5,7 @@
         <VIcon start size="small" color="primary">mdi-account-cog-outline</VIcon>
         Estatus Consolidado
         <VSpacer />
-        <VBtn id="con-status-close-btn" icon size="x-small" :disabled="saving" @click="close">
-          <VIcon>mdi-close</VIcon>
-        </VBtn>
+        <DialogCloseButton id="con-status-close-btn" :disabled="saving" @close="close" />
       </VCardTitle>
 
       <VCardText class="pt-0">

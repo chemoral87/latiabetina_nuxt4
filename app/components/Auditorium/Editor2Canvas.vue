@@ -91,9 +91,7 @@
         <VIcon start size="small" color="primary">mdi-tag</VIcon>
         Editar etiqueta
         <VSpacer />
-        <VBtn id="ae2-tag-rename-close-btn" icon size="x-small" @click="tagRenameOpen = false">
-          <VIcon>mdi-close</VIcon>
-        </VBtn>
+        <DialogCloseButton id="ae2-tag-rename-close-btn" @close="tagRenameOpen = false" />
       </VCardTitle>
       <VCardText class="pt-0">
         <VTextField id="ae2-tag-rename" v-model="tagRenameText" autofocus hide-details label="Texto" density="compact" variant="outlined" @keyup.enter="confirmTagRename" />

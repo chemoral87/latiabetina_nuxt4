@@ -5,9 +5,7 @@
         <VIcon start size="small" color="primary">mdi-key-variant</VIcon>
         {{ formTitle }}
         <VSpacer />
-        <VBtn id="per-dialog-close-btn" icon size="x-small" @click="close">
-          <VIcon>mdi-close</VIcon>
-        </VBtn>
+        <DialogCloseButton id="per-dialog-close-btn" @close="close" />
       </VCardTitle>
 
       <VCardText class="py-1">

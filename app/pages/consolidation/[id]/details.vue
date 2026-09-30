@@ -40,7 +40,7 @@
                 :loading="loading"
                 :members="filteredMembers"
                 @delete="deleteMemberPrompt"
-                @status-change="onInlineStatusChange"
+                 @status-change="onInlineStatusChange"
               />
             </VCol>
           </VRow>
@@ -150,12 +150,15 @@
                   label="Petición especial"
                   prepend-inner-icon="mdi-heart-outline"
                 />
-              </VCol>
-
-                 <VCol cols="12" class="d-flex justify-end mt-2">
-                   <VBtn
+              </VCol> 
+                  <VCol cols="12" class="d-flex justify-end mt-2">
+                    <VBtn id="cnsld-back-btn" class="mr-4" color="primary" variant="outlined" @click="navigateTo('/consolidation')">
+                  <VIcon start>mdi-arrow-left</VIcon>
+                  Volver
+                </VBtn> 
+                    <VBtn
                   id="cnsld-save-sheet-btn"
-               class="mr-4"
+         
                   color="primary"
                   variant="elevated"
                   :loading="savingSheet"
@@ -165,10 +168,7 @@
                   <VIcon start >mdi-content-save</VIcon>
                   Guardar
                 </VBtn>
-                <VBtn id="cnsld-back-btn"  color="primary" variant="outlined" @click="navigateTo('/consolidation')">
-                  <VIcon start>mdi-arrow-left</VIcon>
-                  Volver
-                </VBtn>   
+                
              
               </VCol>
             </VRow>
@@ -179,7 +179,7 @@
     
     </VRow>
 
-    <ChurchMemberDialog v-if="dialog" id="det-member-dlg" :member="member" :loading="saving" @save="saveMember" @close="closeDialog" />
+    <ChurchMemberDialog    v-if="dialog" id="det-member-dlg" :member="member" :loading="saving" @save="saveMember" @close="closeDialog" />
 
     <DialogDelete v-if="dialogDelete" id="det-member-delete-dlg" :loading="deleting" :dialog="deleteData" @ok="confirmDelete" @close="dialogDelete = false" />
 
@@ -378,11 +378,12 @@ function onStatusChanged(updated: Record<string, unknown>) {
   }
 }
 
-async function onInlineStatusChange(item: Record<string, unknown>, status: string) {
+async function onInlineStatusChange(item: unknown, status: string) {
+  const member = item as Record<string, unknown>
   try {
-    await ChurchMember.updateStatus(item.id as number, status)
+    await ChurchMember.updateStatus(member.id as number, status)
     const idx = members.value.findIndex(
-      (m) => (m as Record<string, unknown>).id === item.id,
+      (m) => (m as Record<string, unknown>).id === member.id,
     )
     if (idx !== -1) {
       members.value[idx] = {

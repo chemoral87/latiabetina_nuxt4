@@ -1,13 +1,11 @@
 <template>
-  <VDialog :id="id" persistent scrollable max-width="600px" :model-value="true">
+  <VDialog :id="id" persistent scrollable class="ma-0" max-width="700px" :model-value="true">
     <VCard>
       <VCardTitle class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center">
         <VIcon start size="small" color="primary">{{ iconTitle }}</VIcon>
         {{ formTitle }}
         <VSpacer />
-        <VBtn id="cmm-dialog-close-btn" icon size="x-small" :disabled="loading" @click="close">
-          <VIcon>mdi-close</VIcon>
-        </VBtn>
+        <DialogCloseButton id="cmm-dialog-close-btn" :disabled="loading" @close="close" />
       </VCardTitle>
 
       <VCardText class="py-1 church-member-dialog-content">
@@ -38,14 +36,7 @@
               />
             </VCol>
             <VCol cols="6">
-              <VTextField
-                id="cmm-dialog-second-last-name"
-                v-model="item.second_last_name"
-                density="compact"
-                variant="outlined"
-                :disabled="loading"
-                label="Apellido Materno"
-              />
+              <VTextField id="cmm-dialog-second-last-name" v-model="item.second_last_name" density="compact" variant="outlined" :disabled="loading" label="Apellido Materno" />
             </VCol>
 
             <VCol cols="6">
@@ -62,21 +53,10 @@
               />
             </VCol>
             <VCol cols="6">
-              <VTextField
-                id="cmm-dialog-cellphone"
-                v-model="item.cellphone"
-                label="Celular"
-                density="compact"
-                variant="outlined"
-                :disabled="loading"
-              />
+              <VTextField id="cmm-dialog-cellphone" v-model="item.cellphone" label="Celular" density="compact" variant="outlined" :disabled="loading" />
             </VCol>
             <VCol cols="12">
-              <MyAddressCompletion
-                id="cmm-dialog-address"
-                v-model="item.address"
-                :disabled="loading"
-              />
+              <MyAddressCompletion id="cmm-dialog-address" v-model="item.address" :disabled="loading" />
             </VCol>
             <VCol cols="6">
               <VSelect
@@ -106,12 +86,7 @@
 
             <VCol cols="12">
               <div class="d-flex align-center">
-                <MyUploadimageCrop
-                  v-model="item.url_image"
-                  v-model:url="item.url_image_s3"
-                  :size="800"
-                  label="Foto"
-                />
+                <MyUploadimageCrop v-model="item.url_image" v-model:url="item.url_image_s3" :size="800" label="Foto" />
                 <VAvatar v-if="item.url_image_s3" size="80" class="ml-4" rounded="circle">
                   <VImg cover alt="Vista previa" :src="item.url_image_s3" />
                 </VAvatar>
@@ -122,24 +97,11 @@
       </VCardText>
 
       <div class="d-flex justify-end px-4 pb-4">
-        <VBtn
-          id="cmm-dialog-cancel-btn"
-          class="mr-4"
-          color="primary"
-          variant="outlined"
-          :disabled="loading"
-          @click="close"
-        >
+        <VBtn id="cmm-dialog-cancel-btn" class="mr-4" color="primary" variant="outlined" :disabled="loading" @click="close">
           <VIcon start>mdi-close</VIcon>
           Cancelar
         </VBtn>
-        <VBtn
-          id="cmm-dialog-save-btn"
-          color="primary"
-          :loading="loading"
-          variant="elevated"
-          @click="save"
-        >
+        <VBtn id="cmm-dialog-save-btn" color="primary" :loading="loading" variant="elevated" @click="save">
           <VIcon start>mdi-content-save</VIcon>
           Guardar
         </VBtn>

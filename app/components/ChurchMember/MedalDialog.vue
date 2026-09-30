@@ -5,9 +5,7 @@
         <VIcon start size="small" color="primary">mdi-medal-outline</VIcon>
         Agregar Medalla
         <VSpacer />
-        <VBtn id="cm-medal-close-btn" icon size="x-small" :disabled="saving" @click="close">
-          <VIcon>mdi-close</VIcon>
-        </VBtn>
+        <DialogCloseButton id="cm-medal-close-btn" :disabled="saving" @close="close" />
       </VCardTitle>
 
       <VCardText class="pt-0">

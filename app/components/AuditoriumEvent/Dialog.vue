@@ -5,9 +5,7 @@
         <VIcon start size="small" color="primary">mdi-theater</VIcon>
         {{ isEditing ? "Editar" : "Nuevo" }} Evento de Auditorio
         <VSpacer />
-        <VBtn id="auev-dialog-close-btn" icon size="x-small" @click="closeDialog">
-          <VIcon>mdi-close</VIcon>
-        </VBtn>
+        <DialogCloseButton id="auev-dialog-close-btn" @close="closeDialog" />
       </VCardTitle>
 
       <VCardText>

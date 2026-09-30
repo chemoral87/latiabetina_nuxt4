@@ -5,9 +5,7 @@
         <VIcon start size="small" color="error">mdi-alert</VIcon>
         {{ item.title }}
         <VSpacer />
-        <VBtn id="dialog-delete-close-btn" icon size="x-small" @click="close">
-          <VIcon>mdi-close</VIcon>
-        </VBtn>
+        <DialogCloseButton id="dialog-delete-close-btn" :disabled="loading" @close="close" />
       </VCardTitle>
 
       <VCardText class="py-1">

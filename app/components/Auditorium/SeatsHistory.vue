@@ -10,9 +10,7 @@
         <VIcon start color="info">mdi-history</VIcon>
         Historial de asientos
         <VSpacer />
-        <VBtn id="aud-history-close-btn" icon @click="localVisible = false">
-          <VIcon>mdi-close</VIcon>
-        </VBtn>
+        <DialogCloseButton id="aud-history-close-btn" @close="localVisible = false" />
       </VCardTitle>
 
       <VDivider />

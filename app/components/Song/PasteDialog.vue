@@ -5,9 +5,7 @@
         <VIcon start size="small" color="primary">mdi-content-paste</VIcon>
         Pegar letra
         <VSpacer />
-        <VBtn id="song-paste-close-btn" icon size="x-small" @click="close">
-          <VIcon>mdi-close</VIcon>
-        </VBtn>
+        <DialogCloseButton id="song-paste-close-btn" @close="close" />
       </VCardTitle>
 
       <VCardText class="py-1">

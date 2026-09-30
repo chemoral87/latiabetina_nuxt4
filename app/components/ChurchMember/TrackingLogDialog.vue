@@ -7,15 +7,7 @@
         <VIcon start size="small" color="primary">mdi-pencil</VIcon>
         Editar Interacción
         <VSpacer />
-        <VBtn
-          id="cmm-tlg-close-btn"
-          icon
-          size="x-small"
-          :disabled="loading"
-          @click="close"
-        >
-          <VIcon>mdi-close</VIcon>
-        </VBtn>
+        <DialogCloseButton id="cmm-tlg-close-btn" :disabled="loading" @close="close" />
       </VCardTitle>
 
       <VCardText class="py-1">

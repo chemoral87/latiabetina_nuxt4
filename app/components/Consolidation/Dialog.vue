@@ -5,9 +5,7 @@
         <VIcon start size="small" color="primary">{{ iconTitle }}</VIcon>
         {{ formTitle }}
         <VSpacer />
-        <VBtn id="con-dialog-close-btn" icon size="x-small" :disabled="saving || loading" @click="close">
-          <VIcon>mdi-close</VIcon>
-        </VBtn>
+        <DialogCloseButton id="con-dialog-close-btn" :disabled="saving || loading" @close="close" />
       </VCardTitle>
 
       <VCardText class="py-1">
@@ -16,27 +14,30 @@
             v-model="item.org_id"
             hide-one
             required
+            autofocus
             class="mb-2"
             density="compact"
             variant="outlined"
-            label="Organización"
-            :disabled="saving || loading"
-            permission="conso-sheet-index"
-            :error-messages="errors?.org_id"
-            :rules="[vrules.requiredField('Organización')]"
-          />
-          <VTextField
+             label="Organización"
+             :disabled="saving || loading"
+             permission="conso-sheet-index"
+             :error-messages="errors?.org_id"
+             :rules="[vrules.requiredField('Organización')]"
+           />
+           <VTextField
             id="con-dialog-folio-number"
-            v-model="item.folio_number"
-            required
-            autofocus
-            density="compact"
-            variant="outlined"
-            label="Número de Folio"
-            :disabled="saving || loading"
-            :error-messages="errors?.folio_number"
-            :rules="[vrules.requiredField('Número de Folio')]"
-            @keyup.enter="save"
+             v-model="item.folio_number"
+             required
+             pattern="[0-9]*"
+             density="compact"
+             variant="outlined"
+             inputmode="numeric"
+             label="Número de Folio"
+             :disabled="saving || loading"
+             :error-messages="errors?.folio_number"
+             :rules="[vrules.requiredField('Número de Folio'), numericFolio]"
+             @keyup.enter="save"
+             @update:model-value="sanitizeFolio"
           />
           <MyDatePicker
             v-model="item.date"
@@ -101,6 +102,12 @@ const item = ref<SheetItem>({
   date: "",
 })
 const saving = ref(false)
+
+const numericFolio = (value: string) => /^\d+$/.test(value) || "El Número de Folio solo debe contener números"
+
+function sanitizeFolio(value: string) {
+  item.value.folio_number = value.replace(/\D/g, "")
+}
 
 const isEditMode = computed(() => !!item.value.id)
 const iconTitle = computed(() => (isEditMode.value ? "mdi-pencil" : "mdi-plus"))
