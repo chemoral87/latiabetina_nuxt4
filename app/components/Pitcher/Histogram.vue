@@ -51,6 +51,7 @@ import {
   A4_FREQ,
   A4_MIDI,
   COLORS,
+  HISTORY_NOW_OFFSET_PX,
   MAJOR_STEPS,
   MIN_MIDI,
   NOTE_LATIN_STRINGS,
@@ -257,6 +258,7 @@ function drawHistogram() {
   ctx.clearRect(0, 0, width, height)
   drawNoteLines()
   drawSineWaves(width, height)
+  drawNowBar(width, height)
 
   const current = currentPoint()
   if (!current) {
@@ -284,7 +286,7 @@ function drawHistogram() {
     const y = height - ((shiftedMidi - MIN_MIDI) / totalNotes.value) * height
     if (y < 0 || y > height) continue
 
-    const x = width - TEXT_WIDTH - 5
+    const x = width - TEXT_WIDTH - 5 - HISTORY_NOW_OFFSET_PX
     const shiftedNoteName = getNoteName(Math.round(shiftedMidi * 2) / 2)
     const shiftedNoteBase = shiftedNoteName.replace(/[0-9+]/g, "")
     const isSameNoteFamily = shiftedNoteBase === currentNoteBase
@@ -439,11 +441,14 @@ function drawSineWaves(width: number, height: number) {
   const cycleSeconds = sineCycleSeconds.value
   if (!segments.length || !(cycleSeconds > 0)) return
 
-  // Eje x = tiempo: 1 columna = 1 tick (1/60 s). Con tick = 0 (mic apagado) es una guía
-  // estática con "ahora" (borde derecho) abajo; con el mic activo la fase avanza con
-  // `tick` y la onda se desplaza a la izquierda junto con la traza.
+  // Eje x = tiempo: 1 columna = 1 tick (1/60 s). "Ahora" (xNow) queda HISTORY_NOW_OFFSET_PX
+  // a la izquierda del borde derecho: lo que hay entre xNow y xRight es el futuro de la
+  // onda (columnas negativas). Con tick = 0 (mic apagado) es una guía estática con "ahora"
+  // abajo; con el mic activo la fase avanza con `tick` y la onda se desplaza a la
+  // izquierda junto con la traza.
   const spacing = (width - 50) / maxHistory.value
   const xRight = width - TEXT_WIDTH - 5
+  const xNow = xRight - HISTORY_NOW_OFFSET_PX
   const midiToY = (m: number) => height - ((m - MIN_MIDI) / totalNotes.value) * height
 
   ctx.strokeStyle = "#888"
@@ -452,7 +457,7 @@ function drawSineWaves(width: number, height: number) {
   for (const { lo, hi } of segments) {
     ctx.beginPath()
     for (let x = xRight; x >= 0; x -= 2) {
-      const fi = (xRight - x) / spacing
+      const fi = (xNow - x) / spacing
       const midi = lo + ((hi - lo) * (1 - Math.cos(sinePhase(props.tick, fi, cycleSeconds)))) / 2
       const y = midiToY(midi)
       if (x === xRight) ctx.moveTo(x, y)
@@ -460,6 +465,19 @@ function drawSineWaves(width: number, height: number) {
     }
     ctx.stroke()
   }
+}
+
+// Barra vertical fina amarilla en "ahora" (HISTORY_NOW_OFFSET_PX a la izquierda del borde
+// derecho): a su derecha queda el futuro de la onda sinusoidal.
+function drawNowBar(width: number, height: number) {
+  if (!ctx) return
+  const x = Math.round(width - TEXT_WIDTH - 5 - HISTORY_NOW_OFFSET_PX) + 0.5 // +0.5: línea nítida de 1 px
+  ctx.strokeStyle = "yellow"
+  ctx.lineWidth = 1
+  ctx.beginPath()
+  ctx.moveTo(x, 0)
+  ctx.lineTo(x, height)
+  ctx.stroke()
 }
 
 function drawHistoryPoints(i: number, freq: number, midi: number, spacing: number) {
@@ -476,7 +494,7 @@ function drawHistoryPoints(i: number, freq: number, midi: number, spacing: numbe
     const y = height - ((shiftedMidi - MIN_MIDI) / totalNotes.value) * height
 
     if (y >= 0 && y <= height) {
-      const x = width - i * spacing - TEXT_WIDTH - 5
+      const x = width - i * spacing - TEXT_WIDTH - 5 - HISTORY_NOW_OFFSET_PX
       const fullIndex = Math.round(shiftedMidi * 2) % 24
       ctx.fillStyle = COLORS[fullIndex]
       ctx.beginPath()

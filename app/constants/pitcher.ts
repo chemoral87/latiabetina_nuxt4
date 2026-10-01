@@ -217,6 +217,9 @@ export const HISTORY_DT_MS = 1000 / 60
 // Cuántos ticks se sostiene la nota actual (resaltado + etiqueta) tras el último
 // sonido válido, para que cortes cortos de detección no hagan parpadear la UI.
 export const SILENCE_HOLD_FRAMES = 8
+// "Ahora" (círculo actual + inicio de la traza) se dibuja este número de px a la
+// izquierda del borde derecho, para dejar ver el futuro de la onda sinusoidal.
+export const HISTORY_NOW_OFFSET_PX = 25
 
 // Add these missing constants that were defined inline in other files
 export const NATURAL_POSITIONS: number[] = [0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6]
