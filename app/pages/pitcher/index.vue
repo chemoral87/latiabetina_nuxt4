@@ -75,6 +75,33 @@
       </VCol>
     </VRow>
 
+    <VRow id="pit-sine-row" class="mb-1" align="center" density="compact">
+      <VCol md="3" sm="4" cols="6" class="py-1">
+        <VTextField
+          id="pit-sine-notes"
+          v-model="sineNotes"
+          hide-details
+          density="compact"
+          placeholder="A,C"
+          variant="outlined"
+          label="Onda (notas)"
+        />
+      </VCol>
+      <VCol md="2" sm="3" cols="6" class="py-1">
+        <VTextField
+          id="pit-sine-cycle"
+          v-model="sineCycle"
+          min="0.1"
+          step="0.5"
+          hide-details
+          type="number"
+          density="compact"
+          variant="outlined"
+          label="Ciclo (seg)"
+        />
+      </VCol>
+    </VRow>
+
     <VRow id="pit-display-row" density="compact">
       <VCol v-if="showStaffNotation" cols="auto" class="px-0 mx-0">
         <PitcherStaffNotation
@@ -92,6 +119,7 @@
         <PitcherHistogram
           ref="histogramComponent"
           :history="history"
+          :tick="historyTick"
           :last-freq="lastFreq"
           :db-display="dBDisplay"
           :freq-display="freqDisplay"
@@ -266,6 +294,7 @@ import {
 import {
   A4_FREQ,
   A4_MIDI,
+  HISTORY_DT_MS,
   NOTE_LATIN_STRINGS,
   NOTE_SHORT_STRINGS,
 } from "~/constants/pitcher";
@@ -282,6 +311,10 @@ interface HistoryPoint {
   freq: number;
   midi: number;
 }
+
+// Frame sin sonido: el histograma ya ignora freq inválida (0). Objeto congelado y
+// compartido para no crear proxies reactivos ni basura a ~60 pushes/s.
+const GAP_POINT: HistoryPoint = Object.freeze({ freq: 0, midi: 0 });
 
 const store = usePitcherStore();
 const {
@@ -305,7 +338,18 @@ const {
   trumpetCols,
   pianoCols,
   bassCols,
+  sineNotes,
+  sineActive,
 } = storeToRefs(store);
+
+// Ciclo de la onda senoidal en segundos (setter aplica clamp 0.1–60)
+const sineCycle = computed({
+  get: () => store.sineCycleSeconds,
+  set: (v: unknown) => {
+    const n = parseFloat(String(v));
+    store.setSineCycleSeconds(Number.isFinite(n) ? n : 2);
+  },
+});
 
 // El pentagrama comparte la misma altura que pit-hist-canvas / pit-db-meter
 // (histogramEffectiveHeight = histogramHeight). Cambiar el ancho (histogramMinWidth)
@@ -329,6 +373,10 @@ const staffZoom = computed(
 const isMicActive = ref(false);
 const audioProcessor = ref<PitcherAudioProcessor | null>(null);
 const history = ref<HistoryPoint[]>([]);
+// Ticks (columnas) agregados al histograma desde que se activó el mic / Reiniciar.
+// Fase de la onda sinusoidal y disparador de redibujo del histograma.
+const historyTick = ref(0);
+let lastTickAt = 0; // performance.now() del último tick (modo continuo)
 const freqDisplay = ref("--");
 const dBDisplay = ref("--");
 const centsDeviation = ref<number | null>(null);
@@ -415,6 +463,8 @@ async function changeProcessor() {
 
 function resetHistory() {
   history.value = [];
+  historyTick.value = 0;
+  lastTickAt = 0;
   lastFreq.value = null;
   lastValidFreq.value = null;
   centsDeviation.value = null;
@@ -453,6 +503,8 @@ async function cleanup() {
   dBDisplay.value = "--";
   centsDeviation.value = null;
   history.value = [];
+  historyTick.value = 0;
+  lastTickAt = 0;
   lastFreq.value = null;
 }
 
@@ -463,6 +515,8 @@ async function toggleMic() {
       // Use audio processor to initialize microphone
       await audioProcessor.value.initializeMicrophone();
       isMicActive.value = true;
+      historyTick.value = 0;
+      lastTickAt = 0;
 
       // Set initial sensitivity
       audioProcessor.value.setSensitivity(sensitivity.value);
@@ -481,6 +535,39 @@ async function toggleMic() {
   }
 }
 
+function pushHistory(point: HistoryPoint) {
+  history.value.unshift(point);
+  if (history.value.length > maxHistory.value) history.value.pop();
+  historyTick.value++;
+}
+
+// Registra un frame en el histograma.
+// - Sin onda (sineActive = false): comportamiento histórico; solo se agregan
+//   muestras válidas, así que en silencio el histograma se congela.
+// - Con onda: el histograma avanza a un ritmo fijo de 60 ticks/s (1 columna =
+//   1/60 s) aunque no haya sonido, para que la onda y la traza compartan el mismo
+//   eje de tiempo en pantallas de 120/144 Hz o con la pestaña limitada.
+function recordFrame(sample: HistoryPoint | null) {
+  if (!sineActive.value) {
+    lastTickAt = 0;
+    if (sample) pushHistory(sample);
+    return;
+  }
+
+  const now = performance.now();
+  if (!lastTickAt) lastTickAt = now - HISTORY_DT_MS; // primer tick inmediato
+  const due = Math.floor((now - lastTickAt) / HISTORY_DT_MS);
+  if (due < 1) return; // entre ticks (pantallas > 60 Hz)
+  lastTickAt += due * HISTORY_DT_MS;
+
+  // Ticks atrasados (pestaña oculta / equipo lento) = silencio; el más nuevo lleva
+  // la muestra. Lo que excede el historial solo avanza el contador (fase de la onda).
+  const gaps = Math.min(due - 1, maxHistory.value);
+  historyTick.value += due - 1 - gaps;
+  for (let k = 0; k < gaps; k++) pushHistory(GAP_POINT);
+  pushHistory(sample ?? GAP_POINT);
+}
+
 function update() {
   if (!isMicActive.value || !audioProcessor.value) return;
 
@@ -489,6 +576,8 @@ function update() {
   dBDisplay.value = Math.max(0, result.dB + store.dbCalibrationOffset).toFixed(
     1,
   );
+
+  let sample: HistoryPoint | null = null;
 
   if (result.freq !== -1) {
     // Intentar estabilizar el ataque
@@ -510,8 +599,7 @@ function update() {
       lastFreq.value = exactFreq;
       lastValidFreq.value = exactFreq; // Guardar la última frecuencia válida
 
-      history.value.unshift({ freq: stableFreq, midi });
-      if (history.value.length > maxHistory.value) history.value.pop();
+      sample = { freq: stableFreq, midi };
     } else {
       // Nota en fase de estabilización: no actualizamos displays de frecuencia
       freqDisplay.value = "--";
@@ -521,6 +609,8 @@ function update() {
     centsDeviation.value = null;
     lastFreq.value = null;
   }
+
+  recordFrame(sample);
 
   if (isMicActive.value) requestAnimationFrame(update);
 }

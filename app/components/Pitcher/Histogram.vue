@@ -57,9 +57,11 @@ import {
   NOTE_LATIN_STRINGS_THIRDS,
   NOTE_SHORT_STRINGS,
   NOTE_SHORT_STRINGS_THIRDS,
+  SILENCE_HOLD_FRAMES,
   TEXT_WIDTH,
   TOLERANCE_HZ,
 } from "~/constants/pitcher"
+import { buildSineSegments, parseSinePitchClasses, sinePhase } from "~/utils/pitcherSine"
 
 interface HistoryPoint {
   freq: number
@@ -76,6 +78,9 @@ const props = withDefaults(
     showDbMeter?: boolean
     showTuningRange?: boolean
     minWidth?: number
+    // Ticks (1/60 s) transcurridos desde que se activó el mic: fase de la onda
+    // sinusoidal y disparador de redibujo.
+    tick?: number
   }>(),
   {
     history: () => [],
@@ -86,11 +91,12 @@ const props = withDefaults(
     showDbMeter: true,
     showTuningRange: true,
     minWidth: 200,
+    tick: 0,
   },
 )
 
 const store = usePitcherStore()
-const { selectedRootNote, latinNotation, showMicrotones, showTricrotones, maxHistory, totalNotes, histogramEffectiveHeight } = storeToRefs(store)
+const { selectedRootNote, latinNotation, showMicrotones, showTricrotones, maxHistory, totalNotes, histogramEffectiveHeight, sineNotes, sineCycleSeconds } = storeToRefs(store)
 
 const rootEl = ref<HTMLElement | null>(null)
 const histogramEl = ref<HTMLCanvasElement | null>(null)
@@ -133,7 +139,7 @@ const tuningAccuracyClass = computed(() => {
   return "tuning-poor"
 })
 
-watch([selectedRootNote, latinNotation, showMicrotones, showTricrotones, maxHistory, totalNotes, histogramEffectiveHeight], () => {
+watch([selectedRootNote, latinNotation, showMicrotones, showTricrotones, maxHistory, totalNotes, histogramEffectiveHeight, sineNotes, sineCycleSeconds], () => {
   drawHistogram()
 })
 
@@ -144,13 +150,11 @@ watch(
   },
 )
 
-watch(
-  () => props.history,
-  () => {
-    drawHistogram()
-  },
-  { deep: true },
-)
+// El historial muta en sitio (unshift/pop) y la página incrementa `tick` en cada
+// cambio, así que basta observar la referencia y el tick (sin deep watch).
+watch([() => props.history, () => props.tick], () => {
+  drawHistogram()
+})
 
 onMounted(() => {
   ctx = histogramEl.value?.getContext("2d", { willReadFrequently: true }) ?? null
@@ -229,6 +233,18 @@ function resetCanvas() {
   drawNoteLines()
 }
 
+// Nota "actual": el punto válido más reciente dentro de los últimos
+// SILENCE_HOLD_FRAMES ticks. En silencio (frames vacíos) se sostiene unos ticks y
+// luego se libera; evita parpadeo por cortes cortos de detección.
+function currentPoint(): { point: HistoryPoint; index: number } | null {
+  const limit = Math.min(props.history.length, SILENCE_HOLD_FRAMES)
+  for (let i = 0; i < limit; i++) {
+    const p = props.history[i]!
+    if (p.freq && p.freq >= 20 && p.freq <= 2000) return { point: p, index: i }
+  }
+  return null
+}
+
 function drawHistogram() {
   const canvas = histogramEl.value
   if (!ctx || !canvas) return
@@ -240,22 +256,25 @@ function drawHistogram() {
 
   ctx.clearRect(0, 0, width, height)
   drawNoteLines()
+  drawSineWaves(width, height)
 
-  const currentData = props.history[0]
-  if (!currentData || !currentData.freq || currentData.freq < 20 || currentData.freq > 2000) {
-    for (let i = 1; i < len; i++) {
-      const { freq, midi } = props.history[i]
+  const current = currentPoint()
+  if (!current) {
+    for (let i = 0; i < len; i++) {
+      const { freq, midi } = props.history[i]!
       if (!freq || freq < 20 || freq > 2000) continue
       drawHistoryPoints(i, freq, midi, spacing)
     }
     return
   }
 
-  const { freq, midi } = currentData
+  const { freq, midi } = current.point
   const currentNoteName = getNoteNameNum(Math.round(midi * 2) / 2)
   const currentNoteBase = currentNoteName.replace(/[0-9+]/g, "")
 
-  const staticDisplayText = `${currentNoteName} (${props.freqDisplay} Hz)`
+  // Se calcula desde el propio punto (props.freqDisplay es "--" durante el silencio)
+  const freqText = String(parseFloat(freq.toFixed(2)))
+  const staticDisplayText = `${currentNoteName} (${freqText} Hz)`
   ctx.font = "bold 16px sans-serif"
   const textWidth = ctx.measureText(staticDisplayText).width
 
@@ -288,8 +307,10 @@ function drawHistogram() {
     ctx.fillText(staticDisplayText, x - textWidth - 10, y - 5)
   }
 
-  for (let i = 1; i < len; i++) {
-    const { freq, midi } = props.history[i]
+  // El punto actual se representa con el círculo/etiqueta del borde derecho
+  for (let i = 0; i < len; i++) {
+    if (i === current.index) continue
+    const { freq, midi } = props.history[i]!
     if (!freq || freq < 20 || freq > 2000) continue
     drawHistoryPoints(i, freq, midi, spacing)
   }
@@ -327,13 +348,14 @@ function drawNoteLines() {
   }
 
   let currentNoteInfo: { subPos: number; base: string; freq: number } | null = null
-  if (props.history.length > 0 && props.history[0].freq) {
-    const currentMidi = freqToMidi(props.history[0].freq)
+  const currentFreqPoint = currentPoint()?.point
+  if (currentFreqPoint) {
+    const currentMidi = freqToMidi(currentFreqPoint.freq)
     const { base, subPos } = noteNameAt(Math.round(currentMidi * subdivisions) / subdivisions)
     currentNoteInfo = {
       subPos,
       base,
-      freq: props.history[0].freq,
+      freq: currentFreqPoint.freq,
     }
   }
 
@@ -404,6 +426,40 @@ function drawNoteLines() {
   ctx.moveTo(width - TEXT_WIDTH - 5, 0)
   ctx.lineTo(width - TEXT_WIDTH - 5, height)
   ctx.stroke()
+}
+
+// ── Onda sinusoidal de referencia ────────────────────────────────────────────
+// Notas separadas por coma ("A,C", también "La,Do", con o sin octava "A4"). Una línea
+// por nota: nace abajo en su nota y sube hasta la siguiente nota de la lista (lista
+// cíclica), p. ej. "A,C" → C3→A3 y A3→C4. Ver app/utils/pitcherSine.ts.
+
+function drawSineWaves(width: number, height: number) {
+  if (!ctx) return
+  const segments = buildSineSegments(parseSinePitchClasses(sineNotes.value), MIN_MIDI, MIN_MIDI + totalNotes.value)
+  const cycleSeconds = sineCycleSeconds.value
+  if (!segments.length || !(cycleSeconds > 0)) return
+
+  // Eje x = tiempo: 1 columna = 1 tick (1/60 s). Con tick = 0 (mic apagado) es una guía
+  // estática con "ahora" (borde derecho) abajo; con el mic activo la fase avanza con
+  // `tick` y la onda se desplaza a la izquierda junto con la traza.
+  const spacing = (width - 50) / maxHistory.value
+  const xRight = width - TEXT_WIDTH - 5
+  const midiToY = (m: number) => height - ((m - MIN_MIDI) / totalNotes.value) * height
+
+  ctx.strokeStyle = "#888"
+  ctx.lineWidth = 1
+  // Todas las líneas van en fase: nacen abajo (fase 0), suben a la siguiente nota y vuelven.
+  for (const { lo, hi } of segments) {
+    ctx.beginPath()
+    for (let x = xRight; x >= 0; x -= 2) {
+      const fi = (xRight - x) / spacing
+      const midi = lo + ((hi - lo) * (1 - Math.cos(sinePhase(props.tick, fi, cycleSeconds)))) / 2
+      const y = midiToY(midi)
+      if (x === xRight) ctx.moveTo(x, y)
+      else ctx.lineTo(x, y)
+    }
+    ctx.stroke()
+  }
 }
 
 function drawHistoryPoints(i: number, freq: number, midi: number, spacing: number) {

@@ -1,4 +1,5 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
+import { parseSinePitchClasses } from '~/utils/pitcherSine'
 
 /**
  * Pinia port of the AUI `pitcher_store` Vuex module (store/pitcher_store.js),
@@ -8,21 +9,7 @@ import { acceptHMRUpdate, defineStore } from 'pinia'
 const STORAGE_KEY = 'pitcher_v1'
 
 // Opciones de columnas (cols) para las notaciones de instrumento del tuner
-export const NOTATION_COLS_OPTIONS: (string | number)[] = [
-  'auto',
-  1,
-  2,
-  3,
-  4,
-  5,
-  6,
-  7,
-  8,
-  9,
-  10,
-  11,
-  12,
-]
+export const NOTATION_COLS_OPTIONS: (string | number)[] = ['auto', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 function clamp(v: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, v))
@@ -72,6 +59,13 @@ export const usePitcherStore = defineStore('pitcher', () => {
   const trumpetCols = ref<string | number>(6)
   const pianoCols = ref<string | number>(6)
   const bassCols = ref<string | number>(6)
+  // Notas separadas por coma para la onda sinusoidal de referencia (ej. "A,C")
+  const sineNotes = ref('')
+  // Duración del ciclo de la onda sinusoidal en segundos
+  const sineCycleSeconds = ref(2)
+  // Derivado (no se persiste): hay una onda válida (≥ 2 notas reconocidas).
+  // Mientras esté activa, el histograma sigue avanzando en silencio.
+  const sineActive = computed(() => parseSinePitchClasses(sineNotes.value).length >= 2)
 
   // ---- mutations → setters (same clamping as aui) ----
   function setRootNote(note: string) {
@@ -188,6 +182,14 @@ export const usePitcherStore = defineStore('pitcher', () => {
     if (NOTATION_COLS_OPTIONS.includes(value)) bassCols.value = value
   }
 
+  function setSineNotes(value: string) {
+    sineNotes.value = value
+  }
+
+  function setSineCycleSeconds(value: number) {
+    sineCycleSeconds.value = clamp(value, 0.1, 60)
+  }
+
   // ---- localStorage persistence (client-only, debounced 300ms like aui) ----
   function persist() {
     if (!import.meta.client) return
@@ -223,6 +225,8 @@ export const usePitcherStore = defineStore('pitcher', () => {
           trumpetCols: trumpetCols.value,
           pianoCols: pianoCols.value,
           bassCols: bassCols.value,
+          sineNotes: sineNotes.value,
+          sineCycleSeconds: sineCycleSeconds.value,
         })
       )
     } catch {
@@ -261,6 +265,8 @@ export const usePitcherStore = defineStore('pitcher', () => {
       trumpetCols,
       pianoCols,
       bassCols,
+      sineNotes,
+      sineCycleSeconds,
     ],
     () => {
       if (!import.meta.client) return
@@ -292,38 +298,27 @@ export const usePitcherStore = defineStore('pitcher', () => {
       if (typeof data.maxHistory === 'number') maxHistory.value = data.maxHistory
       if (typeof data.totalNotes === 'number') totalNotes.value = data.totalNotes
       if (typeof data.histogramHeight === 'number') histogramHeight.value = data.histogramHeight
-      if (typeof data.histogramMinWidth === 'number')
-        histogramMinWidth.value = data.histogramMinWidth
-      if (typeof data.dbCalibrationOffset === 'number')
-        dbCalibrationOffset.value = data.dbCalibrationOffset
-      if (typeof data.showScaleOnFretboard === 'boolean')
-        showScaleOnFretboard.value = data.showScaleOnFretboard
-      if (typeof data.showStaffNotation === 'boolean')
-        showStaffNotation.value = data.showStaffNotation
+      if (typeof data.histogramMinWidth === 'number') histogramMinWidth.value = data.histogramMinWidth
+      if (typeof data.dbCalibrationOffset === 'number') dbCalibrationOffset.value = data.dbCalibrationOffset
+      if (typeof data.showScaleOnFretboard === 'boolean') showScaleOnFretboard.value = data.showScaleOnFretboard
+      if (typeof data.showStaffNotation === 'boolean') showStaffNotation.value = data.showStaffNotation
       if (typeof data.showHistogram === 'boolean') showHistogram.value = data.showHistogram
       if (typeof data.showDbMeter === 'boolean') showDbMeter.value = data.showDbMeter
       if (typeof data.showTuningRange === 'boolean') showTuningRange.value = data.showTuningRange
       if (typeof data.scaleRingOpacity === 'number') scaleRingOpacity.value = data.scaleRingOpacity
       if (typeof data.ghostNoteOpacity === 'number') ghostNoteOpacity.value = data.ghostNoteOpacity
-      if (typeof data.showGuitarNotation === 'boolean')
-        showGuitarNotation.value = data.showGuitarNotation
-      if (typeof data.showUkeleleNotation === 'boolean')
-        showUkeleleNotation.value = data.showUkeleleNotation
-      if (typeof data.showTrumpetNotation === 'boolean')
-        showTrumpetNotation.value = data.showTrumpetNotation
-      if (typeof data.showPianoNotation === 'boolean')
-        showPianoNotation.value = data.showPianoNotation
+      if (typeof data.showGuitarNotation === 'boolean') showGuitarNotation.value = data.showGuitarNotation
+      if (typeof data.showUkeleleNotation === 'boolean') showUkeleleNotation.value = data.showUkeleleNotation
+      if (typeof data.showTrumpetNotation === 'boolean') showTrumpetNotation.value = data.showTrumpetNotation
+      if (typeof data.showPianoNotation === 'boolean') showPianoNotation.value = data.showPianoNotation
       if (typeof data.showBassNotation === 'boolean') showBassNotation.value = data.showBassNotation
-      if (data.ukeleleCols === 'auto' || typeof data.ukeleleCols === 'number')
-        ukeleleCols.value = data.ukeleleCols
-      if (data.guitarCols === 'auto' || typeof data.guitarCols === 'number')
-        guitarCols.value = data.guitarCols
-      if (data.trumpetCols === 'auto' || typeof data.trumpetCols === 'number')
-        trumpetCols.value = data.trumpetCols
-      if (data.pianoCols === 'auto' || typeof data.pianoCols === 'number')
-        pianoCols.value = data.pianoCols
-      if (data.bassCols === 'auto' || typeof data.bassCols === 'number')
-        bassCols.value = data.bassCols
+      if (data.ukeleleCols === 'auto' || typeof data.ukeleleCols === 'number') ukeleleCols.value = data.ukeleleCols
+      if (data.guitarCols === 'auto' || typeof data.guitarCols === 'number') guitarCols.value = data.guitarCols
+      if (data.trumpetCols === 'auto' || typeof data.trumpetCols === 'number') trumpetCols.value = data.trumpetCols
+      if (data.pianoCols === 'auto' || typeof data.pianoCols === 'number') pianoCols.value = data.pianoCols
+      if (data.bassCols === 'auto' || typeof data.bassCols === 'number') bassCols.value = data.bassCols
+      if (typeof data.sineNotes === 'string') sineNotes.value = data.sineNotes
+      if (typeof data.sineCycleSeconds === 'number') sineCycleSeconds.value = clamp(data.sineCycleSeconds, 0.1, 60)
       // Migración: versiones previas guardaban un único `notationCols` compartido
       if (
         typeof data.ukeleleCols === 'undefined' &&
@@ -380,6 +375,9 @@ export const usePitcherStore = defineStore('pitcher', () => {
     trumpetCols,
     pianoCols,
     bassCols,
+    sineNotes,
+    sineCycleSeconds,
+    sineActive,
     loadFromStorage,
     setRootNote,
     setSensitivity,
@@ -409,6 +407,8 @@ export const usePitcherStore = defineStore('pitcher', () => {
     setTrumpetCols,
     setPianoCols,
     setBassCols,
+    setSineNotes,
+    setSineCycleSeconds,
   }
 })
 
