@@ -14,38 +14,19 @@
       :loading="loading"
       :items-length="total"
       :row-props="rowProps"
-      class="elevation-1 xwidth600"
+      class="elevation-1 xwidth680"
       :items-per-page-options="[10, 15, 30]"
       items-per-page-text="Filas por página"
-      @update:options="onUpdateOptions">
+      @update:options="onUpdateOptions"
+    >
       <template #[`item.details`]="{ item }">
-        <VBtn
-          :id="`con-table-view-btn-${item.id}`"
-          icon
-          class="ma-1"
-          size="small"
-          color="success"
-          rounded="circle"
-          title="Detalles"
-          variant="outlined"
-          @click="emit('view', item)"
-        >
+        <VBtn :id="`con-table-view-btn-${item.id}`" icon class="ma-1" size="small" color="success" rounded="circle" title="Detalles" variant="outlined" @click="emit('view', item)">
           <VIcon size="x-large">mdi-clipboard-list</VIcon>
         </VBtn>
       </template>
       <template #[`item.actions`]="{ item }">
         <div class="d-flex flex-nowrap justify-center">
-          <VBtn
-            :id="`con-table-edit-btn-${item.id}`"
-            icon
-            class="ma-1"
-            size="small"
-            title="Editar"
-            color="primary"
-            rounded="circle"
-            variant="outlined"
-            @click="emit('edit', item)"
-          >
+          <VBtn :id="`con-table-edit-btn-${item.id}`" icon class="ma-1" size="small" title="Editar" color="primary" rounded="circle" variant="outlined" @click="emit('edit', item)">
             <VIcon size="x-large">mdi-pencil</VIcon>
           </VBtn>
 
@@ -66,11 +47,11 @@
       </template>
 
       <template #[`item.creator`]="{ item }">
-        {{ item.creator ? item.creator.name : "N/A" }}
+        {{ item.creator ? item.creator.name : 'N/A' }}
       </template>
 
       <template #[`item.organization`]="{ item }">
-        {{ item.organization ? item.organization.name : "N/A" }}
+        {{ item.organization ? item.organization.name : 'N/A' }}
       </template>
 
       <template #[`item.date`]="{ item }">
@@ -80,124 +61,116 @@
       <template #no-data>
         <div class="text-center pa-4">
           <VIcon color="grey-lighten-1">mdi-clipboard-list</VIcon>
-          <span class="text-body-1 text-grey ml-1"
-            >No se encontraron consolidados</span
-          >
+          <span class="text-body-1 text-grey ml-1">No se encontraron consolidados</span>
         </div>
       </template>
     </VDataTableServer>
 
-    <DialogDelete
-      v-if="dialogDelete"
-      :loading="deleting"
-      :dialog="dialogDeleteProp"
-      @ok="(item) => emit('delete', item)"
-      @close="emit('update:dialogDelete', false)"
-    />
+    <DialogDelete v-if="dialogDelete" :loading="deleting" :dialog="dialogDeleteProp" @ok="item => emit('delete', item)" @close="emit('update:dialogDelete', false)" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { rowPropsFor } from "~/composables/useRowHighlight";
-import { formatShortDate } from "~/utils/date";
+  import { rowPropsFor } from '~/composables/useRowHighlight'
+  import { formatShortDate } from '~/utils/date'
 
-interface Header {
-  title: string;
-  value: string;
-  sortable: boolean;
-  align?: string;
-  width?: string;
-}
-
-const props = withDefaults(
-  defineProps<{
-    response?: { total?: number; data?: unknown[] } | null;
-    loading?: boolean;
-    search?: string;
-    highlightId?: number | null;
-    removingId?: number | string | null;
-    dialogDelete?: boolean;
-    deleting?: boolean;
-    initialSortBy?: { key: string; order: string }[];
-  }>(),
-  {
-    response: null,
-    loading: false,
-    search: "",
-    highlightId: null,
-    removingId: null,
-    dialogDelete: false,
-    deleting: false,
-    initialSortBy: () => [{ key: "date", order: "desc" }],
-  },
-);
-
-const emit = defineEmits<{
-  (e: "sorting", val: Record<string, unknown>): void;
-  (e: "update:dialogDelete", val: boolean): void;
-  (e: "view", val: unknown): void;
-  (e: "edit", val: unknown): void;
-  (e: "delete", val: unknown): void;
-}>();
-
-const page = ref(1);
-const itemsPerPage = ref(10);
-const sortBy = ref<{ key: string; order: string }[]>([...props.initialSortBy]);
-
-const auth = useAuthStore();
-
-// Hide the "Organización" column when the user has only one org for this
-// permission — the backend resolves the org from auth context.
-const singleOrg = computed(() => auth.hasSingleOrgFor("conso-sheet-index"));
-
-const headers = computed<Header[]>(() => {
-  const list: Header[] = [
-    { title: "", value: "details", sortable: false, width: "40px" },
-    { title: "Folio", value: "folio_number", sortable: true },
-    { title: "Fecha", value: "date", sortable: true },
-  ];
-  if (!singleOrg.value) {
-    list.push({ title: "Organización", value: "organization" });
+  interface Header {
+    title: string
+    value: string
+    sortable: boolean
+    align?: string
+    width?: string
   }
-  list.push({ title: "Creado por", value: "creator" });
-  list.push({
-    title: "Acciones",
-    value: "actions",
-    sortable: false,
-    align: "center",
-    width: "200px",
-  });
-  return list;
-});
 
-const total = computed(() => props.response?.total ?? 0);
-const items = computed(() => props.response?.data ?? []);
-const loading = computed(() => props.loading ?? false);
+  const props = withDefaults(
+    defineProps<{
+      response?: { total?: number; data?: unknown[] } | null
+      loading?: boolean
+      search?: string
+      highlightId?: number | null
+      removingId?: number | string | null
+      dialogDelete?: boolean
+      deleting?: boolean
+      initialSortBy?: { key: string; order: string }[]
+    }>(),
+    {
+      response: null,
+      loading: false,
+      search: '',
+      highlightId: null,
+      removingId: null,
+      dialogDelete: false,
+      deleting: false,
+      initialSortBy: () => [{ key: 'date', order: 'desc' }],
+    }
+  )
 
-const rowProps = rowPropsFor(
-  () => props.highlightId,
-  () => props.removingId,
-);
+  const emit = defineEmits<{
+    (e: 'sorting', val: Record<string, unknown>): void
+    (e: 'update:dialogDelete', val: boolean): void
+    (e: 'view', val: unknown): void
+    (e: 'edit', val: unknown): void
+    (e: 'delete', val: unknown): void
+  }>()
 
-const dialogDeleteProp = ref<{
-  text?: string;
-  strong?: string;
-  payload?: unknown;
-}>({});
+  const page = ref(1)
+  const itemsPerPage = ref(10)
+  const sortBy = ref<{ key: string; order: string }[]>([...props.initialSortBy])
 
-function confirmDelete(item: unknown) {
-  const s = item as Record<string, unknown>;
-  dialogDeleteProp.value = {
-    text: "¿Desea eliminar el Consolidado con folio ",
-    strong: String(s.folio_number),
-    payload: item,
-  };
-  emit("update:dialogDelete", true);
-}
+  const auth = useAuthStore()
 
-function onUpdateOptions(val: Record<string, unknown>) {
-  emit("sorting", val);
-}
+  // Hide the "Organización" column when the user has only one org for this
+  // permission — the backend resolves the org from auth context.
+  const singleOrg = computed(() => auth.hasSingleOrgFor('conso-sheet-index'))
+
+  const headers = computed<Header[]>(() => {
+    const list: Header[] = [
+      { title: '', value: 'details', sortable: false, width: '40px' },
+      { title: 'Folio', value: 'folio_number', sortable: true },
+      { title: 'Fecha', value: 'date', sortable: true },
+    ]
+    if (!singleOrg.value) {
+      list.push({ title: 'Organización', value: 'organization' })
+    }
+    list.push({ title: 'Creado por', value: 'creator' })
+    list.push({
+      title: 'Acciones',
+      value: 'actions',
+      sortable: false,
+      align: 'center',
+      width: '200px',
+    })
+    return list
+  })
+
+  const total = computed(() => props.response?.total ?? 0)
+  const items = computed(() => props.response?.data ?? [])
+  const loading = computed(() => props.loading ?? false)
+
+  const rowProps = rowPropsFor(
+    () => props.highlightId,
+    () => props.removingId
+  )
+
+  const dialogDeleteProp = ref<{
+    text?: string
+    strong?: string
+    payload?: unknown
+  }>({})
+
+  function confirmDelete(item: unknown) {
+    const s = item as Record<string, unknown>
+    dialogDeleteProp.value = {
+      text: '¿Desea eliminar el Consolidado con folio ',
+      strong: String(s.folio_number),
+      payload: item,
+    }
+    emit('update:dialogDelete', true)
+  }
+
+  function onUpdateOptions(val: Record<string, unknown>) {
+    emit('sorting', val)
+  }
 </script>
 
 <style scoped></style>

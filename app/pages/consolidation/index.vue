@@ -8,10 +8,11 @@
             v-model="filterInput"
             clearable
             hide-details
-            label="Filtro"
+            label="Folio"
             density="compact"
             variant="outlined"
-            placeholder="Filtro"
+            inputmode="numeric"
+            placeholder="Folio"
             append-inner-icon="mdi-magnify"
           />
         </VCol>
@@ -106,6 +107,11 @@ const lastOptions = ref<Record<string, unknown> & { sortBy: SortBy }>({
 
 // Debounced filter — shared useDebouncedFilter (300ms immediate clear)
 useDebouncedFilter(filterInput, filterTerm)
+
+watch(filterInput, (v) => {
+  const digits = String(v ?? "").replace(/\D/g, "");
+  if (digits !== String(v ?? "")) filterInput.value = digits;
+})
 
 // Initial list data is loaded during SSR via useAsyncData so the payload is
 // reused on the client (no double fetch, no hydration mismatch).
