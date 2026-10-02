@@ -217,7 +217,7 @@ function getNoteName(midiNote: number): string {
   const isHalfStep = Math.round(midiNote * 2) % 2 === 1
   const fullIndex = isHalfStep ? noteIndex * 2 + 1 : noteIndex * 2
   const noteStrings = latinNotation.value ? NOTE_LATIN_STRINGS : NOTE_SHORT_STRINGS
-  return noteStrings[fullIndex]
+  return noteStrings[fullIndex]!
 }
 
 function getMajorScaleNotes(root: string): number[] {
@@ -297,7 +297,7 @@ function drawHistogram() {
     if (isSameNoteFamily) {
       pointColor = textColor = "white"
     } else {
-      pointColor = textColor = COLORS[fullIndex]
+      pointColor = textColor = COLORS[fullIndex]!
     }
 
     ctx.fillStyle = pointColor
@@ -454,16 +454,22 @@ function drawSineWaves(width: number, height: number) {
   ctx.strokeStyle = "#888"
   ctx.lineWidth = 1
   // Todas las líneas van en fase: nacen abajo (fase 0), suben a la siguiente nota y vuelven.
+  const topMidi = MIN_MIDI + totalNotes.value
   for (const { lo, hi } of segments) {
-    ctx.beginPath()
-    for (let x = xRight; x >= 0; x -= 2) {
-      const fi = (xNow - x) / spacing
-      const midi = lo + ((hi - lo) * (1 - Math.cos(sinePhase(props.tick, fi, cycleSeconds)))) / 2
-      const y = midiToY(midi)
-      if (x === xRight) ctx.moveTo(x, y)
-      else ctx.lineTo(x, y)
+    // Si la línea desborda por arriba (hi > topMidi), se dibuja otra copia 12 semitonos
+    // más abajo: lo que sale por el borde superior continúa desde abajo.
+    const shifts = hi > topMidi ? [0, -12] : [0]
+    for (const shift of shifts) {
+      ctx.beginPath()
+      for (let x = xRight; x >= 0; x -= 2) {
+        const fi = (xNow - x) / spacing
+        const midi = lo + shift + ((hi - lo) * (1 - Math.cos(sinePhase(props.tick, fi, cycleSeconds)))) / 2
+        const y = midiToY(midi)
+        if (x === xRight) ctx.moveTo(x, y)
+        else ctx.lineTo(x, y)
+      }
+      ctx.stroke()
     }
-    ctx.stroke()
   }
 }
 
@@ -496,7 +502,7 @@ function drawHistoryPoints(i: number, freq: number, midi: number, spacing: numbe
     if (y >= 0 && y <= height) {
       const x = width - i * spacing - TEXT_WIDTH - 5 - HISTORY_NOW_OFFSET_PX
       const fullIndex = Math.round(shiftedMidi * 2) % 24
-      ctx.fillStyle = COLORS[fullIndex]
+      ctx.fillStyle = COLORS[fullIndex]!
       ctx.beginPath()
       ctx.arc(x, y, histogramBallRadius.value, 0, Math.PI * 2)
       ctx.fill()
