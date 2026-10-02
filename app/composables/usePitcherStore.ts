@@ -31,6 +31,8 @@ export const usePitcherStore = defineStore('pitcher', () => {
   const histogramHeight = ref(350)
   // Ancho mínimo (px) del histograma y de su columna contenedora
   const histogramMinWidth = ref(350)
+  // Radio (px) de las bolas del histograma; la bola de la nota actual usa 1.5×
+  const histogramBallRadius = ref(2)
   // Altura efectiva (px) aplicada a pit-hist-canvas, pit-db-meter y pit-staff-canvas
   const histogramEffectiveHeight = computed(() => histogramHeight.value)
   // Desplazamiento de calibración del medidor de dB (alinear con Decibel X).
@@ -108,6 +110,10 @@ export const usePitcherStore = defineStore('pitcher', () => {
 
   function setHistogramMinWidth(value: number) {
     histogramMinWidth.value = clamp(value, 50, 400)
+  }
+
+  function setHistogramBallRadius(value: number) {
+    histogramBallRadius.value = clamp(value, 0.7, 2)
   }
 
   function setDbCalibrationOffset(value: number) {
@@ -207,6 +213,7 @@ export const usePitcherStore = defineStore('pitcher', () => {
           totalNotes: totalNotes.value,
           histogramHeight: histogramHeight.value,
           histogramMinWidth: histogramMinWidth.value,
+          histogramBallRadius: histogramBallRadius.value,
           dbCalibrationOffset: dbCalibrationOffset.value,
           showScaleOnFretboard: showScaleOnFretboard.value,
           scaleRingOpacity: scaleRingOpacity.value,
@@ -247,6 +254,7 @@ export const usePitcherStore = defineStore('pitcher', () => {
       totalNotes,
       histogramHeight,
       histogramMinWidth,
+      histogramBallRadius,
       dbCalibrationOffset,
       showScaleOnFretboard,
       scaleRingOpacity,
@@ -299,6 +307,7 @@ export const usePitcherStore = defineStore('pitcher', () => {
       if (typeof data.totalNotes === 'number') totalNotes.value = data.totalNotes
       if (typeof data.histogramHeight === 'number') histogramHeight.value = data.histogramHeight
       if (typeof data.histogramMinWidth === 'number') histogramMinWidth.value = data.histogramMinWidth
+      if (typeof data.histogramBallRadius === 'number') histogramBallRadius.value = clamp(data.histogramBallRadius, 0.7, 2)
       if (typeof data.dbCalibrationOffset === 'number') dbCalibrationOffset.value = data.dbCalibrationOffset
       if (typeof data.showScaleOnFretboard === 'boolean') showScaleOnFretboard.value = data.showScaleOnFretboard
       if (typeof data.showStaffNotation === 'boolean') showStaffNotation.value = data.showStaffNotation
@@ -356,6 +365,7 @@ export const usePitcherStore = defineStore('pitcher', () => {
     totalNotes,
     histogramHeight,
     histogramMinWidth,
+    histogramBallRadius,
     histogramEffectiveHeight,
     dbCalibrationOffset,
     showScaleOnFretboard,
@@ -389,6 +399,7 @@ export const usePitcherStore = defineStore('pitcher', () => {
     setTotalNotes,
     setHistogramHeight,
     setHistogramMinWidth,
+    setHistogramBallRadius,
     setDbCalibrationOffset,
     setShowScaleOnFretboard,
     setScaleRingOpacity,

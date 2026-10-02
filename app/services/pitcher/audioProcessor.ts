@@ -3,7 +3,7 @@
 // Ported from aui pages/pitcher/audioProcessor.js — the reference processor
 // implementation. The tuner page dynamically loads the variants under
 // app/pages/pitcher/audioProcessors/ instead, but all of them share this shape.
-import { A4_FREQ, A4_MIDI } from "~/constants/pitcher"
+import { A4_FREQ, A4_MIDI } from '~/constants/pitcher'
 
 export interface AnalysisResult {
   freq: number
@@ -13,7 +13,7 @@ export interface AnalysisResult {
 
 /**
  * Common contract implemented by every pitcher audio processor
- * (ap_claude9 / ap_gemini10). Lets the page hold a typed instance
+ * (ap_claude9 / ap_gemini10 / ap_deepseek / ap_claude5.5). Lets the page hold a typed instance
  * regardless of which variant was loaded dynamically.
  */
 export interface PitcherAudioProcessor {
@@ -122,11 +122,11 @@ export class AudioProcessor implements PitcherAudioProcessor {
 
   async cleanupMicrophone(): Promise<void> {
     if (this.mediaStream) {
-      this.mediaStream.getTracks().forEach((track) => track.stop())
+      this.mediaStream.getTracks().forEach(track => track.stop())
       this.mediaStream = null
     }
 
-    if (this.audioContext && this.audioContext.state !== "closed") {
+    if (this.audioContext && this.audioContext.state !== 'closed') {
       await this.audioContext.close()
       this.audioContext = null
     }
@@ -140,13 +140,13 @@ export class AudioProcessor implements PitcherAudioProcessor {
 
   calibrateNoise(): Promise<void> {
     if (!this.analyser || !this.isMicActive) {
-      throw new Error("Microphone not active")
+      throw new Error('Microphone not active')
     }
 
     this.noiseCalibrating = true
     this.noiseSamples = []
 
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const captureNoise = () => {
         if (this.noiseSamples.length < 180 && this.analyser && this.noiseCalibrating && this.buffer) {
           this.analyser.getFloatTimeDomainData(this.buffer)

@@ -235,6 +235,26 @@
                     {{ histogramMinWidth }}px
                   </div>
                 </VCol>
+                <VCol sm="6" cols="12">
+                  <div class="text-caption text-medium-emphasis">
+                    Radio de bolas
+                  </div>
+                  <VSlider
+                    id="pit-config-ball-radius"
+                    v-model="histogramBallRadius"
+                    :max="2"
+                    :min="0.7"
+                    :step="0.1"
+                    thumb-label
+                    hide-details
+                  />
+                  <div
+                    id="pit-config-ball-radius-value"
+                    class="text-center font-weight-bold"
+                  >
+                    {{ histogramBallRadius }}px
+                  </div>
+                </VCol>
               </VRow>
             </div>
           </VExpandTransition>
@@ -605,6 +625,10 @@ const histogramHeight = computed({
 const histogramMinWidth = computed({
   get: () => store.histogramMinWidth,
   set: (v: number) => store.setHistogramMinWidth(v),
+});
+const histogramBallRadius = computed({
+  get: () => store.histogramBallRadius,
+  set: (v: number) => store.setHistogramBallRadius(v),
 });
 const dbCalibrationOffset = computed({
   get: () => store.dbCalibrationOffset,

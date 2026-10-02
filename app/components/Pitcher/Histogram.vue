@@ -97,7 +97,7 @@ const props = withDefaults(
 )
 
 const store = usePitcherStore()
-const { selectedRootNote, latinNotation, showMicrotones, showTricrotones, maxHistory, totalNotes, histogramEffectiveHeight, sineNotes, sineCycleSeconds } = storeToRefs(store)
+const { selectedRootNote, latinNotation, showMicrotones, showTricrotones, maxHistory, totalNotes, histogramEffectiveHeight, histogramBallRadius, sineNotes, sineCycleSeconds } = storeToRefs(store)
 
 const rootEl = ref<HTMLElement | null>(null)
 const histogramEl = ref<HTMLCanvasElement | null>(null)
@@ -140,7 +140,7 @@ const tuningAccuracyClass = computed(() => {
   return "tuning-poor"
 })
 
-watch([selectedRootNote, latinNotation, showMicrotones, showTricrotones, maxHistory, totalNotes, histogramEffectiveHeight, sineNotes, sineCycleSeconds], () => {
+watch([selectedRootNote, latinNotation, showMicrotones, showTricrotones, maxHistory, totalNotes, histogramEffectiveHeight, histogramBallRadius, sineNotes, sineCycleSeconds], () => {
   drawHistogram()
 })
 
@@ -302,7 +302,7 @@ function drawHistogram() {
 
     ctx.fillStyle = pointColor
     ctx.beginPath()
-    ctx.arc(x, y, 3, 0, 2 * Math.PI)
+    ctx.arc(x, y, histogramBallRadius.value * 1.5, 0, 2 * Math.PI)
     ctx.fill()
 
     ctx.fillStyle = textColor
@@ -498,7 +498,7 @@ function drawHistoryPoints(i: number, freq: number, midi: number, spacing: numbe
       const fullIndex = Math.round(shiftedMidi * 2) % 24
       ctx.fillStyle = COLORS[fullIndex]
       ctx.beginPath()
-      ctx.arc(x, y, 2.0, 0, Math.PI * 2)
+      ctx.arc(x, y, histogramBallRadius.value, 0, Math.PI * 2)
       ctx.fill()
     }
   }
