@@ -65,9 +65,12 @@ describe('pitcherSine', () => {
       ])
     })
 
-    it('skips lines that do not fit in the range', () => {
-      // max 58: A3→C4 (57→60) does not fit, C3→A3 does
-      expect(buildSineSegments([9, 0], MIN, 58)).toEqual([{ lo: 48, hi: 57 }])
+    it('keeps overflowing lines (drawn with a continuation copy from below)', () => {
+      // max 58: A3→C4 (57→60) desborda y se conserva; C3→A3 cabe
+      expect(buildSineSegments([9, 0], MIN, 58)).toEqual([
+        { lo: 57, hi: 60 },
+        { lo: 48, hi: 57 },
+      ])
     })
 
     it('returns [] for fewer than 2 pitch classes', () => {

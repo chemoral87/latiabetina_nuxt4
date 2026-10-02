@@ -96,6 +96,81 @@ export function buildSineSegments(pitchClasses: number[], minMidi: number, maxMi
 }
 
 /**
+ * Onda única que recorre la lista en orden (para listas de más de 2 notas).
+ *
+ * Los pasos alternan SUBIR / BAJAR: el 1.º sube a la siguiente nota (a su primera
+ * aparición por encima), el 2.º baja a la siguiente (primera aparición por debajo), y
+ * así sucesivamente. Una misma nota consecutiva salta una octava completa.
+ *   "F#,G#,F#,A" → F#→G# (+2), G#→F# (−2), F#→A (+3), A→F# (−3): F# sube a G#, vuelve a F#,
+ *                  sube a A, vuelve a F#.
+ *   rotación 1 ("G#,F#,A,F#") → G#→F# alto (+10), F#→A bajo (−9), A→F# alto (+9),
+ *                  F#→G# bajo (−10).
+ *
+ * `rotation` mueve los primeros `rotation` elementos al final antes de construir la onda
+ * (rotation = 1: "F#,G#,F#,A" → "G#,F#,A,F#"); cada rotación empieza subiendo.
+ *
+ * Para que la onda cierre el ciclo (la última nota regresa exactamente a la primera) el
+ * desplazamiento total debe ser 0: si no lo es (p. ej. "A,C,E,G"), el salto más grande en
+ * el sentido sobrante se invierte (±12) hasta cerrar.
+ *
+ * Devuelve el MIDI absoluto de cada nodo (misma longitud que la lista); la octava es la
+ * más grave que deja toda la onda dentro de [minMidi, …]. Si por arriba excede el
+ * rango, quien dibuja agrega la copia 12 semitonos más abajo.
+ */
+export function buildSineSequence(pitchClasses: number[], minMidi: number, rotation = 0): number[] | null {
+  const n = pitchClasses.length
+  if (n < 2) return null
+
+  const r = ((rotation % n) + n) % n
+  const pcs = [...pitchClasses.slice(r), ...pitchClasses.slice(0, r)]
+
+  const steps: number[] = []
+  for (let i = 0; i < n; i++) {
+    const from = pcs[i]!
+    const to = pcs[(i + 1) % n]!
+    if (i % 2 === 0) {
+      // Sube: primera aparición de `to` por encima de `from` (1..12 semitonos)
+      steps.push(mod12(to - from) || 12)
+    } else {
+      // Baja: primera aparición de `to` por debajo de `from` (−1..−12 semitonos)
+      steps.push(-(mod12(from - to) || 12))
+    }
+  }
+
+  let total = steps.reduce((a, b) => a + b, 0) // múltiplo de 12
+  while (total !== 0) {
+    const idx = total > 0 ? steps.indexOf(Math.max(...steps)) : steps.indexOf(Math.min(...steps))
+    const fix = total > 0 ? -12 : 12
+    steps[idx] = steps[idx]! + fix
+    total += fix
+  }
+
+  const rel: number[] = [0]
+  for (let i = 0; i < n - 1; i++) rel.push(rel[i]! + steps[i]!)
+
+  const base0 = minMidi - Math.min(...rel)
+  const base = base0 + mod12(pcs[0]! - base0)
+  return rel.map(v => base + v)
+}
+
+/**
+ * MIDI (fraccionario) de la onda de `buildSineSequence` para una fase en radianes.
+ * Cada paso dura media vuelta de fase (π): con "Ciclo (seg)" = una subida y bajada,
+ * la lista completa dura (n / 2) ciclos. Fase 0 = primera nota. Cada paso usa una
+ * interpolación coseno, así que en cada nota la curva queda plana (como una senoide).
+ */
+export function sineSequenceMidi(points: number[], phase: number): number {
+  const n = points.length
+  const u = phase / Math.PI
+  const s = ((u % n) + n) % n
+  const j = Math.floor(s)
+  const t = s - j
+  const a = points[j]!
+  const b = points[(j + 1) % n]!
+  return a + ((b - a) * (1 - Math.cos(Math.PI * t))) / 2
+}
+
+/**
  * Fase (radianes) de la onda en una columna del histograma.
  * `tick`: ticks transcurridos desde el inicio; `column`: 0 = columna más nueva.
  * Con tick = 0 y column = 0 la fase es 0 (la línea está abajo en "ahora").

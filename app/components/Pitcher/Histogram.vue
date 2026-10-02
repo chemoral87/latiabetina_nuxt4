@@ -62,7 +62,7 @@ import {
   TEXT_WIDTH,
   TOLERANCE_HZ,
 } from "~/constants/pitcher"
-import { buildSineSegments, parseSinePitchClasses, sinePhase } from "~/utils/pitcherSine"
+import { buildSineSegments, buildSineSequence, parseSinePitchClasses, sinePhase, sineSequenceMidi } from "~/utils/pitcherSine"
 
 interface HistoryPoint {
   freq: number
@@ -435,11 +435,32 @@ function drawNoteLines() {
 // por nota: nace abajo en su nota y sube hasta la siguiente nota de la lista (lista
 // cíclica), p. ej. "A,C" → C3→A3 y A3→C4. Ver app/utils/pitcherSine.ts.
 
+// Ondas simultáneas en modo lista (> 2 notas): 1 = solo la lista en orden original
+// ("F#,G#,F#,A" = F# sube a G#, vuelve a F#, sube a A, vuelve a F#). Arranca en fase
+// en su primera nota. (Ver buildSineSequence; sube a 2 para sumar la rotación.)
+const SINE_SEQUENCE_WAVES = 1
+
 function drawSineWaves(width: number, height: number) {
   if (!ctx || !showSineWave.value) return
-  const segments = buildSineSegments(parseSinePitchClasses(sineNotes.value), MIN_MIDI, MIN_MIDI + totalNotes.value)
+  const topMidi = MIN_MIDI + totalNotes.value
+  const pitchClasses = parseSinePitchClasses(sineNotes.value)
   const cycleSeconds = sineCycleSeconds.value
-  if (!segments.length || !(cycleSeconds > 0)) return
+  // Más de 2 notas: ondas que recorren la lista en orden ("F#,G#,F#,A" = F# sube a G#,
+  // vuelve a F#, sube a A, vuelve a F# y repite) y su rotación. Con 2 notas: una línea por nota.
+  const sequences =
+    pitchClasses.length > 2
+      ? Array.from({ length: SINE_SEQUENCE_WAVES }, (_, k) => buildSineSequence(pitchClasses, MIN_MIDI, k)).filter((s): s is number[] => s !== null)
+      : []
+  const curves: { midi: (phase: number) => number; top: number }[] = sequences.length
+    ? sequences.map((seq) => ({
+        midi: (phase: number) => sineSequenceMidi(seq, phase),
+        top: Math.max(...seq),
+      }))
+    : buildSineSegments(pitchClasses, MIN_MIDI, topMidi).map(({ lo, hi }) => ({
+        midi: (phase: number) => lo + ((hi - lo) * (1 - Math.cos(phase))) / 2,
+        top: hi,
+      }))
+  if (!curves.length || !(cycleSeconds > 0)) return
 
   // Eje x = tiempo: 1 columna = 1 tick (1/60 s). "Ahora" (xNow) queda HISTORY_NOW_OFFSET_PX
   // a la izquierda del borde derecho: lo que hay entre xNow y xRight es el futuro de la
@@ -454,16 +475,15 @@ function drawSineWaves(width: number, height: number) {
   ctx.strokeStyle = "#888"
   ctx.lineWidth = 1
   // Todas las líneas van en fase: nacen abajo (fase 0), suben a la siguiente nota y vuelven.
-  const topMidi = MIN_MIDI + totalNotes.value
-  for (const { lo, hi } of segments) {
-    // Si la línea desborda por arriba (hi > topMidi), se dibuja otra copia 12 semitonos
+  for (const curve of curves) {
+    // Si la curva desborda por arriba (top > topMidi), se dibuja otra copia 12 semitonos
     // más abajo: lo que sale por el borde superior continúa desde abajo.
-    const shifts = hi > topMidi ? [0, -12] : [0]
+    const shifts = curve.top > topMidi ? [0, -12] : [0]
     for (const shift of shifts) {
       ctx.beginPath()
       for (let x = xRight; x >= 0; x -= 2) {
         const fi = (xNow - x) / spacing
-        const midi = lo + shift + ((hi - lo) * (1 - Math.cos(sinePhase(props.tick, fi, cycleSeconds)))) / 2
+        const midi = shift + curve.midi(sinePhase(props.tick, fi, cycleSeconds))
         const y = midiToY(midi)
         if (x === xRight) ctx.moveTo(x, y)
         else ctx.lineTo(x, y)
