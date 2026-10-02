@@ -54,7 +54,7 @@
       </VCol>
     </VRow>
 
-    <VRow id="pit-sine-row" class="mb-1" align="center" density="compact">
+    <VRow v-if="showSineWave" id="pit-sine-row" class="mb-1" align="center" density="compact">
       <VCol md="1" sm="3" cols="3" class="py-1">
         <VTextField id="pit-sine-notes" v-model="sineNotes" hide-details density="compact" placeholder="A,C" variant="outlined" label="Onda (notas)" />
       </VCol>
@@ -217,6 +217,7 @@
     bassCols,
     sineNotes,
     sineActive,
+    showSineWave,
   } = storeToRefs(store)
 
   // Ciclo de la onda senoidal en segundos (setter aplica clamp 0.1–60)

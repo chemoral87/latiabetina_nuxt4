@@ -65,9 +65,11 @@ export const usePitcherStore = defineStore('pitcher', () => {
   const sineNotes = ref('')
   // Duración del ciclo de la onda sinusoidal en segundos
   const sineCycleSeconds = ref(2)
+  // Mostrar la onda sinusoidal de referencia (y sus campos Onda / Ciclo en la página)
+  const showSineWave = ref(true)
   // Derivado (no se persiste): hay una onda válida (≥ 2 notas reconocidas).
   // Mientras esté activa, el histograma sigue avanzando en silencio.
-  const sineActive = computed(() => parseSinePitchClasses(sineNotes.value).length >= 2)
+  const sineActive = computed(() => showSineWave.value && parseSinePitchClasses(sineNotes.value).length >= 2)
 
   // ---- mutations → setters (same clamping as aui) ----
   function setRootNote(note: string) {
@@ -196,6 +198,10 @@ export const usePitcherStore = defineStore('pitcher', () => {
     sineCycleSeconds.value = clamp(value, 0.1, 60)
   }
 
+  function setShowSineWave(value: boolean) {
+    showSineWave.value = !!value
+  }
+
   // ---- localStorage persistence (client-only, debounced 300ms like aui) ----
   function persist() {
     if (!import.meta.client) return
@@ -234,6 +240,7 @@ export const usePitcherStore = defineStore('pitcher', () => {
           bassCols: bassCols.value,
           sineNotes: sineNotes.value,
           sineCycleSeconds: sineCycleSeconds.value,
+          showSineWave: showSineWave.value,
         })
       )
     } catch {
@@ -275,6 +282,7 @@ export const usePitcherStore = defineStore('pitcher', () => {
       bassCols,
       sineNotes,
       sineCycleSeconds,
+      showSineWave,
     ],
     () => {
       if (!import.meta.client) return
@@ -328,6 +336,7 @@ export const usePitcherStore = defineStore('pitcher', () => {
       if (data.bassCols === 'auto' || typeof data.bassCols === 'number') bassCols.value = data.bassCols
       if (typeof data.sineNotes === 'string') sineNotes.value = data.sineNotes
       if (typeof data.sineCycleSeconds === 'number') sineCycleSeconds.value = clamp(data.sineCycleSeconds, 0.1, 60)
+      if (typeof data.showSineWave === 'boolean') showSineWave.value = data.showSineWave
       // Migración: versiones previas guardaban un único `notationCols` compartido
       if (
         typeof data.ukeleleCols === 'undefined' &&
@@ -387,6 +396,7 @@ export const usePitcherStore = defineStore('pitcher', () => {
     bassCols,
     sineNotes,
     sineCycleSeconds,
+    showSineWave,
     sineActive,
     loadFromStorage,
     setRootNote,
@@ -420,6 +430,7 @@ export const usePitcherStore = defineStore('pitcher', () => {
     setBassCols,
     setSineNotes,
     setSineCycleSeconds,
+    setShowSineWave,
   }
 })
 

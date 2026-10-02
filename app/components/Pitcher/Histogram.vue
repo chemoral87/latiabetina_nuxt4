@@ -97,7 +97,7 @@ const props = withDefaults(
 )
 
 const store = usePitcherStore()
-const { selectedRootNote, latinNotation, showMicrotones, showTricrotones, maxHistory, totalNotes, histogramEffectiveHeight, histogramBallRadius, sineNotes, sineCycleSeconds } = storeToRefs(store)
+const { selectedRootNote, latinNotation, showMicrotones, showTricrotones, maxHistory, totalNotes, histogramEffectiveHeight, histogramBallRadius, showSineWave, sineNotes, sineCycleSeconds } = storeToRefs(store)
 
 const rootEl = ref<HTMLElement | null>(null)
 const histogramEl = ref<HTMLCanvasElement | null>(null)
@@ -140,7 +140,7 @@ const tuningAccuracyClass = computed(() => {
   return "tuning-poor"
 })
 
-watch([selectedRootNote, latinNotation, showMicrotones, showTricrotones, maxHistory, totalNotes, histogramEffectiveHeight, histogramBallRadius, sineNotes, sineCycleSeconds], () => {
+watch([selectedRootNote, latinNotation, showMicrotones, showTricrotones, maxHistory, totalNotes, histogramEffectiveHeight, histogramBallRadius, showSineWave, sineNotes, sineCycleSeconds], () => {
   drawHistogram()
 })
 
@@ -436,7 +436,7 @@ function drawNoteLines() {
 // cíclica), p. ej. "A,C" → C3→A3 y A3→C4. Ver app/utils/pitcherSine.ts.
 
 function drawSineWaves(width: number, height: number) {
-  if (!ctx) return
+  if (!ctx || !showSineWave.value) return
   const segments = buildSineSegments(parseSinePitchClasses(sineNotes.value), MIN_MIDI, MIN_MIDI + totalNotes.value)
   const cycleSeconds = sineCycleSeconds.value
   if (!segments.length || !(cycleSeconds > 0)) return

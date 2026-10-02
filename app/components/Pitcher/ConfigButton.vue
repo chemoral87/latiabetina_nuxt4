@@ -160,6 +160,17 @@
                   />
                 </VCol>
                 <VCol sm="6" cols="12">
+                  <VSwitch
+                    id="pit-config-sine-wave"
+                    v-model="showSineWave"
+                    inset
+                    hide-details
+                    color="success"
+                    class="mt-0 pt-0"
+                    label="Mostrar onda sinusoidal"
+                  />
+                </VCol>
+                <VCol sm="6" cols="12">
                   <VSlider
                     id="pit-config-history"
                     v-model="maxHistory"
@@ -601,6 +612,10 @@ const showMicrotones = computed({
 const showTricrotones = computed({
   get: () => store.showTricrotones,
   set: (v: boolean) => store.setShowTricrotones(v),
+});
+const showSineWave = computed({
+  get: () => store.showSineWave,
+  set: (v: boolean) => store.setShowSineWave(v),
 });
 const ghostQuarterNote = computed({
   get: () => store.ghostQuarterNote,
