@@ -55,7 +55,7 @@
       </template>
 
       <template #[`item.date`]="{ item }">
-        {{ formatShortDate(item.date as string | null) }}
+        {{ formatShortDate(item.date) }}
       </template>
 
       <template #no-data>
@@ -77,9 +77,17 @@
   interface Header {
     title: string
     value: string
-    sortable: boolean
-    align?: string
+    sortable?: boolean
+    align?: 'start' | 'end' | 'center'
     width?: string
+  }
+
+  interface ConsolidationRow {
+    id: number | string
+    folio_number?: number | string
+    date: string | null
+    creator?: { name?: string } | null
+    organization?: { name?: string } | null
   }
 
   const props = withDefaults(
@@ -115,7 +123,12 @@
 
   const page = ref(1)
   const itemsPerPage = ref(10)
-  const sortBy = ref<{ key: string; order: string }[]>([...props.initialSortBy])
+  const sortBy = ref(
+    props.initialSortBy.map(({ key, order }) => ({
+      key,
+      order: order as boolean | 'asc' | 'desc',
+    }))
+  )
 
   const auth = useAuthStore()
 
@@ -144,7 +157,7 @@
   })
 
   const total = computed(() => props.response?.total ?? 0)
-  const items = computed(() => props.response?.data ?? [])
+  const items = computed(() => (props.response?.data ?? []) as ConsolidationRow[])
   const loading = computed(() => props.loading ?? false)
 
   const rowProps = rowPropsFor(
