@@ -171,6 +171,16 @@
                   />
                 </VCol>
                 <VCol sm="6" cols="12">
+                  <VSelect
+                    id="pit-config-sine-wave-type"
+                    v-model="sineWaveType"
+                    hide-details
+                    density="compact"
+                    label="Tipo de onda"
+                    :items="sineWaveTypeOptions"
+                  />
+                </VCol>
+                <VCol sm="6" cols="12">
                   <VSlider
                     id="pit-config-history"
                     v-model="maxHistory"
@@ -585,6 +595,7 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useDisplay } from "vuetify";
+import type { SineWaveType } from "~/utils/pitcherSine";
 import {
   NOTATION_COLS_OPTIONS,
   usePitcherStore,
@@ -616,6 +627,17 @@ const showTricrotones = computed({
 const showSineWave = computed({
   get: () => store.showSineWave,
   set: (v: boolean) => store.setShowSineWave(v),
+});
+
+const sineWaveTypeOptions: { title: string; value: SineWaveType }[] = [
+  { title: "Senoidal", value: "sine" },
+  { title: "Triangular", value: "triangle" },
+  { title: "Cuadrada", value: "square" },
+];
+
+const sineWaveType = computed({
+  get: () => store.sineWaveType,
+  set: (v: SineWaveType) => store.setSineWaveType(v),
 });
 const ghostQuarterNote = computed({
   get: () => store.ghostQuarterNote,

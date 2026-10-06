@@ -62,7 +62,7 @@ import {
   TEXT_WIDTH,
   TOLERANCE_HZ,
 } from "~/constants/pitcher"
-import { buildSineSegments, buildSineSequence, parseSinePitchClasses, sinePhase, sineSequenceMidi } from "~/utils/pitcherSine"
+import { buildSineSegments, buildSineSequence, parseSinePitchClasses, sinePhase, sineSegmentMidi, sineSequenceMidi } from "~/utils/pitcherSine"
 
 interface HistoryPoint {
   freq: number
@@ -97,7 +97,7 @@ const props = withDefaults(
 )
 
 const store = usePitcherStore()
-const { selectedRootNote, latinNotation, showMicrotones, showTricrotones, maxHistory, totalNotes, histogramEffectiveHeight, histogramBallRadius, showSineWave, sineNotes, sineCycleSeconds } = storeToRefs(store)
+const { selectedRootNote, latinNotation, showMicrotones, showTricrotones, maxHistory, totalNotes, histogramEffectiveHeight, histogramBallRadius, showSineWave, sineNotes, sineCycleSeconds, sineWaveType } = storeToRefs(store)
 
 const rootEl = ref<HTMLElement | null>(null)
 const histogramEl = ref<HTMLCanvasElement | null>(null)
@@ -140,7 +140,7 @@ const tuningAccuracyClass = computed(() => {
   return "tuning-poor"
 })
 
-watch([selectedRootNote, latinNotation, showMicrotones, showTricrotones, maxHistory, totalNotes, histogramEffectiveHeight, histogramBallRadius, showSineWave, sineNotes, sineCycleSeconds], () => {
+watch([selectedRootNote, latinNotation, showMicrotones, showTricrotones, maxHistory, totalNotes, histogramEffectiveHeight, histogramBallRadius, showSineWave, sineNotes, sineCycleSeconds, sineWaveType], () => {
   drawHistogram()
 })
 
@@ -453,11 +453,11 @@ function drawSineWaves(width: number, height: number) {
       : []
   const curves: { midi: (phase: number) => number; top: number }[] = sequences.length
     ? sequences.map((seq) => ({
-        midi: (phase: number) => sineSequenceMidi(seq, phase),
+        midi: (phase: number) => sineSequenceMidi(seq, phase, sineWaveType.value),
         top: Math.max(...seq),
       }))
     : buildSineSegments(pitchClasses, MIN_MIDI, topMidi).map(({ lo, hi }) => ({
-        midi: (phase: number) => lo + ((hi - lo) * (1 - Math.cos(phase))) / 2,
+        midi: (phase: number) => sineSegmentMidi(lo, hi, phase, sineWaveType.value),
         top: hi,
       }))
   if (!curves.length || !(cycleSeconds > 0)) return

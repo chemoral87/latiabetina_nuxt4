@@ -10,6 +10,35 @@ export interface SineSegment {
   hi: number
 }
 
+/** Formas de onda soportadas por la guía del histograma. */
+export type SineWaveType = 'sine' | 'triangle' | 'square'
+
+export const SINE_WAVE_TYPES: SineWaveType[] = ['sine', 'triangle', 'square']
+
+/**
+ * Factor 0..1 del avance dentro de un tramo (t ∈ [0, 1]) según la forma de onda:
+ * senoidal = coseno (plana en las notas), triangular = lineal, cuadrada = salto
+ * inmediato a la nota destino (escalonada).
+ */
+export function sineStepFactor(t: number, type: SineWaveType): number {
+  if (type === 'triangle') return t
+  if (type === 'square') return t > 0 ? 1 : 0
+  return (1 - Math.cos(Math.PI * t)) / 2
+}
+
+/**
+ * MIDI de una línea lo↔hi (una nota, modo de 2 notas) en la fase dada.
+ * Fase 0..π sube, π..2π baja; la cuadrada se mantiene en cada extremo medio ciclo.
+ */
+export function sineSegmentMidi(lo: number, hi: number, phase: number, type: SineWaveType): number {
+  const TWO_PI = Math.PI * 2
+  const p = ((phase % TWO_PI) + TWO_PI) % TWO_PI
+  if (type === 'square') return p < Math.PI ? hi : lo
+  const u = p / Math.PI
+  const t = u <= 1 ? u : 2 - u
+  return lo + (hi - lo) * sineStepFactor(t, type)
+}
+
 const mod12 = (n: number): number => ((n % 12) + 12) % 12
 
 /**
@@ -156,10 +185,10 @@ export function buildSineSequence(pitchClasses: number[], minMidi: number, rotat
 /**
  * MIDI (fraccionario) de la onda de `buildSineSequence` para una fase en radianes.
  * Cada paso dura media vuelta de fase (π): con "Ciclo (seg)" = una subida y bajada,
- * la lista completa dura (n / 2) ciclos. Fase 0 = primera nota. Cada paso usa una
- * interpolación coseno, así que en cada nota la curva queda plana (como una senoide).
+ * la lista completa dura (n / 2) ciclos. Fase 0 = primera nota. Cada paso interpola
+ * según `type` (coseno por defecto), así que en cada nota la curva queda plana.
  */
-export function sineSequenceMidi(points: number[], phase: number): number {
+export function sineSequenceMidi(points: number[], phase: number, type: SineWaveType = 'sine'): number {
   const n = points.length
   const u = phase / Math.PI
   const s = ((u % n) + n) % n
@@ -167,7 +196,7 @@ export function sineSequenceMidi(points: number[], phase: number): number {
   const t = s - j
   const a = points[j]!
   const b = points[(j + 1) % n]!
-  return a + ((b - a) * (1 - Math.cos(Math.PI * t))) / 2
+  return a + (b - a) * sineStepFactor(t, type)
 }
 
 /**

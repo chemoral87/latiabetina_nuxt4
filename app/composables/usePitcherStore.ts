@@ -1,5 +1,5 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
-import { parseSinePitchClasses } from '~/utils/pitcherSine'
+import { SINE_WAVE_TYPES, parseSinePitchClasses, type SineWaveType } from '~/utils/pitcherSine'
 
 /**
  * Pinia port of the AUI `pitcher_store` Vuex module (store/pitcher_store.js),
@@ -67,6 +67,8 @@ export const usePitcherStore = defineStore('pitcher', () => {
   const sineCycleSeconds = ref(2)
   // Mostrar la onda sinusoidal de referencia (y sus campos Onda / Ciclo en la página)
   const showSineWave = ref(true)
+  // Forma de la onda de referencia: senoidal, triangular o cuadrada (binaria)
+  const sineWaveType = ref<SineWaveType>('sine')
   // Derivado (no se persiste): hay una onda válida (≥ 2 notas reconocidas).
   // Mientras esté activa, el histograma sigue avanzando en silencio.
   const sineActive = computed(() => showSineWave.value && parseSinePitchClasses(sineNotes.value).length >= 2)
@@ -202,6 +204,10 @@ export const usePitcherStore = defineStore('pitcher', () => {
     showSineWave.value = !!value
   }
 
+  function setSineWaveType(value: SineWaveType) {
+    if (SINE_WAVE_TYPES.includes(value)) sineWaveType.value = value
+  }
+
   // ---- localStorage persistence (client-only, debounced 300ms like aui) ----
   function persist() {
     if (!import.meta.client) return
@@ -241,6 +247,7 @@ export const usePitcherStore = defineStore('pitcher', () => {
           sineNotes: sineNotes.value,
           sineCycleSeconds: sineCycleSeconds.value,
           showSineWave: showSineWave.value,
+          sineWaveType: sineWaveType.value,
         })
       )
     } catch {
@@ -283,6 +290,7 @@ export const usePitcherStore = defineStore('pitcher', () => {
       sineNotes,
       sineCycleSeconds,
       showSineWave,
+      sineWaveType,
     ],
     () => {
       if (!import.meta.client) return
@@ -337,6 +345,7 @@ export const usePitcherStore = defineStore('pitcher', () => {
       if (typeof data.sineNotes === 'string') sineNotes.value = data.sineNotes
       if (typeof data.sineCycleSeconds === 'number') sineCycleSeconds.value = clamp(data.sineCycleSeconds, 0.1, 60)
       if (typeof data.showSineWave === 'boolean') showSineWave.value = data.showSineWave
+      if (typeof data.sineWaveType === 'string' && SINE_WAVE_TYPES.includes(data.sineWaveType as SineWaveType)) sineWaveType.value = data.sineWaveType as SineWaveType
       // Migración: versiones previas guardaban un único `notationCols` compartido
       if (
         typeof data.ukeleleCols === 'undefined' &&
@@ -397,6 +406,7 @@ export const usePitcherStore = defineStore('pitcher', () => {
     sineNotes,
     sineCycleSeconds,
     showSineWave,
+    sineWaveType,
     sineActive,
     loadFromStorage,
     setRootNote,
@@ -431,6 +441,7 @@ export const usePitcherStore = defineStore('pitcher', () => {
     setSineNotes,
     setSineCycleSeconds,
     setShowSineWave,
+    setSineWaveType,
   }
 })
 

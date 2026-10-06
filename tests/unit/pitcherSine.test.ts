@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { buildSineSegments, parseSinePitchClasses, sinePhase } from '~/utils/pitcherSine'
+import { buildSineSegments, parseSinePitchClasses, sinePhase, sineSegmentMidi, sineSequenceMidi } from '~/utils/pitcherSine'
 
 describe('pitcherSine', () => {
   describe('parseSinePitchClasses', () => {
@@ -94,6 +94,36 @@ describe('pitcherSine', () => {
 
     it('grows with tick', () => {
       expect(sinePhase(10, 0, 2)).toBeLessThan(sinePhase(20, 0, 2))
+    })
+  })
+
+  describe('wave shapes', () => {
+    const points = [48, 60] // C3 → C4
+
+    it('sine: cosine ramp, flat at the notes', () => {
+      expect(sineSequenceMidi(points, 0)).toBe(48)
+      expect(sineSequenceMidi(points, Math.PI / 2)).toBe(54)
+      expect(sineSequenceMidi(points, Math.PI)).toBe(60)
+    })
+
+    it('triangle: linear ramp', () => {
+      expect(sineSequenceMidi(points, 0, 'triangle')).toBe(48)
+      expect(sineSequenceMidi(points, Math.PI / 2, 'triangle')).toBe(54)
+      expect(sineSequenceMidi(points, Math.PI, 'triangle')).toBe(60)
+    })
+
+    it('square: jumps to the target note and holds', () => {
+      expect(sineSequenceMidi(points, 0.01, 'square')).toBe(60)
+      expect(sineSequenceMidi(points, Math.PI - 0.01, 'square')).toBe(60)
+      expect(sineSequenceMidi(points, Math.PI + 0.01, 'square')).toBe(48)
+    })
+
+    it('segment lines: square holds each extreme half a cycle', () => {
+      expect(sineSegmentMidi(48, 60, 0, 'square')).toBe(60)
+      expect(sineSegmentMidi(48, 60, Math.PI, 'square')).toBe(48)
+      expect(sineSegmentMidi(48, 60, Math.PI / 2, 'triangle')).toBe(54)
+      expect(sineSegmentMidi(48, 60, Math.PI, 'triangle')).toBe(60)
+      expect(sineSegmentMidi(48, 60, Math.PI, 'sine')).toBe(60)
     })
   })
 })
