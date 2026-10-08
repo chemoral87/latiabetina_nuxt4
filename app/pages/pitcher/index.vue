@@ -24,7 +24,7 @@
           <VIcon start size="small">mdi-tune</VIcon>
           <span>Calibrar Ruido</span>
         </VBtn>
-        <VBtn id="pit-mic-btn" density="compact" :color="isMicActive ? 'error' : 'success'" @click="toggleMic">
+        <VBtn id="pit-mic-btn" density="compact" :disabled="scorePlaying" :color="isMicActive ? 'error' : 'success'" @click="toggleMic">
           <VIcon start size="small">{{ isMicActive ? 'mdi-microphone-off' : 'mdi-microphone' }}</VIcon>
           <span>{{ isMicActive ? 'Silenciar' : 'Activar mic' }}</span>
         </VBtn>
@@ -39,6 +39,18 @@
           :items="currentNoteOptions"
           :label="latinNotation ? 'Escala Mayor' : 'Mayor Scale'"
         />
+      </VCol>
+      <VCol v-if="auth.loggedIn" cols="12" class="py-1 d-flex ga-1 align-center flex-wrap">
+        <VSelect id="pit-score-select" v-model="selectedScoreId" hide-details density="compact" label="Partitura" variant="outlined" :items="scoreOptions" style="max-width: 220px" />
+        <VBtn id="pit-score-load-btn" variant="outlined" :loading="scoreLoading" :disabled="!selectedScoreId" @click="loadScore">Cargar</VBtn>
+        <VBtn id="pit-score-play-btn" color="primary" :disabled="!loadedScore" :loading="scorePreparing" @click="toggleScore">{{ scorePlaying ? 'Pausa' : 'Reproducir' }}</VBtn>
+        <VBtn id="pit-score-stop-btn" variant="outlined" :disabled="!loadedScore" @click="stopScore">Detener</VBtn>
+        <template v-if="loadedScore">
+          <VTextField id="pit-score-bpm" v-model.number="loadedScore.tempo" min="30" max="240" label="BPM" hide-details type="number" density="compact" style="max-width: 90px" />
+          <VBtn id="pit-score-transpose-down-btn" size="small" density="compact" variant="outlined" @click="transposeLoadedScore(-1)">-1 Semi</VBtn>
+          <VBtn id="pit-score-transpose-up-btn" size="small" density="compact" variant="outlined" @click="transposeLoadedScore(1)">+1 Semi</VBtn>
+          <span class="text-caption">{{ loadedScoreTitle }}</span>
+        </template>
       </VCol>
       <VCol sm="2" cols="6" class="py-1">
         <VSelect
@@ -104,6 +116,12 @@
       </VCol>
       <VCol v-if="showBassNotation" :cols="bassCols">
         <PitcherBassNotation v-if="lastValidFreq" :frequency="lastValidFreq" />
+      </VCol>
+    </VRow>
+
+    <VRow v-if="loadedScore" id="pit-score-strip-row" density="compact">
+      <VCol cols="12" class="px-0 mx-0">
+        <ScoreEditor readonly single-row :score="loadedScore" :playback-time="scorePlayheadBeat" />
       </VCol>
     </VRow>
 
@@ -176,6 +194,10 @@
   import { NOTATION_COLS_OPTIONS, usePitcherStore } from '~/composables/usePitcherStore'
   import { A4_FREQ, A4_MIDI, HISTORY_DT_MS, NOTE_LATIN_STRINGS, NOTE_SHORT_STRINGS } from '~/constants/pitcher'
   import type { PitcherAudioProcessor } from '~/services/pitcher/audioProcessor'
+  import { deserializeScore, noteToMidi, scoreTimeline, transposeScore } from '~/utils/score'
+  import { useScorePlayback } from '~/composables/useScorePlayback'
+  import type { Score } from '~/types/score'
+  import { useAuthStore } from '~/composables/useAuth'
 
   definePageMeta({
     title: 'Tuner',
@@ -193,6 +215,7 @@
   // compartido para no crear proxies reactivos ni basura a ~60 pushes/s.
   const GAP_POINT: HistoryPoint = Object.freeze({ freq: 0, midi: 0 })
 
+  const auth = useAuthStore()
   const store = usePitcherStore()
   const {
     selectedRootNote,
@@ -261,6 +284,57 @@
   const { mobile } = useDisplay()
   // En móvil solo se permiten las columnas auto / 6 / 12
   const isColsOptionEnabled = (opt: string | number) => !mobile.value || ['auto', 6, 12].includes(opt)
+
+  const { Score } = useRepository()
+  const selectedScoreId = ref<number | null>(null)
+  const scoreOptions = ref<{ title: string; value: number }[]>([])
+  const scoreLoading = ref(false)
+  const loadedScore = ref<Score | null>(null)
+  const loadedScoreTitle = ref('')
+  const {
+    playing: scorePlaying,
+    preparing: scorePreparing,
+    playbackTime: scorePlayheadBeat,
+    toggle: toggleScore,
+    stop: stopScore,
+  } = useScorePlayback(loadedScore)
+
+  // Refleja en el tuner y las notaciones la nota que suena en la partitura.
+  watch(scorePlayheadBeat, (beat) => {
+    if (beat === null || !loadedScore.value) return
+    let current: { pitch: string; octave: number } | null = null
+    for (const event of scoreTimeline(loadedScore.value)) {
+      if (event.time <= beat) current = event
+      else break
+    }
+    if (!current) return
+    const freq = midiToFreq(noteToMidi(current.pitch, current.octave))
+    lastValidFreq.value = freq
+    lastFreq.value = freq
+    freqDisplay.value = freq.toFixed(2)
+    centsDeviation.value = 0
+  })
+  onMounted(async () => {
+    if (!auth.loggedIn) return
+    const response = await Score.index<{ data?: { id: number; title: string }[] } | { id: number; title: string }[]>().catch(() => [])
+    const items = Array.isArray(response) ? response : response.data || []
+    scoreOptions.value = items.map(item => ({ title: item.title, value: item.id }))
+  })
+  async function loadScore() {
+    if (!selectedScoreId.value) return
+    scoreLoading.value = true
+    try {
+      const item = await Score.show<{ title: string; content: unknown }>(selectedScoreId.value)
+      loadedScore.value = deserializeScore(item.content)
+      loadedScoreTitle.value = item.title
+    } finally { scoreLoading.value = false }
+  }
+  function transposeLoadedScore(semitones: number) {
+    if (!loadedScore.value) return
+    if (scorePlaying.value) stopScore()
+    loadedScore.value = transposeScore(loadedScore.value, semitones)
+  }
+  onBeforeUnmount(stopScore)
 
   const currentNoteOptions = computed(() =>
     latinNotation.value ? ['Do', 'Do♯', 'Re', 'Re♯', 'Mi', 'Fa', 'Fa♯', 'Sol', 'Sol♯', 'La', 'La♯', 'Si'] : ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B']
@@ -363,6 +437,7 @@
 
   async function toggleMic() {
     if (!isMicActive.value) {
+      stopScore()
       try {
         if (!audioProcessor.value) return
         // Use audio processor to initialize microphone

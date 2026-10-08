@@ -99,10 +99,10 @@ export function useApi() {
       throw unauthenticatedError()
     }
     const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
       Accept: 'application/json',
       Authorization: `Bearer ${token}`,
     }
+    if (!(opts.body instanceof FormData)) headers['Content-Type'] = 'application/json'
     if (opts.headers) {
       Object.assign(headers, opts.headers as Record<string, string>)
     }

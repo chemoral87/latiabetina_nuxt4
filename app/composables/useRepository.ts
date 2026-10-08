@@ -5,13 +5,11 @@ import { createSaleRepository } from '~/repositories/SaleRepository'
 import { createProductRepository } from '~/repositories/ProductRepository'
 import { createTestimonyRepository } from '~/repositories/TestimonyRepository'
 import { createChurchEventRepository } from '~/repositories/ChurchEventRepository'
-import {
-  createChurchMemberRepository,
-  createChurchMemberTrackingLogRepository,
-} from '~/repositories/ChurchMemberRepository'
+import { createChurchMemberRepository, createChurchMemberTrackingLogRepository } from '~/repositories/ChurchMemberRepository'
 import { createPermissionRepository } from '~/repositories/PermissionRepository'
 import { createConsoSheetRepository } from '~/repositories/ConsoSheetRepository'
 import { createSongRepository } from '~/repositories/SongRepository'
+import { createScoreRepository } from '~/repositories/ScoreRepository'
 import { createProfileRepository } from '~/repositories/ProfileRepository'
 import { createWhatsAppRepository } from '~/repositories/WhatsAppRepository'
 import { createAssistanceRepository } from '~/repositories/AssistanceRepository'
@@ -32,6 +30,7 @@ export function useRepository() {
     Testimony: createTestimonyRepository($api),
     ChurchEvent: createChurchEventRepository($api),
     Song: createSongRepository($api),
+    Score: createScoreRepository($api),
     Sale: createSaleRepository($api),
     Product: createProductRepository($api),
     ConsoSheet: createConsoSheetRepository($api),

@@ -21,12 +21,9 @@ export class MenuService {
         to: '/dashboard',
       })
 
-      if (this.hasPermission('organization-index'))
-        menu.push({ icon: 'mdi-domain', title: 'Orgs', to: '/organization' })
-      if (this.hasPermission('user-index'))
-        menu.push({ icon: 'mdi-account', title: 'Usuarios', to: '/user' })
-      if (this.hasPermission('role-index'))
-        menu.push({ icon: 'mdi-redhat', title: 'Roles', to: '/role' })
+      if (this.hasPermission('organization-index')) menu.push({ icon: 'mdi-domain', title: 'Orgs', to: '/organization' })
+      if (this.hasPermission('user-index')) menu.push({ icon: 'mdi-account', title: 'Usuarios', to: '/user' })
+      if (this.hasPermission('role-index')) menu.push({ icon: 'mdi-redhat', title: 'Roles', to: '/role' })
       if (this.hasPermission('permission-index'))
         menu.push({
           icon: 'mdi-key-variant',
@@ -71,8 +68,7 @@ export class MenuService {
         })
       }
 
-      if (this.hasPermission('auditorium-index'))
-        menu.push({ icon: 'mdi-seat', title: 'Auditorio', to: '/auditorium' })
+      if (this.hasPermission('auditorium-index')) menu.push({ icon: 'mdi-seat', title: 'Auditorio', to: '/auditorium' })
       if (this.hasPermission('auditorium-event-index'))
         menu.push({
           icon: 'mdi-theater',
@@ -158,6 +154,11 @@ export class MenuService {
         icon: 'mdi-music-note-eighth',
         title: 'Cancionero',
         to: '/song',
+      })
+      menu.push({
+        icon: 'mdi-music-clef-treble',
+        title: 'Partituras',
+        to: '/music-score',
       })
 
       if (this.hasPermission('church-event-index')) {
