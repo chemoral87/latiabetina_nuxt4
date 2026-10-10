@@ -15,6 +15,8 @@
           <VBtn id="score-transpose-down-btn" size="small" density="compact" variant="outlined" @click="applyTranspose(-1)">-1 Semi</VBtn>
           <VBtn id="score-transpose-up-btn" size="small" density="compact" variant="outlined" @click="applyTranspose(1)">+1 Semi</VBtn>
           <VBtn id="score-transpose-up-oct-btn" size="small" density="compact" variant="outlined" @click="applyTranspose(12)">+1 Oct</VBtn>
+          <VBtn id="score-import-midi-btn" size="small" density="compact" variant="outlined" @click="midiInput?.click()">Cargar MIDI</VBtn>
+          <input id="score-midi-file-input" ref="midiInput" type="file" style="display: none" accept=".mid,.midi,audio/midi" @change="onMidiFile" />
         </VCol>
       </VRow>
 
@@ -28,6 +30,8 @@
 
 <script setup lang="ts">
 import type { Score, ScoreNote } from '~/types/score'
+import { midiBytesToScore } from '~/utils/midiScoreImport'
+import { MidiParseError } from '~/utils/midiParser'
 import { normalizeScore, transposeScore } from '~/utils/score'
 
 defineOptions({ inheritAttrs: false })
@@ -401,6 +405,21 @@ onMounted(() => {
 
 function applyTranspose(semitones: number) {
   local.value = transposeScore(local.value, semitones)
+}
+
+const midiInput = ref<HTMLInputElement | null>(null)
+async function onMidiFile(e: Event) {
+  const input = e.target as HTMLInputElement
+  const file = input.files?.[0]
+  input.value = ''
+  if (!file) return
+  try {
+    local.value = normalizeScore(midiBytesToScore(await file.arrayBuffer()))
+    trackId.value = local.value.tracks[0]?.id || 'track-1'
+    useNotifyStore().notify({ success: `MIDI cargado: ${file.name}` })
+  } catch (err) {
+    useNotifyStore().notify({ error: err instanceof MidiParseError ? err.message : 'No es un archivo MIDI válido' })
+  }
 }
 </script>
 

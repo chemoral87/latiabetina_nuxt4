@@ -76,11 +76,16 @@
           <VIcon start>mdi-file-upload-outline</VIcon>
           Cargar JSON
         </VBtn>
+        <VBtn id="song-import-midi-btn" size="small" color="primary" class="mr-2 mb-1" variant="outlined" @click="triggerImportMidi">
+          <VIcon start>mdi-file-music-outline</VIcon>
+          Cargar MIDI
+        </VBtn>
         <VBtn id="song-export-json-btn" class="mb-1" size="small" color="primary" variant="outlined" @click="exportJson">
           <VIcon start>mdi-file-download-outline</VIcon>
           Exportar JSON
         </VBtn>
         <input id="song-json-file-input" ref="jsonFileInput" type="file" style="display: none" accept=".json,application/json" @change="onJsonFileChange" />
+        <input id="song-midi-file-input" ref="midiFileInput" type="file" style="display: none" accept=".mid,.midi,audio/midi" @change="onMidiFileChange" />
       </div>
 
       <div v-if="content.sections.length === 0 && content.tabs.length === 0" class="text-center text-grey py-6">
@@ -255,6 +260,16 @@
     </div>
 
     <SongPasteDialog v-if="pasteDialog" @apply="applyPasted" @close="pasteDialog = false" />
+    <SongMidiImportDialog
+      v-if="midiDialog && midiTracks.length"
+      :tracks="midiTracks"
+      :has-lyrics="songHasLyrics(content)"
+      :can-overwrite-key="!!item.key?.trim()"
+      :can-overwrite-tempo="!!item.tempo?.trim()"
+      :syllable-count="flattenSyllables(content).length"
+      @apply="applyMidiImport"
+      @close="closeMidiDialog"
+    />
     <SongEditorHistoryFab :can-redo="canRedo" :can-undo="canUndo" @redo="redo" @undo="undo" />
 
     <VDialog max-width="400" :model-value="!!confirmDeleteSectionId" @update:model-value="(v: boolean) => { if (!v) confirmDeleteSectionId = null }">
@@ -297,6 +312,17 @@ import {
 } from "~/utils/songSerializer"
 import { parsePastedLyrics } from "~/utils/songParser"
 import { splitLine, uid } from "~/utils/syllables"
+import {
+  flattenSyllables,
+  importSongFromMidi,
+  listMidiTracks,
+  parseMidiSongFile,
+  songHasLyrics,
+  validateMidiFileMeta,
+  type MidiImportMode,
+  type MidiTrackChoice,
+} from "~/utils/midiSongImport"
+import type { MidiFile } from "~/utils/midiParser"
 
 const props = defineProps<{
   song?: Record<string, unknown>
@@ -318,6 +344,11 @@ const formRef = ref()
 const saving = ref(false)
 const pasteDialog = ref(false)
 const jsonFileInput = ref<HTMLInputElement | null>(null)
+const midiFileInput = ref<HTMLInputElement | null>(null)
+const midiDialog = ref(false)
+const midiParsed = ref<MidiFile | null>(null)
+const midiTracks = ref<MidiTrackChoice[]>([])
+const midiFileName = ref("")
 
 // Core song state
 const item = ref<Song>(defaultSong())
@@ -580,6 +611,77 @@ function applyPasted(text: string, mode: "replace" | "append") {
 function triggerImportJson() {
   jsonFileInput.value?.click()
 }
+function triggerImportMidi() {
+  midiFileInput.value?.click()
+}
+function closeMidiDialog() {
+  midiDialog.value = false
+  midiParsed.value = null
+  midiTracks.value = []
+  midiFileName.value = ""
+}
+function onMidiFileChange(event: Event) {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  if (!file) return
+  try {
+    validateMidiFileMeta(file.name, file.type, file.size)
+  } catch (err) {
+    notifyJson.notify({ error: (err as Error).message })
+    if (input) input.value = ""
+    return
+  }
+  const reader = new FileReader()
+  reader.onload = () => {
+    try {
+      const parsed = parseMidiSongFile(reader.result as ArrayBuffer)
+      const tracks = listMidiTracks(parsed)
+      if (!tracks.length) {
+        notifyJson.notify({ error: "El archivo no tiene notas" })
+        return
+      }
+      midiParsed.value = parsed
+      midiTracks.value = tracks
+      midiFileName.value = file.name
+      midiDialog.value = true
+    } catch (err) {
+      notifyJson.notify({ error: (err as Error).message })
+    } finally {
+      if (input) input.value = ""
+    }
+  }
+  reader.onerror = () => {
+    notifyJson.notify({ error: "No se pudo leer el archivo." })
+    if (input) input.value = ""
+  }
+  reader.readAsArrayBuffer(file)
+}
+function applyMidiImport(payload: {
+  track: MidiTrackChoice
+  mode: MidiImportMode
+  overwriteTempo: boolean
+  overwriteKey: boolean
+  appendLeftover: boolean
+}) {
+  if (!midiParsed.value) return
+  try {
+    const keptId = item.value.id
+    const keptOrg = item.value.org_id
+    const result = importSongFromMidi(midiParsed.value, item.value, payload)
+    item.value = {
+      ...item.value,
+      ...result.song,
+      content: normalizeContent(result.song.content),
+      id: keptId,
+      org_id: keptOrg,
+    } as Song
+    notifyJson.notify({ success: `MIDI cargado: ${item.value.title || midiFileName.value}` })
+    if (result.warning) notifyJson.notify({ warning: result.warning })
+    closeMidiDialog()
+  } catch (err) {
+    notifyJson.notify({ error: (err as Error).message })
+  }
+}
 function onJsonFileChange(event: Event) {
   const input = event.target as HTMLInputElement
   const file = input.files?.[0]
@@ -655,7 +757,7 @@ async function saveAndContinue() {
   emit("save-and-continue", payload)
 }
 
-defineExpose({ exportJson, triggerImportJson, getSong: () => item.value })
+defineExpose({ exportJson, triggerImportJson, triggerImportMidi, getSong: () => item.value })
 </script>
 
 <style scoped>
