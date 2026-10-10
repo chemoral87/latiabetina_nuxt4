@@ -66,7 +66,7 @@
     <VRow id="pit-display-row" density="compact">
       <VCol v-if="showStaffNotation" cols="auto" class="px-0 mx-0">
         <PitcherStaffNotation
-          v-if="lastValidFreq"
+          v-if="lastValidFreq || isMicActive"
           :zoom="staffZoom"
           :frequency="lastValidFreq"
           :show-cents-deviation="true"
@@ -91,19 +91,19 @@
         />
       </VCol>
       <VCol v-if="showUkeleleNotation" :cols="ukeleleCols">
-        <PitcherUkeleleNotation v-if="lastValidFreq" :frequency="lastValidFreq" :frequencies="playheadFrequencies" />
+        <PitcherUkeleleNotation v-if="lastValidFreq || isMicActive" :frequency="lastValidFreq" :frequencies="activeNotationFrequencies" />
       </VCol>
       <VCol v-if="showGuitarNotation" :cols="guitarCols">
-        <PitcherGuitarNotation v-if="lastValidFreq" :frequency="lastValidFreq" :frequencies="playheadFrequencies" />
+        <PitcherGuitarNotation v-if="lastValidFreq || isMicActive" :frequency="lastValidFreq" :frequencies="activeNotationFrequencies" />
       </VCol>
       <VCol v-if="showTrumpetNotation" :cols="trumpetCols">
-        <PitcherTrumpetNotation v-if="lastValidFreq" :frequency="lastValidFreq" />
+        <PitcherTrumpetNotation v-if="lastValidFreq || isMicActive" :frequency="lastValidFreq" />
       </VCol>
       <VCol v-if="showPianoNotation" :cols="pianoCols">
-        <PitcherPianoNotation v-if="lastValidFreq" :frequency="lastValidFreq" :frequencies="playheadFrequencies" />
+        <PitcherPianoNotation v-if="lastValidFreq || isMicActive" :frequency="lastValidFreq" :frequencies="activeNotationFrequencies" />
       </VCol>
       <VCol v-if="showBassNotation" :cols="bassCols">
-        <PitcherBassNotation v-if="lastValidFreq" :frequency="lastValidFreq" />
+        <PitcherBassNotation v-if="lastValidFreq || isMicActive" :frequency="lastValidFreq" />
       </VCol>
     </VRow>
 
@@ -301,15 +301,26 @@
     playbackTime: scorePlayheadBeat,
     toggle: toggleScore,
     playFrom: playFromBeat,
+    pause: pauseScore,
     stop: stopScore,
   } = useScorePlayback(loadedScore)
 
   // Notas que suenan en este instante de la partitura (puede haber varias a la vez).
   const playheadFrequencies = ref<number[]>([])
 
+  // Cuando la partitura no se está reproduciendo (pausada o detenida), las notaciones
+  // quedan libres para detectar el sonido del micrófono.
+  const activeNotationFrequencies = computed(() => (scorePlaying.value ? playheadFrequencies.value : []))
+
+  watch(scorePlaying, (playing) => {
+    if (!playing) {
+      playheadFrequencies.value = []
+    }
+  })
+
   // Refleja en el tuner y las notaciones las notas que suenan en la partitura.
   watch(scorePlayheadBeat, (beat) => {
-    if (beat === null || !loadedScore.value) {
+    if (!scorePlaying.value || beat === null || !loadedScore.value) {
       playheadFrequencies.value = []
       return
     }
@@ -447,7 +458,7 @@
 
   async function toggleMic() {
     if (!isMicActive.value) {
-      stopScore()
+      if (scorePlaying.value) pauseScore()
       try {
         if (!audioProcessor.value) return
         // Use audio processor to initialize microphone
@@ -508,6 +519,13 @@
 
   function update() {
     if (!isMicActive.value || !audioProcessor.value) return
+
+    // Mientras la partitura está sonando, mantener el loop vivo pero no interferir
+    // con las notas de la partitura
+    if (scorePlaying.value) {
+      if (isMicActive.value) requestAnimationFrame(update)
+      return
+    }
 
     const result = audioProcessor.value.analyzeFrequency()
     // El medidor arranca en 0 dB: nunca muestra valores negativos
