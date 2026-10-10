@@ -71,6 +71,7 @@
 import { storeToRefs } from "pinia"
 import { usePitcherStore } from "~/composables/usePitcherStore"
 import { COLOR_NEEDS_WHITE_TEXT, COLORS, MAJOR_STEPS } from "~/constants/pitcher"
+import { usePitcherNotes } from "~/composables/usePitcherNotes"
 
 interface FretString {
   name: string
@@ -81,14 +82,17 @@ interface FretString {
 const props = withDefaults(
   defineProps<{
     frequency?: number | null
+    frequencies?: number[]
   }>(),
   {
     frequency: null,
+    frequencies: () => [],
   },
 )
 
 const store = usePitcherStore()
-const { ghostQuarterNote, latinNotation, selectedRootNote, showScaleOnFretboard, scaleRingOpacity, ghostNoteOpacity } = storeToRefs(store)
+const { latinNotation, selectedRootNote, showScaleOnFretboard, scaleRingOpacity, ghostNoteOpacity } = storeToRefs(store)
+const { targetLabels, isExactMidi, isAdjacentMidi } = usePitcherNotes(() => props.frequency, () => props.frequencies)
 
 const fretboardWidth = 900
 const fretboardHeight = 250
@@ -123,20 +127,8 @@ function isNoteInScale(string: FretString, fret: number): boolean {
   return scaleNoteIndices.value.includes(noteIndex)
 }
 
-const currentNote = computed(() => {
-  if (!props.frequency) return null
-  const midi = freqToMidi(props.frequency)
-  const roundedMidi = Math.round(midi)
-  const noteIndex = roundedMidi % 12
-  const octave = Math.floor(roundedMidi / 12) - 1
-  const noteName = latinNotation.value ? latinNotes[noteIndex] : notes[noteIndex]
-  return `${noteName}${octave}`
-})
-
-function freqToMidi(freq: number): number {
-  if (freq <= 0) return 0
-  return 69 + 12 * Math.log2(freq / 440)
-}
+// Nota o acorde que se está resaltando (una sola nota o varias simultáneas).
+const currentNote = computed(() => targetLabels.value.join(" ") || null)
 
 function getFretX(fret: number): number {
   return 60 + fret * fretSpacing
@@ -162,50 +154,25 @@ function getNoteAtFret(string: FretString, fret: number): string {
   return `${noteName}${octave}`
 }
 
+// MIDI de la nota que suena en esa cuerda/traste (fret -1 = cuerda al aire).
+function fretMidi(string: FretString, fret: number): number {
+  const startIndex = notes.indexOf(string.note)
+  const actualFret = fret === -1 ? 0 : fret
+  const noteIndex = (startIndex + actualFret) % 12
+  const octave = string.octave + Math.floor((startIndex + actualFret) / 12)
+  return (octave + 1) * 12 + noteIndex
+}
+
 function getNoteHighlightType(string: FretString, fret: number): "none" | "exact" | "adjacent" {
-  if (!currentNote.value) return "none"
-  const noteAtFret = getNoteAtFret(string, fret)
-
-  // Comparar la nota completa CON la octava
-  if (noteAtFret === currentNote.value) return "exact"
-
-  // Si showGhostNotes está activo, verificar octavas adyacentes
-  if (ghostQuarterNote.value) {
-    const currentNoteWithoutOctave = currentNote.value.replace(/\d+$/, "")
-    const currentOctave = parseInt(currentNote.value.match(/\d+$/)?.[0] || "0")
-    const noteAtFretWithoutOctave = noteAtFret.replace(/\d+$/, "")
-    const fretOctave = parseInt(noteAtFret.match(/\d+$/)?.[0] || "0")
-
-    // Si es la misma nota pero octava ±1
-    if (noteAtFretWithoutOctave === currentNoteWithoutOctave && Math.abs(fretOctave - currentOctave) === 1) {
-      return "adjacent"
-    }
-  }
-
+  const midi = fretMidi(string, fret)
+  if (isExactMidi(midi)) return "exact"
+  if (isAdjacentMidi(midi)) return "adjacent"
   return "none"
 }
 
-function isNoteHighlighted(string: FretString, fret: number): boolean {
-  return getNoteHighlightType(string, fret) !== "none"
-}
-
 function getNoteColor(string: FretString, fret: number): string {
-  const type = getNoteHighlightType(string, fret)
-  if (type === "none") return "#E0E0E0" // Gris por defecto
-
-  // Calcular el MIDI de la nota en el traste
-  const noteAtFret = getNoteAtFret(string, fret)
-  const noteWithoutOctave = noteAtFret.replace(/\d+$/, "")
-  const octave = parseInt(noteAtFret.match(/\d+$/)?.[0] || "0")
-
-  // Encontrar el índice de la nota
-  const noteArray = latinNotation.value ? latinNotes : notes
-  const noteIndex = noteArray.indexOf(noteWithoutOctave)
-  const midiNote = (octave + 1) * 12 + noteIndex
-
-  // Usar el color del array COLORS
-  const colorIndex = (midiNote % 12) * 2
-  return COLORS[colorIndex]
+  if (getNoteHighlightType(string, fret) === "none") return "#E0E0E0" // Gris por defecto
+  return COLORS[(fretMidi(string, fret) % 12) * 2]
 }
 
 function getNoteOpacity(string: FretString, fret: number): number {
@@ -216,22 +183,8 @@ function getNoteOpacity(string: FretString, fret: number): number {
 }
 
 function getNoteTextColor(string: FretString, fret: number): string {
-  const type = getNoteHighlightType(string, fret)
-  if (type === "none") return "#666"
-
-  // Calcular el MIDI de la nota en el traste
-  const noteAtFret = getNoteAtFret(string, fret)
-  const noteWithoutOctave = noteAtFret.replace(/\d+$/, "")
-  const octave = parseInt(noteAtFret.match(/\d+$/)?.[0] || "0")
-
-  // Encontrar el índice de la nota
-  const noteArray = latinNotation.value ? latinNotes : notes
-  const noteIndex = noteArray.indexOf(noteWithoutOctave)
-  const midiNote = (octave + 1) * 12 + noteIndex
-
-  // Verificar si necesita texto blanco
-  const colorIndex = (midiNote % 12) * 2
-  return COLOR_NEEDS_WHITE_TEXT[colorIndex] ? "#FFFFFF" : "#666"
+  if (getNoteHighlightType(string, fret) === "none") return "#666"
+  return COLOR_NEEDS_WHITE_TEXT[(fretMidi(string, fret) % 12) * 2] ? "#FFFFFF" : "#666"
 }
 </script>
 

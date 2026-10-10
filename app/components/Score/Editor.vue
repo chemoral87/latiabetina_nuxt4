@@ -18,7 +18,7 @@
         </VCol>
       </VRow>
 
-      <div ref="canvasWrap" class="staff-wrap" :class="{ 'single-row': singleRow }">
+      <div ref="canvasWrap" class="staff-wrap" :class="{ 'single-row': singleRow, seekable }">
         <canvas ref="canvasEl" class="staff-canvas" @click="handleClick" />
       </div>
       <div v-if="!readonly" class="text-caption text-grey mt-1">Clic en pentagrama → agregar nota. Clic en nota → quitar.</div>
@@ -31,8 +31,8 @@ import type { Score, ScoreNote } from '~/types/score'
 import { normalizeScore, transposeScore } from '~/utils/score'
 
 defineOptions({ inheritAttrs: false })
-const props = defineProps<{ score?: Score; playbackTime?: number | null; singleRow?: boolean; readonly?: boolean }>()
-const emit = defineEmits<{ save: [score: Score] }>()
+const props = defineProps<{ score?: Score; playbackTime?: number | null; singleRow?: boolean; readonly?: boolean; seekable?: boolean }>()
+const emit = defineEmits<{ save: [score: Score]; seek: [beat: number] }>()
 
 const local = ref(normalizeScore(props.score))
 const trackId = ref(local.value.tracks[0]?.id || 'track-1')
@@ -326,11 +326,26 @@ function scrollToPlayhead() {
 watch(() => props.playbackTime, () => nextTick(scrollToPlayhead), { flush: 'post' })
 
 // ── Click handling ──────────────────────────────────────────────────────────
+// Emits the start beat of the measure under the pointer (used to seek playback).
+function emitSeek(cx: number, cy: number) {
+  const cols = mpr.value
+  const measureW = (canvasW - 4) / cols
+  const row = Math.floor(cy / ROW_H)
+  const measure = row * cols + Math.floor(cx / measureW)
+  if (measure < 0 || measure >= measures.value.length) return
+  emit('seek', measure * beatsPerMeasure())
+}
+
 function handleClick(e: MouseEvent) {
-  if (props.readonly) return
   const rect = canvasEl.value!.getBoundingClientRect()
   const cx = (e.clientX - rect.left) * (canvasEl.value!.width / rect.width)
   const cy = (e.clientY - rect.top) * (canvasEl.value!.height / rect.height)
+
+  if (props.seekable) {
+    emitSeek(cx, cy)
+    return
+  }
+  if (props.readonly) return
 
   for (const h of hitNotes) {
     if (Math.hypot(cx - h.cx, cy - h.cy) <= NOTE_R + 4) {
@@ -394,4 +409,5 @@ function applyTranspose(semitones: number) {
 .staff-wrap.single-row { overflow-x: auto; }
 .staff-canvas { display: block; width: 100%; cursor: crosshair; background: #fff; border-radius: 4px; border: 1px solid #e0e0e0; }
 .staff-wrap.single-row .staff-canvas { width: auto; cursor: default; }
+.staff-wrap.seekable .staff-canvas { cursor: pointer; }
 </style>

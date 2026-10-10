@@ -26,6 +26,8 @@ export interface ScorePlayback {
   toggle: () => Promise<void>
   /** Start (or resume) playback. */
   play: () => Promise<void>
+  /** Start playback from a given beat, discarding the current position. */
+  playFrom: (beat: number) => Promise<void>
   /** Pause, keeping the current position. */
   pause: () => void
   /** Stop and rewind to the beginning. */
@@ -93,11 +95,13 @@ export function useScorePlayback(score: Ref<Score | null | undefined>): ScorePla
     }
   }
 
-  function schedule(fromBeat: number): void {
+  // `includeExact` also plays notes starting exactly at `fromBeat` (used when seeking);
+  // otherwise notes already started at or before that point count as played.
+  function schedule(fromBeat: number, includeExact = false): void {
     const list = events()
     maxBeat = Math.max(1, ...list.map(ev => ev.time + ev.duration))
     for (const ev of list) {
-      if (fromBeat > 0 && ev.time <= fromBeat) continue
+      if (fromBeat > 0 && (ev.time < fromBeat || (ev.time === fromBeat && !includeExact))) continue
       const delay = Math.max(0, (((ev.time - fromBeat) * 60) / playTempo) * 1000 - TIMER_LEAD_MS)
       const timer = window.setTimeout(() => {
         startTimers.delete(timer)
@@ -151,21 +155,40 @@ export function useScorePlayback(score: Ref<Score | null | undefined>): ScorePla
     tick()
   }
 
-  async function play(): Promise<void> {
+  // Silences everything currently sounding without changing the position.
+  function resetAudio(): void {
+    playing.value = false
+    cancelAnimationFrame(raf)
+    clearTimers()
+    for (const el of activeNotes) {
+      el.pause()
+      el.remove()
+    }
+    activeNotes = []
+  }
+
+  async function playFrom(beat: number): Promise<void> {
     const current = score.value
-    if (!import.meta.client || !current || playing.value) return
+    if (!import.meta.client || !current) return
+    const target = Math.max(0, beat)
+    resetAudio()
+    await prepareSamples()
+    playTempo = current.tempo
+    baseBeat = target
+    startedAt = performance.now()
+    playbackTime.value = target
+    playing.value = true
+    schedule(target, true)
+    tick()
+  }
+
+  async function play(): Promise<void> {
+    if (!import.meta.client || !score.value || playing.value) return
     if (playbackTime.value !== null && playbackTime.value > 0) {
       resume()
       return
     }
-    await prepareSamples()
-    playTempo = current.tempo
-    baseBeat = 0
-    startedAt = performance.now()
-    playbackTime.value = 0
-    playing.value = true
-    schedule(0)
-    tick()
+    await playFrom(0)
   }
 
   function pause(): void {
@@ -177,14 +200,7 @@ export function useScorePlayback(score: Ref<Score | null | undefined>): ScorePla
   }
 
   function stop(): void {
-    playing.value = false
-    cancelAnimationFrame(raf)
-    clearTimers()
-    for (const el of activeNotes) {
-      el.pause()
-      el.remove()
-    }
-    activeNotes = []
+    resetAudio()
     playbackTime.value = null
     baseBeat = 0
   }
@@ -200,5 +216,5 @@ export function useScorePlayback(score: Ref<Score | null | undefined>): ScorePla
     sampleUrls.clear()
   })
 
-  return { playing, preparing, playbackTime, toggle, play, pause, stop }
+  return { playing, preparing, playbackTime, toggle, play, playFrom, pause, stop }
 }

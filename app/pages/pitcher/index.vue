@@ -40,18 +40,6 @@
           :label="latinNotation ? 'Escala Mayor' : 'Mayor Scale'"
         />
       </VCol>
-      <VCol v-if="auth.loggedIn" cols="12" class="py-1 d-flex ga-1 align-center flex-wrap">
-        <VSelect id="pit-score-select" v-model="selectedScoreId" hide-details density="compact" label="Partitura" variant="outlined" :items="scoreOptions" style="max-width: 220px" />
-        <VBtn id="pit-score-load-btn" variant="outlined" :loading="scoreLoading" :disabled="!selectedScoreId" @click="loadScore">Cargar</VBtn>
-        <VBtn id="pit-score-play-btn" color="primary" :disabled="!loadedScore" :loading="scorePreparing" @click="toggleScore">{{ scorePlaying ? 'Pausa' : 'Reproducir' }}</VBtn>
-        <VBtn id="pit-score-stop-btn" variant="outlined" :disabled="!loadedScore" @click="stopScore">Detener</VBtn>
-        <template v-if="loadedScore">
-          <VTextField id="pit-score-bpm" v-model.number="loadedScore.tempo" min="30" max="240" label="BPM" hide-details type="number" density="compact" style="max-width: 90px" />
-          <VBtn id="pit-score-transpose-down-btn" size="small" density="compact" variant="outlined" @click="transposeLoadedScore(-1)">-1 Semi</VBtn>
-          <VBtn id="pit-score-transpose-up-btn" size="small" density="compact" variant="outlined" @click="transposeLoadedScore(1)">+1 Semi</VBtn>
-          <span class="text-caption">{{ loadedScoreTitle }}</span>
-        </template>
-      </VCol>
       <VCol sm="2" cols="6" class="py-1">
         <VSelect
           id="pit-processor"
@@ -103,25 +91,41 @@
         />
       </VCol>
       <VCol v-if="showUkeleleNotation" :cols="ukeleleCols">
-        <PitcherUkeleleNotation v-if="lastValidFreq" :frequency="lastValidFreq" />
+        <PitcherUkeleleNotation v-if="lastValidFreq" :frequency="lastValidFreq" :frequencies="playheadFrequencies" />
       </VCol>
       <VCol v-if="showGuitarNotation" :cols="guitarCols">
-        <PitcherGuitarNotation v-if="lastValidFreq" :frequency="lastValidFreq" />
+        <PitcherGuitarNotation v-if="lastValidFreq" :frequency="lastValidFreq" :frequencies="playheadFrequencies" />
       </VCol>
       <VCol v-if="showTrumpetNotation" :cols="trumpetCols">
         <PitcherTrumpetNotation v-if="lastValidFreq" :frequency="lastValidFreq" />
       </VCol>
       <VCol v-if="showPianoNotation" :cols="pianoCols">
-        <PitcherPianoNotation v-if="lastValidFreq" :frequency="lastValidFreq" />
+        <PitcherPianoNotation v-if="lastValidFreq" :frequency="lastValidFreq" :frequencies="playheadFrequencies" />
       </VCol>
       <VCol v-if="showBassNotation" :cols="bassCols">
         <PitcherBassNotation v-if="lastValidFreq" :frequency="lastValidFreq" />
       </VCol>
     </VRow>
 
-    <VRow v-if="loadedScore" id="pit-score-strip-row" density="compact">
+    <VRow id="pit-score-strip-row" density="compact">
       <VCol cols="12" class="px-0 mx-0">
-        <ScoreEditor readonly single-row :score="loadedScore" :playback-time="scorePlayheadBeat" />
+        <div id="pit-score-controls" class="d-flex ga-1 align-center flex-wrap py-1">
+          <VSelect id="pit-score-select" v-model="selectedScoreId" hide-details density="compact" label="Partitura" variant="outlined" :items="scoreOptions" style="max-width: 220px" :disabled="!auth.loggedIn" />
+          <VBtn id="pit-score-load-btn" variant="outlined" :loading="scoreLoading" :disabled="!auth.loggedIn || !selectedScoreId" @click="loadScore">Cargar</VBtn>
+          <VBtn id="pit-score-play-btn" color="primary" :loading="scorePreparing" :disabled="!auth.loggedIn || !loadedScore" @click="toggleScore">{{ scorePlaying ? 'Pausa' : 'Reproducir' }}</VBtn>
+          <VBtn id="pit-score-stop-btn" variant="outlined" :disabled="!auth.loggedIn || !loadedScore" @click="stopScore">Detener</VBtn>
+          <template v-if="loadedScore">
+            <VTextField id="pit-score-bpm" v-model.number="loadedScore.tempo" min="30" max="240" label="BPM" hide-details type="number" density="compact" style="max-width: 90px" />
+            <VBtn id="pit-score-transpose-down-btn" size="small" density="compact" variant="outlined" @click="transposeLoadedScore(-1)">-1 Semi</VBtn>
+            <VBtn id="pit-score-transpose-up-btn" size="small" density="compact" variant="outlined" @click="transposeLoadedScore(1)">+1 Semi</VBtn>
+            <span class="text-caption">{{ loadedScoreTitle }}</span>
+          </template>
+          <template v-if="!auth.loggedIn">
+            <span class="text-caption text-medium-emphasis">Inicia sesión para cargar y reproducir partituras.</span>
+            <VBtn id="pit-score-login-btn" size="small" color="primary" variant="tonal" @click="navigateTo('/login')">Iniciar sesión</VBtn>
+          </template>
+        </div>
+        <ScoreEditor v-if="loadedScore" readonly seekable single-row :score="loadedScore" :playback-time="scorePlayheadBeat" @seek="playFromBeat" />
       </VCol>
     </VRow>
 
@@ -296,22 +300,28 @@
     preparing: scorePreparing,
     playbackTime: scorePlayheadBeat,
     toggle: toggleScore,
+    playFrom: playFromBeat,
     stop: stopScore,
   } = useScorePlayback(loadedScore)
 
-  // Refleja en el tuner y las notaciones la nota que suena en la partitura.
+  // Notas que suenan en este instante de la partitura (puede haber varias a la vez).
+  const playheadFrequencies = ref<number[]>([])
+
+  // Refleja en el tuner y las notaciones las notas que suenan en la partitura.
   watch(scorePlayheadBeat, (beat) => {
-    if (beat === null || !loadedScore.value) return
-    let current: { pitch: string; octave: number } | null = null
-    for (const event of scoreTimeline(loadedScore.value)) {
-      if (event.time <= beat) current = event
-      else break
+    if (beat === null || !loadedScore.value) {
+      playheadFrequencies.value = []
+      return
     }
-    if (!current) return
-    const freq = midiToFreq(noteToMidi(current.pitch, current.octave))
-    lastValidFreq.value = freq
-    lastFreq.value = freq
-    freqDisplay.value = freq.toFixed(2)
+    const frequencies = scoreTimeline(loadedScore.value)
+      .filter((event) => beat >= event.time && beat < event.time + event.duration)
+      .map((event) => midiToFreq(noteToMidi(event.pitch, event.octave)))
+    playheadFrequencies.value = frequencies
+    const first = frequencies[0]
+    if (first === undefined) return
+    lastValidFreq.value = first
+    lastFreq.value = first
+    freqDisplay.value = first.toFixed(2)
     centsDeviation.value = 0
   })
   onMounted(async () => {

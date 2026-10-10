@@ -85,6 +85,7 @@
 import { storeToRefs } from "pinia"
 import { usePitcherStore } from "~/composables/usePitcherStore"
 import { COLORS, COLOR_NEEDS_WHITE_TEXT } from "~/constants/pitcher"
+import { usePitcherNotes } from "~/composables/usePitcherNotes"
 
 interface PianoKey {
   note: string
@@ -98,14 +99,17 @@ interface PianoKey {
 const props = withDefaults(
   defineProps<{
     frequency?: number | null
+    frequencies?: number[]
   }>(),
   {
     frequency: null,
+    frequencies: () => [],
   },
 )
 
 const store = usePitcherStore()
-const { ghostQuarterNote, latinNotation, ghostNoteOpacity } = storeToRefs(store)
+const { latinNotation, ghostNoteOpacity } = storeToRefs(store)
+const { targetLabels, isExactMidi, isAdjacentMidi } = usePitcherNotes(() => props.frequency, () => props.frequencies)
 
 const allNotes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
 const latinAllNotes = ["Do", "Do#", "Re", "Re#", "Mi", "Fa", "Fa#", "Sol", "Sol#", "La", "La#", "Si"]
@@ -186,79 +190,48 @@ const blackKeys = computed(() => allKeys.value.blackKeys)
 const pianoWidth = computed(() => whiteKeys.value.length * whiteKeyWidth)
 const pianoHeight = whiteKeyHeight + 10
 
-const currentNote = computed(() => {
-  if (!props.frequency) return null
-  const midi = freqToMidi(props.frequency)
-  const roundedMidi = Math.round(midi)
-  const noteIndex = roundedMidi % 12
-  const octave = Math.floor(roundedMidi / 12) - 1
-  const noteName = latinNotation.value ? latinAllNotes[noteIndex] : allNotes[noteIndex]
-  return `${noteName}${octave}`
-})
-
-const currentMidi = computed(() => {
-  if (!props.frequency) return -1
-  return Math.round(freqToMidi(props.frequency))
-})
-
-function freqToMidi(freq: number): number {
-  if (freq <= 0) return 0
-  return 69 + 12 * Math.log2(freq / 440)
-}
-
-function isExactMatch(midi: number): boolean {
-  if (currentMidi.value < 0) return false
-  return midi === currentMidi.value
-}
-
-function isAdjacentOctave(midi: number): boolean {
-  if (currentMidi.value < 0) return false
-  if (!ghostQuarterNote.value) return false
-  const diff = Math.abs(midi - currentMidi.value)
-  return diff === 12
-}
+// Nota o acorde que se está resaltando (una sola nota o varias simultáneas).
+const currentNote = computed(() => targetLabels.value.join(" ") || null)
 
 function getKeyColor(midi: number): string {
-  const colorIndex = (midi % 12) * 2
-  return COLORS[colorIndex]
+  return COLORS[(midi % 12) * 2]
 }
 
 function getKeyTextColor(midi: number): string {
-  const colorIndex = (midi % 12) * 2
-  return COLOR_NEEDS_WHITE_TEXT[colorIndex] ? "#FFFFFF" : "#666"
+  return COLOR_NEEDS_WHITE_TEXT[(midi % 12) * 2] ? "#FFFFFF" : "#666"
 }
 
 function getWhiteKeyFill(key: PianoKey): string {
-  if (isExactMatch(key.midi)) return getKeyColor(key.midi)
-  if (isAdjacentOctave(key.midi)) return getKeyColor(key.midi)
+  if (isExactMidi(key.midi)) return getKeyColor(key.midi)
+  if (isAdjacentMidi(key.midi)) return getKeyColor(key.midi)
   return "#FFFFFF"
 }
 
 function getWhiteKeyOpacity(key: PianoKey): number {
-  if (isExactMatch(key.midi)) return 1
-  if (isAdjacentOctave(key.midi)) return ghostNoteOpacity.value
+  if (isExactMidi(key.midi)) return 1
+  if (isAdjacentMidi(key.midi)) return ghostNoteOpacity.value
   return 1
 }
 
 function getWhiteKeyTextColor(key: PianoKey): string {
-  if (isExactMatch(key.midi) || isAdjacentOctave(key.midi)) return getKeyTextColor(key.midi)
+  if (isExactMidi(key.midi) || isAdjacentMidi(key.midi)) return getKeyTextColor(key.midi)
   return "#666"
 }
 
 function getBlackKeyFill(key: PianoKey): string {
-  if (isExactMatch(key.midi)) return getKeyColor(key.midi)
-  if (isAdjacentOctave(key.midi)) return getKeyColor(key.midi)
+  if (isExactMidi(key.midi)) return getKeyColor(key.midi)
+  if (isAdjacentMidi(key.midi)) return getKeyColor(key.midi)
   return "#333"
 }
 
 function getBlackKeyOpacity(key: PianoKey): number {
-  if (isExactMatch(key.midi)) return 1
-  if (isAdjacentOctave(key.midi)) return ghostNoteOpacity.value
+  if (isExactMidi(key.midi)) return 1
+  if (isAdjacentMidi(key.midi)) return ghostNoteOpacity.value
   return 1
 }
 
 function getBlackKeyTextColor(key: PianoKey): string {
-  if (isExactMatch(key.midi) || isAdjacentOctave(key.midi)) return getKeyTextColor(key.midi)
+  if (isExactMidi(key.midi) || isAdjacentMidi(key.midi)) return getKeyTextColor(key.midi)
   return "#AAA"
 }
 </script>
