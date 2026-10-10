@@ -32,11 +32,15 @@
   import type { Score, ScoreNote } from '~/types/score'
   import { midiBytesToScore } from '~/utils/midiScoreImport'
   import { MidiParseError } from '~/utils/midiParser'
-  import { normalizeScore, transposeScore } from '~/utils/score'
+  import { normalizeScore, noteToMidi, transposeScore } from '~/utils/score'
+  import { COLORS } from '~/constants/pitcher'
+  import { usePitcherStore } from '~/composables/usePitcherStore'
 
   defineOptions({ inheritAttrs: false })
-  const props = defineProps<{ score?: Score; playbackTime?: number | null; singleRow?: boolean; readonly?: boolean; seekable?: boolean }>()
+  const props = defineProps<{ score?: Score; playbackTime?: number | null; singleRow?: boolean; readonly?: boolean; seekable?: boolean; detectedMidis?: number[] }>()
   const emit = defineEmits<{ save: [score: Score]; seek: [beat: number] }>()
+
+  const pitcherStore = usePitcherStore()
 
   const local = ref(normalizeScore(props.score))
   const trackId = ref(local.value.tracks[0]?.id || 'track-1')
@@ -63,6 +67,7 @@
   const PAD_BOT = 20
   const STAFF_GAP = 32 // gap between treble and bass staff (in px)
   const NOTE_R = SP * 0.46 // note head radius (~8.3px)
+  const RING_OFFSET = 1.5  // extra px outside NOTE_R for detected-note ring
 
   // Row height: treble (4*SP) + gap + bass (4*SP) + paddings
   const ROW_H = PAD_T + 4 * SP + STAFF_GAP + 4 * SP + PAD_BOT
@@ -163,7 +168,7 @@
     if (!ctx || !canvasEl.value) return
     const ms = measures.value
     const cols = mpr.value
-    if (props.singleRow) canvasW = 4 + cols * FIXED_MEASURE_W
+    if (props.singleRow) canvasW = 4 + CLEF_W + cols * FIXED_MEASURE_W
     const rows = Math.ceil(ms.length / cols)
     const h = rows * ROW_H
     canvasEl.value.width = canvasW
@@ -175,7 +180,10 @@
     hitNotes.length = 0
 
     const bpm = beatsPerMeasure()
-    const measureW = (canvasW - 4) / cols
+    // In singleRow: col 0 gets CLEF_W extra prefix; all measure slots are FIXED_MEASURE_W wide.
+    // In multi-row: all cols share equal width derived from canvasW.
+    const measureW = props.singleRow ? FIXED_MEASURE_W : (canvasW - 4) / cols
+    const colLeft = (col: number) => props.singleRow ? CLEF_W + col * FIXED_MEASURE_W : col * measureW
     const playTime = props.playbackTime ?? null
     const currentMi = playTime !== null ? Math.floor(playTime / bpm) : -1
 
@@ -186,9 +194,9 @@
 
       // Current measure highlight (red section)
       if (currentMi >= row * cols && currentMi < (row + 1) * cols && currentMi < ms.length) {
-        const col = currentMi - row * MEASURES_PER_ROW
+        const col = currentMi - row * cols
         ctx.fillStyle = 'rgba(229,57,53,0.15)'
-        ctx.fillRect(col * measureW, trebleTop - 6, measureW, 4 * SP + STAFF_GAP + 4 * SP + 12)
+        ctx.fillRect(colLeft(col), trebleTop - 6, measureW, 4 * SP + STAFF_GAP + 4 * SP + 12)
       }
 
       // Staff lines: treble
@@ -236,7 +244,7 @@
       for (let col = 0; col < cols; col++) {
         const mi = row * cols + col
         const measure = ms[mi]
-        const mLeft = col * measureW
+        const mLeft = colLeft(col)
         const mRight = mLeft + measureW
 
         // Bar line
@@ -251,7 +259,7 @@
         ctx.lineTo(mRight, bassTop + 4 * SP + 1)
         ctx.stroke()
 
-        // Measure number (first of each row)
+        // Measure number (first each row)
         if (col === 0 && mi < ms.length) {
           ctx.font = `10px sans-serif`
           ctx.fillStyle = '#888'
@@ -286,8 +294,13 @@
             }
           }
 
-          // Active highlight
+          // Active highlight + detected-note logic
           const active = playTime !== null && playTime >= note.start && playTime < note.start + note.duration
+          const detectedPcs = props.detectedMidis?.map(m => ((m % 12) + 12) % 12) ?? []
+          const hasDetection = detectedPcs.length > 0
+          const notePc = ((noteToMidi(note.pitch, note.octave) % 12) + 12) % 12
+          const isDetected = hasDetection && detectedPcs.includes(notePc)
+
           ctx.beginPath()
           ctx.arc(nx, ny, NOTE_R, 0, Math.PI * 2)
           ctx.fillStyle = active ? '#2979ff' : '#1565c0'
@@ -297,6 +310,20 @@
             ctx.shadowBlur = 8
             ctx.fill()
             ctx.shadowBlur = 0
+          }
+
+          // Detected-note ring — exact octave = full opacity, same pitch class other octave = ghostNoteOpacity
+          if (isDetected) {
+            const ringColor = COLORS[notePc * 2] ?? '#fff'
+            const exactMatch = props.detectedMidis!.some(m => m === noteToMidi(note.pitch, note.octave))
+            ctx.globalAlpha = exactMatch ? 1 : pitcherStore.ghostNoteOpacity
+            ctx.beginPath()
+            ctx.arc(nx, ny, NOTE_R + RING_OFFSET, 0, Math.PI * 2)
+            ctx.strokeStyle = ringColor
+            ctx.lineWidth = 3
+            ctx.stroke()
+            ctx.lineWidth = 1
+            ctx.globalAlpha = 1
           }
 
           // Note pitch inside dot (e.g. "F#", "G", "Bb")
@@ -314,10 +341,10 @@
         }
       }
 
-      // Final double bar line at end of last measure in row
-      const lastCol = Math.min(cols, ms.length - row * cols)
-      if (lastCol > 0) {
-        const x = lastCol * measureW
+    // Final double bar line at end of last measure in row
+    const lastCol = Math.min(cols, ms.length - row * cols)
+    if (lastCol > 0) {
+      const x = colLeft(lastCol - 1) + measureW
         ctx.strokeStyle = '#333'
         ctx.lineWidth = 1
         ctx.beginPath()
@@ -344,7 +371,7 @@
     }
   }
 
-  watch([measures, () => props.playbackTime], () => nextTick(draw), { deep: true })
+  watch([measures, () => props.playbackTime, () => props.detectedMidis], () => nextTick(draw), { deep: true })
 
   // In single-row mode keep the measure being played inside the visible strip.
   function scrollToPlayhead() {
@@ -357,12 +384,12 @@
     }
     const bpm = beatsPerMeasure()
     const cols = mpr.value
-    const measureW = (canvasW - 4) / cols
     const measure = Math.min(Math.max(0, Math.floor(time / bpm)), cols - 1)
     if (measure === scrolledMeasure) return
     scrolledMeasure = measure
     const maxScroll = Math.max(0, wrap.scrollWidth - wrap.clientWidth)
-    const target = Math.max(0, Math.min(maxScroll, measure * measureW + measureW / 2 - wrap.clientWidth / 2))
+    const mLeft = CLEF_W + measure * FIXED_MEASURE_W
+    const target = Math.max(0, Math.min(maxScroll, mLeft + FIXED_MEASURE_W / 2 - wrap.clientWidth / 2))
     wrap.scrollTo({ left: target, behavior: 'smooth' })
   }
   watch(
@@ -375,10 +402,11 @@
   // Emits the start beat of the measure under the pointer (used to seek playback).
   function emitSeek(cx: number, cy: number) {
     const cols = mpr.value
-    const measureW = (canvasW - 4) / cols
+    const measureW = props.singleRow ? FIXED_MEASURE_W : (canvasW - 4) / cols
     const row = Math.floor(cy / ROW_H)
-    const measure = row * cols + Math.floor(cx / measureW)
-    if (measure < 0 || measure >= measures.value.length) return
+    const col = props.singleRow ? Math.floor((cx - CLEF_W) / measureW) : Math.floor(cx / measureW)
+    const measure = row * cols + col
+    if (col < 0 || measure < 0 || measure >= measures.value.length) return
     emit('seek', measure * beatsPerMeasure())
   }
 
@@ -402,14 +430,15 @@
 
     const bpm = beatsPerMeasure()
     const cols = mpr.value
-    const measureW = (canvasW - 4) / cols
+    const measureW = props.singleRow ? FIXED_MEASURE_W : (canvasW - 4) / cols
     const row = Math.floor(cy / ROW_H)
     const sysTop = row * ROW_H + PAD_T
     const trebleTop = sysTop
     const bassTop = sysTop + 4 * SP + STAFF_GAP
-    const col = Math.floor(cx / measureW)
+    const col = props.singleRow ? Math.floor((cx - CLEF_W) / measureW) : Math.floor(cx / measureW)
     const mi = row * cols + col
-    const xInMeasure = cx - col * measureW
+    const mLeft = props.singleRow ? CLEF_W + col * measureW : col * measureW
+    const xInMeasure = cx - mLeft
 
     const leftMargin = col === 0 ? CLEF_W + PAD_L : PAD_L
     const usableW = measureW - leftMargin - PAD_L

@@ -125,7 +125,7 @@
             <VBtn id="pit-score-login-btn" size="small" color="primary" variant="tonal" @click="navigateTo('/login')">Iniciar sesión</VBtn>
           </template>
         </div>
-        <ScoreEditor v-if="loadedScore" readonly seekable single-row :score="loadedScore" :playback-time="scorePlayheadBeat" @seek="playFromBeat" />
+        <ScoreEditor v-if="loadedScore" readonly seekable single-row :score="loadedScore" :detected-midis="detectedMidis" :playback-time="scorePlayheadBeat" @seek="playFromBeat" />
       </VCol>
     </VRow>
 
@@ -311,6 +311,14 @@
   // Cuando la partitura no se está reproduciendo (pausada o detenida), las notaciones
   // quedan libres para detectar el sonido del micrófono.
   const activeNotationFrequencies = computed(() => (scorePlaying.value ? playheadFrequencies.value : []))
+
+  // Cuando la partitura está pausada/detenida y el mic está activo, los midis
+  // detectados se usan para resaltar las notas coincidentes en la partitura.
+  const detectedMidis = computed<number[]>(() => {
+    if (scorePlaying.value || !isMicActive.value) return []
+    if (!lastValidFreq.value) return []
+    return [Math.round(69 + 12 * Math.log2(lastValidFreq.value / 440))]
+  })
 
   watch(scorePlaying, (playing) => {
     if (!playing) {
