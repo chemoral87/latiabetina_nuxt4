@@ -88,6 +88,7 @@
           :min-width="histogramMinWidth"
           :cents-deviation="centsDeviation"
           :show-tuning-range="showTuningRange"
+          :frequencies="activeNotationFrequencies"
         />
       </VCol>
       <VCol v-if="showUkeleleNotation" :cols="ukeleleCols">
@@ -199,6 +200,7 @@
   import { A4_FREQ, A4_MIDI, HISTORY_DT_MS, NOTE_LATIN_STRINGS, NOTE_SHORT_STRINGS } from '~/constants/pitcher'
   import type { PitcherAudioProcessor } from '~/services/pitcher/audioProcessor'
   import { deserializeScore, noteToMidi, scoreTimeline, transposeScore } from '~/utils/score'
+  import { detectChordFrequencies } from '~/utils/micChordDetect'
   import { useScorePlayback } from '~/composables/useScorePlayback'
   import type { Score } from '~/types/score'
   import { useAuthStore } from '~/composables/useAuth'
@@ -245,6 +247,7 @@
     sineNotes,
     sineActive,
     showSineWave,
+    scoreMultiNote,
   } = storeToRefs(store)
 
   // Ciclo de la onda senoidal en segundos (setter aplica clamp 0.1–60)
@@ -308,9 +311,23 @@
   // Notas que suenan en este instante de la partitura (puede haber varias a la vez).
   const playheadFrequencies = ref<number[]>([])
 
+  // Acordes detectados del micrófono por picos FFT (solo con scoreMultiNote activo).
+  const micChordFrequencies = ref<number[]>([])
+
+  function sameFrequencies(a: number[], b: number[]): boolean {
+    return a.length === b.length && a.every((f, i) => Math.abs(f - b[i]!) < 0.5)
+  }
+
   // Cuando la partitura no se está reproduciendo (pausada o detenida), las notaciones
   // quedan libres para detectar el sonido del micrófono.
-  const activeNotationFrequencies = computed(() => (scorePlaying.value ? playheadFrequencies.value : []))
+  // Con scoreMultiNote activo, se pasan todos los acordes; si no, solo la primera nota.
+  const activeNotationFrequencies = computed(() => {
+    if (scorePlaying.value) {
+      return scoreMultiNote.value ? playheadFrequencies.value : playheadFrequencies.value.slice(0, 1)
+    }
+    if (isMicActive.value && scoreMultiNote.value) return micChordFrequencies.value
+    return []
+  })
 
   // Cuando la partitura está pausada/detenida y el mic está activo, los midis
   // detectados se usan para resaltar las notas coincidentes en la partitura.
@@ -455,6 +472,7 @@
     if (!audioProcessor.value) return
     await audioProcessor.value.cleanupMicrophone()
     isMicActive.value = false
+    micChordFrequencies.value = []
     freqDisplay.value = '--'
     dBDisplay.value = '--'
     centsDeviation.value = null
@@ -571,6 +589,17 @@
     }
 
     recordFrame(sample)
+
+    // Acordes del micrófono por picos FFT (solo con "Detectar acordes" activo).
+    const analyser = audioProcessor.value.analyser
+    if (scoreMultiNote.value && analyser) {
+      const chord = detectChordFrequencies(analyser)
+      if (!sameFrequencies(chord, micChordFrequencies.value)) {
+        micChordFrequencies.value = chord
+      }
+    } else if (micChordFrequencies.value.length) {
+      micChordFrequencies.value = []
+    }
 
     if (isMicActive.value) requestAnimationFrame(update)
   }

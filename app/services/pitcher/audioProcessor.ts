@@ -25,6 +25,8 @@ export interface PitcherAudioProcessor {
   setSensitivity(s: number): void
   getSensitivity(): number
   reset(): void
+  // Expuesto para detección de acordes (picos FFT) — todos los procesadores lo implementan.
+  readonly analyser?: AnalyserNode | null
 }
 
 type FloatBuffer = Float32Array<ArrayBuffer>

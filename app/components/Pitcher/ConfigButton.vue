@@ -51,6 +51,17 @@
             </VCol>
             <VCol cols="12">
               <VSwitch
+                id="pit-config-score-multi-note"
+                v-model="scoreMultiNote"
+                inset
+                hide-details
+                color="success"
+                class="mt-0 pt-0"
+                label="Detectar acordes en partitura"
+              />
+            </VCol>
+            <VCol cols="12">
+              <VSwitch
                 id="pit-config-ghost"
                 v-model="ghostQuarterNote"
                 inset
@@ -638,6 +649,10 @@ const sineWaveTypeOptions: { title: string; value: SineWaveType }[] = [
 const sineWaveType = computed({
   get: () => store.sineWaveType,
   set: (v: SineWaveType) => store.setSineWaveType(v),
+});
+const scoreMultiNote = computed({
+  get: () => store.scoreMultiNote,
+  set: (v: boolean) => store.setScoreMultiNote(v),
 });
 const ghostQuarterNote = computed({
   get: () => store.ghostQuarterNote,

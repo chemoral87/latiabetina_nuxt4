@@ -72,6 +72,8 @@ export const usePitcherStore = defineStore('pitcher', () => {
   // Derivado (no se persiste): hay una onda válida (≥ 2 notas reconocidas).
   // Mientras esté activa, el histograma sigue avanzando en silencio.
   const sineActive = computed(() => showSineWave.value && parseSinePitchClasses(sineNotes.value).length >= 2)
+  // Cuando está activo, las notaciones muestran todos los acordes de la partitura simultáneamente
+  const scoreMultiNote = ref(false)
 
   // ---- mutations → setters (same clamping as aui) ----
   function setRootNote(note: string) {
@@ -208,6 +210,10 @@ export const usePitcherStore = defineStore('pitcher', () => {
     if (SINE_WAVE_TYPES.includes(value)) sineWaveType.value = value
   }
 
+  function setScoreMultiNote(value: boolean) {
+    scoreMultiNote.value = !!value
+  }
+
   // ---- localStorage persistence (client-only, debounced 300ms like aui) ----
   function persist() {
     if (!import.meta.client) return
@@ -248,6 +254,7 @@ export const usePitcherStore = defineStore('pitcher', () => {
           sineCycleSeconds: sineCycleSeconds.value,
           showSineWave: showSineWave.value,
           sineWaveType: sineWaveType.value,
+          scoreMultiNote: scoreMultiNote.value,
         })
       )
     } catch {
@@ -291,6 +298,7 @@ export const usePitcherStore = defineStore('pitcher', () => {
       sineCycleSeconds,
       showSineWave,
       sineWaveType,
+      scoreMultiNote,
     ],
     () => {
       if (!import.meta.client) return
@@ -346,6 +354,7 @@ export const usePitcherStore = defineStore('pitcher', () => {
       if (typeof data.sineCycleSeconds === 'number') sineCycleSeconds.value = clamp(data.sineCycleSeconds, 0.1, 60)
       if (typeof data.showSineWave === 'boolean') showSineWave.value = data.showSineWave
       if (typeof data.sineWaveType === 'string' && SINE_WAVE_TYPES.includes(data.sineWaveType as SineWaveType)) sineWaveType.value = data.sineWaveType as SineWaveType
+      if (typeof data.scoreMultiNote === 'boolean') scoreMultiNote.value = data.scoreMultiNote
       // Migración: versiones previas guardaban un único `notationCols` compartido
       if (
         typeof data.ukeleleCols === 'undefined' &&
@@ -407,6 +416,7 @@ export const usePitcherStore = defineStore('pitcher', () => {
     sineCycleSeconds,
     showSineWave,
     sineWaveType,
+    scoreMultiNote,
     sineActive,
     loadFromStorage,
     setRootNote,
@@ -442,6 +452,7 @@ export const usePitcherStore = defineStore('pitcher', () => {
     setSineCycleSeconds,
     setShowSineWave,
     setSineWaveType,
+    setScoreMultiNote,
   }
 })
 
