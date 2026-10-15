@@ -9,19 +9,6 @@
         </div>
         <div>
           <VRow density="compact">
-            <VCol md="3"  cols="12">
-              <VTextField
-                id="con-detai-filterterm-tf-2"
-                v-model="filterTerm"
-                clearable
-                hide-details
-                label="Filtro"
-                density="compact"
-                variant="outlined"
-                placeholder="Filtro"
-                append-inner-icon="mdi-magnify"
-              />
-            </VCol>
             <VCol md="4" cols="12">
               <VBtn id="cnsld-new-member-btn" class="mr-1" color="success" @click="newMember">
                 <VIcon start>mdi-plus</VIcon>
@@ -38,7 +25,7 @@
               <ConsolidationMemberTable
                 id="det-members-dt"
                 :loading="loading"
-                :members="filteredMembers"
+                :members="members"
                 @delete="deleteMemberPrompt"
                  @status-change="onInlineStatusChange"
               />
@@ -224,7 +211,6 @@ const auth = useAuthStore()
 
 const sheetId = computed(() => route.params.id as string)
 
-const filterTerm = ref("")
 const saving = ref(false)
 const savingSheet = ref(false)
 const deleting = ref(false)
@@ -287,19 +273,6 @@ onBeforeRouteLeave((to, _from) => {
 const isDirty = computed(() => JSON.stringify(sheet.value) !== JSON.stringify(originalSheet.value))
 
 const singleOrg = computed(() => auth.hasSingleOrgFor("conso-sheet-index"))
-
-const filteredMembers = computed(() => {
-  if (!filterTerm.value) return members.value
-  const term = filterTerm.value.toLowerCase()
-  return members.value.filter((m) => {
-    const memberData = m as Record<string, unknown>
-    return (
-      (memberData.name && String(memberData.name).toLowerCase().includes(term)) ||
-      (memberData.last_name && String(memberData.last_name).toLowerCase().includes(term)) ||
-      (memberData.cellphone && String(memberData.cellphone).toLowerCase().includes(term))
-    )
-  })
-})
 
 // ── Sheet ─────────────────────────────────────────────────────────────
 

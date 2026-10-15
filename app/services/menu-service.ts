@@ -228,7 +228,18 @@ export class MenuService {
       if (this.hasPermission('pitch-train')) {
         menu.push({ icon: 'mdi-tune', title: 'Tuner', to: '/pitcher' })
       }
+
+      menu.push({
+        icon: 'mdi-account-search',
+        title: 'Profesionales',
+        to: '/professional',
+      })
     } else {
+      menu.push({
+        icon: 'mdi-account-search',
+        title: 'Profesionales',
+        to: '/professional',
+      })
       menu.push({
         icon: 'mdi-lock',
         title: 'Inicia Sesión',

@@ -1,17 +1,19 @@
-import { useNotifyStore } from "~/composables/useNotify"
-import { useValidationErrors } from "~/composables/useValidationErrors"
+import { useNotifyStore } from '~/composables/useNotify'
+import { useValidationErrors } from '~/composables/useValidationErrors'
 
-const NETWORK_ERROR_MESSAGE = "Error de conexión, verifique su conexión a Internet."
-const UNKNOWN_ERROR_MESSAGE = "Ha ocurrido un error inesperado"
+const NETWORK_ERROR_MESSAGE = 'Error de conexión, verifique su conexión a Internet.'
+const UNKNOWN_ERROR_MESSAGE = 'Ha ocurrido un error inesperado'
 
 // Status codes that carry a user-facing message worth notifying (matches
 // the old axios.js MESSAGE_ERROR_CODES: 401, 404, 405). 422 is intentionally
 // excluded — validation errors are field-level, not a toast, same as before.
 // 403 is included so backend permission denials surface as a danger snackbar.
-const MESSAGE_ERROR_STATUSES = [401, 403, 404, 405]
+// 409 is included so business-rule conflicts (e.g. one listing per user)
+// surface their `message` as a danger snackbar.
+const MESSAGE_ERROR_STATUSES = [401, 403, 404, 405, 409]
 
 function notifySuccess(res: unknown) {
-  if (!import.meta.client || !res || typeof res !== "object") return
+  if (!import.meta.client || !res || typeof res !== 'object') return
   const data = res as Record<string, unknown>
   if (data.success || data.warning || data.error) {
     useNotifyStore().notify(data as { success?: string; warning?: string; error?: string })
@@ -21,16 +23,16 @@ function notifySuccess(res: unknown) {
 function notifyError(err: unknown) {
   if (!import.meta.client) return
 
-  if (err && typeof err === "object" && "code" in err) {
+  if (err && typeof err === 'object' && 'code' in err) {
     const codeErr = err as { code?: string }
-    if (codeErr.code === "UNAUTHENTICATED") {
+    if (codeErr.code === 'UNAUTHENTICATED') {
       // Session expired / token unavailable: useApi already cleared the
       // session and is redirecting to /login. Don't stack a toast on top.
       return
     }
   }
 
-  if (err && typeof err === "object" && "status" in err) {
+  if (err && typeof err === 'object' && 'status' in err) {
     const fetchErr = err as { status?: number; data?: { message?: string } }
     const status = fetchErr.status
 

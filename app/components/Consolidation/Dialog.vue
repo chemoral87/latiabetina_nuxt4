@@ -70,6 +70,7 @@
 <script setup lang="ts">
 import { useValidationErrors } from "~/composables/useValidationErrors"
 import { useVrules } from "~/composables/useVrules"
+import { localDateTimeString } from "~/utils/date"
 
 interface SheetItem {
   id?: number | null
@@ -132,9 +133,8 @@ onMounted(() => {
   if (props.sheet && Object.keys(props.sheet).length > 0) {
     item.value = { ...item.value, ...props.sheet } as SheetItem
   } else {
-    // Default to today
-    const today = new Date().toISOString().substr(0, 10)
-    item.value.date = today
+    // Default to today (local time — toISOString() is UTC and rolls to tomorrow after 18:00 in UTC-6)
+    item.value.date = localDateTimeString().slice(0, 10)
   }
   clearErrors()
 })
