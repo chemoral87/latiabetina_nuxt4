@@ -66,6 +66,7 @@
         <VCol cols="12">
           <TrackingTable
             :orgs="orgs"
+            :total="total"
             :loading="loading"
             :members="members"
             @view="viewMember"
@@ -98,9 +99,14 @@ const filterOrgId = ref<string | number | null>(null);
 const filterHasPhone = ref(true);
 const loading = ref(false);
 const members = ref<Record<string, unknown>[]>([]);
+const total = ref(0);
 const sortBy = ref<{ key: string; order: string }[]>([
   { key: "last_contacted", order: "asc" },
 ]);
+const lastOptions = ref<Record<string, unknown>>({
+  page: 1,
+  itemsPerPage: 10,
+});
 
 const showOrgSelect = computed(
   () => auth.orgIdsFor("conso-sheet-index").length > 1,
@@ -118,6 +124,7 @@ function viewMember(item: unknown) {
 }
 
 function onUpdateOptions(opts: Record<string, unknown>) {
+  lastOptions.value = { ...lastOptions.value, ...opts };
   const newSortBy = (opts.sortBy as { key: string; order: string }[]) ?? [];
   if (newSortBy.length) {
     sortBy.value = newSortBy;
@@ -128,16 +135,30 @@ function onUpdateOptions(opts: Record<string, unknown>) {
 // Debounced filter — shared useDebouncedFilter (300ms immediate clear)
 useDebouncedFilter(filterInput, filterTerm);
 
-function normalizeMembers(res: unknown): Record<string, unknown>[] {
-  if (Array.isArray(res)) return res as Record<string, unknown>[];
-  const r = res as { data?: unknown[] } | null | undefined;
-  if (r && Array.isArray(r.data)) return r.data as Record<string, unknown>[];
-  return [];
+function normalizeResponse(res: unknown): {
+  data: Record<string, unknown>[];
+  total: number;
+} {
+  if (Array.isArray(res)) {
+    return { data: res as Record<string, unknown>[], total: res.length };
+  }
+  const r = res as { data?: unknown[]; total?: number } | null | undefined;
+  if (r && Array.isArray(r.data)) {
+    return {
+      data: r.data as Record<string, unknown>[],
+      total: r.total ?? r.data.length,
+    };
+  }
+  return { data: [], total: 0 };
 }
 
 async function fetchData() {
   loading.value = true;
-  const params: Record<string, unknown> = { mine: true };
+  const params: Record<string, unknown> = {
+    mine: true,
+    page: lastOptions.value.page,
+    itemsPerPage: lastOptions.value.itemsPerPage,
+  };
   if (filterStatus.value) params.status = filterStatus.value;
   if (filterTerm.value) params.filter = filterTerm.value;
   if (filterOrgId.value) params.org_id = filterOrgId.value;
@@ -152,7 +173,9 @@ async function fetchData() {
 
   try {
     const res = await ChurchMember.index<unknown>(params);
-    members.value = normalizeMembers(res);
+    const norm = normalizeResponse(res);
+    members.value = norm.data;
+    total.value = norm.total;
   } catch (error) {
     notify.notify({
       error:
@@ -160,6 +183,7 @@ async function fetchData() {
           ?.message || "Error al cargar miembros",
     });
     members.value = [];
+    total.value = 0;
   } finally {
     loading.value = false;
   }

@@ -6,10 +6,10 @@
       :items="members"
       density="compact"
       :headers="headers"
+      :items-length="total"
       mobile-breakpoint="0"
       :loading="props.loading"
       class="elevation-1 xwidth1000"
-      :items-length="members.length"
       @update:options="onUpdateOptions">
       <template #[`item.name`]="{ item }">
         {{ item.name }} {{ item.last_name }}
@@ -103,12 +103,14 @@ const props = withDefaults(
     members?: unknown[];
     orgs?: { id: number | string; name: string }[];
     loading?: boolean;
+    total?: number;
   }>(),
   {
     id: "cmp-tracking-table",
     members: () => [],
     orgs: () => [],
     loading: false,
+    total: 0,
   },
 );
 

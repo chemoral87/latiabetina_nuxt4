@@ -180,7 +180,8 @@ const { Sale } = useRepository()
 const notify = useNotifyStore()
 const auth = useAuthStore()
 
-const selectedDate = ref(new Date().toISOString().slice(0, 10))
+// Local time — toISOString() is UTC and rolls to tomorrow after 18:00 in UTC-6
+const selectedDate = ref(localDateTimeString().slice(0, 10))
 const sales = ref<Record<string, unknown>[]>([])
 const loading = ref(false)
 

@@ -245,7 +245,7 @@ const { data: sheetData, pending: sheetPending } = await useAsyncData(
 const { data: membersData, pending: membersPending } = await useAsyncData(
   `consolidation-details-members-${route.params.id}`,
   async () => {
-    return await ChurchMember.index<unknown>({ conso_sheet_id: sheetId.value })
+    return await ChurchMember.index<unknown>({ conso_sheet_id: sheetId.value, itemsPerPage: -1 })
   },
   { default: () => [] as unknown[] },
 )
@@ -301,7 +301,7 @@ async function saveSheet() {
 async function fetchMembers() {
   try {
     refreshingMembers.value = true
-    const data = await ChurchMember.index<unknown>({ conso_sheet_id: sheetId.value })
+    const data = await ChurchMember.index<unknown>({ conso_sheet_id: sheetId.value, itemsPerPage: -1 })
     members.value = Array.isArray(data) ? data : (data as { data?: unknown[] })?.data || []
   } catch (error) {
     notify.notify({ error: "Error al cargar los miembros" })

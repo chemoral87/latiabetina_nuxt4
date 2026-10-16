@@ -120,7 +120,7 @@
 
 <script setup lang="ts">
 import { useVrules } from "~/composables/useVrules"
-import { formatShortDate } from "~/utils/date"
+import { formatShortDate, localDateTimeString } from "~/utils/date"
 
 const props = withDefaults(defineProps<{
   id?: string
@@ -181,7 +181,8 @@ const form = ref<{
   description: "",
 })
 
-const contactDate = ref<string | null>(new Date().toISOString().substr(0, 10))
+// Local time — toISOString() is UTC and rolls to tomorrow after 18:00 in UTC-6
+const contactDate = ref<string | null>(localDateTimeString().slice(0, 10))
 const contactTime = ref("")
 
 async function fetchLogs() {
