@@ -21,6 +21,17 @@
           />
         </VCol>
 
+        <VCol md="6" cols="12">
+          <MyDatePicker
+            id="useprf-end-date"
+            v-model="(profile.end_date as string | null)"
+            clearable
+            density="compact"
+            variant="outlined"
+            label="Fecha de fin (vacía = sin límite)"
+          />
+        </VCol>
+
         <VCol cols="12" class="d-flex justify-end">
           <VBtn
             id="useprf-cancel-btn"
@@ -101,7 +112,11 @@ async function saveProfileRolesPermissions() {
   const permissionsIds = (
     profile.value.direct_permissions as Record<string, unknown>[]
   ).map((x) => x.id);
-  const params = { roleIds, permissionsIds };
+  const params = {
+    roleIds,
+    permissionsIds,
+    end_date: (profile.value.end_date as string | null) ?? null,
+  };
   await Profile.update(userId, profileId, params);
   navigateTo(`/user/${userId}/profile`);
 }

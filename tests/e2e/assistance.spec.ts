@@ -2,29 +2,23 @@
  * Assistance E2E tests
  *
  * Instructions:
- * 1. Set E2E_EMAIL and E2E_PASSWORD environment variables
+ * 1. Set E2E_EMAIL and E2E_PASSWORD in .env.test (or export them)
  * 2. Start dev server: npm run dev (localhost:3003)
  * 3. Run tests: npm run test:e2e
  *
  * Tests create/edit/delete assistance records via API and verify UI display.
  */
 import { test, expect } from '@playwright/test'
+import { apiBase, authHeaders, loginOrSkip, permittedOrgFor } from './helpers/auth'
 
 test.describe.serial('Assistance', () => {
   let createdId: number
   let uniqueNote: string
+  let canIndex = false
   let canDelete = false
 
   test.beforeEach(async ({ page }) => {
-    const email = process.env.E2E_EMAIL
-    const password = process.env.E2E_PASSWORD
-    test.skip(!email || !password, 'Set E2E_EMAIL and E2E_PASSWORD to run this test')
-    await page.goto('/login')
-    await page.waitForLoadState('networkidle')
-    await page.getByRole('textbox', { name: /correo/i }).fill(email!)
-    await page.getByRole('textbox', { name: /contraseña/i }).fill(password!)
-    await page.locator('#login-submit').click()
-    await expect(page).toHaveURL(/\/dashboard/, { timeout: 15_000 })
+    await loginOrSkip(page)
   })
 
   test('logs in as admin', async ({ page }) => {
@@ -36,11 +30,13 @@ test.describe.serial('Assistance', () => {
     await page.waitForLoadState('networkidle')
     const account = page.locator('#acc-permissions-card')
     await expect(account).toBeVisible()
-    await expect(account.getByText('assistance-index', { exact: true })).toBeVisible()
+    canIndex = await account.getByText('assistance-index', { exact: true }).isVisible()
+    test.skip(!canIndex, 'Account lacks assistance-index permission')
     canDelete = await account.getByText('assistance-delete', { exact: true }).isVisible()
   })
 
   test('opens assistance list', async ({ page }) => {
+    test.skip(!canIndex, 'Account lacks assistance-index permission')
     await page.goto('/assistance')
     await page.waitForLoadState('networkidle')
     await expect(page.locator('#ass-refresh-btn')).toBeVisible()
@@ -49,6 +45,7 @@ test.describe.serial('Assistance', () => {
   })
 
   test('shows permitted actions', async ({ page }) => {
+    test.skip(!canIndex, 'Account lacks assistance-index permission')
     await page.goto('/assistance')
     await page.waitForLoadState('networkidle')
     const canCreate = await page
@@ -63,23 +60,20 @@ test.describe.serial('Assistance', () => {
   })
 
   test('creates an assistance record', async ({ page }) => {
-    const apiBase = process.env.BASE_URL || 'http://192.168.1.20:8001/api'
-    const tokenCookie = (await page.context().cookies()).find(cookie => cookie.name === 'auth.token')
-    const headers = tokenCookie ? { Authorization: `Bearer ${decodeURIComponent(tokenCookie.value)}`, Accept: 'application/json' } : { Accept: 'application/json' }
+    test.skip(!canIndex, 'Account lacks assistance-index permission')
+    const headers = await authHeaders(page)
 
-    const organizations = await page.request.get(`${apiBase}/organization`, { headers })
-    expect(organizations.ok()).toBeTruthy()
-    const orgResponse = await organizations.json()
-    const orgData = Array.isArray(orgResponse) ? orgResponse : (orgResponse.data ?? [])
-    const org = orgData[0]
-    expect(org).toBeTruthy()
+    // The list is scoped to the account's permitted orgs, so the record has to
+    // be written to an org holding both assistance-create and assistance-index.
+    const orgId = await permittedOrgFor(page, 'assistance-create', 'assistance-index')
+    expect(orgId, 'Account has no org with assistance-create + assistance-index').toBeTruthy()
 
     const now = new Date()
     const localToday = new Date(now.getTime() - now.getTimezoneOffset() * 60_000).toISOString().slice(0, 10)
     uniqueNote = `E2E-${Date.now()}`
 
     const payload = {
-      org_id: org.id,
+      org_id: orgId,
       assistance_date: localToday,
       service_time: '09:45',
       adults: 10,
@@ -90,7 +84,7 @@ test.describe.serial('Assistance', () => {
       notes: uniqueNote,
     }
 
-    const createdResponse = await page.request.post(`${apiBase}/assistance`, { data: payload, headers })
+    const createdResponse = await page.request.post(`${apiBase()}/assistance`, { data: payload, headers })
     expect(createdResponse.ok(), await createdResponse.text()).toBeTruthy()
     const created = (await createdResponse.json()).data
     expect(created).toBeTruthy()
@@ -102,9 +96,8 @@ test.describe.serial('Assistance', () => {
   })
 
   test('edits the assistance record', async ({ page }) => {
-    const apiBase = process.env.BASE_URL || 'http://192.168.1.20:8001/api'
-    const tokenCookie = (await page.context().cookies()).find(cookie => cookie.name === 'auth.token')
-    const headers = tokenCookie ? { Authorization: `Bearer ${decodeURIComponent(tokenCookie.value)}`, Accept: 'application/json' } : { Accept: 'application/json' }
+    test.skip(!canIndex, 'Account lacks assistance-index permission')
+    const headers = await authHeaders(page)
 
     const now = new Date()
     const localToday = new Date(now.getTime() - now.getTimezoneOffset() * 60_000).toISOString().slice(0, 10)
@@ -116,7 +109,7 @@ test.describe.serial('Assistance', () => {
       kids: 3,
       babies: 2,
     }
-    const updatedResponse = await page.request.put(`${apiBase}/assistance/${createdId}`, { data: edited, headers })
+    const updatedResponse = await page.request.put(`${apiBase()}/assistance/${createdId}`, { data: edited, headers })
     expect(updatedResponse.ok(), await updatedResponse.text()).toBeTruthy()
 
     await page.goto('/assistance')
@@ -127,13 +120,12 @@ test.describe.serial('Assistance', () => {
   })
 
   test('deletes the assistance record', async ({ page }) => {
+    test.skip(!canIndex, 'Account lacks assistance-index permission')
     test.skip(!canDelete, 'Account lacks assistance-delete permission')
 
-    const apiBase = process.env.BASE_URL || 'http://192.168.1.20:8001/api'
-    const tokenCookie = (await page.context().cookies()).find(cookie => cookie.name === 'auth.token')
-    const headers = tokenCookie ? { Authorization: `Bearer ${decodeURIComponent(tokenCookie.value)}`, Accept: 'application/json' } : { Accept: 'application/json' }
+    const headers = await authHeaders(page)
 
-    const deletedResponse = await page.request.delete(`${apiBase}/assistance/${createdId}`, { headers })
+    const deletedResponse = await page.request.delete(`${apiBase()}/assistance/${createdId}`, { headers })
     expect(deletedResponse.ok(), await deletedResponse.text()).toBeTruthy()
 
     await page.goto('/assistance')

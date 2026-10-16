@@ -1,14 +1,8 @@
 import { test, expect, type Page } from '@playwright/test'
+import { apiBase, authHeaders, loginOrSkip } from './helpers/auth'
 
 const MIN_RECORDS = 11
 const PER_PAGE = 10
-
-const apiBase = () => process.env.BASE_URL || 'http://192.168.1.20:8001/api'
-
-async function authHeaders(page: Page) {
-  const token = (await page.context().cookies()).find(c => c.name === 'auth.token')?.value
-  return { Accept: 'application/json', Authorization: `Bearer ${decodeURIComponent(token ?? '')}` }
-}
 
 function extractId(json: unknown): number | null {
   const j = json as { data?: { data?: { id?: unknown }; id?: unknown }; id?: unknown } | null
@@ -26,16 +20,14 @@ test.describe.serial('Pagination (10 per page)', () => {
   let orgId: number | string | null = null
 
   test.beforeEach(async ({ page }) => {
-    const email = process.env.E2E_EMAIL
-    const password = process.env.E2E_PASSWORD
-    test.skip(!email || !password, 'Set E2E_EMAIL and E2E_PASSWORD to run this test')
-    await page.goto('/login')
-    await page.waitForLoadState('networkidle')
-    await page.getByRole('textbox', { name: /correo/i }).fill(email!)
-    await page.getByRole('textbox', { name: /contraseña/i }).fill(password!)
-    await page.locator('#login-submit').click()
-    await expect(page).toHaveURL(/\/dashboard/, { timeout: 15_000 })
+    await loginOrSkip(page)
   })
+
+  /** Permission probe: a 401/403 means this account simply cannot exercise the route. */
+  async function canAccess(page: Page, path: string): Promise<boolean> {
+    const res = await page.request.get(`${apiBase()}${path}`, { headers: await authHeaders(page) })
+    return res.status() !== 401 && res.status() !== 403
+  }
 
   async function listCount(page: Page, path: string): Promise<number> {
     const headers = await authHeaders(page)
@@ -152,6 +144,7 @@ test.describe.serial('Pagination (10 per page)', () => {
 
   test('seeds 11+ tracking logs via capture on /tracking', async ({ page }) => {
     test.setTimeout(120_000)
+    test.skip(!(await canAccess(page, '/church-member/tracking-logs?itemsPerPage=1')), 'E2E user lacks church-member-tracking-logs-index')
     const countLogs = () => listCount(page, '/church-member/tracking-logs?itemsPerPage=1')
     let total = await countLogs()
     let captures = 0
@@ -174,6 +167,7 @@ test.describe.serial('Pagination (10 per page)', () => {
   })
 
   test('paginates /church-member/tracking-logs', async ({ page }) => {
+    test.skip(!(await canAccess(page, '/church-member/tracking-logs?itemsPerPage=1')), 'E2E user lacks church-member-tracking-logs-index')
     const total = await listCount(page, '/church-member/tracking-logs?itemsPerPage=1')
     expect(total).toBeGreaterThanOrEqual(MIN_RECORDS)
 

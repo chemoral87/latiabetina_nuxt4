@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { hasCredentials, login } from './helpers/auth'
 
 test.describe('Login page smoke test', () => {
   test.beforeEach(async ({ page }) => {
@@ -24,15 +25,7 @@ test.describe('Login page smoke test', () => {
   })
 
   test('logs in with valid credentials and reaches dashboard', async ({ page }) => {
-    const email = process.env.E2E_EMAIL
-    const password = process.env.E2E_PASSWORD
-    test.skip(!email || !password, 'Set E2E_EMAIL and E2E_PASSWORD to run this test')
-
-    await page.getByRole('textbox', { name: /correo/i }).fill(email!)
-    await page.getByRole('textbox', { name: /contraseña/i }).fill(password!)
-    await page.locator('#login-submit').click()
-
-    await expect(page).toHaveURL(/\/dashboard/, { timeout: 15_000 })
-    await expect(page).toHaveURL(/\/dashboard/, { timeout: 15_000 })
+    test.skip(!hasCredentials(), 'Set E2E_EMAIL and E2E_PASSWORD (or fill .env.test) to run this test')
+    await login(page)
   })
 })

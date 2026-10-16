@@ -1,16 +1,9 @@
 import { test, expect } from '@playwright/test'
+import { apiBase, authHeaders, loginOrSkip } from './helpers/auth'
 
 test.describe.serial('Professional create', () => {
   test.beforeEach(async ({ page }) => {
-    const email = process.env.E2E_EMAIL
-    const password = process.env.E2E_PASSWORD
-    test.skip(!email || !password, 'Set E2E_EMAIL and E2E_PASSWORD to run this test')
-    await page.goto('/login')
-    await page.waitForLoadState('networkidle')
-    await page.getByRole('textbox', { name: /correo/i }).fill(email!)
-    await page.getByRole('textbox', { name: /contraseña/i }).fill(password!)
-    await page.locator('#login-submit').click()
-    await expect(page).toHaveURL(/\/dashboard/, { timeout: 15_000 })
+    await loginOrSkip(page)
   })
 
   test('opens the new professional page and shows the dialog', async ({ page }) => {
@@ -28,6 +21,16 @@ test.describe.serial('Professional create', () => {
   })
 
   test('creates a professional', async ({ page }) => {
+    // One publication per user: clear any existing listing first, then create.
+    const headers = await authHeaders(page)
+    const mine = await page.request.get(`${apiBase()}/professionals/mine`, { headers })
+    const existing = mine.ok() ? await mine.json() : null
+    const publication = Array.isArray(existing) ? existing[0] : (existing?.data ?? existing)
+    if (publication?.id) {
+      const removed = await page.request.delete(`${apiBase()}/professionals/${publication.id}`, { headers })
+      expect(removed.ok(), `DELETE /professionals/${publication.id} → ${removed.status()} ${await removed.text()}`).toBe(true)
+    }
+
     const last = `E2E${Date.now()}`.slice(-8)
     await page.goto('/professional/new')
     await page.waitForLoadState('networkidle')
@@ -37,6 +40,10 @@ test.describe.serial('Professional create', () => {
     await page.getByRole('textbox', { name: 'Profesión u oficio' }).fill('Plomero')
     await page.locator('#pro-dialog-save-btn').click()
     await expect(page).toHaveURL(/\/professional$/, { timeout: 15_000 })
+
+    const after = await page.request.get(`${apiBase()}/professionals/mine`, { headers })
+    expect(after.ok()).toBe(true)
+    expect((await after.json())?.last_name).toBe(last)
   })
 
   test('cancel returns to the list', async ({ page }) => {

@@ -1,21 +1,15 @@
 import { test, expect } from '@playwright/test'
+import { apiBase, authHeaders, loginOrSkip } from './helpers/auth'
 
 test.describe.serial('Consolidation members', () => {
   let sheetId = ''
   let folio = ''
   let memberName = ''
   let editedName = ''
+  let canDelete = false
 
   test.beforeEach(async ({ page }) => {
-    const email = process.env.E2E_EMAIL
-    const password = process.env.E2E_PASSWORD
-    test.skip(!email || !password, 'Set E2E_EMAIL and E2E_PASSWORD to run this test')
-    await page.goto('/login')
-    await page.waitForLoadState('networkidle')
-    await page.getByRole('textbox', { name: /correo/i }).fill(email!)
-    await page.getByRole('textbox', { name: /contraseña/i }).fill(password!)
-    await page.locator('#login-submit').click()
-    await expect(page).toHaveURL(/\/dashboard/, { timeout: 15_000 })
+    await loginOrSkip(page)
   })
 
   test('logs in as admin', async ({ page }) => {
@@ -26,21 +20,20 @@ test.describe.serial('Consolidation members', () => {
     await page.goto('/account')
     await expect(page.locator('#acc-permissions-card')).toBeVisible()
     await expect(page.locator('#acc-permissions-card').getByText('conso-sheet-create', { exact: true })).toBeVisible()
+    canDelete = await page.locator('#acc-permissions-card').getByText('conso-sheet-delete', { exact: true }).isVisible()
   })
 
   test('creates a consolidation', async ({ page }) => {
     await page.goto('/consolidation')
     await page.waitForLoadState('networkidle')
     await expect(page.locator('#cnsld-new-btn')).toBeVisible()
-    const token = (await page.context().cookies()).find(cookie => cookie.name === 'auth.token')?.value
-    const headers = { Accept: 'application/json', Authorization: `Bearer ${decodeURIComponent(token ?? '')}` }
-    const apiBase = process.env.BASE_URL || 'http://192.168.1.20:8001/api'
-    const organizations = await page.request.get(`${apiBase}/organization`, { headers })
+    const headers = await authHeaders(page)
+    const organizations = await page.request.get(`${apiBase()}/organization`, { headers })
     const payload = await organizations.json()
     const items = Array.isArray(payload) ? payload : (payload.data?.data ?? payload.data ?? [])
     expect(items.length).toBeGreaterThan(0)
     folio = `E2E-${Date.now()}`
-    const response = await page.request.post(`${apiBase}/conso-sheet`, {
+    const response = await page.request.post(`${apiBase()}/conso-sheet`, {
       headers,
       data: { org_id: items[0].id, folio_number: folio, date: new Date().toISOString().slice(0, 10) },
     })
@@ -61,22 +54,20 @@ test.describe.serial('Consolidation members', () => {
     await page.locator('#cmm-dialog-save-btn').click()
     await expect(page.getByRole('row').filter({ hasText: memberName })).toHaveCount(1)
     editedName = `${memberName}X`
-    const token = (await page.context().cookies()).find(cookie => cookie.name === 'auth.token')?.value
-    const headers = { Accept: 'application/json', Authorization: `Bearer ${decodeURIComponent(token ?? '')}` }
-    const apiBase = process.env.BASE_URL || 'http://192.168.1.20:8001/api'
-    const response = await page.request.get(`${apiBase}/church-member`, { headers })
+    const headers = await authHeaders(page)
+    const response = await page.request.get(`${apiBase()}/church-member?itemsPerPage=-1`, { headers })
     const payload = await response.json()
     const items = Array.isArray(payload) ? payload : (payload.data?.data ?? payload.data ?? [])
     const member = items.find((item: { name: string }) => item.name === memberName)
     expect(member).toBeTruthy()
-    const update = await page.request.put(`${apiBase}/church-member/${member.id}`, {
+    const update = await page.request.put(`${apiBase()}/church-member/${member.id}`, {
       headers,
       data: { name: editedName, last_name: 'Test', conso_sheet_id: sheetId },
     })
     expect(update.ok(), await update.text()).toBeTruthy()
     await page.reload()
     await expect(page.getByRole('row').filter({ hasText: editedName })).toHaveCount(1)
-    const deleteMember = await page.request.delete(`${apiBase}/church-member/${member.id}`, { headers })
+    const deleteMember = await page.request.delete(`${apiBase()}/church-member/${member.id}`, { headers })
     expect(deleteMember.ok(), await deleteMember.text()).toBeTruthy()
     await page.reload()
     await page.waitForLoadState('networkidle')
@@ -84,12 +75,11 @@ test.describe.serial('Consolidation members', () => {
   })
 
   test('deletes the sheet', async ({ page }) => {
+    test.skip(!canDelete, 'Account lacks conso-sheet-delete permission')
     await page.goto('/consolidation')
     await page.waitForLoadState('networkidle')
-    const token = (await page.context().cookies()).find(cookie => cookie.name === 'auth.token')?.value
-    const headers = { Accept: 'application/json', Authorization: `Bearer ${decodeURIComponent(token ?? '')}` }
-    const apiBase = process.env.BASE_URL || 'http://192.168.1.20:8001/api'
-    const response = await page.request.delete(`${apiBase}/conso-sheet/${sheetId}`, { headers })
+    const headers = await authHeaders(page)
+    const response = await page.request.delete(`${apiBase()}/conso-sheet/${sheetId}`, { headers })
     expect(response.ok(), await response.text()).toBeTruthy()
     await page.reload()
     await expect(page.getByRole('row').filter({ hasText: folio })).toHaveCount(0)
