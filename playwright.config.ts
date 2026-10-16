@@ -10,6 +10,9 @@ export default defineConfig({
   use: {
     baseURL: process.env.E2E_BASE_URL || 'http://localhost:3003',
     trace: 'on-first-retry',
+    // Real Google Chrome. Headless by default; pass --headed for a visible window.
+    channel: 'chrome',
+    headless: true,
   },
   projects: [
     {

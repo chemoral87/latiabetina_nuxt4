@@ -7,6 +7,7 @@ import {
   formatShortDateTime,
   formatShortDateTime12h,
   formatHourTime,
+  formatHumanDate,
   localDateTimeString,
 } from '~/utils/date'
 
@@ -73,6 +74,27 @@ describe('date utils', () => {
       expect(formatHourTime('09:05')).toBe('9:05 am')
       expect(formatHourTime('')).toBe('-')
       expect(formatHourTime(null)).toBe('-')
+    })
+  })
+
+  describe('formatHumanDate', () => {
+    const now = new Date(2026, 9, 17, 1, 36, 0) // 17 Oct 2026 01:36
+
+    it('appends a humanized relative time', () => {
+      expect(formatHumanDate('2026-10-16 01:36:00', now)).toBe('16 Oct - hace 1 día')
+      expect(formatHumanDate('2026-10-17 00:36:00', now)).toBe('17 Oct - hace 1 hora')
+      expect(formatHumanDate('2026-10-17 01:30:00', now)).toBe('17 Oct - hace 6 minutos')
+      expect(formatHumanDate('2026-10-17 01:36:20', now)).toBe('17 Oct - en unos segundos')
+    })
+
+    it('adds the year only when it differs from the current year', () => {
+      expect(formatHumanDate('2025-10-16 01:36:00', now)).toBe('16 Oct 2025 - hace 1 año')
+    })
+
+    it('handles empty / invalid values', () => {
+      expect(formatHumanDate('')).toBe('')
+      expect(formatHumanDate(null)).toBe('')
+      expect(formatHumanDate('invalid-date')).toBe('invalid-date')
     })
   })
 

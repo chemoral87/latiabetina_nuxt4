@@ -31,7 +31,7 @@
 
       <template #[`item.last_contacted`]="{ item }">
         <div>
-          <div>{{ formatShortDateTime12h(String(item.last_contacted ?? "")) || "—" }}</div>
+          <div>{{ formatHumanDate(String(item.last_contacted ?? "")) || "—" }}</div>
           <div v-if="item.last_contacted_by" class="text-caption text-medium-emphasis">
             {{ item.last_contacted_by }}
           </div>
@@ -86,7 +86,7 @@
 </template>
 
 <script setup lang="ts">
-import { formatShortDateTime12h } from "~/utils/date";
+import { formatHumanDate } from "~/utils/date";
 import { useChurchMemberStatus } from "~/composables/useChurchMemberStatus";
 
 interface Header {

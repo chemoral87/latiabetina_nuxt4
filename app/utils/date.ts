@@ -91,6 +91,42 @@ export function formatHourTime(time?: string | null): string {
   return `${h12}:${pad(m)} ${ampm}`
 }
 
+const MINUTE = 60_000
+const HOUR = 60 * MINUTE
+const DAY = 24 * HOUR
+
+function relativeFromNow(target: Date, now: Date): string {
+  const diff = now.getTime() - target.getTime()
+  const future = diff < 0
+  const abs = Math.abs(diff)
+  const unit = (n: number, sing: string, plur: string) => (future ? `en ${n} ${n === 1 ? sing : plur}` : `hace ${n} ${n === 1 ? sing : plur}`)
+  if (abs < MINUTE) return future ? 'en unos segundos' : 'hace unos segundos'
+  if (abs < HOUR) return unit(Math.round(abs / MINUTE), 'minuto', 'minutos')
+  if (abs < DAY) return unit(Math.round(abs / HOUR), 'hora', 'horas')
+  const days = Math.round(abs / DAY)
+  if (days < 30) return unit(days, 'día', 'días')
+  const months = Math.round(days / 30)
+  if (months < 12) return unit(months, 'mes', 'meses')
+  return unit(Math.round(days / 365), 'año', 'años')
+}
+
+/**
+ * Formats an ISO datetime (e.g. "2026-10-16 01:36:00") as "16 Oct - hace 1 día".
+ * Day/month come from the raw string (no timezone shift); the year is appended
+ * only when it differs from the current year.
+ */
+export function formatHumanDate(value?: string | null, now = new Date()): string {
+  if (!value) return ''
+  const [year, month, day] = String(value).split(/[-T ]/)
+  const m = parseInt(month, 10)
+  if (!year || isNaN(m) || m < 1 || m > 12) return String(value)
+  const label = `${day} ${MONTHS_SHORT[m - 1]}`
+  const d = new Date(String(value).replace(' ', 'T'))
+  if (isNaN(d.getTime())) return label
+  const withYear = year === String(now.getFullYear()) ? label : `${label} ${year}`
+  return `${withYear} - ${relativeFromNow(d, now)}`
+}
+
 export function localDateTimeString(date = new Date()): string {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`
 }

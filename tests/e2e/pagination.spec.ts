@@ -75,8 +75,35 @@ test.describe.serial('Pagination (10 per page)', () => {
       created++
     }
     expect(count).toBeGreaterThanOrEqual(MIN_RECORDS)
+
+    // Backfill 1-2 members into every sheet with none, so each
+    // /consolidation/:id/details shows records (covers pre-existing sheets).
+    const sheets = await listItems(page, '/conso-sheet?itemsPerPage=-1')
+    for (const sheet of sheets) {
+      const id = sheet.id as number | string
+      const existing = await listCount(page, `/church-member?conso_sheet_id=${id}&itemsPerPage=-1`)
+      if (existing > 0) continue
+      const memberCount = 1 + Math.floor(Math.random() * 2)
+      for (let m = 0; m < memberCount; m++) {
+        const memberRes = await page.request.post(`${apiBase()}/church-member`, {
+          headers,
+          data: {
+            org_id: orgId,
+            conso_sheet_id: id,
+            name: `E2E Detail ${stamp}-${id}-${m}`,
+            last_name: 'PgTest',
+            cellphone: '5500000000',
+            status: 'ACTIVO',
+          },
+        })
+        expect(memberRes.ok(), await memberRes.text()).toBeTruthy()
+        const memberId = extractId(await memberRes.json())
+        expect(memberId).not.toBeNull()
+        createdMemberIds.push(memberId!)
+      }
+    }
     // eslint-disable-next-line no-console
-    console.log(`[pagination] consolidation sheets: ${count} (created ${created})`)
+    console.log(`[pagination] consolidation sheets: ${count} (created ${created}, members ${createdMemberIds.length})`)
   })
 
   test('seeds 11+ tracking members', async ({ page }) => {
