@@ -150,16 +150,16 @@ export class MenuService {
         })
       }
 
-      menu.push({
-        icon: 'mdi-music-note-eighth',
-        title: 'Cancionero',
-        to: '/song',
-      })
-      menu.push({
-        icon: 'mdi-music-clef-treble',
-        title: 'Partituras',
-        to: '/music-score',
-      })
+      // menu.push({
+      //   icon: 'mdi-music-note-eighth',
+      //   title: 'Cancionero',
+      //   to: '/song',
+      // })
+      // menu.push({
+      //   icon: 'mdi-music-clef-treble',
+      //   title: 'Partituras',
+      //   to: '/music-score',
+      // })
 
       if (this.hasPermission('church-event-index')) {
         menu.push({
@@ -221,25 +221,25 @@ export class MenuService {
         })
       }
 
-      if (this.hasPermission('breath-train')) {
-        menu.push({ icon: 'mdi-meditation', title: 'Relax', to: '/relax' })
-      }
+      // if (this.hasPermission('breath-train')) {
+      //   menu.push({ icon: 'mdi-meditation', title: 'Relax', to: '/relax' })
+      // }
 
-      if (this.hasPermission('pitch-train')) {
-        menu.push({ icon: 'mdi-tune', title: 'Tuner', to: '/pitcher' })
-      }
+      // if (this.hasPermission('pitch-train')) {
+      //   menu.push({ icon: 'mdi-tune', title: 'Tuner', to: '/pitcher' })
+      // }
 
-      menu.push({
-        icon: 'mdi-account-search',
-        title: 'Profesionales',
-        to: '/professional',
-      })
+      // menu.push({
+      //   icon: 'mdi-account-search',
+      //   title: 'Profesionales',
+      //   to: '/professional',
+      // })
     } else {
-      menu.push({
-        icon: 'mdi-account-search',
-        title: 'Profesionales',
-        to: '/professional',
-      })
+      // menu.push({
+      //   icon: 'mdi-account-search',
+      //   title: 'Profesionales',
+      //   to: '/professional',
+      // })
       menu.push({
         icon: 'mdi-lock',
         title: 'Inicia Sesión',
