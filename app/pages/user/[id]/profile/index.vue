@@ -1,7 +1,15 @@
 <template>
   <VContainer class="pa-4" :fluid="true">
     <VRow class="mb-3" density="compact">
-      <VCol cols="12">
+      <VCol cols="12" class="d-flex align-center justify-space-between flex-wrap ga-3">
+        <div>
+          <span class="text-body-1 font-weight-medium text-black">
+            {{ [mUser.name, mUser.last_name].filter(Boolean).join(" ") || "—" }}
+          </span>
+          <span class="text-body-1 text-medium-emphasis ml-3">
+            {{ mUser.email ?? "—" }}
+          </span>
+        </div>
         <VBtn
           id="usr-profile-new-btn"
           color="success"
@@ -25,14 +33,30 @@
         <VCard
           :id="'card-usp-profile-' + profile.id"
           variant="outlined"
-          class="bg-white rounded-lg"
+          :class="[
+            'rounded-lg',
+            isProfileDisabled(profile.end_date) ? 'bg-grey-lighten-3' : 'bg-white',
+          ]"
         >
           <VCardItem class="pb-2">
-            <div class="d-flex align-center justify-space-between">
-              <div class="text-h6 font-weight-regular text-body-1">
-                {{ profile.organization_name }} ({{
-                  profile.organization_short_code
-                }})
+            <div class="d-flex align-center justify-space-between ga-2">
+              <div class="d-flex align-center">
+                <div class="text-h6 font-weight-regular text-body-1">
+                  {{ profile.organization_name }} ({{
+                    profile.organization_short_code
+                  }})
+                </div>
+                <VChip
+                  v-if="isProfileDisabled(profile.end_date)"
+                  id="usp-profile-disabled-chip"
+                  class="ml-2"
+                  size="small"
+                  color="error"
+                  rounded="pill"
+                  variant="flat"
+                >
+                  Deshabilitado
+                </VChip>
               </div>
 
               <div class="d-flex align-center ga-2">
@@ -188,8 +212,7 @@ const [userRes, profilesRes] = await Promise.all([
 mUser.value = (userRes as Record<string, unknown>) ?? {};
 profiles.value = (profilesRes as Record<string, unknown>[]) ?? [];
 if (mUser.value.name) {
-  route.meta.title =
-    `Perfiles de: ${mUser.value.name} ${mUser.value.last_name ?? ""}`.trim();
+  route.meta.title = "Perfiles";
   route.meta.icon = "mdi-shield-key-outline";
   route.meta.back = "/user";
   route.meta.showDrawer = false;
@@ -197,6 +220,15 @@ if (mUser.value.name) {
 
 function getColorFavorite(favorite: unknown) {
   return favorite ? "orange" : "grey";
+}
+
+function isProfileDisabled(endDate: unknown): boolean {
+  if (!endDate) return false;
+  const d = new Date(String(endDate));
+  if (isNaN(d.getTime())) return false;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return d <= today;
 }
 
 function setFavProfile(profile: Record<string, unknown>) {

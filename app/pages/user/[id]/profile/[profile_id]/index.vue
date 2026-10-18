@@ -2,7 +2,19 @@
   <VContainer>
     <VSheet rounded class="pa-6" color="white">
       <div class="text-h6 mb-2">
-        {{ profile.organization_name }} ({{ profile.organization_short_code }})
+        {{ profile.organization_name }} ({{
+          profile.organization_short_code
+        }})
+        <VChip
+          v-if="isProfileDisabled(profile.end_date)"
+          class="ml-2"
+          size="small"
+          color="error"
+          rounded="pill"
+          variant="flat"
+        >
+          Deshabilitado
+        </VChip>
       </div>
       <VRow density="compact">
         <VCol md="6" cols="12">
@@ -99,6 +111,15 @@ function setRoles(roles: Record<string, unknown>[]) {
 
 function setDirectPermissions(permissions: Record<string, unknown>[]) {
   profile.value.direct_permissions = permissions;
+}
+
+function isProfileDisabled(endDate: unknown): boolean {
+  if (!endDate) return false;
+  const d = new Date(String(endDate));
+  if (isNaN(d.getTime())) return false;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return d <= today;
 }
 
 function back() {

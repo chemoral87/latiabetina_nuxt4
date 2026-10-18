@@ -1,5 +1,5 @@
 export interface MenuItem {
-  icon: string
+  icon?: string
   title: string
   to: string
   children?: MenuItem[]
@@ -174,6 +174,14 @@ export class MenuService {
           icon: 'mdi-whatsapp',
           title: 'WhatsApp',
           to: '/whatsapp',
+        })
+      }
+
+      if (this.hasPermission('log-entry-index')) {
+        menu.push({
+          icon: 'mdi-alert-circle-outline',
+          title: 'Errores',
+          to: '/log-entry',
         })
       }
 

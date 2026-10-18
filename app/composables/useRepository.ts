@@ -14,6 +14,7 @@ import { createProfileRepository } from '~/repositories/ProfileRepository'
 import { createWhatsAppRepository } from '~/repositories/WhatsAppRepository'
 import { createAssistanceRepository } from '~/repositories/AssistanceRepository'
 import { createProfessionalRepository } from '~/repositories/ProfessionalRepository'
+import { createLogEntryRepository } from '~/repositories/LogEntryRepository'
 
 export function useRepository() {
   const { $api } = useApi()
@@ -40,5 +41,6 @@ export function useRepository() {
     WhatsApp: createWhatsAppRepository($api),
     Assistance: createAssistanceRepository($api),
     Professional: createProfessionalRepository($api),
+    LogEntry: createLogEntryRepository($api),
   }
 }
