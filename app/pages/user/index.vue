@@ -99,14 +99,12 @@ const lastOptions = ref<Record<string, unknown> & { sortBy: SortBy }>({
 });
 
 // Top-level await — loads initial data before render (asyncData equivalent)
-{
   const apiParams = buildApiParams(lastOptions.value);
   const initialResponse = await User.index(apiParams).catch(() => ({
     data: [],
     total: 0,
   }));
   response.value = initialResponse as { data: unknown[]; total: number };
-}
 
 // Debounced filter — shared useDebouncedFilter (300ms immediate clear)
 useDebouncedFilter(filterInput, filterUser);
@@ -118,18 +116,17 @@ async function indexUsers(opts: Record<string, unknown>) {
   try {
     loading.value = true;
     response.value = await User.index(params);
-  } finally {
     loading.value = false;
+  } catch (error) {
+    console.error(error);
   }
 }
-
-let initialLoaded = false;
+  let initialLoaded = false;
 
 function handleSorting(opts: Record<string, unknown>) {
   if (!initialLoaded) {
-    // Suppress mount-time @update:options — data was already loaded by top-level await
-    initialLoaded = true;
-    return;
+    initialLoaded = true
+    return
   }
   indexUsers(opts);
 }

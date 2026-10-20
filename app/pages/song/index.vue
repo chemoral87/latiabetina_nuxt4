@@ -107,9 +107,6 @@ const { data: initialData } = await useAsyncData(
   { default: () => ({ data: [] as unknown[], total: 0 }) },
 );
 response.value = normalizeResponse(initialData.value);
-
-let initialLoaded = false;
-
 function normalizeResponse(res: unknown): { data: unknown[]; total: number } {
   if (Array.isArray(res)) return { data: res, total: res.length };
   const r = res as { data?: unknown[]; total?: number } | null | undefined;
@@ -149,7 +146,6 @@ async function loadSongs(overrides: Record<string, unknown> = {}) {
     const params = buildApiParams(requestOptions);
     const res = await Song.index(params);
     response.value = normalizeResponse(res);
-    lastOptions.value = requestOptions;
   } catch (error) {
     notify.notify({
       error:
@@ -164,11 +160,13 @@ async function loadSongs(overrides: Record<string, unknown> = {}) {
 async function refreshSongs() {
   await loadSongs();
 }
+  let initialLoaded = false;
+
 
 function handleSorting(opts: Record<string, unknown>) {
   if (!initialLoaded) {
-    initialLoaded = true;
-    return;
+    initialLoaded = true
+    return
   }
   loadSongs(opts);
 }

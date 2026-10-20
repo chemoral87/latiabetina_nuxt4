@@ -84,7 +84,6 @@ const lastOptions = ref<{ page: number; itemsPerPage: number; sortBy: { key: str
 // Initial list data loaded during SSR via useAsyncData so the payload is reused
 // on the client. Public page — no permission middleware. See
 // ai_rule/ssr_and_data_loading.md.
-{
   const apiParams = buildApiParams(lastOptions.value);
   const { data: initialData } = await useAsyncData(
     "professional-index",
@@ -98,7 +97,6 @@ const lastOptions = ref<{ page: number; itemsPerPage: number; sortBy: { key: str
   );
 
   response.value = initialData.value;
-}
 
 // Debounced filter — shared useDebouncedFilter (300ms immediate clear)
 useDebouncedFilter(filterInput, filterProfessional);
@@ -110,8 +108,8 @@ async function loadProfessionals(opts: { page: number; itemsPerPage: number; sor
     const params = buildApiParams(opts);
     if (filterProfessional.value && !params.filter) params.filter = filterProfessional.value;
     response.value = await Professional.search(params);
-  } catch (e) {
-    console.error("Error al cargar profesionales", e);
+  } catch (error) {
+    console.error(error);
   } finally {
     loading.value = false;
   }
@@ -122,14 +120,12 @@ async function refreshProfessionals() {
     await loadProfessionals(lastOptions.value);
   }
 }
-
-let initialLoaded = false;
+  let initialLoaded = false;
 
 function handleSorting(opts: Record<string, unknown>) {
   if (!initialLoaded) {
-    // Suppress mount-time @update:options — data was already loaded by top-level await
-    initialLoaded = true;
-    return;
+    initialLoaded = true
+    return
   }
   loadProfessionals(opts as { page: number; itemsPerPage: number; sortBy: { key: string; order: string }[] });
 }

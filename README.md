@@ -88,7 +88,7 @@ npx playwright test tests/e2e/login.spec.ts
 export E2E_EMAIL=""
 export E2E_PASSWORD=""
 npm run test:e2e -- --headed # visible Chrome window
-npx playwright test tests/e2e --workers=2
+npx playwright test tests/e2e --workers=3
 npx playwright test tests/e2e/role.spec.ts
 npx playwright test tests/e2e/assistance.spec.ts
 

@@ -125,8 +125,7 @@ async function refreshSales() {
     await loadSales(lastOptions.value)
   }
 }
-
-let initialLoaded = false
+  let initialLoaded = false;
 
 function handleSorting(opts: Record<string, unknown>) {
   if (!initialLoaded) {

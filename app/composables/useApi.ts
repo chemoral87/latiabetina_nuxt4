@@ -116,7 +116,7 @@ export function useApi() {
     start()
 
     try {
-      return await $fetch<T>(url, { ...rest, headers })
+      return await $fetch<T>(url, { ...rest, headers, retry: 0 })
     } catch (err: unknown) {
       if (err && typeof err === 'object' && 'response' in err) {
         const status = (err as { response: { status: number } }).response?.status
@@ -124,7 +124,7 @@ export function useApi() {
           const newToken = await tryRefreshToken()
           if (newToken) {
             headers.Authorization = `Bearer ${newToken}`
-            return await $fetch<T>(url, { ...rest, headers })
+            return await $fetch<T>(url, { ...rest, headers, retry: 0 })
           }
           if (import.meta.client) {
             try {

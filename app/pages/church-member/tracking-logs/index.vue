@@ -113,9 +113,6 @@
 
     response.value = normalizeResponse(initialData.value)
   }
-
-  let initialLoaded = false
-
   function normalizeResponse(res: unknown): { data: unknown[]; total: number } {
     if (Array.isArray(res)) return { data: res, total: res.length }
     const r = res as { data?: unknown[]; total?: number } | null | undefined
@@ -172,6 +169,8 @@
       loading.value = false
     }
   }
+  let initialLoaded = false;
+
 
   function handleSorting(opts: Record<string, unknown>) {
     if (!initialLoaded) {

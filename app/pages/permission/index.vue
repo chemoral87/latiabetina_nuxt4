@@ -98,14 +98,12 @@ const lastOptions = ref<Record<string, unknown> & { sortBy: SortBy }>({
 });
 
 // Top-level await — loads initial data before render (asyncData equivalent)
-{
   const apiParams = buildApiParams(lastOptions.value);
   const initialResponse = await Permission.index(apiParams).catch(() => ({
     data: [],
     total: 0,
   }));
   response.value = initialResponse as { data: unknown[]; total: number };
-}
 
 // Debounced filter — shared useDebouncedFilter (300ms immediate clear)
 useDebouncedFilter(filterInput, filterPermission)
@@ -117,8 +115,8 @@ async function loadPermissions(opts: Record<string, unknown>) {
     const params = buildApiParams(opts);
     if (filterPermission.value && !params.filter) params.filter = filterPermission.value;
     response.value = await Permission.index(params);
-  } catch (e) {
-    console.error("Error al cargar permisos", e);
+  } catch (error) {
+    console.error(error);
   } finally {
     loading.value = false;
   }
@@ -129,14 +127,12 @@ async function refreshPermissions() {
     await loadPermissions(lastOptions.value);
   }
 }
-
-let initialLoaded = false;
+  let initialLoaded = false;
 
 function handleSorting(opts: Record<string, unknown>) {
   if (!initialLoaded) {
-    // Suppress mount-time @update:options — data was already loaded by top-level await
-    initialLoaded = true;
-    return;
+    initialLoaded = true
+    return
   }
   loadPermissions(opts);
 }

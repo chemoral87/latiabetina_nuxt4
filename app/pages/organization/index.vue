@@ -101,8 +101,7 @@
       loading.value = false
     }
   }
-
-  let initialLoaded = false
+  let initialLoaded = false;
 
   function handleSorting(opts: Record<string, unknown>) {
     if (!initialLoaded) {

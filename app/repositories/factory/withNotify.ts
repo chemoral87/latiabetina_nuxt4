@@ -10,7 +10,9 @@ const UNKNOWN_ERROR_MESSAGE = 'Ha ocurrido un error inesperado'
 // 403 is included so backend permission denials surface as a danger snackbar.
 // 409 is included so business-rule conflicts (e.g. one listing per user)
 // surface their `message` as a danger snackbar.
-const MESSAGE_ERROR_STATUSES = [401, 403, 404, 405, 409]
+const MESSAGE_ERROR_STATUSES = [401, 403, 404, 405, 409, 500]
+let lastErrorKey = ''
+let lastErrorAt = 0
 
 function notifySuccess(res: unknown) {
   if (!import.meta.client || !res || typeof res !== 'object') return
@@ -20,8 +22,22 @@ function notifySuccess(res: unknown) {
   }
 }
 
+function errorKey(err: unknown): string {
+  if (err && typeof err === 'object') {
+    const e = err as { status?: number; data?: { message?: string } }
+    return `${e.status ?? 'no-status'}|${e.data?.message ?? e.data?.error ?? ''}`
+  }
+  return String(err ?? '')
+}
+
 function notifyError(err: unknown) {
   if (!import.meta.client) return
+
+  const now = Date.now()
+  const key = errorKey(err)
+  if (key === lastErrorKey && now - lastErrorAt < 1000) return
+  lastErrorKey = key
+  lastErrorAt = now
 
   if (err && typeof err === 'object' && 'code' in err) {
     const codeErr = err as { code?: string }
@@ -42,7 +58,7 @@ function notifyError(err: unknown) {
     }
 
     if (MESSAGE_ERROR_STATUSES.includes(status)) {
-      const message = fetchErr.data?.message ?? fetchErr.data?.error
+      const message = status === 500 ? 'No se pudieron cargar los datos.' : (fetchErr.data?.message ?? fetchErr.data?.error)
       if (message) {
         useNotifyStore().notify({ error: message })
       }

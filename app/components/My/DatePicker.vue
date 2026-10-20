@@ -24,6 +24,7 @@
         :prepend-inner-icon="prependIcon"
         :density="density ?? (dense ? 'compact' : undefined)"
         :variant="variant ?? (outlined ? 'outlined' : undefined)"
+        @click:clear="onClear"
       />
     </template>
 

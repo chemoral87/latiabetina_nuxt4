@@ -170,7 +170,7 @@ async function createAndAddPermission() {
 
   creatingPermission.value = true;
   try {
-    // Backend supports comma-separated `name` or `names` array; send as `name` joined
+    // Backend supports comma-separated names or names array; send as name joined
     const body =
       toCreate.length === 1
         ? { name: toCreate[0] }

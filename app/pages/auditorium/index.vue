@@ -153,18 +153,17 @@ async function indexAuditoriums(overrides: Record<string, unknown> = {}) {
   try {
     loading.value = true;
     response.value = await Auditorium.index(params);
-  } finally {
     loading.value = false;
+  } catch (error) {
+    console.error(error);
   }
 }
-
-let initialLoaded = false;
+  let initialLoaded = false;
 
 function handleSorting(opts: Record<string, unknown>) {
   if (!initialLoaded) {
-    // Suppress mount-time @update:options — data was already loaded by top-level await
-    initialLoaded = true;
-    return;
+    initialLoaded = true
+    return
   }
   indexAuditoriums(opts);
 }

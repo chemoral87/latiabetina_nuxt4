@@ -92,7 +92,6 @@ const actionOptions = [
 
 useDebouncedFilter(filterInput, filterTerm);
 
-{
   const { data: initialData } = await useAsyncData(
     "church-member-consolidator-logs-index",
     async () => {
@@ -105,10 +104,6 @@ useDebouncedFilter(filterInput, filterTerm);
   );
 
   response.value = normalizeResponse(initialData.value);
-}
-
-let initialLoaded = false;
-
 function normalizeResponse(res: unknown): { data: unknown[]; total: number } {
   if (Array.isArray(res)) return { data: res, total: res.length };
   const r = res as { data?: unknown[]; total?: number } | null | undefined;
@@ -127,7 +122,6 @@ async function fetchData(overrides: Record<string, unknown> = {}) {
     if (filterAction.value && !params.action) params.action = filterAction.value;
     const res = await ChurchMember.consolidatorLogsIndex(params);
     response.value = normalizeResponse(res);
-    lastOptions.value = requestOptions;
   } catch (error) {
     notify.notify({
       error:
@@ -135,15 +129,16 @@ async function fetchData(overrides: Record<string, unknown> = {}) {
           ?.message || "Error al cargar historial",
     });
     response.value = { data: [], total: 0 };
-  } finally {
     loading.value = false;
   }
 }
+  let initialLoaded = false;
+
 
 function handleSorting(opts: Record<string, unknown>) {
   if (!initialLoaded) {
-    initialLoaded = true;
-    return;
+    initialLoaded = true
+    return
   }
   fetchData(opts);
 }

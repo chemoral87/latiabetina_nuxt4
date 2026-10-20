@@ -3,6 +3,7 @@ import { loginOrSkip } from './helpers/auth'
 
 test.describe.serial('Auditorium CRUD', () => {
   let canDelete = false
+  let canIndex = false
   let name = ''
   let edited = ''
 
@@ -20,11 +21,12 @@ test.describe.serial('Auditorium CRUD', () => {
     const account = page.locator('#acc-permissions-card')
     await expect(account).toBeVisible()
     canDelete = await account.getByText('auditorium-delete', { exact: true }).isVisible()
-    const canIndex = await account.getByText('auditorium-index', { exact: true }).isVisible()
+    canIndex = await account.getByText('auditorium-index', { exact: true }).isVisible()
     test.skip(!canIndex, 'Account lacks auditorium-index permission')
   })
 
   test('creates an auditorium', async ({ page }) => {
+    test.skip(!canIndex, 'Account lacks auditorium-index permission')
     await page.goto('/auditorium')
     await page.waitForLoadState('networkidle')
     await expect(page.locator('#aud-new-btn')).toBeVisible()

@@ -168,17 +168,12 @@ const effectiveOrgId = computed(() => {
 });
 
 // Initial load (asyncData equivalent)
-{
   const apiParams = buildApiParams(lastOptions.value);
   const initialResponse = await Testimony.index(apiParams).catch(() => ({
     data: [],
     total: 0,
   }));
   response.value = initialResponse as { data: unknown[]; total: number };
-}
-
-let initialLoaded = false;
-
 // Debounced filter — matches project convention (manual setTimeout)
 let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -243,7 +238,6 @@ async function loadTestimonies(overrides: Record<string, unknown> = {}) {
 
     const params = buildApiParams(requestOptions);
     response.value = await Testimony.index(params);
-    lastOptions.value = requestOptions;
   } catch (error) {
     notify.notify({
       error:
@@ -262,12 +256,13 @@ async function onStatusChange(value: unknown) {
 async function refreshTestimonies() {
   await loadTestimonies();
 }
+  let initialLoaded = false;
+
 
 function handleSorting(opts: Record<string, unknown>) {
   if (!initialLoaded) {
-    // Suppress mount-time @update:options — data was already loaded
-    initialLoaded = true;
-    return;
+    initialLoaded = true
+    return
   }
   loadTestimonies(opts);
 }

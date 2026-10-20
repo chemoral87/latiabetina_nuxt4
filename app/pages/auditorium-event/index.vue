@@ -152,10 +152,6 @@ const { data: initialData } = await useAsyncData(
 );
 
 response.value = initialData.value;
-options.value = initialOptions;
-
-let initialLoaded = false;
-
 let filterDebounceTimer: ReturnType<typeof setTimeout> | null = null;
 
 watch(filterAuditoriumEvent, (value) => {
@@ -196,15 +192,18 @@ async function getAuditoriumEvents(overrides: Record<string, unknown> = {}) {
   try {
     loading.value = true;
     response.value = await AuditoriumEvent.index(params);
-  } finally {
     loading.value = false;
+  } catch (error) {
+    console.error(error);
   }
 }
+  let initialLoaded = false;
+
 
 function handleSorting(opts: Record<string, unknown>) {
   if (!initialLoaded) {
-    initialLoaded = true;
-    return;
+    initialLoaded = true
+    return
   }
   getAuditoriumEvents(opts);
 }

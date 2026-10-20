@@ -136,19 +136,30 @@ test.describe.serial('Pagination (10 per page)', () => {
     console.log(`[pagination] tracking members: ${count} (created ${created})`)
   })
 
-  async function expectPagination(page: Page, total: number) {
-    const footer = page.getByText(new RegExp(`^\\d+-\\d+ de ${total}$`))
-    await expect(footer).toHaveText(new RegExp(`^1-${PER_PAGE} de ${total}$`), { timeout: 15_000 })
-    await expect(page.getByRole('row')).toHaveCount(PER_PAGE + 1)
+  async function expectPagination(page: Page, total: number, refetchTotal: () => Promise<number>) {
+    const assertSorting = async (paginationTotal: number) => {
+      const footer = page.getByText(new RegExp(`^\\d+-\\d+ de ${paginationTotal}$`))
+      await expect(footer).toHaveText(new RegExp(`^1-${PER_PAGE} de ${paginationTotal}$`), { timeout: 15_000 })
+      await expect(page.getByRole('row')).toHaveCount(PER_PAGE + 1)
 
-    const next = page.getByRole('button', { name: 'Página siguiente' })
-    await expect(next).toBeEnabled()
-    await Promise.all([page.waitForRequest(r => r.url().includes('page=2') && r.url().includes(`itemsPerPage=${PER_PAGE}`), { timeout: 15_000 }), next.click()])
-    await expect(footer).toHaveText(new RegExp(`^${PER_PAGE + 1}-${total} de ${total}$`))
-    await expect(page.getByRole('row')).toHaveCount(total - PER_PAGE + 1)
+      const next = page.getByRole('button', { name: 'Página siguiente' })
+      await expect(next).toBeEnabled()
+      // Wait the response, not the request — the request fires while the old page is still rendered.
+      await Promise.all([page.waitForResponse(r => r.url().includes('page=2') && r.url().includes(`itemsPerPage=${PER_PAGE}`), { timeout: 15_000 }), next.click()])
+      await expect(footer).toHaveText(new RegExp(`^${PER_PAGE + 1}-${paginationTotal} de ${paginationTotal}$`))
+      await expect(page.getByRole('row')).toHaveCount(paginationTotal - PER_PAGE + 1)
 
-    await page.getByRole('button', { name: 'Primera página' }).click()
-    await expect(footer).toHaveText(new RegExp(`^1-${PER_PAGE} de ${total}$`))
+      await page.getByRole('button', { name: 'Primera página' }).click()
+      await expect(footer).toHaveText(new RegExp(`^1-${PER_PAGE} de ${paginationTotal}$`))
+    }
+    // Retry once: another worker's test can add/delete rows between the API count and page load.
+    try {
+      await assertSorting(total)
+    } catch {
+      await page.goto(page.url()) // reset to page 1 (retry may have advanced the table)
+      await page.waitForLoadState('networkidle')
+      await assertSorting(await refetchTotal())
+    }
   }
 
   test('paginates /consolidation', async ({ page }) => {
@@ -157,7 +168,7 @@ test.describe.serial('Pagination (10 per page)', () => {
 
     await page.goto('/consolidation')
     await page.waitForLoadState('networkidle')
-    await expectPagination(page, total)
+    await expectPagination(page, total, () => listCount(page, '/conso-sheet?itemsPerPage=-1'))
   })
 
   test('paginates /tracking', async ({ page }) => {
@@ -166,7 +177,7 @@ test.describe.serial('Pagination (10 per page)', () => {
 
     await page.goto('/tracking')
     await page.waitForLoadState('networkidle')
-    await expectPagination(page, total)
+    await expectPagination(page, total, () => listCount(page, '/church-member?mine=true&status=ACTIVO&has_phone=true&itemsPerPage=-1'))
   })
 
   test('seeds 11+ tracking logs via capture on /tracking', async ({ page }) => {
@@ -201,7 +212,7 @@ test.describe.serial('Pagination (10 per page)', () => {
     await page.goto('/church-member/tracking-logs')
     await page.waitForLoadState('networkidle')
     test.skip(page.url().includes('/forbidden'), 'E2E user lacks church-member-tracking-logs-index')
-    await expectPagination(page, total)
+    await expectPagination(page, total, () => listCount(page, '/church-member/tracking-logs?itemsPerPage=1'))
   })
 
   test('cleans up seeded data', async ({ page }) => {

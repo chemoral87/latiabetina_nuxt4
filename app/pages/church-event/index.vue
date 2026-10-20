@@ -167,9 +167,6 @@ const { data: initialData } = await useAsyncData(
   { default: () => ({ data: [] as unknown[], total: 0 }) },
 );
 response.value = normalizeResponse(initialData.value);
-
-let initialLoaded = false;
-
 function normalizeResponse(res: unknown): { data: unknown[]; total: number } {
   if (Array.isArray(res)) return { data: res, total: res.length };
   const r = res as { data?: unknown[]; total?: number } | null | undefined;
@@ -218,7 +215,6 @@ async function loadChurchEvents(overrides: Record<string, unknown> = {}) {
     const params = buildApiParams(requestOptions);
     const res = await ChurchEvent.index(params);
     response.value = normalizeResponse(res);
-    lastOptions.value = requestOptions;
   } catch (error) {
     console.error(error);
     notify.notify({ error: "Error al cargar eventos de iglesia" });
@@ -230,11 +226,13 @@ async function loadChurchEvents(overrides: Record<string, unknown> = {}) {
 async function refreshChurchEvents() {
   await loadChurchEvents();
 }
+  let initialLoaded = false;
+
 
 function handleSorting(opts: Record<string, unknown>) {
   if (!initialLoaded) {
-    initialLoaded = true;
-    return;
+    initialLoaded = true
+    return
   }
   loadChurchEvents(opts);
 }

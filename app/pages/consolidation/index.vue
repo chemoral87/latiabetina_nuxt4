@@ -115,7 +115,6 @@ watch(filterInput, (v) => {
 
 // Initial list data is loaded during SSR via useAsyncData so the payload is
 // reused on the client (no double fetch, no hydration mismatch).
-{
   const { data: initialData } = await useAsyncData(
     "consolidation-index",
     async () => {
@@ -128,10 +127,6 @@ watch(filterInput, (v) => {
   );
 
   response.value = normalizeResponse(initialData.value);
-}
-
-let initialLoaded = false;
-
 function normalizeResponse(res: unknown): { data: unknown[]; total: number } {
   if (Array.isArray(res)) return { data: res, total: res.length };
   const r = res as { data?: unknown[]; total?: number } | null | undefined;
@@ -149,7 +144,6 @@ async function fetchData(overrides: Record<string, unknown> = {}) {
     if (filterTerm.value && !params.filter) params.filter = filterTerm.value;
     const res = await ConsoSheet.index(params);
     response.value = normalizeResponse(res);
-    lastOptions.value = requestOptions;
   } catch (error) {
     notify.notify({
       error:
@@ -234,11 +228,13 @@ function closeDialog() {
   sheet.value = {};
   useValidationErrors().clearErrors();
 }
+  let initialLoaded = false;
+
 
 function handleSorting(opts: Record<string, unknown>) {
   if (!initialLoaded) {
-    initialLoaded = true;
-    return;
+    initialLoaded = true
+    return
   }
   fetchData(opts);
 }

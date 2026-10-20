@@ -19,14 +19,7 @@
 
           <!-- Action buttons -->
           <VCol cols="auto" class="d-flex align-center">
-            <VBtn
-              id="rol-refresh-btn"
-              class="mr-4"
-              color="primary"
-              :loading="loading"
-              variant="outlined"
-              @click="refreshRoles"
-            >
+            <VBtn id="rol-refresh-btn" class="mr-4" color="primary" :loading="loading" variant="outlined" @click="refreshRoles">
               <VIcon start>mdi-reload</VIcon>
               Refrescar
             </VBtn>
@@ -58,191 +51,167 @@
     </VSheet>
 
     <!-- Create/Edit dialog -->
-    <RoleDialog
-      v-if="roleDialog"
-      :role="role"
-      :loading="saving"
-      @save="saveRole"
-      @close="closeDialog"
-    />
+    <RoleDialog v-if="roleDialog" :role="role" :loading="saving" @save="saveRole" @close="closeDialog" />
   </VContainer>
 </template>
 
 <script setup lang="ts">
-import { useRowHighlight } from "~/composables/useRowHighlight";
-import { buildApiParams } from "~/utils/buildApiParams";
+  import { useRowHighlight } from '~/composables/useRowHighlight'
+  import { buildApiParams } from '~/utils/buildApiParams'
 
-definePageMeta({
-  title: "Roles",
-  icon: "mdi-redhat",
-  permission: "role-index",
-  middleware: ["authenticated", "permission"],
-});
+  definePageMeta({
+    title: 'Roles',
+    icon: 'mdi-redhat',
+    permission: 'role-index',
+    middleware: ['authenticated', 'permission'],
+  })
 
-const { Role } = useRepository();
-const { loadCatalog } = usePermissionCatalog();
+  const { Role } = useRepository()
+  const { loadCatalog } = usePermissionCatalog()
 
-const filterInput = ref("");
-const filterRole = ref("");
-const role = ref<Record<string, unknown> | null>(null);
-const response = ref<{ data: unknown[]; total: number }>({ data: [], total: 0 });
-const loading = ref(false);
-const saving = ref(false);
-const roleDialog = ref(false);
-const roleDialogDelete = ref(false);
-const {
-  highlightId,
-  prependCreated,
-  updateRow,
-  removingId,
-  removeWithAnimation,
-} = useRowHighlight();
+  const filterInput = ref('')
+  const filterRole = ref('')
+  const role = ref<Record<string, unknown> | null>(null)
+  const response = ref<{ data: unknown[]; total: number }>({ data: [], total: 0 })
+  const loading = ref(false)
+  const saving = ref(false)
+  const roleDialog = ref(false)
+  const roleDialogDelete = ref(false)
+  const { highlightId, prependCreated, updateRow, removingId, removeWithAnimation } = useRowHighlight()
 
-const lastOptions = ref<{ page: number; itemsPerPage: number; sortBy: { key: string; order: string }[] }>({
-  page: 1,
-  itemsPerPage: 10,
-  sortBy: [{ key: "name", order: "asc" }],
-});
+  let initialLoaded = false
 
-// Initial list data is loaded during SSR via useAsyncData so the payload is
-// reused on the client (no double fetch, no hydration mismatch). See
-// ai_rule/nuxt4_ssr_hydration.md.
-{
-  const apiParams = buildApiParams(lastOptions.value);
-  const { data: initialData } = await useAsyncData(
-    "role-index",
-    async () => {
-      const [roleData] = await Promise.all([
-        Role.index<{ data: unknown[]; total: number }>(apiParams).catch(() => ({
-          data: [] as unknown[],
-          total: 0,
-        })),
-        loadCatalog().catch(() => []),
-      ]);
-      return roleData;
-    },
-    { default: () => ({ data: [] as unknown[], total: 0 }) },
-  );
+  const lastOptions = ref<{ page: number; itemsPerPage: number; sortBy: { key: string; order: string }[] }>({
+    page: 1,
+    itemsPerPage: 10,
+    sortBy: [{ key: 'name', order: 'asc' }],
+  })
 
-  response.value = initialData.value;
-}
+  // Initial list data is loaded during SSR via useAsyncData so the payload is
+  // reused on the client (no double fetch, no hydration mismatch). See
+  // ai_rule/nuxt4_ssr_hydration.md.
+  {
+    const apiParams = buildApiParams(lastOptions.value)
+    const { data: initialData } = await useAsyncData(
+      'role-index',
+      async () => {
+        const [roleData] = await Promise.all([
+          Role.index<{ data: unknown[]; total: number }>(apiParams).catch(() => ({ data: [] as unknown[], total: 0 })),
+          loadCatalog().catch(() => []),
+        ])
+        return roleData
+      },
+      { default: () => ({ data: [] as unknown[], total: 0 }) }
+    )
 
-// Debounced filter — shared useDebouncedFilter (300ms immediate clear)
-useDebouncedFilter(filterInput, filterRole);
-
-async function loadRoles(opts: { page: number; itemsPerPage: number; sortBy: { key: string; order: string }[] }) {
-  try {
-    loading.value = true;
-    lastOptions.value = opts;
-    const params = buildApiParams(opts);
-    if (filterRole.value && !params.filter) params.filter = filterRole.value;
-    response.value = await Role.index(params);
-  } catch (e) {
-    console.error("Error al cargar roles", e);
-    if ((e as { code?: string })?.code === "UNAUTHENTICATED") {
-      // useApi already cleared the session and is redirecting to /login
-      return;
-    }
-  } finally {
-    loading.value = false;
+    response.value = initialData.value
   }
-}
 
-async function refreshRoles() {
-  if (lastOptions.value) {
-    await loadRoles(lastOptions.value);
-  }
-}
+  // Debounced filter — shared useDebouncedFilter (300ms immediate clear)
+  useDebouncedFilter(filterInput, filterRole)
 
-let initialLoaded = false;
-
-function handleSorting(opts: Record<string, unknown>) {
-  if (!initialLoaded) {
-    // Suppress mount-time @update:options — data was already loaded by top-level await
-    initialLoaded = true;
-    return;
-  }
-  loadRoles(opts as { page: number; itemsPerPage: number; sortBy: { key: string; order: string }[] });
-}
-
-function newRole() {
-  useValidationErrors().clearErrors();
-  role.value = {};
-  roleDialog.value = true;
-}
-
-function editRole(item: unknown) {
-  useValidationErrors().clearErrors();
-  role.value = { ...(item as Record<string, unknown>) };
-  roleDialog.value = true;
-}
-
-function editRolePermissions(item: unknown) {
-  navigateTo(`/role/${(item as Record<string, unknown>).id}/children`);
-}
-
-function distributeRole(item: unknown) {
-  navigateTo(`/role/${(item as Record<string, unknown>).id}/distribution`);
-}
-
-async function deleteRole(item: unknown) {
-  const row = item as Record<string, unknown>;
-  try {
-    saving.value = true;
-    await Role.delete(row.id as number);
-    roleDialogDelete.value = false;
-    await removeWithAnimation(response, row.id as number);
-  } catch (e) {
-    console.error("Error al eliminar el rol", e);
-  } finally {
-    saving.value = false;
-  }
-}
-
-async function saveRole(item: Record<string, unknown>) {
-  try {
-    saving.value = true;
-    if (item.id) {
-      const res = await Role.update<Record<string, unknown>>(
-        item.id as number,
-        item,
-      );
-      const updated = (res as Record<string, unknown>)?.data as
-        | Record<string, unknown>
-        | undefined;
-      if (updated) {
-        updateRow(response, updated);
+  async function loadRoles(opts: { page: number; itemsPerPage: number; sortBy: { key: string; order: string }[] }) {
+    try {
+      loading.value = true
+      lastOptions.value = opts
+      const params = buildApiParams(opts)
+      if (filterRole.value && !params.filter) params.filter = filterRole.value
+      response.value = await Role.index(params)
+    } catch (e) {
+      if ((e as { code?: string })?.code === 'UNAUTHENTICATED') {
+        // useApi already cleared the session and is redirecting to /login
+        return
       }
-    } else {
-      const res = await Role.create<Record<string, unknown>>(item);
-      const created = (res as Record<string, unknown>)?.data as
-        | Record<string, unknown>
-        | undefined;
-      if (created) {
-        prependCreated(response, created);
-      }
+    } finally {
+      loading.value = false
     }
-    roleDialog.value = false;
-    role.value = null;
-  } catch (e) {
-    console.error("Error al guardar el rol", e);
-  } finally {
-    saving.value = false;
   }
-}
 
-function closeDialog() {
-  roleDialog.value = false;
-  role.value = null;
-  useValidationErrors().clearErrors();
-}
+  async function refreshRoles() {
+    if (lastOptions.value) {
+      await loadRoles(lastOptions.value)
+    }
+  }
+
+  function handleSorting(opts: Record<string, unknown>) {
+    if (!initialLoaded) {
+      initialLoaded = true
+      return
+    }
+    loadRoles(opts as { page: number; itemsPerPage: number; sortBy: { key: string; order: string }[] })
+  }
+
+  function newRole() {
+    useValidationErrors().clearErrors()
+    role.value = {}
+    roleDialog.value = true
+  }
+
+  function editRole(item: unknown) {
+    useValidationErrors().clearErrors()
+    role.value = { ...(item as Record<string, unknown>) }
+    roleDialog.value = true
+  }
+
+  function editRolePermissions(item: unknown) {
+    navigateTo(`/role/${(item as Record<string, unknown>).id}/children`)
+  }
+
+  function distributeRole(item: unknown) {
+    navigateTo(`/role/${(item as Record<string, unknown>).id}/distribution`)
+  }
+
+  async function deleteRole(item: unknown) {
+    const row = item as Record<string, unknown>
+    try {
+      saving.value = true
+      await Role.delete(row.id as number)
+      roleDialogDelete.value = false
+      await removeWithAnimation(response, row.id as number)
+    } catch (e) {
+      console.error('Error al eliminar el rol', e)
+    } finally {
+      saving.value = false
+    }
+  }
+
+  async function saveRole(item: Record<string, unknown>) {
+    try {
+      saving.value = true
+      if (item.id) {
+        const res = await Role.update<Record<string, unknown>>(item.id as number, item)
+        const updated = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined
+        if (updated) {
+          updateRow(response, updated)
+        }
+      } else {
+        const res = await Role.create<Record<string, unknown>>(item)
+        const created = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined
+        if (created) {
+          prependCreated(response, created)
+        }
+      }
+      roleDialog.value = false
+      role.value = null
+    } catch (e) {
+      console.error('Error al guardar el rol', e)
+    } finally {
+      saving.value = false
+    }
+  }
+
+  function closeDialog() {
+    roleDialog.value = false
+    role.value = null
+    useValidationErrors().clearErrors()
+  }
 </script>
 
 <style scoped>
-:deep(.v-sheet) {
-  margin: 0;
-  padding: 0;
-  border: none;
-  background-color: #ffffff;
-}
+  :deep(.v-sheet) {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background-color: #ffffff;
+  }
 </style>
