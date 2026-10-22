@@ -52,12 +52,14 @@ import {
   A4_MIDI,
   COLORS,
   HISTORY_NOW_OFFSET_PX,
+  LATIN_ROOTS,
   MAJOR_STEPS,
   MIN_MIDI,
   NOTE_LATIN_STRINGS,
   NOTE_LATIN_STRINGS_THIRDS,
   NOTE_SHORT_STRINGS,
   NOTE_SHORT_STRINGS_THIRDS,
+  SHORT_ROOTS,
   SILENCE_HOLD_FRAMES,
   TEXT_WIDTH,
   TOLERANCE_HZ,
@@ -223,9 +225,11 @@ function getNoteName(midiNote: number): string {
 }
 
 function getMajorScaleNotes(root: string): number[] {
-  const rootIndex = latinNotation.value
-    ? ["Do", "Doâ™¯", "Re", "Reâ™¯", "Mi", "Fa", "Faâ™¯", "Sol", "Solâ™¯", "La", "Laâ™¯", "Si"].indexOf(root)
-    : ["C", "Câ™¯", "D", "Dâ™¯", "E", "F", "Fâ™¯", "G", "Gâ™¯", "A", "Aâ™¯", "B"].indexOf(root)
+  // Normaliza la raiz en ambas notaciones: cambiar LatinNotation no convierte el valor guardado.
+  const [primary, fallback] = latinNotation.value ? [LATIN_ROOTS, SHORT_ROOTS] : [SHORT_ROOTS, LATIN_ROOTS]
+  const found = primary.indexOf(root)
+  const rootIndex = found >= 0 ? found : fallback.indexOf(root)
+  if (rootIndex < 0) return []
   return MAJOR_STEPS.map((step) => (rootIndex + step) % 12)
 }
 
@@ -354,7 +358,7 @@ function drawNoteLines() {
     const subPos = ((Math.round(rounded * subdivisions) % subdivisions) + subdivisions) % subdivisions
     const fullIndex = subdivisions === 3 ? noteIndex * 3 + subPos : noteIndex * 2 + subPos
     const name = noteStrings[fullIndex]!
-    return { name, base: name.replace(/[+â…“â…”]/g, ""), subPos, noteIndex }
+    return { name, base: name.replace(/[+⅓⅔]/g, ""), subPos, noteIndex }
   }
 
   let currentNoteInfo: { subPos: number; base: string; freq: number } | null = null
@@ -378,7 +382,7 @@ function drawNoteLines() {
     const isRealSemitone = subPos === 0
     const fullIndex = subdivisions === 3 ? noteIndex * 3 + subPos : noteIndex * 2 + subPos
     const noteName = noteStrings[fullIndex]!
-    const noteBase = noteName.replace(/[+â…“â…”]/g, "")
+    const noteBase = noteName.replace(/[+⅓⅔]/g, "")
     const isInScale = scaleNoteIndices.includes(noteIndex)
 
     const style = {

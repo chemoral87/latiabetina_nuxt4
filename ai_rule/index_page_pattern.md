@@ -78,6 +78,8 @@ const { highlightId, prependCreated, updateRow } = useRowHighlight()
 const lastOptions = ref<Record<string, unknown> | null>(null)
 ```
 
+**Response shape (backend contract):** every index endpoint returns `DataSetResource` — `{ data: unknown[], total: number, itemsPerPage: number }`. Type it as `{ data: unknown[]; total: number }`. Do not write `normalizeResponse()` for new pages — shape is guaranteed. Legacy pages that predate this still have normalize helpers; leave them.
+
 ---
 
 ## 4. SSR Initial Load (top-level await, lastOptions, buildApiParams)
