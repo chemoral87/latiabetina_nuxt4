@@ -27,6 +27,13 @@ test.describe.serial('Permission CRUD', () => {
     await page.locator('#per-dialog-save-btn').click()
     await expect(page.getByRole('row').filter({ hasText: name })).toHaveCount(1)
   })
+  test('filters the created permission', async ({ page }) => {
+    await page.goto('/permission')
+    await page.waitForLoadState('networkidle')
+    await page.getByPlaceholder('Buscar permiso...').fill(name)
+    await expect(page.getByRole('row').filter({ hasText: name })).toHaveCount(1)
+    await expect(page.locator('tbody tr')).toHaveCount(1)
+  })
   test('edits the permission', async ({ page }) => {
     edited = `${name}x`
     await page.goto('/permission')

@@ -2,6 +2,8 @@ import { test, expect } from '@playwright/test'
 import { apiBase, authHeaders, loginOrSkip } from './helpers/auth'
 
 test.describe.serial('Professional create', () => {
+  let lastName = ''
+
   test.beforeEach(async ({ page }) => {
     await loginOrSkip(page)
   })
@@ -31,11 +33,11 @@ test.describe.serial('Professional create', () => {
       expect(removed.ok(), `DELETE /professionals/${publication.id} → ${removed.status()} ${await removed.text()}`).toBe(true)
     }
 
-    const last = `E2E${Date.now()}`.slice(-8)
+    lastName = `E2E${Date.now()}`.slice(-8)
     await page.goto('/professional/new')
     await page.waitForLoadState('networkidle')
     await page.getByRole('textbox', { name: 'Nombre' }).fill('E2E')
-    await page.getByRole('textbox', { name: 'Apellido' }).fill(last)
+    await page.getByRole('textbox', { name: 'Apellido' }).fill(lastName)
     await page.getByRole('textbox', { name: 'Teléfono' }).fill('5512345678')
     await page.getByRole('textbox', { name: 'Profesión u oficio' }).fill('Plomero')
     await page.locator('#pro-dialog-save-btn').click()
@@ -43,7 +45,15 @@ test.describe.serial('Professional create', () => {
 
     const after = await page.request.get(`${apiBase()}/professionals/mine`, { headers })
     expect(after.ok()).toBe(true)
-    expect((await after.json())?.last_name).toBe(last)
+    expect((await after.json())?.last_name).toBe(lastName)
+  })
+
+  test('filters the created professional', async ({ page }) => {
+    await page.goto('/professional')
+    await page.waitForLoadState('networkidle')
+    await page.getByPlaceholder('Buscar por profesión o nombre...').fill(lastName)
+    await expect(page.getByRole('row').filter({ hasText: lastName })).toHaveCount(1)
+    await expect(page.locator('tbody tr')).toHaveCount(1)
   })
 
   test('cancel returns to the list', async ({ page }) => {

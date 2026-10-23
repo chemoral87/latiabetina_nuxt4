@@ -27,6 +27,13 @@ test.describe.serial('Organization CRUD', () => {
     await page.locator('#org-dialog-save-btn').click()
     await expect(page.getByRole('row').filter({ hasText: name })).toHaveCount(1)
   })
+  test('filters the created organization', async ({ page }) => {
+    await page.goto('/organization')
+    await page.waitForLoadState('networkidle')
+    await page.getByPlaceholder('Filtro').fill(name)
+    await expect(page.getByRole('row').filter({ hasText: name })).toHaveCount(1)
+    await expect(page.locator('tbody tr')).toHaveCount(1)
+  })
   test('edits the organization', async ({ page }) => {
     edited = `${name}x`
     await page.goto('/organization')

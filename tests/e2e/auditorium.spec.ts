@@ -47,6 +47,15 @@ test.describe.serial('Auditorium CRUD', () => {
     await expect(page.getByRole('row').filter({ hasText: name })).toHaveCount(1)
   })
 
+  test('filters the created auditorium', async ({ page }) => {
+    test.skip(!canIndex, 'Account lacks auditorium-index permission')
+    await page.goto('/auditorium')
+    await page.waitForLoadState('networkidle')
+    await page.getByPlaceholder('Filtro').fill(name)
+    await expect(page.getByRole('row').filter({ hasText: name })).toHaveCount(1)
+    await expect(page.locator('tbody tr')).toHaveCount(1)
+  })
+
   test('edits the auditorium', async ({ page }) => {
     test.skip(!name, 'Create test did not run')
     await page.goto('/auditorium')

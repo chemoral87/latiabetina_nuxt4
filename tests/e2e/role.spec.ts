@@ -34,6 +34,14 @@ test.describe.serial('Role CRUD', () => {
     await expect(page.getByRole('row').filter({ hasText: name })).toHaveCount(1)
   })
 
+  test('filters the created role', async ({ page }) => {
+    await page.goto('/role')
+    await page.waitForLoadState('networkidle')
+    await page.getByPlaceholder('Buscar rol...').fill(name)
+    await expect(page.getByRole('row').filter({ hasText: name })).toHaveCount(1)
+    await expect(page.locator('tbody tr')).toHaveCount(1)
+  })
+
   test('edits the role', async ({ page }) => {
     edited = `${name}x`
     await page.goto('/role')

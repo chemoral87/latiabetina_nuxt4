@@ -30,6 +30,13 @@ test.describe.serial('User CRUD', () => {
     await page.waitForLoadState('networkidle')
     await expect(page.getByRole('row').filter({ hasText: name })).toHaveCount(1)
   })
+  test('filters the created user', async ({ page }) => {
+    await page.goto('/user')
+    await page.waitForLoadState('networkidle')
+    await page.getByPlaceholder('Filtro').fill(name)
+    await expect(page.getByRole('row').filter({ hasText: name })).toHaveCount(1)
+    await expect(page.locator('tbody tr')).toHaveCount(1)
+  })
   test('edits the user', async ({ page }) => {
     edited = `${name}x`
     await page.goto('/user')
