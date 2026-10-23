@@ -23,7 +23,7 @@
         <div v-if="hasPermissions(item as Record<string, unknown>)" class="d-flex flex-wrap ga-1">
           <VChip
             v-for="permission in sortedPermissions((item as Record<string, unknown>).permissions as Record<string, unknown>[])"
-            :key="permission.id as number"
+            :key="(permission as Record<string, unknown>).id as number"
             size="small"
             variant="flat"
             :color="permissionColors[permission.name as string] ?? 'primary'"
@@ -69,7 +69,7 @@
     title: string
     value: string
     sortable: boolean
-    align?: string
+    align?: "start" | "center" | "end"
     width?: string
   }
 
@@ -99,7 +99,7 @@
 
   const page = ref(1)
   const itemsPerPage = ref(10)
-  const sortBy = ref<{ key: string; order: string }[]>([...props.initialSortBy])
+  const sortBy = ref([...props.initialSortBy] as { key: string; order: 'asc' | 'desc' }[])
   const dialogDeleteProp = ref<Record<string, unknown>>({})
 
   const headers: Header[] = [

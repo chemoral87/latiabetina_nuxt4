@@ -124,6 +124,7 @@
     if (toIndex < 0 || toIndex >= config.value.sections.length) return
     const arr = config.value.sections
     const [item] = arr.splice(fromIndex, 1)
+    if (!item) return
     arr.splice(toIndex, 0, item)
   }
 
@@ -181,7 +182,9 @@
     } else if (key === 'dist-h') {
       const all = config.value.sections
       const ordered = all.filter(s => sel.includes(s))
-      let cursor = ordered[0].x
+      const first = ordered[0]
+      if (!first) return
+      let cursor = first.x
       for (const s of ordered) {
         s.x = cursor
         cursor += getFloatingSectionWidth(s) + constantGap.value
@@ -189,7 +192,9 @@
     } else if (key === 'dist-v') {
       const all = config.value.sections
       const ordered = all.filter(s => sel.includes(s))
-      let cursor = ordered[0].y
+      const first = ordered[0]
+      if (!first) return
+      let cursor = first.y
       for (const s of ordered) {
         s.y = cursor
         cursor += getFloatingSectionHeight(s) + constantGap.value

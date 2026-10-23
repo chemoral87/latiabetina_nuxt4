@@ -1,3 +1,4 @@
+import type { LocationQueryRaw } from 'vue-router'
 import { useRepository } from '~/composables/useRepository'
 import { useNotifyStore } from '~/composables/useNotify'
 import { formatShortDate } from '~/utils/date'
@@ -51,7 +52,7 @@ export function useAssistanceActions(opts: {
     const assistance = item as Record<string, unknown>
     navigateTo({
       path: `/assistance/${assistance.id}`,
-      query: opts.routeQuery(),
+      query: opts.routeQuery() as LocationQueryRaw,
     })
   }
 

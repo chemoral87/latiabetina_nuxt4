@@ -166,6 +166,7 @@
   )
 
   const dialogDeleteProp = ref<{
+    title?: string
     text?: string
     strong?: string
     payload?: unknown
