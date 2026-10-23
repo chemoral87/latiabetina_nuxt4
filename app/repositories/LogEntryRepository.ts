@@ -8,5 +8,8 @@ export function createLogEntryRepository(api: ApiFn) {
     testError<T = unknown>() {
       return withNotify(api<T>('/log-entry/test-error', { method: 'POST' }))
     },
+    destroyMany<T = unknown>(ids: number[]) {
+      return withNotify(api<T>('/log-entry/bulk', { method: 'DELETE', body: { ids } }))
+    },
   }
 }
