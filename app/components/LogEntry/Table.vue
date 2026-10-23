@@ -89,7 +89,8 @@
   const sortBy = ref<DataTableSortItem[]>([{ key: 'created_at', order: 'desc' }])
   const deleteDialog = ref(false)
   const deleteDialogData = computed(() => ({
-    text: '¿Desea eliminar',
+    title: selected.value.length === 1 ? '¿Eliminar Registro?' : '¿Eliminar Registros?',
+    text: selected.value.length === 1 ? 'Se eliminará 1 registro: ' : `Se eliminarán ${selected.value.length} registros: `,
     strong: `${selected.value.length} registro${selected.value.length === 1 ? '' : 's'} seleccionado${selected.value.length === 1 ? '' : 's'}`,
     payload: selected.value,
   }))

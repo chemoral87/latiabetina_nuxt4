@@ -198,8 +198,8 @@
   }
 
   const sectionDeleteDialogProp = computed(() => ({
-    title: 'Eliminar sección',
-    text: '¿Eliminar la sección',
+    title: '¿Eliminar Sección?',
+    text: 'Se eliminará 1 registro: ',
     strong: sectionPendingDelete.value?.name ?? '',
     payload: sectionPendingDelete.value,
   }))

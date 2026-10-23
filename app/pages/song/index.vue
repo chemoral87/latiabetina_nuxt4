@@ -186,7 +186,8 @@ function editSong(item: unknown) {
 function beforeDeleteSong(item: unknown) {
   const s = item as Record<string, unknown>;
   dialogDelete.value = {
-    text: "¿Desea eliminar la canción ",
+    title: '¿Eliminar Canción?',
+    text: 'Se eliminará 1 registro: ',
     strong: (s.title as string) || String(s.id),
     payload: item,
   };

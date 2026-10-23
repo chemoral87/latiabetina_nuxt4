@@ -162,7 +162,8 @@ function formatNumber(val: unknown): string {
 
 function confirmDelete(item: unknown) {
   dialogDeleteProp.value = {
-    text: "¿Desea eliminar la venta ",
+    title: '¿Eliminar Venta?',
+    text: 'Se eliminará 1 registro: ',
     strong: (item as Record<string, unknown>).number as string,
     payload: item,
   }

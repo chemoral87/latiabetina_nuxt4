@@ -159,7 +159,8 @@ function onUpdateOptions(val: Record<string, unknown>) {
 function confirmDelete(item: unknown) {
   const i = item as Record<string, unknown>;
   dialogDeleteProp.value = {
-    text: "Desea eliminar el Usuario ",
+    title: '¿Eliminar Usuario?',
+    text: 'Se eliminará 1 registro: ',
     strong: `${i.name ?? ""} ${i.last_name ?? ""} ${i.second_last_name ?? ""}`,
     payload: item,
   };

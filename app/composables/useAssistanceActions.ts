@@ -18,7 +18,8 @@ export function useAssistanceActions(opts: {
   function beforeDeleteAssistance(item: unknown) {
     const assistance = item as Record<string, unknown>
     opts.dialogDelete.value = {
-      text: 'Desea eliminar la Asistencia ',
+      title: '¿Eliminar Asistencia?',
+      text: 'Se eliminará 1 registro: ',
       strong: `${assistance.assistance_date} - ${assistance.service_time}`,
       payload: item,
     }

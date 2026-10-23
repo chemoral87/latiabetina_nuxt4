@@ -174,7 +174,8 @@
   function confirmDelete(item: unknown) {
     const s = item as Record<string, unknown>
     dialogDeleteProp.value = {
-      text: '¿Desea eliminar el Consolidado con folio ',
+      title: '¿Eliminar Consolidado?',
+      text: 'Se eliminará 1 registro: ',
       strong: String(s.folio_number),
       payload: item,
     }

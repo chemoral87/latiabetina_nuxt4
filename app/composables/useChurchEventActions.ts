@@ -1,6 +1,6 @@
-import { useRepository } from "~/composables/useRepository"
-import { useNotifyStore } from "~/composables/useNotify"
-import { formatShortDate } from "~/utils/date"
+import { useRepository } from '~/composables/useRepository'
+import { useNotifyStore } from '~/composables/useNotify'
+import { formatShortDate } from '~/utils/date'
 
 /**
  * Shared actions for the ChurchEvent pages (index & calendar).
@@ -50,17 +50,17 @@ export function useChurchEventActions(opts: {
       }
 
       if (skipped.length > 0) {
-        const dateList = skipped.map((d) => formatShortDate(String(d))).join(", ")
+        const dateList = skipped.map(d => formatShortDate(String(d))).join(', ')
         notify.notify({ warning: `Las siguientes fechas no se copiaron porque ya existe un evento con el mismo nombre: ${dateList}` })
       }
 
       if (created.length === 0 && skipped.length === 0) {
-        notify.notify({ warning: "No se copiaron eventos." })
+        notify.notify({ warning: 'No se copiaron eventos.' })
       }
 
       await opts.loadChurchEvents()
     } catch (error) {
-      console.error("Error al copiar evento", error)
+      console.error('Error al copiar evento', error)
     } finally {
       opts.copying.value = false
     }
@@ -81,7 +81,8 @@ export function useChurchEventActions(opts: {
   function beforeDeleteChurchEvent(item: unknown) {
     const event = item as Record<string, unknown>
     opts.dialogDelete.value = {
-      text: "Desea eliminar el Evento ",
+      title: '¿Eliminar Evento?',
+      text: 'Se eliminará 1 registro: ',
       strong: event.name as string,
       payload: item,
     }
@@ -95,12 +96,12 @@ export function useChurchEventActions(opts: {
       await ChurchEvent.delete(event.id as number)
 
       opts.skipFilterWatch.value = true
-      opts.filterChurchEvent.value = ""
-      await opts.loadChurchEvents({ filter: "", ...opts.deleteReloadOverrides() })
+      opts.filterChurchEvent.value = ''
+      await opts.loadChurchEvents({ filter: '', ...opts.deleteReloadOverrides() })
 
       opts.churchEventDialogDelete.value = false
     } catch (error) {
-      console.error("Error al eliminar evento", error)
+      console.error('Error al eliminar evento', error)
     } finally {
       opts.deleting.value = false
     }

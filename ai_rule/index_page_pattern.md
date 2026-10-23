@@ -64,10 +64,10 @@ app/components/<Module>/Dialog.vue  create/edit dialog (optional, shown with v-i
 All pages share this exact skeleton:
 
 ```ts
-const { Role } = useRepository()          // BEFORE any top-level await
+const { Role } = useRepository() // BEFORE any top-level await
 
-const filterInput = ref("")               // bound to the VTextField
-const filterRole = ref("")                // drives the API call (debounced)
+const filterInput = ref('') // bound to the VTextField
+const filterRole = ref('') // drives the API call (debounced)
 const role = ref<Record<string, unknown> | null>(null)
 const response = ref({ data: [], total: 0 })
 const loading = ref(false)
@@ -87,18 +87,18 @@ const lastOptions = ref<Record<string, unknown> | null>(null)
 **Rule: never hard-code `sortBy`/`sortDesc` twice.** `lastOptions` is the single source of truth (Vuetify 4 format). `buildApiParams()` converts it to backend format for every fetch, including the SSR initial load. Changing the default sort requires editing **only** `lastOptions` — the table and the initial fetch follow automatically.
 
 ```ts
-import { buildApiParams } from "~/utils/buildApiParams"  // shared — app/utils/buildApiParams.ts:8
+import { buildApiParams } from '~/utils/buildApiParams' // shared — app/utils/buildApiParams.ts:8
 
 // Single source — Vuetify 4 format
 const lastOptions = ref<Record<string, unknown>>({
   page: 1,
-  itemsPerPage: 10,                    // organization uses 5
-  sortBy: [{ key: "name", order: "asc" }],
+  itemsPerPage: 10, // organization uses 5
+  sortBy: [{ key: 'name', order: 'asc' }],
 })
 
 // buildApiParams imported — must be imported before top-level await (used at SSR)
 {
-  const apiParams = buildApiParams(lastOptions.value)  // dynamic, not hard-coded
+  const apiParams = buildApiParams(lastOptions.value) // dynamic, not hard-coded
   const initialResponse = await Role.index(apiParams).catch(() => ({ data: [], total: 0 }))
   response.value = initialResponse as { data: unknown[]; total: number }
 }
@@ -118,11 +118,11 @@ const lastOptions = ref<Record<string, unknown>>({
 
 ```ts
 // Shared — app/composables/useDebouncedFilter.ts:8 (auto-imported, no import needed)
-const filterInput = ref("")  // bound to the VTextField
-const filterRole = ref("")   // drives the API call
+const filterInput = ref('') // bound to the VTextField
+const filterRole = ref('') // drives the API call
 
 // Debounced filter — shared useDebouncedFilter (300ms immediate clear)
-useDebouncedFilter(filterInput, filterRole)            // 300ms default
+useDebouncedFilter(filterInput, filterRole) // 300ms default
 // useDebouncedFilter(filterInput, filterRole, 500)    // custom delay (e.g. testimony)
 
 // Alternative — creates both refs and wires the debounce:
@@ -136,7 +136,7 @@ Clear immediately when the input empties; never debounce the clear. Do not dupli
 ## 6. Single Loader Function
 
 ```ts
-import { buildApiParams } from "~/utils/buildApiParams"
+import { buildApiParams } from '~/utils/buildApiParams'
 
 async function loadRoles(opts: Record<string, unknown>) {
   try {
@@ -144,11 +144,11 @@ async function loadRoles(opts: Record<string, unknown>) {
     lastOptions.value = opts
     // Simple pages: merge filter if not already in opts (generic passthrough covers opts.filter)
     const _opts = { ...opts }
-    if (filterRole.value && !("filter" in _opts)) _opts.filter = filterRole.value
-    const params = buildApiParams(_opts)  // shared — handles pagination + sort + passthrough
+    if (filterRole.value && !('filter' in _opts)) _opts.filter = filterRole.value
+    const params = buildApiParams(_opts) // shared — handles pagination + sort + passthrough
     response.value = await Role.index(params)
   } catch (e) {
-    console.error("Error al cargar roles", e)
+    console.error('Error al cargar roles', e)
   } finally {
     loading.value = false
   }
@@ -172,7 +172,7 @@ let initialLoaded = false
 
 function handleSorting(opts: Record<string, unknown>) {
   if (!initialLoaded) {
-    initialLoaded = true     // first @update:options fires on mount; data already loaded
+    initialLoaded = true // first @update:options fires on mount; data already loaded
     return
   }
   loadRoles(opts)
@@ -180,7 +180,7 @@ function handleSorting(opts: Record<string, unknown>) {
 
 function refreshRoles() {
   if (lastOptions.value) {
-    loadRoles(lastOptions.value)   // refresh bypasses the flag
+    loadRoles(lastOptions.value) // refresh bypasses the flag
   }
 }
 ```
@@ -206,19 +206,19 @@ async function fetchData(options: Record<string, unknown> = {}) {
   try {
     const params = buildApiParams({ ...lastOptions.value, ...options })
     const result = await Repository.getAll(params)
-    if (id !== requestId) return   // stale — discard
+    if (id !== requestId) return // stale — discard
     response.value = result
     lastOptions.value = { ...lastOptions.value, ...options }
   } catch (e) {
     if (id !== requestId) return
-    notify.notify({ error: "..." })
+    notify.notify({ error: '...' })
   } finally {
     if (id === requestId) loading.value = false
   }
 }
 
 function handleSorting(opts: Record<string, unknown>) {
-  fetchData(opts)   // always fetch — counter prevents stale overwrite
+  fetchData(opts) // always fetch — counter prevents stale overwrite
 }
 ```
 
@@ -264,7 +264,7 @@ async function saveX(item: Record<string, unknown>) {
     roleDialog.value = false
     role.value = null
   } catch (e) {
-    console.error("Error al guardar el rol", e)
+    console.error('Error al guardar el rol', e)
   } finally {
     saving.value = false
   }
@@ -286,7 +286,7 @@ async function deleteX(item: Record<string, unknown>) {
     roleDialogDelete.value = false
     await removeWithAnimation(response, item.id as number)
   } catch (e) {
-    console.error("Error al eliminar el rol", e)
+    console.error('Error al eliminar el rol', e)
   } finally {
     saving.value = false
   }
@@ -402,7 +402,7 @@ const emit = defineEmits<{
 }>()
 
 function onUpdateOptions(val: Record<string, unknown>) {
-  emit("sorting", val)
+  emit('sorting', val)
 }
 ```
 
@@ -413,8 +413,7 @@ options (avoids the reactive loop).
 
 ```vue
 <template #[`item.actions`]="{ item }">
-  <VBtn title="Editar" class="ma-1" color="primary" variant="outlined" size="small"
-    icon rounded="circle" id="rol-table-edit-btn" @click="emitEdit(item)">
+  <VBtn title="Editar" class="ma-1" color="primary" variant="outlined" size="small" icon rounded="circle" id="rol-table-edit-btn" @click="emitEdit(item)">
     <VIcon size="x-large">mdi-pencil</VIcon>
   </VBtn>
   ...
@@ -432,7 +431,7 @@ and `Consolidation/MemberTable.vue` previously used those and were aligned to
 ### Row highlight
 
 ```ts
-import { rowPropsFor } from "~/composables/useRowHighlight"
+import { rowPropsFor } from '~/composables/useRowHighlight'
 const rowProps = rowPropsFor(() => props.highlightId)
 ```
 
@@ -441,21 +440,16 @@ const rowProps = rowPropsFor(() => props.highlightId)
 ```ts
 function confirmDelete(item: unknown) {
   dialogDeleteProp.value = {
-    text: "¿Desea eliminar el Rol ",
+    text: '¿Eliminar el Rol ',
     strong: (item as Record<string, unknown>).name,
     payload: item,
   }
-  emit("update:dialogDelete", true)
+  emit('update:dialogDelete', true)
 }
 ```
 
 ```vue
-<DialogDelete
-  v-if="dialogDelete"
-  :dialog="dialogDeleteProp"
-  @ok="(item) => emit('delete', item)"
-  @close="emit('update:dialogDelete', false)"
-/>
+<DialogDelete v-if="dialogDelete" :dialog="dialogDeleteProp" @ok="item => emit('delete', item)" @close="emit('update:dialogDelete', false)" />
 ```
 
 The table owns the confirmation; the page only listens for `@delete`. The
@@ -493,17 +487,21 @@ const auth = useAuthStore()
 // Computed: true when the user can access exactly one org for the permission.
 // Use the shared helper (see ai_rule/single_org_permission.md) — never
 // re-implement this inline.
-const singleOrg = computed(() => auth.hasSingleOrgFor("auditorium-index"))
+const singleOrg = computed(() => auth.hasSingleOrgFor('auditorium-index'))
 
 // Initial SSR fetch — no org_id, dynamic via buildApiParams(lastOptions)
-const { data: initialData } = await useAsyncData("auditorium-index", async () => {
-  const apiParams = buildApiParams(lastOptions.value)
-  return await Auditorium.index<{ data: unknown[]; total: number }>(apiParams).catch(() => ({ data: [], total: 0 }))
-}, { default: () => ({ data: [] as unknown[], total: 0 }) })
+const { data: initialData } = await useAsyncData(
+  'auditorium-index',
+  async () => {
+    const apiParams = buildApiParams(lastOptions.value)
+    return await Auditorium.index<{ data: unknown[]; total: number }>(apiParams).catch(() => ({ data: [], total: 0 }))
+  },
+  { default: () => ({ data: [] as unknown[], total: 0 }) }
+)
 
 // For 1-org users: never send org_id (backend resolves it from auth token)
 // For 2+ orgs: only send org_id from explicit user selection
-watch(filterOrgId, (val) => {
+watch(filterOrgId, val => {
   if (singleOrg.value) return
   const overrides: Record<string, unknown> = { page: 1 }
   overrides.org_id = val ?? undefined
@@ -514,7 +512,9 @@ watch(filterOrgId, (val) => {
 // NOT from filterOrgId.value (which includes auto-select):
 async function indexAuditoriums(overrides: Record<string, unknown> = {}) {
   // ...build params...
-  if (opts.org_id) { params.org_id = opts.org_id }  // ✅ only from overrides
+  if (opts.org_id) {
+    params.org_id = opts.org_id
+  } // ✅ only from overrides
   // DO NOT add: if (filterOrgId.value) { params.org_id = filterOrgId.value }  ❌
 }
 ```
@@ -579,15 +579,15 @@ function buildItems() {
 
 ## Differences Between Reference Pages (keep the common core)
 
-| Aspect | role / user / permission / organization / auditorium | auditorium-event |
-|---|---|---|
-| Initial load | plain top-level await | `useAsyncData("auditorium-event-index", ...)` |
-| Filter | single `VTextField` + `filter` param | `MyDateRange` + `OrganizationSelect` (org_id param) |
-| Table wrapper | `<div id="cmp-x-table">` root | no wrapper root |
-| `:search` prop | present on `VDataTableServer` | not used (date-range filter) |
-| Delete dialog | inside `Table.vue` (DialogDelete) | at page level, `DialogDelete` + `dialogDelete` data |
-| Loader signature | `loadX(opts)` | `getAuditoriumEvents(overrides)` merged over `options` ref |
-| Org filter dupe | no org filter | suppress `filterOrgId` entirely when 1-org; `prevent-auto-select` on `OrganizationSelect` |
+| Aspect           | role / user / permission / organization / auditorium | auditorium-event                                                                          |
+| ---------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| Initial load     | plain top-level await                                | `useAsyncData("auditorium-event-index", ...)`                                             |
+| Filter           | single `VTextField` + `filter` param                 | `MyDateRange` + `OrganizationSelect` (org_id param)                                       |
+| Table wrapper    | `<div id="cmp-x-table">` root                        | no wrapper root                                                                           |
+| `:search` prop   | present on `VDataTableServer`                        | not used (date-range filter)                                                              |
+| Delete dialog    | inside `Table.vue` (DialogDelete)                    | at page level, `DialogDelete` + `dialogDelete` data                                       |
+| Loader signature | `loadX(opts)`                                        | `getAuditoriumEvents(overrides)` merged over `options` ref                                |
+| Org filter dupe  | no org filter                                        | suppress `filterOrgId` entirely when 1-org; `prevent-auto-select` on `OrganizationSelect` |
 
 ---
 

@@ -374,7 +374,8 @@ async function onInlineStatusChange(item: unknown, status: string) {
 function deleteMemberPrompt(item: unknown) {
   const m = item as Record<string, unknown>
   deleteData.value = {
-    text: "¿Desea eliminar al miembro ",
+    title: '¿Eliminar Miembro?',
+    text: 'Se eliminará 1 registro: ',
     strong: `${m.name} ${m.last_name}`,
     payload: item,
   }

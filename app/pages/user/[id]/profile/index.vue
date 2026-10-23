@@ -269,7 +269,8 @@ function saveProfile(item: Record<string, unknown>) {
 
 function confirmDeleteProfile(profile: Record<string, unknown>) {
   dialogDeleteProp.value = {
-    text: "Desea eliminar el Perfil ",
+    title: '¿Eliminar Perfil?',
+    text: 'Se eliminará 1 registro: ',
     strong: profile.organization_name,
     payload: profile,
   };

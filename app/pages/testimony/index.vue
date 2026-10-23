@@ -286,7 +286,8 @@ function showTestimony(item: unknown) {
 function beforeDeleteTestimony(item: unknown) {
   const t = item as Record<string, unknown>;
   dialogDelete.value = {
-    text: "¿Desea eliminar el Testimonio ",
+    title: '¿Eliminar Testimonio?',
+    text: 'Se eliminará 1 registro: ',
     strong: (t.title as string) || String(t.id),
     payload: item,
   };

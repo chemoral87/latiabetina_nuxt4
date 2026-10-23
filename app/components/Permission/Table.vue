@@ -140,7 +140,8 @@ function onUpdateOptions(val: Record<string, unknown>) {
 
 function confirmDelete(item: unknown) {
   dialogDeleteProp.value = {
-    text: "¿Desea eliminar el Permiso ",
+    title: '¿Eliminar Permiso?',
+    text: 'Se eliminará 1 registro: ',
     strong: (item as Record<string, unknown>).name,
     payload: item,
   };

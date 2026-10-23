@@ -276,7 +276,8 @@ function markAuditoriumEvent(item: unknown) {
 function beforeDeleteAuditoriumEvent(item: unknown) {
   const event = item as Record<string, unknown>;
   dialogDelete.value = {
-    text: "¿Desea eliminar el Evento de Auditorio ",
+    title: '¿Eliminar Evento de Auditorio?',
+    text: 'Se eliminará 1 registro: ',
     strong: event.auditorium_name as string,
     payload: item,
   };

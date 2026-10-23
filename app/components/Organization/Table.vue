@@ -128,7 +128,8 @@ function onUpdateOptions(val: Record<string, unknown>) {
 
 function confirmDelete(item: unknown) {
   dialogDeleteProp.value = {
-    text: "Desea eliminar ",
+    title: '¿Eliminar Organización?',
+    text: 'Se eliminará 1 registro: ',
     strong: (item as Record<string, unknown>).name,
     payload: item,
   };

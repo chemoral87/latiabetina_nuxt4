@@ -134,7 +134,8 @@ function onUpdateOptions(val: Record<string, unknown>) {
 function confirmDelete(item: unknown) {
   const i = item as Record<string, unknown>;
   dialogDeleteProp.value = {
-    text: "Desea eliminar el Auditorio ",
+    title: '¿Eliminar Auditorio?',
+    text: 'Se eliminará 1 registro: ',
     strong: i.name,
     payload: item,
   };
