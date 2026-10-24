@@ -109,11 +109,11 @@ interface Header {
   title: string
   value: string
   sortable?: boolean
-  align?: string
+  align?: "start" | "center" | "end"
   width?: string
 }
 
-interface WhatsAppLog extends Record<string, unknown> {
+export interface WhatsAppLog extends Record<string, unknown> {
   sender?: string | null
   receiver?: string | null
   body?: string | null
@@ -139,7 +139,7 @@ const emit = defineEmits<{
 
 const page = ref(1)
 const itemsPerPage = ref(15)
-const sortBy = ref<{ key: string; order: string }[]>([{ key: 'created_at', order: 'desc' }])
+const sortBy = ref<{ key: string; order: 'asc' | 'desc' }[]>([{ key: 'created_at', order: 'desc' }])
 
 const total = computed(() => props.response?.total ?? 0)
 const items = computed<WhatsAppLog[]>(() => props.response?.data ?? [])

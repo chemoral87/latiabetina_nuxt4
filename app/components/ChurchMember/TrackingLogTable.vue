@@ -15,35 +15,35 @@
       items-per-page-text="Filas por página"
       @update:options="onUpdateOptions">
       <template #[`item.medium`]="{ item }">
-        <VChip size="small" variant="flat" :color="mediumColor(item.medium)">
-          <VIcon start size="small">{{ mediumIcon(item.medium) }}</VIcon>
-          {{ mediumLabel(item.medium) }}
+        <VChip size="small" variant="flat" :color="mediumColor(asRec(item).medium)">
+          <VIcon start size="small">{{ mediumIcon(asRec(item).medium) }}</VIcon>
+          {{ mediumLabel(asRec(item).medium) }}
         </VChip>
       </template>
 
       <template #[`item.contact_datetime`]="{ item }">
-        {{ formatShortDateTime12h(String(item.contact_datetime ?? "")) || "—" }}
+        {{ formatShortDateTime12h(String(asRec(item).contact_datetime ?? "")) || "—" }}
       </template>
 
       <template #[`item.creator`]="{ item }">
-        {{ (item.creator as Record<string, unknown> | undefined)?.name || "N/A" }}
+        {{ (asRec(item).creator as Record<string, unknown> | undefined)?.name || "N/A" }}
       </template>
 
       <template #[`item.classification`]="{ item }">
-        <VChip v-if="item.classification" size="small" variant="flat" :color="classificationColor(item.classification)">
-          {{ item.classification }}
+        <VChip v-if="asRec(item).classification" size="small" variant="flat" :color="classificationColor(asRec(item).classification)">
+          {{ asRec(item).classification }}
         </VChip>
       </template>
 
       <template #[`item.description`]="{ item }">
-        <span v-if="item.description">{{ item.description }}</span>
+        <span v-if="asRec(item).description">{{ asRec(item).description }}</span>
         <span v-else class="text-grey">—</span>
       </template>
 
       <template #[`item.actions`]="{ item }">
-        <template v-if="item.created_by === userId">
+        <template v-if="asRec(item).created_by === userId">
           <VBtn
-            :id="`cmm-tlt-edit-btn-${item.id}`"
+            :id="`cmm-tlt-edit-btn-${asRec(item).id}`"
             icon
             class="ma-1"
             size="small"
@@ -56,7 +56,7 @@
             <VIcon size="x-large">mdi-pencil</VIcon>
           </VBtn>
           <VBtn
-            :id="`cmm-tlt-delete-btn-${item.id}`"
+            :id="`cmm-tlt-delete-btn-${asRec(item).id}`"
             icon
             class="ma-1"
             size="small"
@@ -88,10 +88,12 @@ import { rowPropsFor } from "~/composables/useRowHighlight"
 interface Header {
   title: string
   value: string
-  sortable: boolean
-  align?: string
+  sortable?: boolean
+  align?: "start" | "center" | "end"
   width?: string
 }
+
+const asRec = (i: unknown) => i as Record<string, unknown>
 
 const props = withDefaults(defineProps<{
   id?: string
@@ -111,7 +113,7 @@ const emit = defineEmits<{
 
 const page = ref(1)
 const itemsPerPage = ref(10)
-const sortBy = ref<{ key: string; order: string }[]>([
+const sortBy = ref<{ key: string; order: "asc" | "desc" }[]>([
   { key: "contact_datetime", order: "desc" },
 ])
 
@@ -134,11 +136,11 @@ const auth = useAuthStore()
 const userId = computed(() => (auth.user as Record<string, unknown> | undefined)?.id)
 
 onMounted(() => {
-  const opts = props.response ?? {}
+  const opts = (props.response ?? {}) as Record<string, unknown>
   if (Array.isArray(opts.sortBy)) {
-    const sb = opts.sortBy as ({ key: string; order: string } | string)[]
+    const sb = opts.sortBy as ({ key: string; order: "asc" | "desc" } | string)[]
     sortBy.value = sb.map((s) =>
-      typeof s === "string" ? { key: s, order: "asc" } : s,
+      typeof s === "string" ? { key: s, order: "asc" as const } : s,
     )
   }
 })

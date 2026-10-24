@@ -1,3 +1,5 @@
+import type { PaginatedResponse } from './common'
+
 export interface Course {
   id: number
   title: string

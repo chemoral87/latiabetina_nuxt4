@@ -58,7 +58,7 @@
                 variant="outlined"
                 :disabled="disabled"
                 :error-messages="errors?.adults"
-                :rules="[vrules.requiredField('Adultos'), vrules.minValue(0, 'Adultos')]"
+                :rules="[vrules.requiredField('Adultos'), vrules.minValue(0)]"
                 @keyup.enter="save"
               />
             </VCol>
@@ -74,7 +74,7 @@
                 :disabled="disabled"
                 label="Adolescentes"
                 :error-messages="errors?.teens"
-                :rules="[vrules.requiredField('Adolescentes'), vrules.minValue(0, 'Adolescentes')]"
+                :rules="[vrules.requiredField('Adolescentes'), vrules.minValue(0)]"
                 @keyup.enter="save"
               />
             </VCol>
@@ -90,7 +90,7 @@
                 variant="outlined"
                 :disabled="disabled"
                 :error-messages="errors?.kids"
-                :rules="[vrules.requiredField('Niños'), vrules.minValue(0, 'Niños')]"
+                :rules="[vrules.requiredField('Niños'), vrules.minValue(0)]"
                 @keyup.enter="save"
               />
             </VCol>
@@ -106,7 +106,7 @@
                 variant="outlined"
                 :disabled="disabled"
                 :error-messages="errors?.babies"
-                :rules="[vrules.requiredField('Bebés'), vrules.minValue(0, 'Bebés')]"
+                :rules="[vrules.requiredField('Bebés'), vrules.minValue(0)]"
                 @keyup.enter="save"
               />
             </VCol>
@@ -120,8 +120,8 @@
                 density="compact"
                 variant="outlined"
                 :disabled="disabled"
+                :rules="[vrules.minValue(0)]"
                 :error-messages="errors?.newcomers"
-                :rules="[vrules.minValue(0, 'Nuevos')]"
                 @keyup.enter="save"
               />
             </VCol>
@@ -185,10 +185,12 @@
   }
 
   const props = defineProps<{
+    id?: string
     assistance?: Record<string, unknown> | null
     loading?: boolean
     permission?: string
     dialog?: boolean
+    disabled?: boolean
   }>()
 
   const emit = defineEmits<{

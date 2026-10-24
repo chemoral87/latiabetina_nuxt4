@@ -122,12 +122,9 @@ const {
 
 const effectiveOrgId = computed(() => {
   const orgPermission = auth.permissionsOrg["auditorium-index"] ?? [];
-  const orgs = auth.user?.orgs ?? [];
-  if (
-    orgs.length === 1 &&
-    orgPermission.includes((orgs[0] as { id: unknown }).id)
-  ) {
-    return (orgs[0] as { id: unknown }).id;
+  const orgs = (auth.user?.orgs as { id: number }[] | undefined) ?? [];
+  if (orgs.length === 1 && orgPermission.includes(orgs[0]!.id)) {
+    return orgs[0]!.id;
   }
   return null;
 });
@@ -233,9 +230,9 @@ async function downloadAuditoriumEvent(item: unknown) {
       const rows = [[headerRow], ["Status", "Cantidad"]];
 
       Object.keys(STATUS_CONFIG).forEach((key) => {
-        const count = result.seats[key] ? result.seats[key].length : 0;
+        const count = result.seats?.[key]?.length ?? 0;
         if (count > 0) {
-          rows.push([STATUS_CONFIG[key].label ?? key, String(count)]);
+          rows.push([STATUS_CONFIG[key]!.label ?? key, String(count)]);
         }
       });
 

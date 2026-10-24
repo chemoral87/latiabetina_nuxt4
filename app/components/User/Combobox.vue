@@ -70,7 +70,7 @@ const emit = defineEmits<{
 
 const items = ref<UserItem[]>([])
 const model = ref<UserItem[]>([])
-const search = ref<string | null>(null)
+const search = ref<string | undefined>(undefined)
 const searching = ref(false)
 const menu = ref(false)
 

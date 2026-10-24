@@ -18,33 +18,32 @@
  */
 export function useAuthCookies() {
   const config = useRuntimeConfig()
-  const baseUrl = (config.public.baseUrl || "") as string
+  const baseUrl = (config.public.baseUrl || '') as string
 
   let secure = false
   if (import.meta.client) {
-    secure = window.location.protocol === "https:"
+    secure = window.location.protocol === 'https:'
   } else {
-    let forwarded = ""
+    let forwarded = ''
     try {
-      forwarded = (useRequestHeaders(["x-forwarded-proto"])["x-forwarded-proto"] || "")
-        .split(",")[0]
-        .trim()
+      const headers = useRequestHeaders(['x-forwarded-proto'])
+      forwarded = (headers['x-forwarded-proto'] ?? '').split(',')[0]?.trim() ?? ''
     } catch {
-      forwarded = ""
+      forwarded = ''
     }
-    secure = forwarded === "https" || baseUrl.startsWith("https://")
+    secure = forwarded === 'https' || baseUrl.startsWith('https://')
   }
 
   const opts = {
-    path: "/",
-    sameSite: "lax" as const,
+    path: '/',
+    sameSite: 'lax' as const,
     secure,
     maxAge: 60 * 60 * 24 * 14,
   }
 
   return {
-    tokenCookie: useCookie<string | null>("auth.token", opts),
-    refreshTokenCookie: useCookie<string | null>("auth.refreshToken", opts),
-    strategyCookie: useCookie<string | null>("auth.strategy", opts),
+    tokenCookie: useCookie<string | null>('auth.token', opts),
+    refreshTokenCookie: useCookie<string | null>('auth.refreshToken', opts),
+    strategyCookie: useCookie<string | null>('auth.strategy', opts),
   }
 }

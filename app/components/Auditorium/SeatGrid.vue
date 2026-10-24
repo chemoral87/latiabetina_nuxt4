@@ -19,10 +19,10 @@
             Object.assign({}, getSeatConfig(seat), {
               x: 0,
               y: 0,
-              onMouseenter: e => emit('seat-hover', e),
-              onMouseleave: e => emit('seat-leave', e),
-              onClick: e => emit('seat-click', { seat, event: e }),
-              onTap: e => emit('seat-click', { seat, event: e }),
+              onMouseenter: (e: KonvaEvent) => emit('seat-hover', e),
+              onMouseleave: (e: KonvaEvent) => emit('seat-leave', e),
+              onClick: (e: KonvaEvent) => emit('seat-click', { seat, event: e }),
+              onTap: (e: KonvaEvent) => emit('seat-click', { seat, event: e }),
             })
           "
         />
@@ -33,6 +33,11 @@
 </template>
 
 <script setup lang="ts">
+interface KonvaEvent {
+  target?: any;
+  evt?: { stopPropagation?: () => void };
+  cancelBubble?: boolean;
+}
   /**
    * Shared Konva rendering for a single rows x cols seat grid: background
    * rect, row/column labels, and seat circles colored by category.
@@ -264,11 +269,11 @@
 
   function getIconPathConfig(seat: Seat) {
     const status = seat.status ? String(seat.status).toLowerCase() : null
-    const path = status ? STATUS_ICONS[status] : ''
+    const path = status ? STATUS_ICONS[status] ?? '' : ''
     if (!path) return null
 
     const radius = props.seatSize / 2
-    const iconScale = STATUS_CONFIG[status]?.icon_scale || 1.8
+    const iconScale = STATUS_CONFIG[status!]?.icon_scale || 1.8
     const scale = (radius * iconScale) / 24
     const offset = (24 * scale) / 2
     return {
@@ -314,11 +319,11 @@
     // Picked seats blink between their status colour and grey (same as the v1
     // mark page), so the user can see what is about to be assigned.
     if ((props.selectedSeatIds ?? []).includes(seat.id)) {
-      const baseColor = seat.status && STATUS_COLORS[seat.status] ? STATUS_COLORS[seat.status] : COLORS.SEAT_FREE
+      const baseColor = seat.status && STATUS_COLORS[seat.status] ? STATUS_COLORS[seat.status]! : COLORS.SEAT_FREE
       fill = props.blinkState ? baseColor : '#808080'
       strokeWidth = 0
     } else if (seat.status && STATUS_COLORS[seat.status]) {
-      fill = STATUS_COLORS[seat.status]
+      fill = STATUS_COLORS[seat.status]!
     }
 
     return {

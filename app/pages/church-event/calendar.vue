@@ -94,8 +94,8 @@
       v-if="churchEventDialogCopy"
       :loading="copying"
       :church-event="copyingChurchEvent"
-      @copy="copyChurchEvent"
       @close="churchEventDialogCopy = false"
+      @copy="(val: unknown) => copyChurchEvent(val as Parameters<typeof copyChurchEvent>[0])"
     />
 
     <!-- Dialogo de confirmacion de eliminacion -->
@@ -185,12 +185,9 @@ const skipFilterWatch = ref(false);
 // single-org users (see index_page_table_pattern.md).
 const effectiveOrgId = computed(() => {
   const orgPermission = auth.permissionsOrg["church-event-index"] ?? [];
-  const orgs = auth.user?.orgs ?? [];
-  if (
-    orgs.length === 1 &&
-    orgPermission.includes((orgs[0] as { id: unknown }).id)
-  ) {
-    return (orgs[0] as { id: unknown }).id;
+  const orgs = (auth.user?.orgs as { id: number }[] | undefined) ?? [];
+  if (orgs.length === 1 && orgPermission.includes(orgs[0]!.id)) {
+    return orgs[0]!.id;
   }
   return null;
 });
@@ -231,7 +228,7 @@ const effectiveOrgId = computed(() => {
   };
 }
 
-const churchEvents = computed(() => response.value?.data || []);
+const churchEvents = computed(() => (response.value?.data || []) as { id: number | string }[]);
 
 // Debounced filter (300ms): the input ref feeds the API-driving ref, and the
 // clear is immediate (never debounced) — see index_page_table_pattern.md.

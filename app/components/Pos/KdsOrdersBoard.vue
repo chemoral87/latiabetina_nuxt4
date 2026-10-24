@@ -89,6 +89,7 @@ interface PrepItem {
   id: number
   quantity: number
   completed_quantity?: number
+  preparation_status?: string
   product?: { requires_preparation?: boolean }
 }
 

@@ -1,17 +1,6 @@
-import {
-  newLine,
-  newSection,
-  newSyllable,
-  newTab,
-} from "~/types/song"
-import type {
-  SongContent,
-  SongLine,
-  SongSection,
-  SongSyllable,
-  SongTab,
-} from "~/types/song"
-import { isChordLine, splitLine } from "~/utils/syllables"
+import { newLine, newSection, newSyllable, newTab } from '~/types/song'
+import type { SongContent, SongLine, SongSection, SongSyllable, SongTab } from '~/types/song'
+import { isChordLine, splitLine } from '~/utils/syllables'
 
 const TAB_LINE_RE = /^[A-Ga-g]\|/
 const SECTION_RE = /^\[(.*)\]$/
@@ -77,7 +66,7 @@ export function parsePastedLyrics(text: string): SongContent {
 
   const ensureSection = () => {
     if (!currentSection) {
-      currentSection = newSection("Verso 1")
+      currentSection = newSection('Verso 1')
       content.sections.push(currentSection)
     }
   }
@@ -87,10 +76,10 @@ export function parsePastedLyrics(text: string): SongContent {
 
     if (TAB_LINE_RE.test(trimmed)) {
       if (!currentTab) {
-        currentTab = newTab("Tab")
+        currentTab = newTab('Tab')
         content.tabs.push(currentTab)
       }
-      currentTab.tablature += currentTab.tablature ? "\n" + trimmed : trimmed
+      currentTab.tablature += currentTab.tablature ? '\n' + trimmed : trimmed
       continue
     }
 
@@ -100,7 +89,7 @@ export function parsePastedLyrics(text: string): SongContent {
     if (NUMBER_RE.test(trimmed)) continue
 
     if (SECTION_RE.test(trimmed)) {
-      currentSection = newSection(trimmed.slice(1, -1).trim() || "Sección")
+      currentSection = newSection(trimmed.slice(1, -1).trim() || 'Sección')
       content.sections.push(currentSection)
       pendingChords = []
       continue
@@ -113,29 +102,27 @@ export function parsePastedLyrics(text: string): SongContent {
 
     ensureSection()
     const positioned = positionedSyllables(trimmed)
-    const line: SongLine = newLine(
-      positioned.map((p) => newSyllable(p.text) as SongSyllable),
-    )
+    const line: SongLine = newLine(positioned.map(p => newSyllable(p.text) as SongSyllable))
 
     if (pendingChords.length > 0) {
       for (const chord of pendingChords) {
         let targetIndex = positioned.length ? 0 : -1
         for (let i = 0; i < positioned.length; i++) {
-          if (chord.col <= positioned[i].end) {
+          if (chord.col <= positioned[i]!.end) {
             targetIndex = i
             break
           }
           targetIndex = i
         }
         if (targetIndex >= 0) {
-          const target = line.syllables[targetIndex]
+          const target = line.syllables[targetIndex]!
           target.chords.push(chord.name)
         }
       }
       pendingChords = []
     }
 
-    currentSection.lines.push(line)
+    currentSection!.lines.push(line)
   }
 
   return content

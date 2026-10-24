@@ -1,35 +1,17 @@
-const VOWELS = "aeiouáéíóúü"
-const STRONG = "aeoáéó"
-const WEAK = "iuüy"
-const WEAK_ACCENTED = "íú"
-const INSEPARABLE_PAIRS = [
-  "ch",
-  "ll",
-  "rr",
-  "pr",
-  "br",
-  "tr",
-  "dr",
-  "cr",
-  "gr",
-  "fr",
-  "kr",
-  "pl",
-  "bl",
-  "cl",
-  "gl",
-  "fl",
-  "tl",
-]
+const VOWELS = 'aeiouáéíóúü'
+const STRONG = 'aeoáéó'
+const WEAK = 'iuüy'
+const WEAK_ACCENTED = 'íú'
+const INSEPARABLE_PAIRS = ['ch', 'll', 'rr', 'pr', 'br', 'tr', 'dr', 'cr', 'gr', 'fr', 'kr', 'pl', 'bl', 'cl', 'gl', 'fl', 'tl']
 const LETTER_RE = /[a-záéíóúüñ]/
 
 function isVowel(c: string): boolean {
   return VOWELS.includes(c)
 }
 
-function vowelClass(c: string): "strong" | "weak" | null {
-  if (STRONG.includes(c)) return "strong"
-  if (WEAK.includes(c) || WEAK_ACCENTED.includes(c)) return "weak"
+function vowelClass(c: string): 'strong' | 'weak' | null {
+  if (STRONG.includes(c)) return 'strong'
+  if (WEAK.includes(c) || WEAK_ACCENTED.includes(c)) return 'weak'
   return null
 }
 
@@ -38,7 +20,7 @@ function canFormDiphthong(a: string, b: string): boolean {
   const ca = vowelClass(a)
   const cb = vowelClass(b)
   if (!ca || !cb) return false
-  if (ca === "weak" && cb === "weak") return true
+  if (ca === 'weak' && cb === 'weak') return true
   if (ca !== cb) {
     // weak + strong / strong + weak combine unless the weak vowel is accented
     if (WEAK_ACCENTED.includes(a) || WEAK_ACCENTED.includes(b)) return false
@@ -64,44 +46,44 @@ export function syllabifyWord(word: string): string[] {
   // right after a vowel (ley, hoy, Uruguay).
   const isV = (c: string, idx: number): boolean => {
     if (isVowel(c)) return true
-    if (c === "y" && idx === n - 1 && idx > 0 && isVowel(chars[idx - 1])) return true
+    if (c === 'y' && idx === n - 1 && idx > 0 && isVowel(chars[idx - 1]!)) return true
     return false
   }
 
   const runs: { v: boolean; chars: string[] }[] = []
   let i = 0
   while (i < n) {
-    const v = isV(chars[i], i)
+    const v = isV(chars[i]!, i)
     let j = i
-    while (j < n && isV(chars[j], j) === v) j++
+    while (j < n && isV(chars[j]!, j) === v) j++
     runs.push({ v, chars: chars.slice(i, j) })
     i = j
   }
 
   const syllables: string[] = []
-  let cur = ""
+  let cur = ''
   const flush = () => {
     if (cur) {
       syllables.push(cur)
-      cur = ""
+      cur = ''
     }
   }
 
   for (let r = 0; r < runs.length; r++) {
-    const run = runs[r]
+    const run = runs[r]!
     if (run.v) {
       const vs = run.chars
-      cur += vs[0]
+      cur += vs[0]!
       for (let k = 1; k < vs.length; k++) {
-        if (canFormDiphthong(vs[k - 1], vs[k])) {
-          cur += vs[k]
+        if (canFormDiphthong(vs[k - 1]!, vs[k]!)) {
+          cur += vs[k]!
         } else {
           flush()
-          cur = vs[k]
+          cur = vs[k]!
         }
       }
     } else {
-      const cs = run.chars.join("")
+      const cs = run.chars.join('')
       const k = cs.length
       const first = r === 0
       const last = r === runs.length - 1
@@ -136,10 +118,10 @@ export function splitLine(line: string): string[] {
   const syllables: string[] = []
   for (const token of tokens) {
     const leadMatch = token.match(LEADING_PUNCT_RE)
-    const lead = leadMatch ? leadMatch[0] : ""
+    const lead = leadMatch ? leadMatch[0] : ''
     let core = token.slice(lead.length)
     const trailMatch = core.match(TRAILING_PUNCT_RE)
-    const trail = trailMatch ? trailMatch[0] : ""
+    const trail = trailMatch ? trailMatch[0] : ''
     core = core.slice(0, core.length - trail.length)
 
     const parts = syllabifyWord(core)
@@ -157,7 +139,7 @@ export function splitLine(line: string): string[] {
 let uidCounter = 0
 
 /** Short unique id for editor nodes (sections, lines, syllables, tabs). */
-export function uid(prefix = ""): string {
+export function uid(prefix = ''): string {
   uidCounter += 1
   const rnd = Math.random().toString(36).slice(2, 8)
   return prefix ? `${prefix}-${rnd}${uidCounter}` : `${rnd}${uidCounter}`
@@ -169,34 +151,34 @@ const CHORD_RE = /^[A-G](#|b)?[a-zA-Z0-9#b+\-()]*$/
 // otherwise look like chord symbols (Fe, Dios, La, El, De...). When a token
 // is in this list it is treated as lyric text, not a chord.
 const CHORD_BLACKLIST = new Set([
-  "de",
-  "el",
-  "en",
-  "es",
-  "se",
-  "fe",
-  "la",
-  "mi",
-  "do",
-  "re",
-  "fa",
-  "sol",
-  "da",
-  "ve",
-  "va",
-  "le",
-  "te",
-  "mas",
-  "don",
-  "del",
-  "al",
-  "ala",
-  "dia",
-  "dios",
-  "fue",
-  "dio",
-  "me",
-  "des",
+  'de',
+  'el',
+  'en',
+  'es',
+  'se',
+  'fe',
+  'la',
+  'mi',
+  'do',
+  're',
+  'fa',
+  'sol',
+  'da',
+  've',
+  'va',
+  'le',
+  'te',
+  'mas',
+  'don',
+  'del',
+  'al',
+  'ala',
+  'dia',
+  'dios',
+  'fue',
+  'dio',
+  'me',
+  'des',
 ])
 
 /** True when a token looks like a chord symbol (G, Am, C7, Em7(b5), D/F#...). */
@@ -209,5 +191,5 @@ export function isChordToken(token: string): boolean {
 export function isChordLine(line: string): boolean {
   const tokens = line.trim().split(/\s+/).filter(Boolean)
   if (tokens.length === 0) return false
-  return tokens.every((t) => isChordToken(t))
+  return tokens.every(t => isChordToken(t))
 }

@@ -1,3 +1,5 @@
+import type { PaginatedResponse } from './common'
+
 export interface User {
   id: number
   name: string

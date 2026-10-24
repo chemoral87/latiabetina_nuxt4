@@ -88,7 +88,7 @@ interface Header {
   title: string
   value: string
   sortable: boolean
-  align?: string
+  align?: "start" | "center" | "end"
   width?: string
 }
 
@@ -124,7 +124,7 @@ const emit = defineEmits<{
 
 const auth = useAuthStore()
 
-function parseSortBy(opts: Record<string, unknown> | null): { key: string; order: string }[] {
+function parseSortBy(opts: Record<string, unknown> | null): { key: string; order: "asc" | "desc" }[] {
   if (!opts) return [{ key: "name", order: "asc" }]
   const sb = opts.sortBy
   const desc = Array.isArray(opts.sortDesc) ? Boolean(opts.sortDesc[0]) : false
@@ -141,7 +141,7 @@ function parseSortBy(opts: Record<string, unknown> | null): { key: string; order
 // enough to keep pagination state in sync.
 const page = ref(Number((props.options?.page as number) ?? 1))
 const itemsPerPage = ref(Number((props.options?.itemsPerPage as number) ?? 10))
-const sortBy = ref<{ key: string; order: string }[]>(parseSortBy(props.options))
+const sortBy = ref<{ key: string; order: "asc" | "desc" }[]>(parseSortBy(props.options))
 const dialogDeleteProp = ref<Record<string, unknown>>({})
 
 const showOrgColumn = computed(() => {

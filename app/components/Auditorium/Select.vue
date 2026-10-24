@@ -165,7 +165,7 @@ async function loadAuditoriums() {
   if (cache.has(key)) {
     items.value = cache.get(key)!
     if (items.value.length === 1 && !selected.value) {
-      selected.value = items.value[0].id
+      selected.value = items.value[0]?.id ?? null
     }
     return
   }
@@ -180,7 +180,7 @@ async function loadAuditoriums() {
     cache.set(key, items.value)
 
     if (items.value.length === 1 && !selected.value) {
-      selected.value = items.value[0].id
+      selected.value = items.value[0]?.id ?? null
     }
   } catch (error) {
     items.value = []

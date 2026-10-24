@@ -10,9 +10,9 @@
         <ConsolidationConsolidatorCombobox
           id="cmm-consolidator-combobox"
           :disabled="saving"
-          :org-id="member.org_id"
           label="Asignar consolidadores"
           :consolidatorsx="consolidators"
+          :org-id="member.org_id as string | number | undefined"
           @model-change="emit('update:consolidators', $event)"
         />
         <div class="d-flex justify-end mt-2">
@@ -67,7 +67,7 @@ defineProps<{
   canAssign: boolean;
 }>();
 
-defineEmits<{
+const emit = defineEmits<{
   "update:consolidators": [
     val: { id: number | string; name: string; last_name?: string }[],
   ];

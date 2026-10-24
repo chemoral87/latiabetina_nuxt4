@@ -7,46 +7,46 @@
       density="compact"
       :headers="headers"
       :items-length="total"
-      mobile-breakpoint="0"
+      :mobile-breakpoint="0"
       :loading="props.loading"
       class="elevation-1 xwidth1000"
       @update:options="onUpdateOptions">
       <template #[`item.name`]="{ item }">
-        {{ item.name }} {{ item.last_name }}
+        {{ asRec(item).name }} {{ asRec(item).last_name }}
       </template>
 
       <template #[`item.cellphone`]="{ item }">
-        {{ maskedCellphone(item.cellphone) }}
+        {{ maskedCellphone(asRec(item).cellphone) }}
       </template>
 
       <template #[`item.years_old`]="{ item }">
-        {{ item.years_old ?? "—" }}
+        {{ asRec(item).years_old ?? "—" }}
       </template>
 
       <template #[`item.status`]="{ item }">
-        <VChip size="small" variant="elevated" :color="statusColor(item.status)">
-          {{ statusLabel(item.status) }}
+        <VChip size="small" variant="elevated" :color="statusColor(asRec(item).status as string)">
+          {{ statusLabel(asRec(item).status as string) }}
         </VChip>
       </template>
 
       <template #[`item.last_contacted`]="{ item }">
         <div>
-          <div>{{ formatHumanDate(String(item.last_contacted ?? "")) || "—" }}</div>
-          <div v-if="item.last_contacted_by" class="text-caption text-medium-emphasis">
-            {{ item.last_contacted_by }}
+          <div>{{ formatHumanDate(String(asRec(item).last_contacted ?? "")) || "—" }}</div>
+          <div v-if="asRec(item).last_contacted_by" class="text-caption text-medium-emphasis">
+            {{ asRec(item).last_contacted_by }}
           </div>
         </div>
       </template>
 
       <template #[`item.creator`]="{ item }">
         {{
-          item.creator ? `${item.creator.name} ${item.creator.last_name}` : "—"
+          asRec(item).creator ? `${(asRec(item).creator as Record<string, unknown>).name} ${(asRec(item).creator as Record<string, unknown>).last_name}` : "—"
         }}
       </template>
 
       <template #[`item.consolidators`]="{ item }">
-        <template v-if="Array.isArray(item.consolidators) && item.consolidators.length">
-          <div v-for="c in item.consolidators" :key="c.id">
+        <template v-if="Array.isArray(asRec(item).consolidators) && (asRec(item).consolidators as unknown[]).length">
+          <div v-for="c in asRec(item).consolidators as Record<string, unknown>[]" :key="String(c.id)">
             {{ c.name }} {{ c.last_name }}
           </div>
         </template>
@@ -54,7 +54,7 @@
       </template>
 
       <template #[`item.org_id`]="{ item }">
-        {{ orgLabel(item.org_id) }}
+        {{ orgLabel(asRec(item).org_id) }}
       </template>
 
       <template #[`item.actions`]="{ item }">
@@ -92,10 +92,12 @@ import { useChurchMemberStatus } from "~/composables/useChurchMemberStatus";
 interface Header {
   title: string;
   value: string;
-  sortable: boolean;
-  align?: string;
+  sortable?: boolean;
+  align?: "start" | "center" | "end";
   width?: string;
 }
+
+const asRec = (i: unknown) => i as Record<string, unknown>;
 
 const props = withDefaults(
   defineProps<{
@@ -124,7 +126,7 @@ const { statusLabel, statusColor } = useChurchMemberStatus();
 
 const singleOrg = computed(() => auth.hasSingleOrgFor("conso-sheet-index"));
 
-const sortBy = ref([{ key: "last_contacted", order: "asc" }]);
+const sortBy = ref<{ key: string; order: "asc" | "desc" }[]>([{ key: "last_contacted", order: "asc" }]);
 
 function onUpdateOptions(opts: Record<string, unknown>) {
   emit("update:options", opts);

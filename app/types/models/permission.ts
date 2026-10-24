@@ -1,3 +1,5 @@
+import type { PaginatedResponse } from './common'
+
 export interface Permission {
   id: number
   name: string

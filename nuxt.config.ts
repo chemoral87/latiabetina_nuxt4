@@ -58,14 +58,7 @@ export default defineNuxtConfig({
   css: ['@/assets/css/global.css'],
   vuetify: {
     moduleOptions: {
-      importComposables: [
-        'useDate',
-        'useLocale',
-        'useDefaults',
-        'useDisplay',
-        'useRtl',
-        'useTheme',
-      ],
+      importComposables: ['useDate', 'useLocale', 'useDefaults', 'useDisplay', 'useRtl', 'useTheme'],
     },
     vuetifyOptions: {
       theme: {
@@ -77,30 +70,12 @@ export default defineNuxtConfig({
         messages: {
           // Vuetify only loads the built-in "en" locale by default; any other
           // locale must be supplied entirely by the app. Spread the full
-          // built-in Spanish messages so all `$vuetify.*` keys resolve, then
-          // override the date labels with the app's own Spanish values.
+          // built-in Spanish messages so all `$vuetify.*` keys resolve.
+          // Date labels (weekdays/months) are patched on the date adapter in
+          // app/plugins/vuetify-weekdays.ts — `locale.messages` only accepts
+          // strings/nested messages, not label arrays.
           es: {
             ...es,
-            date: {
-              months: {
-                short: [
-                  'Ene',
-                  'Feb',
-                  'Mar',
-                  'Abr',
-                  'May',
-                  'Jun',
-                  'Jul',
-                  'Ago',
-                  'Sep',
-                  'Oct',
-                  'Nov',
-                  'Dic',
-                ],
-              },
-              weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-              weekdaysShort: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
-            },
           },
         },
       },

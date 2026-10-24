@@ -1,4 +1,4 @@
-import { acceptHMRUpdate, defineStore } from "pinia"
+import { acceptHMRUpdate, defineStore } from 'pinia'
 
 export interface QuizAnswer {
   text: string
@@ -21,16 +21,16 @@ interface LevelConfig {
 }
 
 const LEVEL_CONFIG: Record<string, LevelConfig> = {
-  basic: { color: "green", icon: "mdi-star", label: { en: "Basic", es: "Básico" }, count: { en: 60, es: 60 } },
-  intermediate: { color: "orange", icon: "mdi-star-half-full", label: { en: "Intermediate", es: "Intermedio" }, count: { en: 60, es: 60 } },
-  expert: { color: "red", icon: "mdi-star-outline", label: { en: "Expert", es: "Experto" }, count: { en: 60, es: 60 } },
+  basic: { color: 'green', icon: 'mdi-star', label: { en: 'Basic', es: 'Básico' }, count: { en: 60, es: 60 } },
+  intermediate: { color: 'orange', icon: 'mdi-star-half-full', label: { en: 'Intermediate', es: 'Intermedio' }, count: { en: 60, es: 60 } },
+  expert: { color: 'red', icon: 'mdi-star-outline', label: { en: 'Expert', es: 'Experto' }, count: { en: 60, es: 60 } },
 }
 
 function shuffleArray<T>(arr: T[]): T[] {
   const shuffled = [...arr]
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
-    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+    ;[shuffled[i], shuffled[j]] = [shuffled[j]!, shuffled[i]!]
   }
   return shuffled
 }
@@ -45,11 +45,11 @@ function clampCount(v: number): number {
  * level config, so the same quiz state survives across the Courses pages that
  * mount `CoursesQuizQuizPage`.
  */
-export const useQuizStore = defineStore("quiz", () => {
+export const useQuizStore = defineStore('quiz', () => {
   // ---- state ----
-  const lang = ref("es")
+  const lang = ref('es')
   const allQuestions = ref<QuizQuestion[]>([])
-  const selectedLevels = ref<string[]>(["basic", "intermediate", "expert"])
+  const selectedLevels = ref<string[]>(['basic', 'intermediate', 'expert'])
   const questionCount = ref(15)
   const quizStarted = ref(false)
   const starting = ref(false)
@@ -64,38 +64,38 @@ export const useQuizStore = defineStore("quiz", () => {
   const levelConfig = computed(() => LEVEL_CONFIG)
 
   function levelColor(level: string): string {
-    return LEVEL_CONFIG[level]?.color || "grey"
+    return LEVEL_CONFIG[level]?.color || 'grey'
   }
 
   function levelIcon(level: string): string {
-    return LEVEL_CONFIG[level]?.icon || "mdi-help"
+    return LEVEL_CONFIG[level]?.icon || 'mdi-help'
   }
 
   function levelLabel(level: string): string {
-    return LEVEL_CONFIG[level]?.label?.[lang.value] || LEVEL_CONFIG[level]?.label?.es || level
+    const label = LEVEL_CONFIG[level]?.label as Record<string, string> | undefined
+    return label?.[lang.value] || label?.es || level
   }
 
   function levelCount(level: string, l: string): number {
-    return LEVEL_CONFIG[level]?.count?.[l] || 50
+    const count = LEVEL_CONFIG[level]?.count as Record<string, number> | undefined
+    return count?.[l] || 50
   }
 
   const maxQuestions = computed(() => {
     if (selectedLevels.value.length === 0) return 0
-    return allQuestions.value.filter((q) => selectedLevels.value.includes(q.level)).length
+    return allQuestions.value.filter(q => selectedLevels.value.includes(q.level)).length
   })
 
   const currentQuestion = computed(() => questions.value[currentQuestionIndex.value])
 
-  const answeredCount = computed(
-    () => userAnswers.value.filter((a) => a !== null && a !== undefined).length,
-  )
+  const answeredCount = computed(() => userAnswers.value.filter(a => a !== null && a !== undefined).length)
 
   const correctCount = computed(() =>
     questions.value.reduce((count, question, idx) => {
       const ua = userAnswers.value[idx]
       if (ua === null || ua === undefined) return count
       return count + (question.answers[ua]?.isCorrect ? 1 : 0)
-    }, 0),
+    }, 0)
   )
 
   const incorrectCount = computed(() => answeredCount.value - correctCount.value)
@@ -108,42 +108,38 @@ export const useQuizStore = defineStore("quiz", () => {
   }
 
   const scoreColor = computed(() => {
-    if (answeredCount.value === 0) return ""
+    if (answeredCount.value === 0) return ''
     const pct = correctCount.value / answeredCount.value
-    if (pct >= 0.8) return "text-green"
-    if (pct >= 0.5) return "text-orange"
-    return "text-red"
+    if (pct >= 0.8) return 'text-green'
+    if (pct >= 0.5) return 'text-orange'
+    return 'text-red'
   })
 
   const finalResultColor = computed(() => {
     const pct = questions.value.length > 0 ? correctCount.value / questions.value.length : 0
-    if (pct >= 0.8) return "text-green"
-    if (pct >= 0.5) return "text-orange"
-    return "text-red"
+    if (pct >= 0.8) return 'text-green'
+    if (pct >= 0.5) return 'text-orange'
+    return 'text-red'
   })
 
   const finalResultIcon = computed(() => {
     const pct = questions.value.length > 0 ? correctCount.value / questions.value.length : 0
-    if (pct >= 0.9) return "mdi-trophy"
-    if (pct >= 0.7) return "mdi-emoticon-happy"
-    if (pct >= 0.5) return "mdi-emoticon-neutral"
-    return "mdi-emoticon-sad"
+    if (pct >= 0.9) return 'mdi-trophy'
+    if (pct >= 0.7) return 'mdi-emoticon-happy'
+    if (pct >= 0.5) return 'mdi-emoticon-neutral'
+    return 'mdi-emoticon-sad'
   })
 
-  const progressPercent = computed(() =>
-    questions.value.length > 0 ? ((currentQuestionIndex.value + 1) / questions.value.length) * 100 : 0,
-  )
+  const progressPercent = computed(() => (questions.value.length > 0 ? ((currentQuestionIndex.value + 1) / questions.value.length) * 100 : 0))
 
   function questionChipColor(idx: number): string {
-    if (idx === currentQuestionIndex.value) return "primary"
-    if (!isAnswered(idx)) return "grey-lighten-3"
+    if (idx === currentQuestionIndex.value) return 'primary'
+    if (!isAnswered(idx)) return 'grey-lighten-3'
     const answer = questions.value[idx]?.answers[userAnswers.value[idx] as number]
-    return answer && answer.isCorrect ? "success" : "error"
+    return answer && answer.isCorrect ? 'success' : 'error'
   }
 
-  const answerCircleColor = computed(() =>
-    isAnswered(currentQuestionIndex.value) ? "grey-lighten-1" : "grey-darken-1",
-  )
+  const answerCircleColor = computed(() => (isAnswered(currentQuestionIndex.value) ? 'grey-lighten-1' : 'grey-darken-1'))
 
   function levelStats(level: string): { total: number; correct: number } {
     let total = 0
@@ -218,11 +214,11 @@ export const useQuizStore = defineStore("quiz", () => {
       // Remap questions to the new language using their id, and preserve
       // user answers by matching childId
       const newPoolById: Record<string, QuizQuestion> = {}
-      payload.questions.forEach((q) => {
+      payload.questions.forEach(q => {
         newPoolById[String(q.id)] = q
       })
 
-      const newQuestions = questions.value.map((oldQ) => {
+      const newQuestions = questions.value.map(oldQ => {
         const match = newPoolById[String(oldQ.id)]
         if (!match) return { ...oldQ }
         return {
@@ -239,14 +235,14 @@ export const useQuizStore = defineStore("quiz", () => {
         if (!oldAnswer || oldAnswer.childId === undefined) return null
 
         const newQ = newQuestions[idx]
-        const newIdx = newQ.answers.findIndex((a) => a.childId === oldAnswer.childId)
+        const newIdx = newQ!.answers.findIndex(a => a.childId === oldAnswer.childId)
         return newIdx >= 0 ? newIdx : null
       })
 
       setQuiz(newQuestions, newUserAnswers, currentQuestionIndex.value)
     } else if (!wasStarted) {
       // Reset selections if needed (counts may differ)
-      const max = payload.questions.filter((q) => selectedLevels.value.includes(q.level)).length
+      const max = payload.questions.filter(q => selectedLevels.value.includes(q.level)).length
       if (questionCount.value > max) {
         setQuestionCount(max)
       }
@@ -256,10 +252,10 @@ export const useQuizStore = defineStore("quiz", () => {
   function startQuiz() {
     starting.value = true
 
-    let pool = allQuestions.value.filter((q) => selectedLevels.value.includes(q.level))
+    let pool = allQuestions.value.filter(q => selectedLevels.value.includes(q.level))
     pool = shuffleArray(pool)
     const count = Math.min(questionCount.value, pool.length)
-    const questionsList = pool.slice(0, count).map((q) => ({
+    const questionsList = pool.slice(0, count).map(q => ({
       ...q,
       answers: shuffleArray(q.answers),
     }))

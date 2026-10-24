@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div id="cmp-log-entry-table">
     <VDataTableServer
       id="le-table"
@@ -19,7 +19,7 @@
     >
       <template #top>
         <div class="d-flex justify-end pa-2">
-          <VBtn v-if="selectedIds.length" id="le-delete-selected-btn" color="error" variant="flat" @click="openDeleteDialog">
+          <VBtn v-if="canDelete && selectedIds.length" id="le-delete-selected-btn" color="error" variant="flat" @click="openDeleteDialog">
             <VIcon start>mdi-delete</VIcon>
             Eliminar ({{ selectedIds.length }})
           </VBtn>
@@ -83,6 +83,8 @@
     { title: 'Contexto', value: 'context' },
   ]
 
+  const auth = useAuthStore()
+  const canDelete = computed(() => auth.hasPermission('log-entry-delete'))
   const selected = ref<number[]>([])
   const page = ref(1)
   const itemsPerPage = ref(10)

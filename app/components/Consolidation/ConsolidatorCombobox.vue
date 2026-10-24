@@ -54,7 +54,7 @@
 defineOptions({ inheritAttrs: false });
 
 interface UserItem {
-  id: number;
+  id: number | string;
   name: string;
   last_name?: string;
   email?: string;

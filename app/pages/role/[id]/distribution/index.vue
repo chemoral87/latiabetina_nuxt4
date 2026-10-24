@@ -44,7 +44,7 @@
                 {{ (item as Record<string, unknown>).organization_name }} ({{ (item as Record<string, unknown>).organization_short_code }})
               </template>
               <template #[`item.lastLogin`]="{ item }">
-                {{ formatLastLogin(((item as Record<string, unknown>).user as Record<string, unknown>)?.last_login_at) }}
+                {{ formatLastLogin(((item as Record<string, unknown>).user as Record<string, unknown>)?.last_login_at as string | null | undefined) }}
               </template>
               <template #[`item.actions`]="{ item }">
                 <VBtn

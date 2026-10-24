@@ -64,12 +64,12 @@ const emit = defineEmits<{
 
 const page = ref(1);
 const itemsPerPage = ref(10);
-const sortBy = ref([...props.initialSortBy]);
+const sortBy = ref<{ key: string; order: "asc" | "desc" }[]>([...props.initialSortBy] as { key: string; order: "asc" | "desc" }[]);
 const items = computed(() => props.response?.data ?? []);
 const total = computed(() => props.response?.total ?? 0);
 
 watch(() => props.initialSortBy, (val) => {
-  sortBy.value = [...val];
+  sortBy.value = [...val] as { key: string; order: "asc" | "desc" }[];
 });
 
 const headers = [

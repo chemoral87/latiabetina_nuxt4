@@ -46,10 +46,10 @@ export function parseAuditoriumConfig(csvString: string): Section[] {
     return fields
   }
 
-  const isNewFormat = lines[0].trim() === 'csv_format'
+  const isNewFormat = lines[0]!.trim() === 'csv_format'
 
   if (!isNewFormat) {
-    const header = lines[0].split(',')
+    const header = lines[0]!.split(',')
     const idx: Record<string, number> = {}
     header.forEach((h, i) => {
       idx[h.trim()] = i
@@ -60,16 +60,16 @@ export function parseAuditoriumConfig(csvString: string): Section[] {
     let currentSub: Subsection | null = null
 
     for (let li = 1; li < lines.length; li++) {
-      const f = parseCsvLine(lines[li])
-      const type = f[idx.type] || ''
-      const id = f[idx.id] || ''
-      const name = f[idx.name] || ''
-      const level = parseInt(f[idx.level] || '0', 10)
-      const tr = f[idx.tr] !== '' && f[idx.tr] !== undefined ? parseInt(f[idx.tr], 10) : undefined
-      const tc = f[idx.tc] !== '' && f[idx.tc] !== undefined ? parseInt(f[idx.tc], 10) : undefined
-      const r = f[idx.r] !== '' && f[idx.r] !== undefined ? parseInt(f[idx.r], 10) : undefined
-      const c = f[idx.c] !== '' && f[idx.c] !== undefined ? parseInt(f[idx.c], 10) : undefined
-      const k = (f[idx.k] || '').trim()
+      const f = parseCsvLine(lines[li]!)
+      const type = f[idx.type!] || ''
+      const id = f[idx.id!] || ''
+      const name = f[idx.name!] || ''
+      const level = parseInt(f[idx.level!] || '0', 10)
+      const tr = f[idx.tr!] !== '' && f[idx.tr!] !== undefined ? parseInt(f[idx.tr!]!, 10) : undefined
+      const tc = f[idx.tc!] !== '' && f[idx.tc!] !== undefined ? parseInt(f[idx.tc!]!, 10) : undefined
+      const r = f[idx.r!] !== '' && f[idx.r!] !== undefined ? parseInt(f[idx.r!]!, 10) : undefined
+      const c = f[idx.c!] !== '' && f[idx.c!] !== undefined ? parseInt(f[idx.c!]!, 10) : undefined
+      const k = (f[idx.k!] || '').trim()
 
       if (type === 's') {
         currentSection = { id, name, isLabel: level === 1, subsections: [] }
@@ -90,7 +90,7 @@ export function parseAuditoriumConfig(csvString: string): Section[] {
         }
         const seat: Seat = { id, row: r, col: c }
         if (k) seat.category = k
-        seats[r!].push(seat)
+        seats[r!]!.push(seat)
         currentSub.seats = seats
       }
     }
@@ -104,7 +104,7 @@ export function parseAuditoriumConfig(csvString: string): Section[] {
   let subCounter = 0
 
   for (let li = 1; li < lines.length; li++) {
-    const f = parseCsvLine(lines[li])
+    const f = parseCsvLine(lines[li]!)
     const type = f[0] || ''
 
     if (type === 's') {
@@ -143,7 +143,7 @@ export function parseAuditoriumConfig(csvString: string): Section[] {
       }
       const seat: Seat = { id, row: r, col: c }
       if (k) seat.category = k
-      seats[r].push(seat)
+      seats[r]!.push(seat)
       currentSub.seats = seats
     }
   }

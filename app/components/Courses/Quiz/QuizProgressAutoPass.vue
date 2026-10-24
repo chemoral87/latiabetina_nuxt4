@@ -10,7 +10,7 @@
         :label="t('autoPass')"
         :model-value="autoPass"
         class="auto-pass-switch mt-0 pt-0"
-        @update:model-value="emit('toggleAutopass', $event)"
+        @update:model-value="emit('toggleAutopass', !!$event)"
       />
       <VIcon v-if="autoPass" class="ml-1" size="small" color="primary">mdi-auto-fix</VIcon>
     </div>

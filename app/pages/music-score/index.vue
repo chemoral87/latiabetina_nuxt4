@@ -3,5 +3,6 @@
 definePageMeta({ title: 'Partituras', icon: 'mdi-music-clef-treble', middleware: ['authenticated'] })
 const { Score } = useRepository()
 const result = await Score.index<unknown[] | { data?: unknown[] }>().catch(() => [])
-const items = ref(Array.isArray(result) ? result : result.data || [])
+type ScoreItem = { id: number | string; title?: string }
+const items = ref<ScoreItem[]>(Array.isArray(result) ? (result as ScoreItem[]) : ((result.data as ScoreItem[]) || []))
 </script>

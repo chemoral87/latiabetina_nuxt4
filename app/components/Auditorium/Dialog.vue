@@ -66,7 +66,13 @@ const formRef = ref()
 const dialogVisible = ref(true)
 const saving = ref(false)
 
-const item = ref<Record<string, unknown>>({})
+type AuditoriumItem = {
+  id?: number | string | null
+  org_id?: string | number | null
+  name?: string
+}
+
+const item = ref<AuditoriumItem>({})
 
 const formTitle = computed(() => item.value.id ? "Editar Auditorio" : "Nuevo Auditorio")
 

@@ -13,7 +13,7 @@
               density="compact"
               label="Buscar y asignar permisos"
               :permissionsx="
-                (mRole.permissions as Record<string, unknown>[]) ?? []
+                (mRole.permissions as { id: number; name: string }[]) ?? []
               "
               @model-change="setPermissions"
             />
@@ -126,7 +126,7 @@ if (mRole.value.name) {
   route.meta.title = "Permisos del Rol";
 }
 
-function setPermissions(permissions: Record<string, unknown>[]) {
+function setPermissions(permissions: { id: number; name: string }[]) {
   mRole.value.permissions = permissions;
 }
 
@@ -193,7 +193,7 @@ async function createAndAddPermission() {
     newPermissionName.value = "";
     if (newPerms.length === 1) {
       notify.notify({
-        success: `Permiso "${newPerms[0].name}" agregado al rol.`,
+        success: `Permiso "${newPerms[0]!.name}" agregado al rol.`,
       });
     } else {
       notify.notify({

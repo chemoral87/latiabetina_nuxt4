@@ -14,7 +14,7 @@
           id="pit-staff-cents"
           :class="tuningAccuracyClass"
           style="display: inline-block; text-align: right"
-          >{{ centsDeviation > 0 ? "+" : ""
+          >{{ (centsDeviation ?? 0) > 0 ? "+" : ""
           }}{{ centsDeviation !== null ? centsDeviation : "--" }}</strong
         >
         <strong>cents</strong>
@@ -181,7 +181,7 @@ function getNoteName(midiNote: number): string {
   const fullIndex = isHalfStep ? noteIndex * 2 + 1 : noteIndex * 2;
   return (latinNotation.value ? NOTE_LATIN_STRINGS : NOTE_SHORT_STRINGS)[
     fullIndex
-  ];
+  ]!;
 }
 
 function drawStaff() {
@@ -269,7 +269,7 @@ function renderNotes(
   if (!ctx || !props.frequency) return;
   const currentMidi = freqToMidi(props.frequency);
   const roundedMidi = Math.round(currentMidi);
-  const noteColor = COLORS[(roundedMidi % 12) * 2];
+  const noteColor = COLORS[(roundedMidi % 12) * 2]!;
 
   const drawPair = (
     midi: number,
@@ -277,7 +277,7 @@ function renderNotes(
     customColor: string | null = null,
   ) => {
     const pairIsSharp = getNoteName(midi).match(/[♯#]/);
-    const pairColor = customColor || COLORS[(midi % 12) * 2];
+    const pairColor = customColor || COLORS[(midi % 12) * 2]!;
 
     // 1. Draw original Sharp Note
     const { noteY: ySharp, ledgerLines: lSharp } = calculateNotePos(
@@ -344,7 +344,7 @@ function calculateNotePos(
   const refY = isTreble ? trebleTop + 4 * lineSpacing : bassTop + lineSpacing;
   const totalDiff =
     (Math.floor(midi / 12) - Math.floor(refMidi / 12)) * 7 +
-    (NATURAL_POSITIONS[midi % 12] - NATURAL_POSITIONS[refMidi % 12]); // Use imported constant
+    (NATURAL_POSITIONS[midi % 12]! - NATURAL_POSITIONS[refMidi % 12]!); // Use imported constant
   const noteY = refY - totalDiff * (lineSpacing / 2);
   const ledgerLines: number[] = [];
 

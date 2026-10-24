@@ -108,7 +108,7 @@ const props = withDefaults(defineProps<{
   hideDetails?: boolean
   errorMessages?: string | string[]
   density?: "default" | "comfortable" | "compact" | null
-  variant?: "outlined" | "filled" | "solo" | "plain" | "underlined" | "elevated" | "flat" | "tonal" | null
+  variant?: "outlined" | "filled" | "solo" | "plain" | "underlined"
   color?: string
   min?: string | null
   max?: string | null

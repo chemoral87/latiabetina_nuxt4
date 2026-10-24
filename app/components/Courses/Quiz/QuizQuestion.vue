@@ -84,7 +84,7 @@ function getAnswerClasses(idx: number): string[] {
     classes.push("answer-unanswered")
     return classes
   }
-  const answer = props.answers[idx]
+  const answer = props.answers[idx]!
   if (answer.isCorrect) {
     classes.push("answer-correct")
   } else if (props.userAnswer === idx) {
@@ -101,7 +101,7 @@ function getAnswerTextClass(idx: number): string[] {
     classes.push("text-grey-darken-4")
     return classes
   }
-  const answer = props.answers[idx]
+  const answer = props.answers[idx]!
   if (answer.isCorrect) {
     classes.push("text-green", "font-weight-bold")
   } else if (props.userAnswer === idx) {

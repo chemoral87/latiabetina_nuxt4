@@ -160,8 +160,8 @@ const canCopy = computed(() => {
   return !!recurrence.value.start_date && !!recurrence.value.end_date && recurrence.value.days_of_week.length > 0
 })
 
-function isAllowedDate(date: string): boolean {
-  return date !== eventDate
+function isAllowedDate(date: unknown): boolean {
+  return String(date) !== eventDate
 }
 
 function removeDate(date: string) {

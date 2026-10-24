@@ -143,7 +143,6 @@
       label?: string
     }>(),
     {
-      modelValue: null,
       url: null,
       size: 750,
       label: '',
@@ -234,8 +233,9 @@
   }
 
   function dataURItoBlob(dataURI: string): Blob {
-    const byteString = atob(dataURI.split(',')[1])
-    const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+    const parts = dataURI.split(',')
+    const byteString = atob(parts[1] ?? '')
+    const mimeString = (parts[0] ?? '').split(':')[1]?.split(';')[0] ?? ''
     const ab = new ArrayBuffer(byteString.length)
     const ia = new Uint8Array(ab)
     for (let i = 0; i < byteString.length; i++) {
@@ -288,7 +288,7 @@
     }
     const objectUrl = _URL.createObjectURL(file)
     imgLoader.src = objectUrl
-    imgLoader.onloadend = () => _URL.revokeObjectURL(objectUrl)
+    imgLoader.onload = () => _URL.revokeObjectURL(objectUrl)
   }
 </script>
 

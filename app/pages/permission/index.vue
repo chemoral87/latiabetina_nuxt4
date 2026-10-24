@@ -81,7 +81,7 @@ const { Permission } = useRepository();
 const filterInput = ref("");
 const filterPermission = ref("");
 const permission = ref<Record<string, unknown> | null>(null);
-const response = ref({ data: [], total: 0 });
+const response = ref<{ data: unknown[]; total: number }>({ data: [], total: 0 });
 const loading = ref(false);
 const saving = ref(false);
 const permissionDialog = ref(false);
@@ -111,7 +111,7 @@ useDebouncedFilter(filterInput, filterPermission)
 async function loadPermissions(opts: Record<string, unknown>) {
   try {
     loading.value = true;
-    lastOptions.value = opts;
+    lastOptions.value = opts as typeof lastOptions.value;
     const params = buildApiParams(opts);
     if (filterPermission.value && !params.filter) params.filter = filterPermission.value;
     response.value = await Permission.index(params);
@@ -143,17 +143,20 @@ function newPermission() {
   permissionDialog.value = true;
 }
 
-function editPermission(item: Record<string, unknown>) {
+function editPermission(val: unknown) {
+  const item = val as Record<string, unknown>
   useValidationErrors().clearErrors();
   permission.value = { ...item };
   permissionDialog.value = true;
 }
 
-function distributePermission(item: Record<string, unknown>) {
+function distributePermission(val: unknown) {
+  const item = val as Record<string, unknown>
   navigateTo(`/permission/${item.id}/distribution`);
 }
 
-async function deletePermission(item: Record<string, unknown>) {
+async function deletePermission(val: unknown) {
+  const item = val as Record<string, unknown>
   try {
     saving.value = true;
     await Permission.delete(item.id as number);

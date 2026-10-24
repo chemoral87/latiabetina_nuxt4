@@ -1,3 +1,5 @@
+import type { PaginatedResponse } from './common'
+
 export interface Product {
   id: number
   name: string

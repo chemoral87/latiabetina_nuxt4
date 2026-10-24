@@ -87,7 +87,7 @@
 <template v-for="(log, i) in logs" :key="log.id">
             <VListItem>
               <div class="d-flex align-center">
-                <span class="text-body-2 font-weight-bold">{{ formatShortDate(log.contact_datetime) }}</span>
+                <span class="text-body-2 font-weight-bold">{{ formatShortDate(log.contact_datetime as string | null | undefined) }}</span>
                 <VChip class="ml-2" size="small" :color="mediumColor(log.medium)">
                   {{ mediumLabel(log.medium) }}
                 </VChip>
@@ -217,7 +217,7 @@ async function save() {
       medium: form.value.medium,
       description: form.value.description,
     })
-    const created = res?.data ?? res
+    const created = (res?.data ?? res) as Record<string, unknown>
     logs.value = [created, ...logs.value]
     form.value.medium = ""
     form.value.description = ""

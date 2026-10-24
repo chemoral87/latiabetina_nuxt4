@@ -100,7 +100,7 @@ const { highlightId, flash, prependCreated } = useRowHighlight();
 const auth = useAuthStore();
 const { Auditorium } = useRepository();
 
-type SortBy = { key: string; order: string }[];
+type SortBy = { key: string; order: "asc" | "desc" }[];
 
 const lastOptions = ref<Record<string, unknown> & { sortBy: SortBy }>({
   page: 1,
@@ -145,7 +145,7 @@ async function indexAuditoriums(overrides: Record<string, unknown> = {}) {
     ...(lastOptions.value ?? {}),
     ...overrides,
   };
-  lastOptions.value = opts;
+  lastOptions.value = opts as typeof lastOptions.value;
 
   const params = buildApiParams(opts);
   if (filterAuditorium.value && !params.filter) params.filter = filterAuditorium.value;
@@ -180,13 +180,15 @@ function newAuditorium() {
   auditoriumDialog.value = true;
 }
 
-function editAuditorium(item: Record<string, unknown>) {
+function editAuditorium(val: unknown) {
+  const item = val as Record<string, unknown>;
   useValidationErrors().clearErrors();
   auditorium.value = { ...item };
   auditoriumDialog.value = true;
 }
 
-async function deleteAuditorium(item: Record<string, unknown>) {
+async function deleteAuditorium(val: unknown) {
+  const item = val as Record<string, unknown>;
   try {
     await Auditorium.delete(item.id as number);
     await indexAuditoriums(lastOptions.value ?? {});
@@ -239,7 +241,8 @@ function closeDialog() {
   useValidationErrors().clearErrors();
 }
 
-function goToLayout(item: Record<string, unknown>) {
+function goToLayout(val: unknown) {
+  const item = val as Record<string, unknown>;
   const version = Number(item.layout_version ?? 1);
   navigateTo(
     `/auditorium/${item.id}/${version === 2 ? "editor2" : "editor"}`,

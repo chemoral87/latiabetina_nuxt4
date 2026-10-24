@@ -19,7 +19,7 @@
       <VRow density="compact">
         <VCol md="6" cols="12">
           <RoleCombobox
-            :roles="profile.roles as Record<string, unknown>[]"
+            :roles="profile.roles as { id: number; name: string }[]"
             @model-change="setRoles"
           />
         </VCol>
@@ -27,7 +27,7 @@
           <PermissionCombobox
             label="Permisos Directos"
             :permissionsx="
-              profile.direct_permissions as Record<string, unknown>[]
+              profile.direct_permissions as { id: number; name: string }[]
             "
             @model-change="setDirectPermissions"
           />
@@ -105,11 +105,11 @@ if (mUser.value.name) {
   route.meta.showDrawer = false;
 }
 
-function setRoles(roles: Record<string, unknown>[]) {
+function setRoles(roles: { id: number; name: string }[]) {
   profile.value.roles = roles;
 }
 
-function setDirectPermissions(permissions: Record<string, unknown>[]) {
+function setDirectPermissions(permissions: { id: number; name: string }[]) {
   profile.value.direct_permissions = permissions;
 }
 

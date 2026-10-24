@@ -49,6 +49,8 @@
 
 <script setup lang="ts">
 import { STATUS_CONFIG } from "~/constants/auditorium";
+import AuditoriumSeatsStageCanvas from "~/components/Auditorium/SeatsStageCanvas.vue";
+import AuditoriumSeatsStageOpControls from "~/components/Auditorium/SeatsStageOpControls.vue";
 import { useLayout } from "vuetify";
 import type { Seat, Section, Subsection } from "~/types/auditorium";
 
@@ -104,7 +106,7 @@ const activeStatusConfig = computed(() => {
     )
     .reduce(
       (acc, key) => {
-        acc[key] = key === "_" ? null : STATUS_CONFIG[key];
+        acc[key] = key === "_" ? null : STATUS_CONFIG[key]!;
         return acc;
       },
       {} as Record<
@@ -273,7 +275,7 @@ function nextSubsection() {
   if (!selectedSubsection.value || allSubsections.value.length === 0) return;
   const currentIndex = currentSubsectionIndex.value;
   const nextIndex = (currentIndex + 1) % allSubsections.value.length;
-  selectedSubsection.value = allSubsections.value[nextIndex];
+  selectedSubsection.value = allSubsections.value[nextIndex]!;
   nextTick(() => {
     setTimeout(() => {
       applyCurrentFit();
@@ -286,7 +288,7 @@ function previousSubsection() {
   const currentIndex = currentSubsectionIndex.value;
   const prevIndex =
     currentIndex === 0 ? allSubsections.value.length - 1 : currentIndex - 1;
-  selectedSubsection.value = allSubsections.value[prevIndex];
+  selectedSubsection.value = allSubsections.value[prevIndex]!;
   nextTick(() => {
     setTimeout(() => {
       applyCurrentFit();
@@ -348,7 +350,7 @@ function handleSeatClick(payload: { seat: Seat; event?: unknown }) {
     return;
   }
 
-  const seatId = seat.i || seat.id;
+  const seatId = (seat.i || seat.id)!;
   const index = selectedSeatsArray.value.indexOf(seatId);
 
   selectedSeatsArray.value =

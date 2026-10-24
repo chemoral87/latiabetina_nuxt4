@@ -65,7 +65,7 @@
               <div class="text-caption text-grey-darken-1 mt-1">
                 <VIcon start size="x-small">mdi-account</VIcon>
                 {{ (log.changer as Record<string, unknown> | undefined)?.name || "N/A" }}
-                · {{ formatShortDate(log.created_at) }}
+                · {{ formatShortDate(log.created_at as string | null | undefined) }}
               </div>
               <div v-if="log.reason" class="text-caption mt-1">
                 <VIcon start size="x-small" color="primary">mdi-note-text-outline</VIcon>

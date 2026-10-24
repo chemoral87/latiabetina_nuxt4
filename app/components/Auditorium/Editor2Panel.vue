@@ -145,7 +145,7 @@
   function isFirstInGroup(sectionId: string, group: number | undefined): boolean {
     if (group === undefined) return false
     const idx = props.sections.findIndex(s => s.group === group)
-    return idx >= 0 && props.sections[idx].id === sectionId
+    return idx >= 0 && props.sections[idx]!.id === sectionId
   }
 
   function isGroupSelected(group: number | undefined): boolean {

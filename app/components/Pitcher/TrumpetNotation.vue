@@ -247,7 +247,7 @@ const glossaryRows = computed<GlossaryRow[]>(() => {
     .map(Number)
     .sort((a, b) => a - b);
   for (const octave of octaves) {
-    const pcs = Object.keys(FINGERINGS[octave])
+    const pcs = Object.keys(FINGERINGS[octave]!)
       .map(Number)
       .sort((a, b) => a - b);
     for (const pc of pcs) {
@@ -255,7 +255,7 @@ const glossaryRows = computed<GlossaryRow[]>(() => {
       const soundingMidi = writtenMidi - transposition.value;
       // En Sib el glosario llega hasta Do6 (sonido)
       if (tuning.value === "Bb" && soundingMidi > 84) continue;
-      const fingering = FINGERINGS[octave][pc];
+      const fingering = FINGERINGS[octave]![pc]!;
       rows.push({
         written: getNoteName(pc, octave),
         sounding: getNoteName(

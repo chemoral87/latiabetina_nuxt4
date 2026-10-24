@@ -81,6 +81,7 @@
 </template>
 
 <script setup lang="ts">
+import type { WhatsAppLog } from "~/components/WhatsApp/LogsTable.vue"
 definePageMeta({
   title: 'Mensajes WhatsApp',
   icon: 'mdi-whatsapp',
@@ -115,7 +116,7 @@ const botStatusAlert = computed(() => {
   return 'info'
 })
 
-const response = ref<{ data: unknown[]; total: number; current_page?: number; last_page?: number }>({
+const response = ref<{ data: WhatsAppLog[]; total: number; current_page?: number; last_page?: number }>({
   data: [],
   total: 0,
 })
@@ -149,7 +150,7 @@ watch(filterSuccess, () => fetchLogs({ page: 1 }))
   if (Array.isArray((initial as any).data)) {
     response.value = initial as any
   } else if (Array.isArray(initial as unknown as unknown[])) {
-    response.value = { data: initial as unknown as unknown[], total: (initial as unknown as unknown[]).length }
+    response.value = { data: initial as never, total: (initial as unknown as unknown[]).length }
   }
 }
 
@@ -161,7 +162,7 @@ async function fetchLogs(overrides: Record<string, unknown> = {}) {
   else if (!filterReceiverModel.value) delete opts.receiver
   if (!('sender' in overrides) && filterSenderModel.value) opts.sender = filterSenderModel.value
   else if (!filterSenderModel.value) delete opts.sender
-  if (!('success' in overrides) && filterSuccess.value !== null && filterSuccess.value !== '') opts.success = filterSuccess.value
+  if (!('success' in overrides) && filterSuccess.value !== null) opts.success = filterSuccess.value
   else if (filterSuccess.value === null) delete opts.success
 
   const params: Record<string, unknown> = {
@@ -174,8 +175,8 @@ async function fetchLogs(overrides: Record<string, unknown> = {}) {
 
   const sortBy = opts.sortBy as { key: string; order: string }[] | undefined
   if (sortBy?.length) {
-    params['sortBy[]'] = sortBy[0].key
-    params['sortDesc[]'] = sortBy[0].order === 'desc' ? 'true' : 'false'
+    params['sortBy[]'] = sortBy[0]!.key
+    params['sortDesc[]'] = sortBy[0]!.order === 'desc' ? 'true' : 'false'
   }
 
   try {

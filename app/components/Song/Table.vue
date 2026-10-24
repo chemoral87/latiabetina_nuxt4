@@ -34,12 +34,12 @@
       </template>
 
       <template #[`item.key`]="{ item }">
-        <VChip v-if="item.key" size="small" color="primary" variant="outlined">{{ item.key }}</VChip>
+        <VChip v-if="(item as Record<string, unknown>).key" size="small" color="primary" variant="outlined">{{ (item as Record<string, unknown>).key }}</VChip>
         <span v-else>—</span>
       </template>
 
       <template #[`item.updated_at`]="{ item }">
-        <span>{{ formatShortDateTime(item.updated_at as string | null).toUpperCase() }}</span>
+        <span>{{ formatShortDateTime((item as Record<string, unknown>).updated_at as string | null).toUpperCase() }}</span>
       </template>
 
       <template #[`item.actions`]="{ item }">
@@ -91,8 +91,8 @@ import { formatShortDateTime } from "~/utils/date"
 interface Header {
   title: string
   value: string
-  sortable: boolean
-  align?: string
+  sortable?: boolean
+  align?: "start" | "center" | "end"
   width?: string
 }
 
@@ -117,7 +117,7 @@ const emit = defineEmits<{
 
 const page = ref(1)
 const itemsPerPage = ref(10)
-const sortBy = ref<{ key: string; order: string }[]>([...props.initialSortBy])
+const sortBy = ref<{ key: string; order: "asc" | "desc" }[]>([...props.initialSortBy] as { key: string; order: "asc" | "desc" }[])
 
 const headers: Header[] = [
   { title: "", value: "view", sortable: false },

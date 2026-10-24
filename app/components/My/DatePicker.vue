@@ -130,8 +130,8 @@ const props = withDefaults(defineProps<{
   errorMessages?: string | string[]
   dense?: boolean
   outlined?: boolean
-  variant?: string
-  density?: string
+  variant?: "outlined" | "filled" | "solo" | "plain" | "underlined"
+  density?: "default" | "comfortable" | "compact"
   hideDetails?: boolean
   disabled?: boolean
   clearable?: boolean

@@ -106,7 +106,7 @@ interface Header {
   title: string
   value: string
   sortable: boolean
-  align?: string
+  align?: "start" | "center" | "end"
   width?: string
 }
 
@@ -135,7 +135,7 @@ const auth = useAuthStore()
 
 const page = ref(1)
 const itemsPerPage = ref(10)
-const sortBy = ref<{ key: string; order: string }[]>([...props.initialSortBy])
+const sortBy = ref<{ key: string; order: "asc" | "desc" }[]>([...props.initialSortBy] as { key: string; order: "asc" | "desc" }[])
 
 const total = computed(() => props.response?.total ?? 0)
 const items = computed(() => props.response?.data ?? [])
@@ -169,7 +169,7 @@ function orgCodeById(orgId?: number | string): string {
 
 function formatTime(value?: string | null): string {
   if (!value) return ""
-  const [hour, minute] = value.split(":").map(Number)
+  const [hour = NaN, minute = NaN] = value.split(":").map(Number)
   if (isNaN(hour) || isNaN(minute)) return ""
   const period = hour >= 12 ? "pm" : "am"
   const h = hour % 12 || 12

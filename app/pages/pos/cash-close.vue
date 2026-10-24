@@ -133,7 +133,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="sale in sales" :key="sale.id">
+            <tr v-for="sale in sales" :key="String(sale.id)">
               <td class="font-weight-bold">{{ sale.number }}</td>
               <td>{{ sale.customer_name || '—' }}</td>
               <td class="text-center">
@@ -273,7 +273,7 @@ function formatPrice(val: unknown): string {
 function formatTime(datetime: unknown): string {
   if (!datetime) return "—"
   const m = String(datetime).match(/(?:T|\s)(\d{1,2}):(\d{2})/)
-  if (m) return `${m[1].padStart(2, "0")}:${m[2]}`
+  if (m) return `${m[1]!.padStart(2, "0")}:${m[2]}`
   return "—"
 }
 

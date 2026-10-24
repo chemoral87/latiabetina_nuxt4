@@ -17,7 +17,7 @@
         contain
         height="180px"
         class="bg-grey-lighten-4"
-        :src="product.image_s3 || ''"
+        :src="(product.image_s3 as string) || ''"
         :style="product.hidden ? 'filter: brightness(0.7);' : ''"
       >
         <template #placeholder>
@@ -45,7 +45,7 @@
         </div>
         <div class="text-body-2 mb-2">
           Stock:
-          <strong :class="product.stock > 0 ? 'text-success' : 'text-error'">{{ product.stock }}</strong>
+          <strong :class="Number(product.stock) > 0 ? 'text-success' : 'text-error'">{{ product.stock }}</strong>
         </div>
         <VSwitch
           v-model="requiresPreparation"

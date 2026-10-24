@@ -43,7 +43,7 @@ const props = withDefaults(
   defineProps<{
     modelValue?: boolean
     count?: number
-    statusConfig?: Record<string, unknown>
+    statusConfig?: Record<string, { label?: string; color?: string; icon?: string } | null>
     panelTop?: string | null
     panelBottom?: string | null
   }>(),

@@ -19,32 +19,32 @@
       items-per-page-text="Filas por página"
       @update:options="onUpdateOptions">
       <template #[`item.consolidator`]="{ item }">
-        {{ item.consolidator ? `${item.consolidator.name} ${item.consolidator.last_name}` : "N/A" }}
+        {{ asRec(item).consolidator ? `${(asRec(item).consolidator as Record<string, unknown>).name} ${(asRec(item).consolidator as Record<string, unknown>).last_name}` : "N/A" }}
       </template>
 
       <template #[`item.churchMember`]="{ item }">
-        {{ item.churchMember ? `${item.churchMember.name} ${item.churchMember.last_name}` : "N/A" }}
+        {{ asRec(item).churchMember ? `${(asRec(item).churchMember as Record<string, unknown>).name} ${(asRec(item).churchMember as Record<string, unknown>).last_name}` : "N/A" }}
       </template>
 
       <template #[`item.changer`]="{ item }">
-        {{ item.changer ? `${item.changer.name} ${item.changer.last_name}` : "N/A" }}
+        {{ asRec(item).changer ? `${(asRec(item).changer as Record<string, unknown>).name} ${(asRec(item).changer as Record<string, unknown>).last_name}` : "N/A" }}
       </template>
 
       <template #[`item.action`]="{ item }">
         <VChip
           size="small"
           variant="flat"
-          :color="item.action === 'assigned' ? 'success' : 'error'"
+          :color="asRec(item).action === 'assigned' ? 'success' : 'error'"
         >
           <VIcon start size="small">
-            {{ item.action === 'assigned' ? 'mdi-account-plus' : 'mdi-account-minus' }}
+            {{ asRec(item).action === 'assigned' ? 'mdi-account-plus' : 'mdi-account-minus' }}
           </VIcon>
-          {{ item.action === 'assigned' ? 'Asignado' : 'Desasignado' }}
+          {{ asRec(item).action === 'assigned' ? 'Asignado' : 'Desasignado' }}
         </VChip>
       </template>
 
       <template #[`item.created_at`]="{ item }">
-        {{ formatShortDateTime12h(item.created_at as string) }}
+        {{ formatShortDateTime12h(asRec(item).created_at as string) }}
       </template>
 
       <template #no-data>
@@ -67,7 +67,7 @@ interface Header {
   title: string;
   value: string;
   sortable: boolean;
-  align?: string;
+  align?: "start" | "center" | "end";
   width?: string;
 }
 
@@ -94,7 +94,8 @@ const emit = defineEmits<{
 
 const page = ref(1);
 const itemsPerPage = ref(10);
-const sortBy = ref<{ key: string; order: string }[]>([...props.initialSortBy]);
+const asRec = (i: unknown) => i as Record<string, unknown>;
+const sortBy = ref<{ key: string; order: "asc" | "desc" }[]>([...props.initialSortBy] as { key: string; order: "asc" | "desc" }[]);
 
 const headers: Header[] = [
   { title: "Miembro", value: "churchMember", sortable: false },

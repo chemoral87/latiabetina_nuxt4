@@ -10,11 +10,12 @@
             <VRow density="compact">
               <VCol v-if="showOrgSelect" md="6" cols="12">
                 <OrganizationSelect
-                  v-model="product.org_id"
                   hide-one
                   density="compact"
                   variant="outlined"
                   permission="product-create"
+                  :model-value="product.org_id as string | number | null"
+                  @update:model-value="product.org_id = $event"
                 />
               </VCol>
               <VCol md="6" cols="12">

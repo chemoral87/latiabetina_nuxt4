@@ -61,7 +61,9 @@ export function formatShortDateTime(value?: string | null): string {
   const datePart = formatShortDate(value)
   if (!datePart) return String(value)
   const timeMatch = String(value).match(/(?:T|\s)(\d{1,2}):(\d{2})/)
-  return timeMatch ? `${datePart} ${timeMatch[1].padStart(2, '0')}:${timeMatch[2]}` : datePart
+  const hh = timeMatch?.[1]
+  const mm = timeMatch?.[2]
+  return hh && mm ? `${datePart} ${hh.padStart(2, '0')}:${mm}` : datePart
 }
 
 /**
@@ -85,7 +87,7 @@ export function formatShortDateTime12h(value?: string | null): string {
 export function formatHourTime(time?: string | null): string {
   if (!time) return '-'
   const [h, m] = time.split(':').map(Number)
-  if (isNaN(h) || isNaN(m)) return '-'
+  if (h === undefined || m === undefined || isNaN(h) || isNaN(m)) return '-'
   const h12 = h % 12 || 12
   const ampm = h < 12 ? 'am' : 'pm'
   return `${h12}:${pad(m)} ${ampm}`
@@ -118,8 +120,9 @@ function relativeFromNow(target: Date, now: Date): string {
 export function formatHumanDate(value?: string | null, now = new Date()): string {
   if (!value) return ''
   const [year, month, day] = String(value).split(/[-T ]/)
+  if (!year || !month) return String(value)
   const m = parseInt(month, 10)
-  if (!year || isNaN(m) || m < 1 || m > 12) return String(value)
+  if (isNaN(m) || m < 1 || m > 12) return String(value)
   const label = `${day} ${MONTHS_SHORT[m - 1]}`
   const d = new Date(String(value).replace(' ', 'T'))
   if (isNaN(d.getTime())) return label

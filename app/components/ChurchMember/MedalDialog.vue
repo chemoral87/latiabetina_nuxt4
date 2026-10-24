@@ -183,7 +183,7 @@ async function save() {
 
   saving.value = true
   try {
-    await ChurchMember.createMedal<Record<string, unknown>>(memberId, {
+    await ChurchMember.createMedal<Record<string, unknown>>(memberId as string | number, {
       medal: form.value.medal,
       description: { ...form.value.description },
     })

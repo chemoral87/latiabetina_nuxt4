@@ -112,8 +112,8 @@
         id="cmm-tracking-log-table"
         :loading="loadingLogs"
         :response="logsResponse"
-        @edit="(log: Record<string, unknown>) => emit('editLog', log)"
-        @delete="(log: Record<string, unknown>) => emit('deleteLog', log)"
+        @edit="(log: unknown) => emit('editLog', log)"
+        @delete="(log: unknown) => emit('deleteLog', log)"
         @sorting="(opts: Record<string, unknown>) => emit('sorting', opts)"
       />
     </div>
@@ -129,8 +129,8 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   refresh: [];
-  editLog: [log: Record<string, unknown>];
-  deleteLog: [log: Record<string, unknown>];
+  editLog: [log: unknown];
+  deleteLog: [log: unknown];
   sorting: [opts: Record<string, unknown>];
   contact: [payload: { medium: string; url?: string | null; message: string }];
 }>();
@@ -193,7 +193,7 @@ function triggerWhatsApp() {
     ? `https://wa.me/${digits}?text=${encoded}`
     : `https://wa.me/${digits}`;
 
-  let fallback: ReturnType<typeof window.setTimeout> | null = null;
+  let fallback: number | null = null;
   function cancelFallback() {
     if (fallback !== null) {
       window.clearTimeout(fallback);

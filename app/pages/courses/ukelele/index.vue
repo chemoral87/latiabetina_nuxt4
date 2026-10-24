@@ -133,7 +133,7 @@ function parseOrder(value: unknown) {
   const folders: string[] = []
 
   for (const code of codes) {
-    const folder = FOLDER_CODES[code]
+    const folder = FOLDER_CODES[code]!
     if (!folder) {
       throw new Error(`Código de orden no válido: «${code}». Usa P, TL o TR.`)
     }
@@ -143,7 +143,7 @@ function parseOrder(value: unknown) {
   }
 
   for (const code of DEFAULT_ORDER_CODES) {
-    const folder = FOLDER_CODES[code]
+    const folder = FOLDER_CODES[code]!
     if (!folders.includes(folder)) {
       folders.push(folder)
     }

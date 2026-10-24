@@ -56,14 +56,14 @@ const soundEnabled = ref(true)
 let realtimeCleanup: (() => void) | null = null
 
 /** Non-dismissed orders that have preparation items, sorted oldest-first */
-const activeOrders = computed(() =>
-  orders.value
+const activeOrders = computed<{ id: number }[]>(() =>
+  (orders.value
     .filter((o) => !dismissedIds.value[o.id as number])
     .sort(
       (a, b) =>
         new Date((a.sold_at as string) || (a.created_at as string)).getTime() -
         new Date((b.sold_at as string) || (b.created_at as string)).getTime(),
-    ),
+    ) as unknown as { id: number }[]),
 )
 
 onMounted(() => {
@@ -163,7 +163,7 @@ function isRowDone(saleId: number, itemId: number, rowIndex: number): boolean {
 }
 
 function isItemCompleted(item: { completed_quantity?: number; quantity?: number }): boolean {
-  return (item?.completed_quantity ?? 0) >= (item?.quantity ?? 0)
+  return ((item as { completed_quantity?: number } | null)?.completed_quantity ?? 0) >= ((item as { quantity?: number } | null)?.quantity ?? 0)
 }
 
 function preparationStatusLabel(code: string): string {

@@ -100,7 +100,7 @@ const saving = ref(false)
 const footerHeight = ref(160)
 const viewMode = ref("grid")
 const showStock = ref(false)
-const posFooterEl = ref<InstanceType<typeof PosCartFooter> | null>(null)
+const posFooterEl = ref<{ $el?: Element } | null>(null)
 
 let footerObserver: ResizeObserver | null = null
 
@@ -142,7 +142,7 @@ onMounted(() => {
     productsStore.fetchProducts()
   }
   nextTick(() => {
-    const footer = posFooterEl.value?.$el || posFooterEl.value
+    const footer = posFooterEl.value?.$el || (posFooterEl.value as unknown as Element | null)
     if (footer && typeof ResizeObserver !== "undefined") {
       footerObserver = new ResizeObserver((entries) => {
         for (const entry of entries) {
@@ -150,7 +150,7 @@ onMounted(() => {
         }
       })
       footerObserver.observe(footer)
-      footerHeight.value = footer.offsetHeight + 8
+      footerHeight.value = (footer as HTMLElement).offsetHeight + 8
     }
   })
 })
@@ -173,10 +173,10 @@ function addToCart(product: PosProduct) {
 function decreaseCart(product: PosProduct) {
   const index = cart.value.findIndex((i) => i.product.id === product.id)
   if (index === -1) return
-  if (cart.value[index].quantity <= 1) {
+  if (cart.value[index]!.quantity <= 1) {
     cart.value.splice(index, 1)
   } else {
-    cart.value[index].quantity -= 1
+    cart.value[index]!.quantity -= 1
   }
 }
 

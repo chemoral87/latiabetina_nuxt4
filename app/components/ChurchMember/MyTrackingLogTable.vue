@@ -20,7 +20,7 @@
       @update:options="onUpdateOptions">
       <template #[`item.actions`]="{ item }">
         <VBtn
-          :id="`mtl-table-view-btn-${item.id}`"
+          :id="`mtl-table-view-btn-${asRec(item).id}`"
           icon
           class="ma-1"
           size="small"
@@ -35,26 +35,26 @@
       </template>
 
       <template #[`item.church_member`]="{ item }">
-        {{ item.church_member ? `${item.church_member.name} ${item.church_member.last_name}` : "N/A" }}
+        {{ asRec(item).church_member ? `${(asRec(item).church_member as Record<string, unknown>).name} ${(asRec(item).church_member as Record<string, unknown>).last_name}` : "N/A" }}
       </template>
 
       <template #[`item.church_member_phone`]="{ item }">
-        {{ maskedCellphone(item.church_member?.cellphone) }}
+        {{ maskedCellphone((asRec(item).church_member as Record<string, unknown> | undefined)?.cellphone as string | undefined) }}
       </template>
 
       <template #[`item.medium`]="{ item }">
-        <VChip size="small" variant="flat" :color="mediumColor(item.medium as string)">
-          <VIcon start size="small">{{ mediumIcon(item.medium as string) }}</VIcon>
-          {{ mediumLabel(item.medium as string) }}
+        <VChip size="small" variant="flat" :color="mediumColor(asRec(item).medium as string)">
+          <VIcon start size="small">{{ mediumIcon(asRec(item).medium as string) }}</VIcon>
+          {{ mediumLabel(asRec(item).medium as string) }}
         </VChip>
       </template>
 
       <template #[`item.contact_datetime`]="{ item }">
-        {{ formatShortDateTime12h(item.contact_datetime as string) }}
+        {{ formatShortDateTime12h(asRec(item).contact_datetime as string) }}
       </template>
 
       <template #[`item.created_at`]="{ item }">
-        {{ formatShortDateTime12h(item.created_at as string) }}
+        {{ formatShortDateTime12h(asRec(item).created_at as string) }}
       </template>
 
       <template #no-data>
@@ -77,7 +77,7 @@ interface Header {
   title: string;
   value: string;
   sortable: boolean;
-  align?: string;
+  align?: "start" | "center" | "end";
   width?: string;
 }
 
@@ -105,7 +105,8 @@ const emit = defineEmits<{
 
 const page = ref(1);
 const itemsPerPage = ref(10);
-const sortBy = ref<{ key: string; order: string }[]>([...props.initialSortBy]);
+const asRec = (i: unknown) => i as Record<string, unknown>;
+const sortBy = ref<{ key: string; order: "asc" | "desc" }[]>([...props.initialSortBy] as { key: string; order: "asc" | "desc" }[]);
 
 const headers: Header[] = [
   { title: "", value: "actions", sortable: false, align: "center", width: "60px" },

@@ -36,14 +36,14 @@
 
       <template #[`item.status`]="{ item }">
         <div class="d-flex align-center">
-          <VChip v-if="item.status === 'approved'" size="small" color="success" variant="elevated">APROBADO</VChip>
-          <VChip v-else-if="item.status === 'rejected'" size="small" color="error" variant="elevated">RECHAZADO</VChip>
+          <VChip v-if="(item as Record<string, unknown>).status === 'approved'" size="small" color="success" variant="elevated">APROBADO</VChip>
+          <VChip v-else-if="(item as Record<string, unknown>).status === 'rejected'" size="small" color="error" variant="elevated">RECHAZADO</VChip>
           <VChip v-else size="small" color="primary" variant="outlined">Pendiente</VChip>
         </div>
       </template>
 
       <template #[`item.created_at`]="{ item }">
-        <span>{{ formatShortDateTime(item.created_at as string | null).toUpperCase() }}</span>
+        <span>{{ formatShortDateTime((item as Record<string, unknown>).created_at as string | null).toUpperCase() }}</span>
       </template>
 
       <template #[`item.actions`]="{ item }">
@@ -95,8 +95,8 @@ import { formatShortDateTime } from "~/utils/date"
 interface Header {
   title: string
   value: string
-  sortable: boolean
-  align?: string
+  sortable?: boolean
+  align?: "start" | "center" | "end"
   width?: string
 }
 
@@ -123,7 +123,7 @@ const emit = defineEmits<{
 
 const page = ref(1)
 const itemsPerPage = ref(10)
-const sortBy = ref<{ key: string; order: string }[]>([...props.initialSortBy])
+const sortBy = ref<{ key: string; order: "asc" | "desc" }[]>([...props.initialSortBy] as { key: string; order: "asc" | "desc" }[])
 
 const headers: Header[] = [
   { title: "", value: "review", sortable: false },

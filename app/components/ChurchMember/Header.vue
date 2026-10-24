@@ -111,7 +111,7 @@
             class="cursor-pointer"
             @click="emit('edit')"
           >
-            <VImg cover alt="Foto del miembro" :src="member.url_image_s3" />
+            <VImg cover alt="Foto del miembro" :src="member.url_image_s3 as string | undefined" />
           </VAvatar>
           <VIcon
             v-else

@@ -87,7 +87,7 @@ const errorSummary = computed(() => {
 // Dynamic text rendered as plain, auto-escaped content by Vue (no v-html).
 const errorDetail = computed(() => {
   const code = statusCode.value
-  if (![403, 404, 500, 405].includes(code)) return ""
+  if (![403, 404, 500, 405].includes(code ?? -1)) return ""
 
   const message = extractErrorMessage()
   if (message === AXIOS_GENERIC_403) return ""
@@ -110,7 +110,7 @@ const showDetail = computed(() => !!errorDetail.value)
 function extractErrorMessage() {
   if (typeof props.error === "string") return props.error
   if (!props.error) return ""
-  const err = props.error as Record<string, unknown>
+  const err = props.error as unknown as Record<string, unknown>
   if (err.message) return err.message as string
   const resp = err.response as Record<string, unknown> | null
   if (resp?.data) return (resp.data as Record<string, unknown>)?.message as string || ""

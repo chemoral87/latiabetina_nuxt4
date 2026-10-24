@@ -141,8 +141,8 @@ let analyser: AnalyserNode | null = null
 let mediaStream: MediaStream | null = null
 let sampleRate = 44100
 let fftSize = FFT_SIZE
-let freqData: Float32Array | null = null
-let timeData: Float32Array | null = null
+let freqData: Float32Array<ArrayBuffer> | null = null
+let timeData: Float32Array<ArrayBuffer> | null = null
 let rafId = 0
 
 // Map midi -> consecutive frames detected (voting for stability)

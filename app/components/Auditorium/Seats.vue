@@ -193,8 +193,8 @@ const tooltipPos = computed(() => {
     }
 
     const parts = String(activeSeat.value.id).split("-");
-    const sectionIdx = Math.max(0, parseInt(parts[1], 10) - 1);
-    const subIdx = Math.max(0, parseInt(parts[2], 10) - 1);
+    const sectionIdx = Math.max(0, parseInt(parts[1]!, 10) - 1);
+    const subIdx = Math.max(0, parseInt(parts[2]!, 10) - 1);
     const section = props.sections[sectionIdx];
     if (!section) return { x: activeSeat.value.x, y: activeSeat.value.y };
 
@@ -245,7 +245,7 @@ function getSectionConfig(sIdx: number) {
       (acc, s) => acc + getSectionHeight(s) + props.settings.SECTIONS_MARGIN,
       props.settings.SECTION_TOP_PADDING,
     );
-  return { x: (props.stageConfig.width - getSectionWidth(section)) / 2, y };
+  return { x: (props.stageConfig.width - getSectionWidth(section!)) / 2, y };
 }
 
 function getSectionBgConfig(section: Section) {
@@ -373,8 +373,9 @@ function getSectionHeight(section: Section) {
 }
 
 // Events & interactions
-function handleSeatClick(payload: { seat: Seat; event?: KonvaEvent }) {
-  const { seat, event: e } = payload;
+function handleSeatClick(payload: { seat: Seat; event?: unknown }) {
+  const { seat } = payload;
+  const e = payload.event as KonvaEvent | undefined;
   // stop Konva/native event propagation so stage click doesn't immediately close the tooltip
   try {
     if (e && e.evt && typeof e.evt.stopPropagation === "function") {
@@ -422,7 +423,7 @@ function handleSeatClick(payload: { seat: Seat; event?: KonvaEvent }) {
   }
 }
 
-function setSeatCategory(seat: Seat | null, category: string | null) {
+function setSeatCategory(seat: { id: string; category?: string } | null, category: string | null) {
   if (!seat) return;
   const original = findSeatById(seat.id);
   const value = category == null ? "Ninguno" : category;
@@ -437,16 +438,16 @@ function setSeatCategory(seat: Seat | null, category: string | null) {
 function findSeatById(id: string) {
   if (!id) return null;
   for (let s = 0; s < props.sections.length; s++) {
-    const section = props.sections[s];
+    const section = props.sections[s]!;
     for (
       let subIdx = 0;
       subIdx < (section.subsections?.length || 0);
       subIdx++
     ) {
-      const sub = section.subsections[subIdx];
+      const sub = section.subsections[subIdx]!;
       if (!sub.seats) continue;
       for (let r = 0; r < sub.seats.length; r++) {
-        const row = sub.seats[r];
+        const row = sub.seats[r]!;
         for (let c = 0; c < row.length; c++) {
           const seat = row[c];
           if (seat && seat.id === id) return seat;
@@ -468,14 +469,15 @@ function handleStageClick(e: KonvaEvent) {
   activeSeat.value = null;
 }
 
-function handleSeatHover(e: KonvaEvent) {
-  const container = e.target.getStage().container();
+function handleSeatHover(e: unknown) {
+  const ev = e as KonvaEvent;
+  const container = ev.target.getStage().container();
   container.style.cursor =
-    e.target.attrs.opacity < 1 ? "not-allowed" : "pointer";
+    ev.target.attrs.opacity < 1 ? "not-allowed" : "pointer";
 }
 
-function handleSeatLeave(e: KonvaEvent) {
-  e.target.getStage().container().style.cursor = "default";
+function handleSeatLeave(e: unknown) {
+  (e as KonvaEvent).target.getStage().container().style.cursor = "default";
 }
 
 function handleTooltipHover(e: KonvaEvent) {
@@ -534,7 +536,7 @@ function parseSeatId(id: string) {
   if (!nums || nums.length === 0) return { sectionIdx: 0, subIdx: 0 };
   // Expecting at least [section, subsection, row, col] or ['section','1','2','3'] formats
   const sectionIdx = Math.max(0, parseInt(nums[0], 10) - 1);
-  const subIdx = Math.max(0, parseInt(nums[1] || 1, 10) - 1);
+  const subIdx = Math.max(0, parseInt(nums[1] || "1", 10) - 1);
   return { sectionIdx, subIdx };
 }
 </script>

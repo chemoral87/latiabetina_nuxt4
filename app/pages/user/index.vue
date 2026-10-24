@@ -110,7 +110,7 @@ const lastOptions = ref<Record<string, unknown> & { sortBy: SortBy }>({
 useDebouncedFilter(filterInput, filterUser);
 
 async function indexUsers(opts: Record<string, unknown>) {
-  lastOptions.value = opts;
+  lastOptions.value = opts as typeof lastOptions.value;
   const params = buildApiParams(opts);
   if (filterUser.value && !params.filter) params.filter = filterUser.value;
   try {
@@ -143,17 +143,20 @@ function newUser() {
   userDialog.value = true;
 }
 
-function editUser(item: Record<string, unknown>) {
+function editUser(val: unknown) {
+  const item = val as Record<string, unknown>
   useValidationErrors().clearErrors();
   userx.value = { ...item };
   userDialog.value = true;
 }
 
-function editProfiles(item: Record<string, unknown>) {
+function editProfiles(val: unknown) {
+  const item = val as Record<string, unknown>
   navigateTo(`/user/${item.id}/profile`);
 }
 
-async function deleteUser(item: Record<string, unknown>) {
+async function deleteUser(val: unknown) {
+  const item = val as Record<string, unknown>
   try {
     await User.delete(item.id as number);
     dialogDeleteUser.value = false;

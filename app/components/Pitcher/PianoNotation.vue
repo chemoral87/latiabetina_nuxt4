@@ -129,9 +129,9 @@ const keyboardSizes: KeyboardConfig[] = [
   { label: "25 teclas (C4–C6)", keys: 25, startMidi: 60 },
 ]
 const keyboardSizeOptions = keyboardSizes.map((k) => k.label)
-const keyboardSize = ref(keyboardSizes[2].label)
+const keyboardSize = ref(keyboardSizes[2]!.label)
 
-const selectedConfig = computed(() => keyboardSizes.find((k) => k.label === keyboardSize.value) ?? keyboardSizes[2])
+const selectedConfig = computed(() => keyboardSizes.find((k) => k.label === keyboardSize.value) ?? keyboardSizes[2]!)
 
 const whiteKeyWidth = 56
 const whiteKeyHeight = 200
@@ -167,7 +167,7 @@ const allKeys = computed(() => {
 
   for (let midi = cfg.startMidi; midi < cfg.startMidi + cfg.keys; midi++) {
     const noteIndex = midi % 12
-    const note = allNotes[noteIndex]
+    const note = allNotes[noteIndex]!
     const octave = midiToOctave(midi)
     const label = getLabel(note, octave)
 
@@ -194,7 +194,7 @@ const pianoHeight = whiteKeyHeight + 10
 const currentNote = computed(() => targetLabels.value.join(" ") || null)
 
 function getKeyColor(midi: number): string {
-  return COLORS[(midi % 12) * 2]
+  return COLORS[(midi % 12) * 2]!
 }
 
 function getKeyTextColor(midi: number): string {

@@ -176,8 +176,8 @@
       :dialog="dialogDeleteProp"
       @close="dialogDelete = false"
       @ok="
-        (item) => {
-          deleteProfile(item);
+        (item: unknown) => {
+          deleteProfile(item as Record<string, unknown>);
         }
       "
     />
@@ -258,7 +258,7 @@ function saveProfile(item: Record<string, unknown>) {
     .then((res) => {
       profileDialog.value = false;
       navigateTo(
-        `/user/${userId}/profile/${(res as Record<string, unknown>).profile?.id}`,
+        `/user/${userId}/profile/${((res as Record<string, unknown>).profile as Record<string, unknown> | undefined)?.id as number | string}`,
       );
     })
     .catch((e) => console.error(e))

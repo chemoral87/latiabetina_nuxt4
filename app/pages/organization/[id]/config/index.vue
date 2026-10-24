@@ -60,7 +60,7 @@ definePageMeta({
 const route = useRoute()
 const orgId = route.params.id as string
 
-const { Organization, OrganizationConfig } = useRepository()
+const { Organization } = useRepository()
 
 const items = ref<Record<string, unknown>[]>([])
 const organization = ref<Record<string, unknown>>({})
@@ -69,7 +69,7 @@ const organization = ref<Record<string, unknown>>({})
 {
   const [orgRes, configRes] = await Promise.all([
     Organization.show(orgId).catch(() => null),
-    OrganizationConfig.index(orgId).catch(() => ({ organization_configs: [], configs: [] })),
+    Organization.config(orgId).catch(() => ({ organization_configs: [], configs: [] })),
   ])
   organization.value = (orgRes as Record<string, unknown>) ?? {}
 
@@ -100,7 +100,7 @@ const organization = ref<Record<string, unknown>>({})
 const groupedItems = computed(() => {
   const grouped: Record<string, Record<string, unknown>[]> = {}
   items.value.forEach((item) => {
-    const groupName = (item.key as string).split(".")[0]
+    const groupName = (item.key as string).split(".")[0]!
     if (!grouped[groupName]) {
       grouped[groupName] = []
     }
@@ -116,7 +116,7 @@ function getLastSegment(str: string): string {
 }
 
 async function saveOrganizationConfig() {
-  await OrganizationConfig.create(orgId, { configs: items.value })
+  await Organization.createConfig(orgId, { configs: items.value })
   navigateTo("/organizations")
 }
 

@@ -4,7 +4,7 @@
       <VCol md="8" cols="12">
         <AssistanceForm
           :loading="saving"
-          :permission="permission"
+          permission="assistance-create"
           @close="close"
           @save="saveAssistance"
         />

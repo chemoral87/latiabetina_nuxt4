@@ -8,10 +8,10 @@ import type { Section } from '~/types/auditorium'
 export function useAuditoriumEventStats(sections: Ref<Section[]>) {
   const activeStatusCfg = computed(() => {
     return Object.keys(STATUS_CONFIG)
-      .filter(k => STATUS_CONFIG[k].active !== false)
+      .filter(k => STATUS_CONFIG[k]!.active !== false)
       .reduce(
         (acc, k) => {
-          acc[k] = STATUS_CONFIG[k]
+          acc[k] = STATUS_CONFIG[k]!
           return acc
         },
         {} as Record<string, (typeof STATUS_CONFIG)[keyof typeof STATUS_CONFIG]>
@@ -37,7 +37,7 @@ export function useAuditoriumEventStats(sections: Ref<Section[]>) {
             if (!seat) return
             const s = seat.status
             const key = s && validKeys.includes(s) ? s : 'e'
-            counts[key]++
+            counts[key] = (counts[key] ?? 0) + 1
           })
         })
       })

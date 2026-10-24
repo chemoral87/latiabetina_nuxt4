@@ -123,7 +123,7 @@ export const useAuthStore = defineStore('auth', () => {
     const baseUrl = getBaseUrl()
     try {
       const res = await $fetch<{ access_token: string }>(`${baseUrl}/${s.endpoints.refresh.url}`, {
-        method: s.endpoints.refresh.method.toUpperCase(),
+        method: s.endpoints.refresh.method.toUpperCase() as 'POST',
         headers: { Authorization: `Bearer ${current}` },
       })
       setAccessToken(res.access_token)
@@ -139,7 +139,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     const baseUrl = getBaseUrl()
     const res = await $fetch(`${baseUrl}/${s.endpoints.login.url}`, {
-      method: s.endpoints.login.method.toUpperCase(),
+      method: s.endpoints.login.method.toUpperCase() as 'POST',
       body: data,
     })
 
@@ -167,12 +167,10 @@ export const useAuthStore = defineStore('auth', () => {
     const baseUrl = getBaseUrl()
     try {
       const res = await $fetch(`${baseUrl}/${s.endpoints.user.url}`, {
-        method: s.endpoints.user.method.toUpperCase(),
+        method: s.endpoints.user.method.toUpperCase() as 'GET',
         headers: { Authorization: `Bearer ${authToken}` },
       })
-      const userData = s.user?.property
-        ? (res as Record<string, unknown>)[s.user.property as string]
-        : res
+      const userData = s.user?.property ? (res as Record<string, unknown>)[s.user.property as string] : res
       user.value = userData as AuthUser
       return user.value
     } catch {
@@ -188,7 +186,7 @@ export const useAuthStore = defineStore('auth', () => {
       const baseUrl = getBaseUrl()
       try {
         await $fetch(`${baseUrl}/${s.endpoints.logout.url}`, {
-          method: s.endpoints.logout.method.toUpperCase(),
+          method: s.endpoints.logout.method.toUpperCase() as 'POST',
           headers: { Authorization: `Bearer ${authToken}` },
         })
       } catch {
@@ -281,7 +279,7 @@ export const useAuthStore = defineStore('auth', () => {
   function hasSingleOrgFor(permission: string): boolean {
     const orgs = (user.value?.orgs as { id: number | string }[] | undefined) ?? []
     const ids = orgIdsFor(permission)
-    return orgs.length === 1 && ids.includes(orgs[0].id)
+    return orgs.length === 1 && ids.includes(orgs[0]!.id)
   }
 
   return {

@@ -27,7 +27,15 @@ const { AuditoriumEvent } = useRepository()
 
 const response = ref<{ data: Array<Record<string, unknown>> }>({ data: [] })
 
-const events = computed(() => response.value?.data || [])
+interface DashEvent extends Record<string, unknown> {
+  id: string | number
+  time?: string | null
+  event_date?: string | null
+  auditorium_name?: string | null
+  layout_version?: string | number | null
+}
+
+const events = computed<DashEvent[]>(() => (response.value?.data as DashEvent[]) || [])
 
 onMounted(async () => {
   const now = new Date()
@@ -50,7 +58,7 @@ function getEventColor(time?: string | null) {
   return "#87ceeb"
 }
 
-function goToEvent(event: Record<string, unknown>) {
+function goToEvent(event: DashEvent) {
   const path = event.layout_version === 2 ? 'mark2' : 'mark'
   navigateTo(`/auditorium-event/${event.id}/${path}`)
 }

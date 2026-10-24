@@ -331,7 +331,7 @@
 
   function onDragEnd(e: any) {
     userAdjusted.value = true
-    handleDragEnd(e)
+    handleDragEnd()
   }
 
   defineExpose({ fitToWidth, fitToHeight, centerContent })

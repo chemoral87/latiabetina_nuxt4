@@ -30,12 +30,12 @@
       >
         <template v-if="selectedSubsection">
           <AuditoriumSeatsStageSubsection
-            :categories="categories"
             :blink-state="blinkState"
-            :loading-seats="loadingSeats"
-            :subsection="selectedSubsection"
+            :categories="categories as never"
+            :loading-seats="loadingSeats as never"
             :border-width="SUBSECTION_BORDER_WIDTH"
-            :selected-seats-array="selectedSeatsArray"
+            :subsection="selectedSubsection as never"
+            :selected-seats-array="selectedSeatsArray as never"
             :border-color="getSubsectionBorderColorForSub(selectedSubsection)"
             @seat-click="handleSeatClick"
           />
@@ -71,12 +71,12 @@
 
                 <template v-else>
                   <AuditoriumSeatsStageSubsection
-                    :subsection="sub"
-                    :categories="categories"
                     :blink-state="blinkState"
-                    :loading-seats="loadingSeats"
+                    :subsection="sub as never"
+                    :categories="categories as never"
+                    :loading-seats="loadingSeats as never"
                     :border-width="SUBSECTION_BORDER_WIDTH"
-                    :selected-seats-array="selectedSeatsArray"
+                    :selected-seats-array="selectedSeatsArray as never"
                     :border-color="getSubsectionBorderColor(sIdx, subIdx)"
                     @seat-click="handleSeatClick"
                   />
@@ -184,12 +184,12 @@ function getSubsectionBorderColor(sIdx: number, subIdx: number) {
 
 function getSubsectionBorderColorForSub(target: Subsection) {
   for (let sIdx = 0; sIdx < props.sections.length; sIdx++) {
-    const section = props.sections[sIdx]
+    const section = props.sections[sIdx]!
     if (section.l || section.isLabel) continue
     const rawSubs = section.ss || section.subsections
     if (!rawSubs) continue
     for (let subIdx = 0; subIdx < rawSubs.length; subIdx++) {
-      const sub = rawSubs[subIdx]
+      const sub = rawSubs[subIdx]!
       if (sub === target || (sub.i || sub.id) === (target.i || target.id)) {
         return getSubsectionBorderColor(sIdx, subIdx)
       }
@@ -199,10 +199,10 @@ function getSubsectionBorderColorForSub(target: Subsection) {
 }
 
 function getSectionConfig(sIdx: number) {
-  const section = props.sections[sIdx]
+  const section = props.sections[sIdx]!
   let y = 0
   for (let i = 0; i < sIdx; i++) {
-    y += getSectionHeight(props.sections[i])
+    y += getSectionHeight(props.sections[i]!)
   }
   if (sIdx > 0) {
     y += sIdx * DEFAULT_SETTINGS.SECTION_TOP_MARGIN
@@ -210,7 +210,7 @@ function getSectionConfig(sIdx: number) {
   const maxSectionWidth = Math.max(
     ...props.sections.map((s) => getSectionWidth(s)),
   )
-  return { x: (maxSectionWidth - getSectionWidth(section)) / 2, y }
+  return { x: (maxSectionWidth - getSectionWidth(section!)) / 2, y }
 }
 
 function getSectionBgConfig(section: Section) {
@@ -245,7 +245,7 @@ function getSubsectionPosition(section: Section, subIdx: number) {
   const rawSubs = section.ss || section.subsections
 
   for (let i = 0; i < subIdx; i++) {
-    const s = rawSubs![i]
+    const s = rawSubs![i]!
     const isLabel = s.l || s.isLabel
     const width = isLabel ? (s.w || s.width || 40) - 20 : getSubsectionWidth(s)
     x += width

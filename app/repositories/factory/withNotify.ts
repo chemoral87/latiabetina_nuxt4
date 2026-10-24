@@ -24,7 +24,7 @@ function notifySuccess(res: unknown) {
 
 function errorKey(err: unknown): string {
   if (err && typeof err === 'object') {
-    const e = err as { status?: number; data?: { message?: string } }
+    const e = err as { status?: number; data?: { message?: string; error?: string } }
     return `${e.status ?? 'no-status'}|${e.data?.message ?? e.data?.error ?? ''}`
   }
   return String(err ?? '')
@@ -49,7 +49,7 @@ function notifyError(err: unknown) {
   }
 
   if (err && typeof err === 'object' && 'status' in err) {
-    const fetchErr = err as { status?: number; data?: { message?: string } }
+    const fetchErr = err as { status?: number; data?: { message?: string; error?: string } }
     const status = fetchErr.status
 
     if (status === undefined) {

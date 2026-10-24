@@ -215,7 +215,7 @@ export function resizeFloatingSectionGrid(section: FloatingSection, rows: number
     for (let c = 0; c < clampedCols; c++) {
       const prev = oldSeats?.[r]?.[c]
       if (prev?.category && next[r]?.[c]) {
-        next[r][c]!.category = prev.category
+        next[r]![c]!.category = prev.category
       }
     }
   }
@@ -236,7 +236,7 @@ export function duplicateFloatingSection(section: FloatingSection, x: number, y:
     for (let c = 0; c < section.cols; c++) {
       const prev = section.seats?.[r]?.[c]
       if (prev?.category && copy.seats[r]?.[c]) {
-        copy.seats[r][c]!.category = prev.category
+        copy.seats[r]![c]!.category = prev.category
       }
     }
   }

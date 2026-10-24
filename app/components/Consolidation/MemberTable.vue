@@ -8,11 +8,11 @@
       :loading="loading"
       hide-default-footer
       :items-per-page="-1"
-      mobile-breakpoint="0"
+      :mobile-breakpoint="0"
       class="elevation-1 xwidth1100">
       <template #[`item.status`]="{ item }">
         <VSelect
-          :id="`det-member-status-${item.id}`"
+          :id="`det-member-status-${asRec(item).id}`"
           hide-details
           density="compact"
           :items="statuses"
@@ -20,15 +20,15 @@
           item-value="value"
           variant="outlined"
           class="status-select"
-          :model-value="item.status"
-          :class="statusBgClass(item.status)"
-          @update:model-value="onStatusChange(item, $event)"
+          :model-value="asRec(item).status"
+          :class="statusBgClass(String(asRec(item).status ?? ''))"
+          @update:model-value="onStatusChange(asRec(item), $event)"
         />
       </template>
 
       <template #[`item.eye`]="{ item }">
         <VBtn
-          :id="`det-member-goto-btn-${item.id}`"
+          :id="`det-member-goto-btn-${asRec(item).id}`"
           icon
           class="ma-1"
           size="small"
@@ -38,7 +38,7 @@
           title="Ver miembro"
           @click="
             navigateTo(
-              `/church-member/${item.id}?from=${encodeURIComponent(route.fullPath)}`,
+              `/church-member/${asRec(item).id}?from=${encodeURIComponent(route.fullPath)}`,
             )
           "
         >
@@ -47,7 +47,7 @@
       </template>
       <template #[`item.actions`]="{ item }">
         <VBtn
-          :id="`det-member-delete-btn-${item.id}`"
+          :id="`det-member-delete-btn-${asRec(item).id}`"
           icon
           class="ma-1"
           size="small"
@@ -62,11 +62,11 @@
       </template>
 
       <template #[`item.years_old`]="{ item }">
-        {{ item.years_old ?? "—" }}
+        {{ asRec(item).years_old ?? "—" }}
       </template>
 
       <template #[`item.number_of_children`]="{ item }">
-        {{ item.number_of_children ?? "—" }}
+        {{ asRec(item).number_of_children ?? "—" }}
       </template>
 
       <template #no-data>
@@ -90,10 +90,12 @@ const { statuses, statusBgClass } = useChurchMemberStatus();
 interface Header {
   title: string;
   value: string;
-  sortable: boolean;
-  align?: string;
+  sortable?: boolean;
+  align?: "start" | "center" | "end";
   width?: string;
 }
+
+const asRec = (i: unknown) => i as Record<string, unknown>;
 
 withDefaults(
   defineProps<{
@@ -113,8 +115,8 @@ const emit = defineEmits<{
   (e: "delete", item: unknown): void;
 }>();
 
-function onStatusChange(item: Record<string, unknown>, status: string) {
-  emit("status-change", item, status);
+function onStatusChange(item: Record<string, unknown>, status: unknown) {
+  emit("status-change", item, status as string);
 }
 
 const headers: Header[] = [

@@ -75,7 +75,7 @@ function buildItems() {
     // mount-time update:modelValue emit that would fire a duplicate request).
     if (!props.preventAutoSelect && (props.modelValue === null || props.modelValue === "" || props.modelValue === undefined)) {
       nextTick(() => {
-        selected.value = filteredOrgs[0].id
+        selected.value = filteredOrgs[0]!.id
       })
     }
   }

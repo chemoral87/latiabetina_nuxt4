@@ -103,7 +103,7 @@ const emit = defineEmits<{
 
 const page = ref(1);
 const itemsPerPage = ref(10);
-const sortBy = ref<{ key: string; order: string }[]>([...props.initialSortBy]);
+const sortBy = ref<{ key: string; order: "asc" | "desc" }[]>([...props.initialSortBy] as { key: string; order: "asc" | "desc" }[]);
 const dialogDeleteProp = ref<Record<string, unknown>>({});
 
 const headers: Header[] = [

@@ -20,7 +20,7 @@
             |<span class="text-subtitle-2">{{ selectedSection?.name }}</span>
           </template>
           <template v-else>
-            |<span class="text-subtitle-2">{{ formatShortDate(eventAuditorium.event_date) }}</span>
+            |<span class="text-subtitle-2">{{ formatShortDate(eventAuditorium.event_date as string | null | undefined) }}</span>
           </template>
 
           <VSpacer />
@@ -239,7 +239,7 @@
       .filter(key => key === '_' || (STATUS_CONFIG[key] && STATUS_CONFIG[key].active !== false))
       .reduce(
         (acc, key) => {
-          acc[key] = key === '_' ? null : STATUS_CONFIG[key]
+          acc[key] = key === '_' ? null : STATUS_CONFIG[key]!
           return acc
         },
         {} as Record<string, (typeof STATUS_CONFIG)[keyof typeof STATUS_CONFIG] | null>

@@ -106,7 +106,7 @@ export const STATUS_CONFIG: Record<string, StatusConfig> = {
 // Backwards-compat derived maps
 export const STATUS_COLORS: Record<string, string> = Object.keys(STATUS_CONFIG).reduce(
   (acc, key) => {
-    acc[key] = STATUS_CONFIG[key].color
+    acc[key] = STATUS_CONFIG[key]!.color
     return acc
   },
   {} as Record<string, string>
@@ -114,7 +114,7 @@ export const STATUS_COLORS: Record<string, string> = Object.keys(STATUS_CONFIG).
 
 export const STATUS_ICONS: Record<string, string> = Object.keys(STATUS_CONFIG).reduce(
   (acc, key) => {
-    acc[key] = STATUS_CONFIG[key].icon ?? ''
+    acc[key] = STATUS_CONFIG[key]!.icon ?? ''
     return acc
   },
   {} as Record<string, string>

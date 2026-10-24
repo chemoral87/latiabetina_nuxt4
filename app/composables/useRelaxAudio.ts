@@ -75,7 +75,7 @@ export async function unlockRelaxAudio(): Promise<AudioContext | null> {
   if (!ctx) return null
 
   // Initiate resume synchronously inside gesture tick - do not await before priming
-  const state = (ctx.state as string)
+  const state = ctx.state as string
   let resumePromise: Promise<void> | null = null
   if (state === 'suspended' || state === 'interrupted') {
     try {
@@ -123,7 +123,7 @@ export async function unlockRelaxAudio(): Promise<AudioContext | null> {
 export async function ensureRelaxAudioRunning(): Promise<AudioContext | null> {
   const ctx = getRelaxAudioContext()
   if (!ctx) return null
-  const state = (ctx.state as string)
+  const state = ctx.state as string
   if (state === 'suspended' || state === 'interrupted') {
     try {
       await ctx.resume()
@@ -168,7 +168,7 @@ function createBeepWavUrl(freq = 1000, duration = 0.3, sampleRate = 44100): stri
   }
   const bytes = new Uint8Array(buffer)
   let binary = ''
-  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i])
+  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]!)
   // btoa is available in browser
   return 'data:audio/wav;base64,' + btoa(binary)
 }
@@ -291,7 +291,7 @@ function createSuccessWavUrl(): string {
         let env = 1
         if (localT < 0.01) env = localT / 0.01
         else if (localT > noteDuration - 0.03) env = (noteDuration - localT) / 0.03
-        sample += Math.sin((2 * Math.PI * notes[n] * t) / sampleRate) * 0.5 * env
+        sample += Math.sin((2 * Math.PI * notes[n]! * t) / sampleRate) * 0.5 * env
         break
       }
     }
@@ -300,7 +300,7 @@ function createSuccessWavUrl(): string {
   }
   const bytes = new Uint8Array(buffer)
   let binary = ''
-  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i])
+  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]!)
   return 'data:audio/wav;base64,' + btoa(binary)
 }
 

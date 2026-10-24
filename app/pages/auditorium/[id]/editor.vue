@@ -306,11 +306,11 @@ function _parseCsvConfig(csvString: string): Section[] {
     return fields
   }
 
-  const isNewFormat = lines[0].trim() === 'csv_format'
+  const isNewFormat = lines[0]!.trim() === 'csv_format'
 
   // ── Legacy format path ──────────────────────────────────────────────
   if (!isNewFormat) {
-    const header = lines[0].split(',')
+    const header = lines[0]!.split(',')
     const idx: Record<string, number> = {}
     header.forEach((h, i) => { idx[h.trim()] = i })
 
@@ -319,16 +319,16 @@ function _parseCsvConfig(csvString: string): Section[] {
     let currentSub: Subsection | null = null
 
     for (let li = 1; li < lines.length; li++) {
-      const f = parseCsvLine(lines[li])
-      const type = f[idx.type] || ''
-      const id = f[idx.id] || ''
-      const name = f[idx.name] || ''
-      const level = parseInt(f[idx.level] || '0', 10)
-      const tr = f[idx.tr] !== '' && f[idx.tr] !== undefined ? parseInt(f[idx.tr], 10) : undefined
-      const tc = f[idx.tc] !== '' && f[idx.tc] !== undefined ? parseInt(f[idx.tc], 10) : undefined
-      const r = f[idx.r] !== '' && f[idx.r] !== undefined ? parseInt(f[idx.r], 10) : undefined
-      const c = f[idx.c] !== '' && f[idx.c] !== undefined ? parseInt(f[idx.c], 10) : undefined
-      const k = (f[idx.k] || '').trim()
+      const f = parseCsvLine(lines[li]!)
+      const type = f[idx.type!] || ''
+      const id = f[idx.id!] || ''
+      const name = f[idx.name!] || ''
+      const level = parseInt(f[idx.level!] || '0', 10)
+      const tr = f[idx.tr!] !== '' && f[idx.tr!] !== undefined ? parseInt(f[idx.tr!]!, 10) : undefined
+      const tc = f[idx.tc!] !== '' && f[idx.tc!] !== undefined ? parseInt(f[idx.tc!]!, 10) : undefined
+      const r = f[idx.r!] !== '' && f[idx.r!] !== undefined ? parseInt(f[idx.r!]!, 10) : undefined
+      const c = f[idx.c!] !== '' && f[idx.c!] !== undefined ? parseInt(f[idx.c!]!, 10) : undefined
+      const k = (f[idx.k!] || '').trim()
 
       if (type === 's') {
         currentSection = { id, name, isLabel: level === 1, subsections: [] }
@@ -344,7 +344,7 @@ function _parseCsvConfig(csvString: string): Section[] {
         while (currentSub.seats!.length <= seatRow) { currentSub.seats!.push([]) }
         const seat: Seat = { id, row: seatRow, col: c ?? 0 }
         if (k) seat.category = k
-        currentSub.seats![seatRow].push(seat)
+        currentSub.seats![seatRow]!.push(seat)
       }
     }
     return sections
@@ -358,7 +358,7 @@ function _parseCsvConfig(csvString: string): Section[] {
   let subCounter = 0
 
   for (let li = 1; li < lines.length; li++) {
-    const f = parseCsvLine(lines[li])
+    const f = parseCsvLine(lines[li]!)
     const type = f[0] || ''
 
     if (type === 's') {
@@ -396,7 +396,7 @@ function _parseCsvConfig(csvString: string): Section[] {
       while (currentSub.seats!.length <= r) { currentSub.seats!.push([]) }
       const seat: Seat = { id, row: r, col: c }
       if (k) seat.category = k
-      currentSub.seats![r].push(seat)
+      currentSub.seats![r]!.push(seat)
     }
   }
 
@@ -580,14 +580,14 @@ function removeSection(sIdx: number) {
 }
 
 function addSubsection(sIdx: number, isLabel: boolean) {
-  const section = sections.value[sIdx]
+  const section = sections.value[sIdx]!
   const subIdx = section.subsections.length
   const name = `${isLabel ? "Área" : "Subsección"} ${subIdx + 1}`
   section.subsections.push(createSubsection(name, isLabel, 3, 5, sIdx, subIdx, section.id))
 }
 
 function removeSubsection(sIdx: number, subIdx: number) {
-  sections.value[sIdx].subsections.splice(subIdx, 1)
+  sections.value[sIdx]!.subsections.splice(subIdx, 1)
 }
 
 function createSubsection(name: string, isLabel: boolean, rows = 3, cols = 5, sectionIdx: number | string = "", subIdx: number | string = "", sectionId = ""): Subsection {
@@ -604,8 +604,8 @@ function createSubsection(name: string, isLabel: boolean, rows = 3, cols = 5, se
 }
 
 function setSubsectionGrid(sIdx: number, subIdx: number) {
-  const section = sections.value[sIdx]
-  const sub = section.subsections[subIdx]
+  const section = sections.value[sIdx]!
+  const sub = section.subsections[subIdx]!
   const rows = Math.max(1, Math.min(20, parseInt(String(sub.tempRows)) || 3))
   const cols = Math.max(1, Math.min(30, parseInt(String(sub.tempCols)) || 5))
   sub.seats = createSeatsGrid(rows, cols, sIdx, subIdx, section.id)
@@ -636,16 +636,16 @@ function isRowSelected(sIdx: number, subIdx: number): boolean {
 }
 
 function addSeatToRow(sIdx: number, subIdx: number, side: 'left' | 'right') {
-  const section = sections.value[sIdx]
-  const sub = section.subsections[subIdx]
+  const section = sections.value[sIdx]!
+  const sub = section.subsections[subIdx]!
   const selectedRowIdx = selectedRow.value[`${sIdx}-${subIdx}`]
   if (!isRowSelected(sIdx, subIdx)) return
-  const row = sub.seats?.[selectedRowIdx]
+  const row = sub.seats?.[selectedRowIdx!]
   if (!row) return
   if (side === "left") {
-    row.unshift(createSeat(0, selectedRowIdx, sIdx, subIdx, section.id))
+    row.unshift(createSeat(0, selectedRowIdx!, sIdx, subIdx, section.id))
   } else {
-    row.push(createSeat(row.length, selectedRowIdx, sIdx, subIdx, section.id))
+    row.push(createSeat(row.length, selectedRowIdx!, sIdx, subIdx, section.id))
   }
 }
 

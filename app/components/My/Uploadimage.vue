@@ -57,8 +57,6 @@ const props = withDefaults(defineProps<{
   filename?: string
   file?: File | null
 }>(), {
-  modelValue: null,
-  img: null,
   url: null,
   encoded: "blob",
   size: 750,
@@ -108,8 +106,9 @@ watch(
 )
 
 function dataURItoBlob(dataURI: string): Blob {
-  const byteString = atob(dataURI.split(",")[1])
-  const mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0]
+  const parts = dataURI.split(",")
+  const byteString = atob(parts[1] ?? "")
+  const mimeString = (parts[0] ?? "").split(":")[1]?.split(";")[0] ?? ""
   const ab = new ArrayBuffer(byteString.length)
   const ia = new Uint8Array(ab)
   for (let i = 0; i < byteString.length; i++) {
@@ -158,7 +157,7 @@ function processFile(file: File) {
   }
   const objectUrl = _URL.createObjectURL(file)
   imgLoader.src = objectUrl
-  imgLoader.onloadend = () => _URL.revokeObjectURL(objectUrl)
+  imgLoader.onload = () => _URL.revokeObjectURL(objectUrl)
 }
 
 function onFileSelected(e: Event) {

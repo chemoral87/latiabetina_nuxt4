@@ -367,7 +367,8 @@ function onLogsUpdateOptions(opts: Record<string, unknown>) {
   fetchTrackingLogs(opts);
 }
 
-function editTrackingLog(log: Record<string, unknown>) {
+function editTrackingLog(val: unknown) {
+  const log = val as Record<string, unknown>
   editingLog.value = { ...log };
   trackingLogDialog.value = true;
 }
@@ -397,7 +398,8 @@ async function saveTrackingLog(payload: Record<string, unknown>) {
   }
 }
 
-async function deleteTrackingLog(log: Record<string, unknown>) {
+async function deleteTrackingLog(val: unknown) {
+  const log = val as Record<string, unknown>
   const id = route.params.id as string;
   const logId = (log as Record<string, unknown> | undefined)?.id;
   if (!id || !logId) return;

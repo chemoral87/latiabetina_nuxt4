@@ -202,8 +202,8 @@ function close() {
 function startDrag(e: MouseEvent | TouchEvent) {
   isDragging.value = true
 
-  const clientX = e.type === 'touchstart' ? (e as TouchEvent).touches[0].clientX : (e as MouseEvent).clientX
-  const clientY = e.type === 'touchstart' ? (e as TouchEvent).touches[0].clientY : (e as MouseEvent).clientY
+  const clientX = e.type === 'touchstart' ? (e as TouchEvent).touches[0]!.clientX : (e as MouseEvent).clientX
+  const clientY = e.type === 'touchstart' ? (e as TouchEvent).touches[0]!.clientY : (e as MouseEvent).clientY
 
   const panelEl = panel.value
   if (panelEl) {
@@ -232,8 +232,8 @@ function onDrag(e: MouseEvent | TouchEvent) {
 
   if (e.type === 'touchmove') e.preventDefault()
 
-  const clientX = e.type === 'touchmove' ? (e as TouchEvent).touches[0].clientX : (e as MouseEvent).clientX
-  const clientY = e.type === 'touchmove' ? (e as TouchEvent).touches[0].clientY : (e as MouseEvent).clientY
+  const clientX = e.type === 'touchmove' ? (e as TouchEvent).touches[0]!.clientX : (e as MouseEvent).clientX
+  const clientY = e.type === 'touchmove' ? (e as TouchEvent).touches[0]!.clientY : (e as MouseEvent).clientY
 
   const panelEl = panel.value
   if (panelEl) {

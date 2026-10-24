@@ -234,6 +234,8 @@ const auth = useAuthStore();
 const formRef = ref();
 const saving = ref(false);
 const imageLoading = ref(false);
+// ponytail: `disabled` was referenced in the template but never declared (falsy at runtime); declared explicitly to satisfy vue-tsc
+const disabled = false;
 
 const item = ref<ChurchEventItem>({
   id: null,

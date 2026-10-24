@@ -69,8 +69,8 @@
             x: 0,
             y: 0,
             listening: true,
-            onClick: (evt) => handleSeatClick(seat, evt),
-            onTap: (evt) => handleSeatClick(seat, evt),
+            onClick: (evt: unknown) => handleSeatClick(seat, evt),
+            onTap: (evt: unknown) => handleSeatClick(seat, evt),
           })
         "
       />
@@ -233,7 +233,7 @@ const seats = computed<SeatRender[]>(() => {
         if (seat && seat.state !== "invisible") {
           const seatData: SeatRender = {
             ...seat,
-            id: seat.i || seat.id,
+            id: (seat.i || seat.id) as string,
             row: seat.r !== undefined ? seat.r : seat.row,
             col: seat.c !== undefined ? seat.c : seat.col,
             category: seat.k || seat.category,
@@ -254,7 +254,7 @@ const seats = computed<SeatRender[]>(() => {
             seatData.iconPathConfig = getIconPathConfig(seat);
           }
 
-          const seatId = seat.i || seat.id;
+          const seatId = (seat.i || seat.id) as string;
           if ((props.loadingSeats ?? []).includes(seatId)) {
             seatData.isLoading = true;
             const radius = DEFAULT_SETTINGS.SEAT_SIZE / 2;
@@ -376,7 +376,7 @@ function getSeatConfig(seat: SeatItem) {
 
   const isReserved = seat.state === "reserved";
   const isSelected = seat.state === "selected";
-  const seatId = seat.i || seat.id;
+  const seatId = (seat.i || seat.id) as string;
   const isInSelectedArray = (props.selectedSeatsArray ?? []).includes(seatId);
   const category =
     seat.k || seat.category
@@ -433,7 +433,7 @@ function getSeatConfig(seat: SeatItem) {
 
 function getIconPathConfig(seat: SeatItem) {
   const status = seat.status ? String(seat.status).toLowerCase() : null;
-  const seatId = seat.i || seat.id;
+  const seatId = (seat.i || seat.id) as string;
   const isInSelectedArray = (props.selectedSeatsArray ?? []).includes(seatId);
 
   let iconColor = "#FFFFFF";

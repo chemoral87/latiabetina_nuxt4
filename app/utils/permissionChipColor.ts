@@ -98,7 +98,7 @@ export function buildPermissionColorMap(names: string[]): Record<string, string>
     const count = groupCounts.get(key) ?? 0
     if (count >= 2) {
       const idx = hashString(key) % PALETTE.length
-      colorMap[name] = PALETTE[idx]
+      colorMap[name] = PALETTE[idx] ?? 'primary'
     } else {
       colorMap[name] = 'primary'
     }
@@ -115,7 +115,7 @@ export function buildPermissionColorMap(names: string[]): Record<string, string>
  */
 export function hashColorForName(name: string): string {
   const idx = hashString(name) % PALETTE.length
-  return PALETTE[idx]
+  return PALETTE[idx] ?? 'primary'
 }
 
 /**

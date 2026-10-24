@@ -109,7 +109,7 @@ watch(filterSale, () => {
 async function loadSales(opts: Record<string, unknown>) {
   try {
     loading.value = true
-    lastOptions.value = opts
+    lastOptions.value = opts as typeof lastOptions.value
     const params = buildApiParams(opts)
     if (filterSale.value && !params.filter) params.filter = filterSale.value
     response.value = await Sale.index<{ data: Record<string, unknown>[]; total: number }>(params)
@@ -136,15 +136,18 @@ function handleSorting(opts: Record<string, unknown>) {
   loadSales(opts)
 }
 
-function viewDetail(item: Record<string, unknown>) {
+function viewDetail(val: unknown) {
+  const item = val as Record<string, unknown>
   navigateTo(`/pos/sales/${item.id}`)
 }
 
-function editSale(item: Record<string, unknown>) {
+function editSale(val: unknown) {
+  const item = val as Record<string, unknown>
   navigateTo(`/pos/sales/${item.id}/edit`)
 }
 
-async function deleteSale(item: Record<string, unknown>) {
+async function deleteSale(val: unknown) {
+  const item = val as Record<string, unknown>
   try {
     saving.value = true
     await Sale.delete(item.id as number)

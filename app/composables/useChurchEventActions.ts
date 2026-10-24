@@ -72,7 +72,7 @@ export function useChurchEventActions(opts: {
     const event = item as Record<string, unknown>
     navigateTo({
       path: `/church-event/${event.id}`,
-      query: opts.routeQuery(),
+      query: opts.routeQuery() as Record<string, string | number | null | (string | number | null)[]>,
     })
   }
 

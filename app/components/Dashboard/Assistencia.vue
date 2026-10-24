@@ -130,7 +130,7 @@
 
     const sorted = [...grouped.entries()].sort(([a], [b]) => a.localeCompare(b))
     const labels = sorted.map(([date]) => {
-      const [y, m, d] = date.split('-')
+      const [y, m = "01", d = ""] = date.split('-')
       const months = [
         'Ene',
         'Feb',
@@ -145,7 +145,7 @@
         'Nov',
         'Dic',
       ]
-      return `${d} ${months[parseInt(m, 10) - 1]}`
+      return `${d} ${months[parseInt(m, 10) - 1]!}`
     })
 
     return {

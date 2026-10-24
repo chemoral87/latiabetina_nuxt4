@@ -17,11 +17,11 @@
     items-per-page-text="Filas por página"
     @update:options="onUpdateOptions">
     <template #[`item.event_date`]="{ item }">
-      {{ formatShortDate(item.event_date) }}
+      {{ formatShortDate((item as Record<string, unknown>).event_date as string | null) }}
     </template>
 
     <template #[`item.time`]="{ item }">
-      {{ item.time ? formatHourTime(item.time) : "-" }}
+      {{ (item as Record<string, unknown>).time ? formatHourTime((item as Record<string, unknown>).time as string) : "-" }}
     </template>
 
     <template #[`item.marks`]="{ item }">
@@ -115,7 +115,7 @@ const emit = defineEmits<{
 
 const page = ref(1);
 const itemsPerPage = ref(10);
-const sortBy = ref<{ key: string; order: string }[]>([...props.initialSortBy]);
+const sortBy = ref<{ key: string; order: "asc" | "desc" }[]>([...props.initialSortBy] as { key: string; order: "asc" | "desc" }[]);
 
 const auth = useAuthStore();
 
@@ -170,9 +170,9 @@ onMounted(() => {
   page.value = (opts.page as number) ?? 1;
   itemsPerPage.value = (opts.itemsPerPage as number) ?? 10;
   if (Array.isArray(opts.sortBy)) {
-    const sb = opts.sortBy as ({ key: string; order: string } | string)[];
+    const sb = opts.sortBy as ({ key: string; order: "asc" | "desc" } | string)[];
     sortBy.value = sb.map((s) =>
-      typeof s === "string" ? { key: s, order: "asc" } : s,
+      typeof s === "string" ? { key: s, order: "asc" as const } : s,
     );
   }
 });

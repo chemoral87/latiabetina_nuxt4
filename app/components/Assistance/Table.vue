@@ -60,7 +60,6 @@
             size="small"
             color="error"
             rounded="circle"
-            title="Eliminar"
             variant="outlined"
             :disabled="isLocked(item as Record<string, unknown>)"
             :title="isLocked(item as Record<string, unknown>) ? 'No se puede editar/eliminar: registro tiene más de 7 días' : 'Eliminar'"
@@ -83,12 +82,13 @@
 <script setup lang="ts">
 import { useAuthStore } from "~/composables/useAuth";
 import { formatHourTime, formatShortDate } from "~/utils/date";
+import type { DataTableSortItem } from "vuetify";
 
 interface Header {
   title: string
   value: string
   sortable: boolean
-  align?: string
+  align?: 'start' | 'end' | 'center'
   width?: string
 }
 
@@ -96,7 +96,7 @@ const props = withDefaults(defineProps<{
   response?: { total?: number; data?: unknown[] } | null
   loading?: boolean
   search?: string
-  initialSortBy?: { key: string; order: string }[]
+  initialSortBy?: DataTableSortItem[]
 }>(), {
   response: null,
   loading: false,
@@ -115,7 +115,7 @@ const auth = useAuthStore()
 
 const page = ref(1)
 const itemsPerPage = ref(10)
-const sortBy = ref<{ key: string; order: string }[]>([...props.initialSortBy])
+const sortBy = ref<DataTableSortItem[]>([...props.initialSortBy])
 
 const total = computed(() => props.response?.total ?? 0)
 const items = computed(() => props.response?.data ?? [])

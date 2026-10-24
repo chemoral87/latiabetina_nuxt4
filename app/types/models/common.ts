@@ -26,6 +26,8 @@ export interface PaginatedList<T> {
   links: PaginationLinks
 }
 
+export interface PaginatedResponse<T> extends PaginatedList<T> {}
+
 export interface PaginationMeta {
   current_page: number
   from: number

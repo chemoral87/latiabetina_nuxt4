@@ -78,6 +78,7 @@
 <script setup lang="ts">
   import { useAssistanceActions } from '~/composables/useAssistanceActions'
   import { buildApiParams } from '~/utils/buildApiParams'
+  import type { DataTableSortItem } from 'vuetify'
 
   definePageMeta({
     title: 'Asistencias',
@@ -113,7 +114,7 @@
   const bulkFile = ref<File[]>([])
   const bulkLoading = ref(false)
 
-  type SortBy = { key: string; order: string }[]
+  type SortBy = DataTableSortItem[]
 
   const lastOptions = ref<Record<string, unknown> & { sortBy: SortBy }>({
     page: 1,

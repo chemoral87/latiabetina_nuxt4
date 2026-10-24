@@ -202,13 +202,13 @@ const localVisible = computed({
 
 const activeStatusConfig = computed(() => {
   return Object.keys(STATUS_CONFIG)
-    .filter((key) => STATUS_CONFIG[key].active !== false)
+    .filter((key) => STATUS_CONFIG[key]!.active !== false)
     .reduce(
       (acc, key) => {
-        acc[key] = STATUS_CONFIG[key];
+        acc[key] = STATUS_CONFIG[key]!;
         return acc;
       },
-      {} as Record<string, { label: string; mdi?: string; color: string }>,
+      {} as Record<string, { label?: string; mdi?: string; color: string }>,
     );
 });
 
@@ -221,9 +221,9 @@ const historyFilterConfig = computed(() => {
 const historyFilterOptions = computed(() => {
   return Object.keys(historyFilterConfig.value).map((key) => ({
     value: key,
-    text: historyFilterConfig.value[key].label,
-    mdi: historyFilterConfig.value[key].mdi || "mdi-circle",
-    color: historyFilterConfig.value[key].color,
+    text: historyFilterConfig.value[key]!.label,
+    mdi: historyFilterConfig.value[key]!.mdi || "mdi-circle",
+    color: historyFilterConfig.value[key]!.color,
   }));
 });
 
@@ -231,7 +231,7 @@ const seatTransitions = computed<SeatTransition[]>(() => {
   const map: Record<string, Transition[]> = {};
   (props.historyLog ?? []).forEach((entry) => {
     const seats = (entry.seat_ids as string[]) || [];
-    const cfg = STATUS_CONFIG[(entry.status as string) || ""] || {};
+    const cfg = STATUS_CONFIG[(entry.status as string) || ""] ?? ({} as { color?: string; mdi?: string; label?: string });
     const step: Transition = {
       status: entry.status as string,
       color: cfg.color || "#ffeb3b",
@@ -251,7 +251,7 @@ const seatTransitions = computed<SeatTransition[]>(() => {
   });
   return Object.keys(map)
     .sort()
-    .map((id) => ({ id, label: formatSeatId(id), transitions: map[id] }));
+    .map((id) => ({ id, label: formatSeatId(id), transitions: map[id]! }));
 });
 
 const filteredSeatTransitions = computed(() => {
@@ -273,7 +273,7 @@ function formatSeatId(seatId: string) {
   const parts = seatId.split("-");
   if (parts.length < 4) return seatId;
   const row = parts[parts.length - 2];
-  const col = parseInt(parts[parts.length - 1], 10);
+  const col = parseInt(parts[parts.length - 1]!, 10);
   if (isNaN(col)) return seatId;
   const letter = String.fromCharCode(64 + col);
   return `${row}${letter}`;
