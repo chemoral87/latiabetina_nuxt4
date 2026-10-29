@@ -3,6 +3,13 @@
   --row-remove-animation-ms: 1000ms;
 }
 
+/* Kill accidental double-tap zoom (iOS/Android). Pinch stays enabled — iOS
+   Safari ignores user-scalable=no, so this is the only lever for taps.
+   `manipulation` = pan + pinch, no double-tap. */
+html {
+  touch-action: manipulation;
+}
+
 /* With viewport-fit=cover (nuxt.config.ts) the page now extends under the
    iOS notch/Dynamic Island and home-indicator areas. Push the fixed app bar
    and the bottom snackbar stack clear of those insets; env() resolves to 0

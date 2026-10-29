@@ -67,7 +67,8 @@
   })
 
   const { Role } = useRepository()
-  const { loadCatalog } = usePermissionCatalog()
+  const { catalog: permissionCatalog } = usePermissionCatalog()
+  const graphQL = useGraphQL()
 
   const filterInput = ref('')
   const filterRole = ref('')
@@ -87,24 +88,41 @@
     sortBy: [{ key: 'name', order: 'asc' }],
   })
 
-  // Initial list data is loaded during SSR via useAsyncData so the payload is
-  // reused on the client (no double fetch, no hydration mismatch). See
-  // ai_rule/nuxt4_ssr_hydration.md.
+  // Initial load is a single GraphQL round trip: role page + permission catalog
+  // (the combobox source) instead of GET /role + GET /permission. Loaded during
+  // SSR via useAsyncData so the payload is reused on the client (no double
+  // fetch, no hydration mismatch). See ai_rule/nuxt4_ssr_hydration.md.
+  // Paging, sorting and writes stay on REST.
   {
     const apiParams = buildApiParams(lastOptions.value)
+    const empty = {
+      roleIndex: { roles: { data: [] as unknown[], total: 0 }, permissionNames: [] as string[] },
+    }
+
     const { data: initialData } = await useAsyncData(
       'role-index',
-      async () => {
-        const [roleData] = await Promise.all([
-          Role.index<{ data: unknown[]; total: number }>(apiParams).catch(() => ({ data: [] as unknown[], total: 0 })),
-          loadCatalog().catch(() => []),
-        ])
-        return roleData
-      },
-      { default: () => ({ data: [] as unknown[], total: 0 }) }
+      () =>
+        graphQL
+          .query<typeof empty>(
+            `query RoleIndex($page: Int, $itemsPerPage: Int, $sortBy: [String!], $sortDesc: [Boolean!]) {
+              roleIndex(page: $page, itemsPerPage: $itemsPerPage, sortBy: $sortBy, sortDesc: $sortDesc) {
+                roles { data { id name guard_name permissions { id name } } total itemsPerPage }
+                permissionNames
+              }
+            }`,
+            {
+              page: apiParams.page,
+              itemsPerPage: apiParams.itemsPerPage,
+              sortBy: apiParams.sortBy ?? [],
+              sortDesc: ((apiParams.sortDesc as string[]) ?? []).map(d => d === 'true'),
+            },
+          )
+          .catch(() => empty),
+      { default: () => empty }
     )
 
-    response.value = initialData.value
+    response.value = initialData.value.roleIndex.roles
+    permissionCatalog.value = initialData.value.roleIndex.permissionNames
   }
 
   // Debounced filter — shared useDebouncedFilter (300ms immediate clear)

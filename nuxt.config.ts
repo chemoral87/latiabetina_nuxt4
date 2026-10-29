@@ -45,7 +45,7 @@ export default defineNuxtConfig({
         // ("blue-lighten-5" -> #E8EAF6, see layouts/default.vue pageBg);
         // pages with a different route.meta.color override this in the
         // layout so the status bar tint always matches the app bar.
-        { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover' },
         { name: 'theme-color', content: '#E8EAF6' },
       ],
     },

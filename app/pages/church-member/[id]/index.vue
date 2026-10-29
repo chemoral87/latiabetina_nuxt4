@@ -236,105 +236,85 @@ const backRoute = computed(() => {
   return "/church-member/tracking-logs";
 });
 
+// One GraphQL round trip replaces the four REST calls this page used to make
+// (member + tracking logs + consolidator logs + medals). Pagination and writes
+// stay on REST.
+const CHURCH_MEMBER_DETAIL_QUERY = `query ChurchMemberDetail($id: ID!) {
+  churchMember(id: $id) {
+    member {
+      id org_id conso_sheet_id name last_name second_last_name years_old
+      number_of_children cellphone address marriage_status status created_by
+      url_image_s3 created_at updated_at
+      creator { id name last_name }
+      consolidators { id name last_name second_last_name email }
+    }
+    trackingLogs {
+      total itemsPerPage
+      data {
+        id church_member_id contact_datetime medium classification description
+        created_by created_at updated_at
+        creator { id name last_name }
+        church_member { id name last_name cellphone }
+      }
+    }
+    consolidatorLogs {
+      id church_member_id consolidator_id action changed_by created_at updated_at
+      consolidator { id name last_name email }
+      changer { id name last_name }
+    }
+    medals {
+      id church_member_id medal description created_by created_at updated_at
+      creator { id name last_name }
+    }
+  }
+}`;
+
+type ChurchMemberDetailPayload = {
+  churchMember: {
+    member: Record<string, unknown>;
+    trackingLogs: { data: unknown[]; total: number };
+    consolidatorLogs: {
+      id: number;
+      consolidator_id: number;
+      action: string;
+      consolidator?: { id: number; name: string; last_name?: string };
+      changer?: { id: number; name: string; last_name?: string };
+      created_at?: string;
+    }[];
+    medals: {
+      id: number;
+      medal: string;
+      description: Record<string, unknown> | string | null;
+      creator?: { id: number; name: string; last_name?: string };
+      created_at?: string;
+    }[];
+  } | null;
+};
+
 {
-  const { data: initialMember, error: memberError } = await useAsyncData(
-    `church-member-${route.params.id}`,
+  const graphQL = useGraphQL();
+  const { data: initialDetail, error: detailError } = await useAsyncData(
+    `church-member-detail-${route.params.id}`,
     () =>
-      ChurchMember.show<Record<string, unknown>>(route.params.id as string),
-    { default: () => ({}) as Record<string, unknown> },
+      graphQL.query<ChurchMemberDetailPayload>(CHURCH_MEMBER_DETAIL_QUERY, {
+        id: route.params.id,
+      }),
+    { default: () => null },
   );
 
-  if (memberError.value) {
-    const err = memberError.value as unknown as {
-      statusCode?: number;
-      status?: number;
-      data?: { message?: string };
-      statusMessage?: string;
-    };
+  const detail = initialDetail.value?.churchMember;
+  if (detailError.value || !detail?.member) {
     throw createError({
-      statusCode: err.statusCode || err.status || 404,
-      statusMessage:
-        err.data?.message ||
-        err.statusMessage ||
-        "Miembro no encontrado o sin acceso a esta organización",
+      statusCode: 404,
+      statusMessage: "Miembro no encontrado o sin acceso a esta organización",
       fatal: true,
     });
   }
 
-  member.value = initialMember.value;
-}
-
-{
-  const { data: initialLogs } = await useAsyncData(
-    `church-member-tracking-logs-${route.params.id}`,
-    async () => {
-      const params = buildApiParams(lastLogOptions.value);
-      return await ChurchMemberTrackingLog.index<{
-        data: unknown[];
-        total: number;
-      }>(route.params.id as string, params).catch(() => ({
-        data: [] as unknown[],
-        total: 0,
-      }));
-    },
-    { default: () => ({ data: [] as unknown[], total: 0 }) },
-  );
-  logsResponse.value = initialLogs.value;
-
-  const { data: initialConsolidatorLogs } = await useAsyncData(
-    `church-member-consolidator-logs-${route.params.id}`,
-    async () => {
-      return await ChurchMember.consolidatorLogs<
-        {
-          id: number;
-          consolidator_id: number;
-          action: string;
-          consolidator?: { id: number; name: string; last_name?: string };
-          changer?: { id: number; name: string; last_name?: string };
-          created_at?: string;
-        }[]
-      >(route.params.id as string).catch(() => []);
-    },
-    {
-      default: () =>
-        [] as {
-          id: number;
-          consolidator_id: number;
-          action: string;
-          consolidator?: { id: number; name: string; last_name?: string };
-          changer?: { id: number; name: string; last_name?: string };
-          created_at?: string;
-        }[],
-    },
-  );
-  consolidatorLogs.value = initialConsolidatorLogs.value;
-
-  const { data: initialMedals } = await useAsyncData(
-    `church-member-medals-${route.params.id}`,
-    async () => {
-      return await ChurchMember.medals<
-        {
-          id: number;
-          medal: string;
-          description: Record<string, unknown> | string | null;
-          creator?: { id: number; name: string; last_name?: string };
-          created_at?: string;
-        }[]
-      >(route.params.id as string).catch(() => []);
-    },
-    {
-      default: () =>
-        [] as {
-          id: number;
-          medal: string;
-          description: Record<string, unknown> | string | null;
-          creator?: { id: number; name: string; last_name?: string };
-          created_at?: string;
-        }[],
-    },
-  );
-  medals.value = initialMedals.value;
-
+  member.value = detail.member;
+  logsResponse.value = detail.trackingLogs;
+  consolidatorLogs.value = detail.consolidatorLogs;
+  medals.value = detail.medals;
 }
 
 async function fetchTrackingLogs(overrides: Record<string, unknown> = {}) {
