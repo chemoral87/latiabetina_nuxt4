@@ -5,9 +5,16 @@
 
 /* Kill accidental double-tap zoom (iOS/Android). Pinch stays enabled — iOS
    Safari ignores user-scalable=no, so this is the only lever for taps.
-   `manipulation` = pan + pinch, no double-tap. */
+   `manipulation` = pan + pinch, no double-tap.
+   text-size-adjust: iOS Safari inflates text on its own (Android Chrome does
+   not); pinning it at 100% keeps type size identical at the same viewport
+   width. Explicit root size stops the browser's default-font preference from
+   shifting every rem-based size. */
 html {
   touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  font-size: 16px;
 }
 
 /* With viewport-fit=cover (nuxt.config.ts) the page now extends under the
