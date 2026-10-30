@@ -2,6 +2,7 @@
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
+  <MyViewportProbe />
 </template>
 
 <script setup lang="ts">
