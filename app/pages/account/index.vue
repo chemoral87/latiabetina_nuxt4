@@ -17,25 +17,9 @@
               <VIcon start size="small">mdi-lock-reset</VIcon>
               Cambiar contraseña
             </VBtn>
-            <div class="text-body-2 text-grey text-end">v{{ buildVersion }}</div>
-          </VCard>
-
-          <VCard id="acc-index-toggle-card" flat border class="mb-3 pa-3">
-            <div style="gap: 6px" class="d-flex align-center">
-              <span class="text-caption text-grey">Separado</span>
-              <VSwitch id="acc-combined-view-sw" v-model="combinedView" inset hide-details class="mt-0 pt-0" density="compact" />
-              <span class="text-caption text-grey">Combinado</span>
-            </div>
-            <VDivider class="my-2" />
-            <div style="gap: 6px" class="d-flex align-center">
-              <span class="text-caption text-grey">Por rol</span>
-              <VSwitch id="acc-combined-view-org-sw" v-model="combinedOrgView" inset hide-details class="mt-0 pt-0" density="compact" />
-              <span class="text-caption text-grey">Por Org</span>
-            </div>
-            <VDivider class="my-2" />
             <!-- Accessibility: scales the root font-size for the whole app (see
                  useAccessibilityStore + assets/css/global.css). -->
-            <div style="gap: 6px" class="d-flex align-center">
+            <div style="gap: 6px" class="d-flex align-center mt-3">
               <span class="text-caption text-grey">
                 <VIcon size="x-small">mdi-format-size</VIcon>
                 Letra
@@ -53,6 +37,21 @@
                 :model-value="accessibility.fontScale"
                 @update:model-value="accessibility.setFontScale"
               />
+            </div>
+            <div class="text-body-2 text-grey text-end">v{{ buildVersion }}</div>
+          </VCard>
+
+          <VCard id="acc-index-toggle-card" flat border class="mb-3 pa-3">
+            <div style="gap: 6px" class="d-flex align-center">
+              <span class="text-caption text-grey">Separado</span>
+              <VSwitch id="acc-combined-view-sw" v-model="combinedView" inset hide-details class="mt-0 pt-0" density="compact" />
+              <span class="text-caption text-grey">Combinado</span>
+            </div>
+            <VDivider class="my-2" />
+            <div style="gap: 6px" class="d-flex align-center">
+              <span class="text-caption text-grey">Por rol</span>
+              <VSwitch id="acc-combined-view-org-sw" v-model="combinedOrgView" inset hide-details class="mt-0 pt-0" density="compact" />
+              <span class="text-caption text-grey">Por Org</span>
             </div>
           </VCard>
 
