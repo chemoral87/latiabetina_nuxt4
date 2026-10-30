@@ -51,8 +51,50 @@ test.describe.serial('Consolidation members', () => {
     const dialog = page.locator('#det-member-dlg')
     await dialog.getByRole('textbox', { name: 'Nombre' }).fill(memberName)
     await dialog.getByRole('textbox', { name: 'Apellido Paterno' }).fill('Test')
+
+    // ---- photo upload through MyUploadimageCrop (random generated image) ----
+    // Random 160x160 PNG built in the browser (8px hsl blocks, random hue), so
+    // every run uploads different bytes without shipping a fixture file.
+    const randomPngBase64 = await page.evaluate(() => {
+      const canvas = document.createElement('canvas')
+      canvas.width = 160
+      canvas.height = 160
+      const ctx = canvas.getContext('2d')
+      if (!ctx) throw new Error('canvas 2d context unavailable')
+      for (let y = 0; y < canvas.height; y += 8) {
+        for (let x = 0; x < canvas.width; x += 8) {
+          ctx.fillStyle = `hsl(${Math.floor(Math.random() * 360)}, 70%, 50%)`
+          ctx.fillRect(x, y, 8, 8)
+        }
+      }
+      return canvas.toDataURL('image/png').split(',')[1] ?? ''
+    })
+    expect(randomPngBase64.length).toBeGreaterThan(0)
+
+    // The component's file input is hidden; setInputFiles drives the same
+    // `change` handler the picker button would.
+    await dialog.locator('input[type="file"]').setInputFiles({
+      name: `e2e-random-${Date.now()}.png`,
+      mimeType: 'image/png',
+      buffer: Buffer.from(randomPngBase64, 'base64'),
+    })
+
+    const cropDialog = page.locator('#my-uploa-dlg-1')
+    await expect(cropDialog).toBeVisible()
+    // The right-hand preview only renders once the cropper emitted its first
+    // change; saving before that would emit a null blob.
+    await expect(cropDialog.locator('div.rounded-circle img')).toBeVisible()
+    await cropDialog.locator('#my-uploadimagecrop-save-btn').click()
+    await expect(cropDialog).toBeHidden()
+
+    // Regression guard for the overwritten-onload bug: the picked image has to
+    // reach the parent as a data URL, which is what shows the avatar preview.
+    await expect(dialog.locator('#my-uploadimagecrop-clear-btn')).toBeVisible()
+    await expect(dialog.locator('.v-avatar img')).toHaveAttribute('src', /^data:image\//)
+
     await page.locator('#cmm-dialog-save-btn').click()
-    await expect(page.getByRole('row').filter({ hasText: memberName })).toHaveCount(1)
+    // 15s: the create now also ships the photo to S3 on the server side.
+    await expect(page.getByRole('row').filter({ hasText: memberName })).toHaveCount(1, { timeout: 15_000 })
     editedName = `${memberName}X`
     const headers = await authHeaders(page)
     const response = await page.request.get(`${apiBase()}/church-member?itemsPerPage=-1`, { headers })

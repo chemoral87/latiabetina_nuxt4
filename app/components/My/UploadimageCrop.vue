@@ -262,8 +262,14 @@
     filename.value = file.name
 
     const _URL = window.URL || window.webkitURL
+    const objectUrl = _URL.createObjectURL(file)
     const imgLoader = new Image()
-    imgLoader.onload = function () {
+
+    // NOTE: keep exactly one onload handler. A previous version set onload to
+    // the crop pipeline and then reassigned it to the URL-revoke callback, so
+    // the pipeline never ran: `uri` stayed null, the crop dialog never opened
+    // and `loading` stayed true forever (the pick button spun indefinitely).
+    imgLoader.onload = () => {
       const ratio = Math.sqrt(
         (imgLoader.width * imgLoader.height) / (maxSize.value * maxSize.value)
       )
@@ -273,8 +279,15 @@
 
       loadImage(
         file,
-        function (img) {
-          uri.value = (img as HTMLCanvasElement).toDataURL()
+        img => {
+          // HEIC/unsupported input makes loadImage hand back false. Without
+          // this guard the old code threw on .toDataURL() and left loading on.
+          if (!img || !(img instanceof HTMLCanvasElement)) {
+            loading.value = false
+            filename.value = ''
+            return
+          }
+          uri.value = img.toDataURL()
           dialog.value = true
           loading.value = false
         },
@@ -285,10 +298,17 @@
           canvas: true,
         }
       )
+
+      _URL.revokeObjectURL(objectUrl)
     }
-    const objectUrl = _URL.createObjectURL(file)
+
+    imgLoader.onerror = () => {
+      loading.value = false
+      filename.value = ''
+      _URL.revokeObjectURL(objectUrl)
+    }
+
     imgLoader.src = objectUrl
-    imgLoader.onload = () => _URL.revokeObjectURL(objectUrl)
   }
 </script>
 
