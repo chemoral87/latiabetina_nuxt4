@@ -32,6 +32,87 @@ export default defineNuxtConfig({
         interval: 300,
       },
     },
+    // Mirrored from avivamiento_webpage/nuxt.config.ts: stamp every emitted
+    // chunk/asset filename with the build time so a deploy can never be served
+    // a stale file. Trade-off: identical commits produce different filenames,
+    // so each deploy invalidates the whole client cache (the content [hash]
+    // alone already busts on change). Verified: CSS goes through
+    // assetFileNames with its real name + extension, so .css files are named
+    // `entry-<ts>-<hash>.css` and still served as text/css.
+    build: {
+      rollupOptions: {
+        output: {
+          chunkFileNames: chunkInfo => {
+            const timestamp = Date.now()
+            return `_nuxt/${chunkInfo.name}-${timestamp}-[hash].js`
+          },
+          entryFileNames: chunkInfo => {
+            const timestamp = Date.now()
+            return `_nuxt/${chunkInfo.name}-${timestamp}-[hash].js`
+          },
+          assetFileNames: assetInfo => {
+            const timestamp = Date.now()
+            const ext = assetInfo.name?.split('.').pop() || 'asset'
+            const name = assetInfo.name?.replace(/\.[^.]+$/, '') || 'asset'
+            return `_nuxt/${name}-${timestamp}-[hash].${ext}`
+          },
+        },
+      },
+      // Remaining CSS-related build options mirrored from
+      // avivamiento_webpage/nuxt.config.ts. All three are already Vite's
+      // defaults, kept explicit only to mirror the source config; the source's
+      // `cssTarget: 'chrome61'` was deliberately left out (see below).
+      assetsInlineLimit: 4096,
+      cssCodeSplit: true,
+      chunkSizeWarningLimit: 1000,
+      // esbuild downlevels CSS to chrome61. Vuetify 4 + global.css only target
+      // modern engines, so this buys nothing on iPhone 15 / current browsers
+      // and adds legacy fallback declarations (measured: +173% total CSS).
+      // cssTarget: 'chrome61',
+    },
+    css: {
+      devSourcemap: false,
+    },
+    // Production-only cssnano pass over the emitted .css bundles, mirrored from
+    // avivamiento_webpage/nuxt.config.ts. Measured on this app: 461,843 B total
+    // CSS with it vs 462,525 B without (-682 B, -0.15%) because Vite already
+    // runs esbuild's CSS minifier. Kept for parity with the source config; it
+    // is 25 lines and some build time for no real gain if you'd rather drop it.
+    // NOTE: cssnano/postcss are not declared in package.json — they currently
+    // resolve as transitive deps. Add both to devDependencies if you keep this.
+    // Gated on `!== 'development'` because `nuxt build` does not export
+    // NODE_ENV=production by itself (the source config's `=== 'production'`
+    // gate silently skips this plugin under a plain `nuxt build`).
+    plugins:
+      process.env.NODE_ENV === 'development'
+        ? []
+        : [
+            {
+              name: 'css-minifier',
+              async generateBundle(_options, bundle) {
+                const cssnano = (await import('cssnano')).default
+                const postcss = (await import('postcss')).default
+
+                for (const [fileName, chunk] of Object.entries(bundle)) {
+                  if (fileName.endsWith('.css') && 'source' in chunk) {
+                    const result = await postcss([
+                      cssnano({
+                        preset: [
+                          'default',
+                          {
+                            discardComments: { removeAll: true },
+                            normalizeWhitespace: true,
+                          },
+                        ],
+                      }),
+                    ]).process(chunk.source, { from: undefined })
+
+                    chunk.source = result.css
+                  }
+                }
+              },
+            },
+          ],
   },
   modules: ['vuetify-nuxt-module', '@pinia/nuxt'],
   app: {
