@@ -9,12 +9,17 @@
    text-size-adjust: iOS Safari inflates text on its own (Android Chrome does
    not); pinning it at 100% keeps type size identical at the same viewport
    width. Explicit root size stops the browser's default-font preference from
-   shifting every rem-based size. */
+   shifting every rem-based size.
+
+   The root size is multiplied by --app-font-scale, which app.vue writes onto
+   <html> from useAccessibilityStore (accessibility VSelect in /account).
+   Every Vuetify type size is rem-based, so one value rescales the whole UI.
+   Fallback 1 keeps the app at 16px when the variable is absent. */
 html {
   touch-action: manipulation;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  font-size: 16px;
+  font-size: calc(16px * var(--app-font-scale, 1));
 }
 
 /* With viewport-fit=cover (nuxt.config.ts) the page now extends under the
