@@ -1,8 +1,50 @@
-import { test, expect } from '@playwright/test'
-import { apiBase, authHeaders, loginOrSkip } from './helpers/auth'
+import { test, expect, type Page } from '@playwright/test'
+import { apiBase, authHeaders, loginOrSkip, permittedOrgFor } from './helpers/auth'
+
+/**
+ * Random 160x160 PNG built in the browser (8px hsl blocks, random hue), so
+ * every run uploads different bytes without shipping a fixture file.
+ * Returns the base64 payload (no `data:` prefix).
+ */
+async function randomPngBase64(page: Page): Promise<string> {
+  return page.evaluate(() => {
+    const canvas = document.createElement('canvas')
+    canvas.width = 160
+    canvas.height = 160
+    const ctx = canvas.getContext('2d')
+    if (!ctx) throw new Error('canvas 2d context unavailable')
+    for (let y = 0; y < canvas.height; y += 8) {
+      for (let x = 0; x < canvas.width; x += 8) {
+        ctx.fillStyle = `hsl(${Math.floor(Math.random() * 360)}, 70%, 50%)`
+        ctx.fillRect(x, y, 8, 8)
+      }
+    }
+    return canvas.toDataURL('image/png').split(',')[1] ?? ''
+  })
+}
+
+/** Members of a sheet, read straight from the API. */
+async function sheetMembers(page: Page, sheetId: string) {
+  const headers = await authHeaders(page)
+  const response = await page.request.get(`${apiBase()}/church-member?itemsPerPage=-1`, { headers })
+  const payload = await response.json()
+  const items = Array.isArray(payload) ? payload : (payload.data?.data ?? payload.data ?? [])
+  return (items as { id: number; name?: string; conso_sheet_id?: number | string }[]).filter(member => String(member.conso_sheet_id) === sheetId)
+}
+
+/**
+ * Wait until Nuxt has hydrated, so clicks hit live Vue handlers.
+ * `waitForLoadState('networkidle')` never settles here: the Vite dev server keeps
+ * re-requesting optimized deps (network drive + polling watcher) and an Echo
+ * WebSocket stays open.
+ */
+async function waitForApp(page: Page) {
+  await page.waitForFunction(() => Boolean((document.getElementById('__nuxt') as { __vue_app__?: unknown } | null)?.__vue_app__))
+}
 
 test.describe.serial('Consolidation members', () => {
   let sheetId = ''
+  let sheetOrgId: number | undefined
   let folio = ''
   let memberName = ''
   let editedName = ''
@@ -25,17 +67,19 @@ test.describe.serial('Consolidation members', () => {
 
   test('creates a consolidation', async ({ page }) => {
     await page.goto('/consolidation')
-    await page.waitForLoadState('networkidle')
+    await waitForApp(page)
     await expect(page.locator('#cnsld-new-btn')).toBeVisible()
     const headers = await authHeaders(page)
-    const organizations = await page.request.get(`${apiBase()}/organization`, { headers })
-    const payload = await organizations.json()
-    const items = Array.isArray(payload) ? payload : (payload.data?.data ?? payload.data ?? [])
-    expect(items.length).toBeGreaterThan(0)
+    // The sheet must live in an org the account holds create/update for: the API
+    // now scopes each of those to the record's own org. Delete is skipped when the
+    // account has no conso-sheet-delete anywhere (see the last test).
+    const orgId = await permittedOrgFor(page, 'conso-sheet-create', 'conso-sheet-update')
+    expect(orgId, 'Account needs conso-sheet-create and conso-sheet-update on one shared org').toBeTruthy()
+    sheetOrgId = orgId
     folio = `E2E-${Date.now()}`
     const response = await page.request.post(`${apiBase()}/conso-sheet`, {
       headers,
-      data: { org_id: items[0].id, folio_number: folio, date: new Date().toISOString().slice(0, 10) },
+      data: { org_id: orgId, folio_number: folio, date: new Date().toISOString().slice(0, 10) },
     })
     expect(response.ok(), await response.text()).toBeTruthy()
     const result = await response.json()
@@ -45,7 +89,7 @@ test.describe.serial('Consolidation members', () => {
 
   test('manages a member', async ({ page }) => {
     await page.goto(`/consolidation/${sheetId}/details`)
-    await page.waitForLoadState('networkidle')
+    await waitForApp(page)
     memberName = `E2E Member ${Date.now()}`
     await page.locator('#cnsld-new-member-btn').click()
     const dialog = page.locator('#det-member-dlg')
@@ -53,30 +97,15 @@ test.describe.serial('Consolidation members', () => {
     await dialog.getByRole('textbox', { name: 'Apellido Paterno' }).fill('Test')
 
     // ---- photo upload through MyUploadimageCrop (random generated image) ----
-    // Random 160x160 PNG built in the browser (8px hsl blocks, random hue), so
-    // every run uploads different bytes without shipping a fixture file.
-    const randomPngBase64 = await page.evaluate(() => {
-      const canvas = document.createElement('canvas')
-      canvas.width = 160
-      canvas.height = 160
-      const ctx = canvas.getContext('2d')
-      if (!ctx) throw new Error('canvas 2d context unavailable')
-      for (let y = 0; y < canvas.height; y += 8) {
-        for (let x = 0; x < canvas.width; x += 8) {
-          ctx.fillStyle = `hsl(${Math.floor(Math.random() * 360)}, 70%, 50%)`
-          ctx.fillRect(x, y, 8, 8)
-        }
-      }
-      return canvas.toDataURL('image/png').split(',')[1] ?? ''
-    })
-    expect(randomPngBase64.length).toBeGreaterThan(0)
+    const pngBase64 = await randomPngBase64(page)
+    expect(pngBase64.length).toBeGreaterThan(0)
 
     // The component's file input is hidden; setInputFiles drives the same
     // `change` handler the picker button would.
     await dialog.locator('input[type="file"]').setInputFiles({
       name: `e2e-random-${Date.now()}.png`,
       mimeType: 'image/png',
-      buffer: Buffer.from(randomPngBase64, 'base64'),
+      buffer: Buffer.from(pngBase64, 'base64'),
     })
 
     const cropDialog = page.locator('#my-uploa-dlg-1')
@@ -112,14 +141,74 @@ test.describe.serial('Consolidation members', () => {
     const deleteMember = await page.request.delete(`${apiBase()}/church-member/${member.id}`, { headers })
     expect(deleteMember.ok(), await deleteMember.text()).toBeTruthy()
     await page.reload()
-    await page.waitForLoadState('networkidle')
+    await waitForApp(page)
     await expect(page.getByRole('row').filter({ hasText: editedName })).toHaveCount(0, { timeout: 15_000 })
+  })
+
+  test('previews a member photo, removes it, and persists nothing', async ({ page }) => {
+    await page.goto(`/consolidation/${sheetId}/details`)
+    await waitForApp(page)
+
+    const before = await sheetMembers(page, sheetId)
+    const discardName = `E2E Discard ${Date.now()}`
+
+    // Any POST /church-member during this test means something got saved.
+    const saves: string[] = []
+    page.on('request', request => {
+      if (request.method() === 'POST' && request.url().includes('/church-member')) saves.push(request.url())
+    })
+
+    await page.locator('#cnsld-new-member-btn').click()
+    const dialog = page.locator('#det-member-dlg')
+    await expect(dialog).toBeVisible()
+    await dialog.getByRole('textbox', { name: 'Nombre' }).fill(discardName)
+    await dialog.getByRole('textbox', { name: 'Apellido Paterno' }).fill('Discard')
+
+    // Load the picture into the cropper.
+    await dialog.locator('input[type="file"]').setInputFiles({
+      name: `e2e-discard-${Date.now()}.png`,
+      mimeType: 'image/png',
+      buffer: Buffer.from(await randomPngBase64(page), 'base64'),
+    })
+
+    const cropDialog = page.locator('#my-uploa-dlg-1')
+    await expect(cropDialog).toBeVisible()
+    await expect(cropDialog.locator('div.rounded-circle img')).toBeVisible()
+    // Visible is not enough — prove the browser decoded it.
+    await expect.poll(() => cropDialog.locator('div.rounded-circle img').evaluate(img => (img as HTMLImageElement).naturalWidth)).toBeGreaterThan(0)
+
+    await cropDialog.locator('#my-uploadimagecrop-save-btn').click()
+    await expect(cropDialog).toBeHidden()
+
+    // The picture reached the parent dialog as a data URL (avatar preview).
+    await expect(dialog.locator('.v-avatar img')).toHaveAttribute('src', /^data:image\//)
+
+    // Remove the picture again: the chip/clear button and avatar go away and the
+    // drop zone comes back.
+    await dialog.locator('#my-uploadimagecrop-clear-btn').click()
+    await expect(dialog.locator('#my-uploadimagecrop-clear-btn')).toBeHidden()
+    await expect(dialog.locator('.v-avatar')).toHaveCount(0)
+    await expect(dialog.locator('.drop-zone')).toBeVisible()
+    // No stuck spinner after the picker was used (pick button is not loading).
+    await expect(dialog.locator('#my-uploadimagecrop-pick-btn')).toBeEnabled()
+
+    // Discard the member: nothing may hit the API and nothing may be stored.
+    await dialog.locator('#cmm-dialog-cancel-btn').click()
+    await expect(dialog).toBeHidden()
+    expect(saves).toEqual([])
+
+    const after = await sheetMembers(page, sheetId)
+    expect(after.length).toBe(before.length)
+    expect(after.some(member => member.name === discardName)).toBe(false)
   })
 
   test('deletes the sheet', async ({ page }) => {
     test.skip(!canDelete, 'Account lacks conso-sheet-delete permission')
+    // The API scopes delete to the record's org, so the permission must cover it.
+    const deleteOrg = await permittedOrgFor(page, 'conso-sheet-delete')
+    test.skip(deleteOrg !== sheetOrgId, 'conso-sheet-delete is not held for the sheet org')
     await page.goto('/consolidation')
-    await page.waitForLoadState('networkidle')
+    await waitForApp(page)
     const headers = await authHeaders(page)
     const response = await page.request.delete(`${apiBase()}/conso-sheet/${sheetId}`, { headers })
     expect(response.ok(), await response.text()).toBeTruthy()

@@ -26,11 +26,12 @@
       </template>
       <template #[`item.actions`]="{ item }">
         <div class="d-flex flex-nowrap justify-center">
-          <VBtn :id="`con-table-edit-btn-${item.id}`" icon class="ma-1" size="small" title="Editar" color="primary" rounded="circle" variant="outlined" @click="emit('edit', item)">
+          <VBtn v-if="canUpdate" :id="`con-table-edit-btn-${item.id}`" icon class="ma-1" size="small" title="Editar" color="primary" rounded="circle" variant="outlined" @click="emit('edit', item)">
             <VIcon size="x-large">mdi-pencil</VIcon>
           </VBtn>
 
           <VBtn
+            v-if="canDelete"
             :id="`con-table-delete-btn-${item.id}`"
             icon
             class="ma-1"
@@ -135,6 +136,9 @@
   // Hide the "Organización" column when the user has only one org for this
   // permission — the backend resolves the org from auth context.
   const singleOrg = computed(() => auth.hasSingleOrgFor('conso-sheet-index'))
+
+  const canUpdate = computed(() => auth.hasPermission('conso-sheet-update'))
+  const canDelete = computed(() => auth.hasPermission('conso-sheet-delete'))
 
   const headers = computed<Header[]>(() => {
     const list: Header[] = [

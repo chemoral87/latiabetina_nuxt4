@@ -28,7 +28,7 @@
             <VIcon start>mdi-reload</VIcon>
             Refrescar
           </VBtn>
-          <VBtn id="cnsld-new-btn" color="success" @click="newSheet">
+          <VBtn v-if="canCreate" id="cnsld-new-btn" color="success" @click="newSheet">
             <VIcon start>mdi-plus</VIcon>
             Nuevo
           </VBtn>
@@ -77,6 +77,8 @@ definePageMeta({
 
 const { ConsoSheet } = useRepository();
 const notify = useNotifyStore();
+const auth = useAuthStore();
+const canCreate = computed(() => auth.hasPermission("conso-sheet-create"));
 const {
   highlightId,
   prependCreated,
