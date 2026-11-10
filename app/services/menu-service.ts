@@ -44,6 +44,14 @@ export class MenuService {
         })
       }
 
+      if (this.hasPermission('consolidator-group-index')) {
+        menu.push({
+          icon: 'mdi-account-group-outline',
+          title: 'Grupos de Consolidadores',
+          to: '/consolidator-group',
+        })
+      }
+
       if (this.hasPermission('church-member-consolidator-logs-index')) {
         menu.push({
           icon: 'mdi-history',

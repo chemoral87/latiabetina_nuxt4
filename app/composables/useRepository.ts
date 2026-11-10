@@ -8,6 +8,7 @@ import { createChurchEventRepository } from '~/repositories/ChurchEventRepositor
 import { createChurchMemberRepository, createChurchMemberTrackingLogRepository } from '~/repositories/ChurchMemberRepository'
 import { createPermissionRepository } from '~/repositories/PermissionRepository'
 import { createConsoSheetRepository } from '~/repositories/ConsoSheetRepository'
+import { createConsolidatorGroupRepository } from '~/repositories/ConsolidatorGroupRepository'
 import { createSongRepository } from '~/repositories/SongRepository'
 import { createScoreRepository } from '~/repositories/ScoreRepository'
 import { createProfileRepository } from '~/repositories/ProfileRepository'
@@ -36,6 +37,7 @@ export function useRepository() {
     Sale: createSaleRepository($api),
     Product: createProductRepository($api),
     ConsoSheet: createConsoSheetRepository($api),
+    ConsolidatorGroup: createConsolidatorGroupRepository($api),
     ChurchMember: createChurchMemberRepository($api),
     ChurchMemberTrackingLog: createChurchMemberTrackingLogRepository($api),
     WhatsApp: createWhatsAppRepository($api),

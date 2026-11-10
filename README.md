@@ -91,5 +91,6 @@ npm run test:e2e -- --headed # visible Chrome window
 npx playwright test tests/e2e --workers=3
 npx playwright test tests/e2e/role.spec.ts
 npx playwright test tests/e2e/assistance.spec.ts
+npx playwright test tests/e2e/consolidator-group.spec.ts
 
 ```

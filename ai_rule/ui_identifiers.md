@@ -69,6 +69,7 @@ Old ids carrying a component-type suffix (`-tf-1`, `-sel-1`) or a `tf-` prefix m
 | `pos/kds/index.vue` | `pos` |
 | `pos/sales/index.vue` | `poss` |
 | `pitcher/index.vue` | `pit` |
+| `consolidator-group/index.vue` | `cgr` |
 
 ## Page Rule
 
