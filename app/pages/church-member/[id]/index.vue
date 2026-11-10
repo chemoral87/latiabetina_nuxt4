@@ -243,7 +243,7 @@ const CHURCH_MEMBER_DETAIL_QUERY = `query ChurchMemberDetail($id: ID!) {
   churchMember(id: $id) {
     member {
       id org_id conso_sheet_id name last_name second_last_name years_old
-      number_of_children cellphone address marriage_status status created_by
+      gender number_of_children cellphone address marriage_status status created_by
       url_image_s3 created_at updated_at
       creator { id name last_name }
       consolidators { id name last_name second_last_name email }

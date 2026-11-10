@@ -17,12 +17,11 @@
         <VCol md="2" sm="4" cols="6">
           <VSelect id="seg-index-status" v-model="filterStatus" clearable hide-details label="Estado" density="compact" variant="outlined" :items="statusOptions" />
         </VCol>
+        <VCol md="2" sm="4" cols="6">
+          <VSelect id="seg-index-gender" v-model="filterGender" hide-details label="Género" density="compact" variant="outlined" :items="trackingGenderOptions" />
+        </VCol>
         <VCol v-if="showOrgSelect" lg="1" md="2" sm="3" cols="6">
           <OrganizationSelect v-model="filterOrgId" clearable hide-details density="compact" variant="outlined" prevent-auto-select permission="conso-sheet-index" />
-        </VCol>
-
-        <VCol cols="auto" class="d-flex align-center">
-          <VCheckbox id="seg-has-phone-chk" v-model="filterHasPhone" hide-details density="compact" label="Con teléfono" />
         </VCol>
 
         <VCol cols="auto" class="d-flex align-center">
@@ -49,16 +48,29 @@
     color: 'purple-lighten-4',
   })
 
+  import { GENDER_OPTIONS } from '~/constants/churchMember'
+
   const { ChurchMember } = useRepository()
   const notify = useNotifyStore()
   const auth = useAuthStore()
   const { statuses: statusOptions } = useChurchMemberStatus()
+  const route = useRoute()
+  const router = useRouter()
 
-  const filterInput = ref('')
-  const filterTerm = ref('')
-  const filterStatus = ref('ACTIVO')
-  const filterOrgId = ref<string | number | null>(null)
-  const filterHasPhone = ref(true)
+  const genderOptions = GENDER_OPTIONS
+
+  // Tracking page gender filter: "Todos" (null) + Masculino/Femenino.
+  const trackingGenderOptions = [
+    { title: 'Todos', value: null },
+    ...GENDER_OPTIONS,
+  ]
+
+  // Restore filters from URL query so they survive page refresh.
+  const filterInput = ref((route.query.filter as string) || '')
+  const filterTerm = ref((route.query.filter as string) || '')
+  const filterStatus = ref((route.query.status as string) || 'ACTIVO')
+  const filterOrgId = ref<string | number | null>((route.query.org_id as string) || null)
+  const filterGender = ref<string | null>((route.query.gender as string) || null)
   const loading = ref(false)
   const members = ref<Record<string, unknown>[]>([])
   const total = ref(0)
@@ -116,7 +128,8 @@
     if (filterStatus.value) params.status = filterStatus.value
     if (filterTerm.value) params.filter = filterTerm.value
     if (filterOrgId.value) params.org_id = filterOrgId.value
-    if (filterHasPhone.value) params.has_phone = true
+    params.has_phone = true
+    if (filterGender.value) params.gender = filterGender.value
 
     if (sortBy.value.length) {
       params['sortBy'] = sortBy.value.map(s => s.key)
@@ -128,6 +141,14 @@
       const norm = normalizeResponse(res)
       members.value = norm.data
       total.value = norm.total
+
+      // Persist filters to URL so they survive page refresh.
+      const q: Record<string, string> = {}
+      if (filterInput.value) q.filter = filterInput.value
+      if (filterStatus.value) q.status = filterStatus.value
+      if (filterOrgId.value) q.org_id = String(filterOrgId.value)
+      if (filterGender.value) q.gender = filterGender.value
+      router.replace({ query: q })
     } catch (error) {
       notify.notify({
         error: (error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Error al cargar miembros',
@@ -142,7 +163,11 @@
   watch(filterStatus, fetchData)
   watch(filterOrgId, fetchData)
   watch(filterTerm, fetchData)
-  watch(filterHasPhone, fetchData)
+  watch(filterGender, fetchData)
+
+  // Persist filters to URL inside fetchData so the query always reflects
+  // the actual state used for the last request (debounced filter included).
+
 </script>
 
 <style scoped></style>

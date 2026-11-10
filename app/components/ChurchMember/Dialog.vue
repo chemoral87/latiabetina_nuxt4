@@ -53,7 +53,26 @@
               />
             </VCol>
             <VCol cols="6">
-              <VTextField id="cmm-dialog-cellphone" v-model="item.cellphone" label="Celular" density="compact" variant="outlined" :disabled="loading" />
+              <VSelect
+                id="cmm-dialog-gender"
+                v-model="item.gender"
+                clearable
+                label="Género"
+                density="compact"
+                variant="outlined"
+                :disabled="loading"
+                :items="genderOptions"
+              />
+            </VCol>
+            <VCol cols="6">
+              <VTextField
+                id="cmm-dialog-cellphone"
+                v-model="item.cellphone"
+                label="Celular"
+                density="compact"
+                variant="outlined"
+                :disabled="loading"
+              />
             </VCol>
             <VCol cols="12">
               <MyAddressCompletion id="cmm-dialog-address" v-model="item.address" :disabled="loading" />
@@ -112,7 +131,7 @@
 
 <script setup lang="ts">
   import { vrules } from '~/utils/vrules'
-  import { MARRIAGE_STATUSES } from '~/constants/churchMember'
+  import { MARRIAGE_STATUSES, GENDER_OPTIONS } from '~/constants/churchMember'
 
   interface MemberItem {
     id?: number | null
@@ -122,6 +141,7 @@
     second_last_name?: string
     cellphone?: string
     years_old?: number | null
+    gender?: string | null
     number_of_children?: number | null
     marriage_status?: string | null
     address?: string
@@ -155,6 +175,7 @@
     second_last_name: '',
     cellphone: '',
     years_old: null,
+    gender: null,
     number_of_children: null,
     marriage_status: null,
     address: '',
@@ -163,6 +184,7 @@
   })
 
   const marriageStatuses = MARRIAGE_STATUSES
+  const genderOptions = GENDER_OPTIONS
 
   /* ── Computed ─────────────────────────────────────────────── */
 
