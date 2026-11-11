@@ -37,7 +37,7 @@
         </VCol>
 
         <VCol cols="auto" class="d-flex align-center">
-          <VBtn id="seg-refresh-btn" color="primary" :loading="loading" variant="outlined" @click="fetchData">
+          <VBtn id="seg-refresh-btn" color="primary" :loading="loading" variant="elevated" @click="fetchData">
             <VIcon start>mdi-magnify</VIcon>
             Buscar
           </VBtn>
@@ -72,10 +72,7 @@
   const genderOptions = GENDER_OPTIONS
 
   // Tracking page gender filter: "Todos" (null) + Masculino/Femenino.
-  const trackingGenderOptions = [
-    { title: 'Todos', value: null },
-    ...GENDER_OPTIONS,
-  ]
+  const trackingGenderOptions = [{ title: 'Todos', value: null }, ...GENDER_OPTIONS]
 
   type GenderListItem = { icon?: string; color?: string; raw?: { icon?: string; color?: string } }
 
@@ -189,7 +186,6 @@
 
   // Persist filters to URL inside fetchData so the query always reflects
   // the actual state used for the last request (debounced filter included).
-
 </script>
 
 <style scoped></style>
