@@ -18,7 +18,19 @@
           <VSelect id="seg-index-status" v-model="filterStatus" clearable hide-details label="Estado" density="compact" variant="outlined" :items="statusOptions" />
         </VCol>
         <VCol md="2" sm="4" cols="6">
-          <VSelect id="seg-index-gender" v-model="filterGender" hide-details label="Género" density="compact" variant="outlined" :items="trackingGenderOptions" />
+          <VSelect id="seg-index-gender" v-model="filterGender" hide-details label="Género" density="compact" variant="outlined" :items="trackingGenderOptions">
+            <template #item="{ item, props }">
+              <VListItem v-bind="props">
+                <template v-if="genderMeta(item).icon" #prepend>
+                  <VIcon :color="genderMeta(item).color">{{ genderMeta(item).icon }}</VIcon>
+                </template>
+              </VListItem>
+            </template>
+            <template #selection="{ item }">
+              <VIcon v-if="genderMeta(item).icon" class="mr-1" size="small" :color="genderMeta(item).color">{{ genderMeta(item).icon }}</VIcon>
+              {{ item.title }}
+            </template>
+          </VSelect>
         </VCol>
         <VCol v-if="showOrgSelect" lg="1" md="2" sm="3" cols="6">
           <OrganizationSelect v-model="filterOrgId" clearable hide-details density="compact" variant="outlined" prevent-auto-select permission="conso-sheet-index" />
@@ -26,8 +38,8 @@
 
         <VCol cols="auto" class="d-flex align-center">
           <VBtn id="seg-refresh-btn" color="primary" :loading="loading" variant="outlined" @click="fetchData">
-            <VIcon start>mdi-reload</VIcon>
-            Refrescar
+            <VIcon start>mdi-magnify</VIcon>
+            Buscar
           </VBtn>
         </VCol>
 
@@ -64,6 +76,16 @@
     { title: 'Todos', value: null },
     ...GENDER_OPTIONS,
   ]
+
+  type GenderListItem = { icon?: string; color?: string; raw?: { icon?: string; color?: string } }
+
+  // Vuetify may hand the slot the raw item or a transformed one — support both.
+  function genderMeta(item: GenderListItem) {
+    return {
+      icon: item?.icon ?? item?.raw?.icon,
+      color: item?.color ?? item?.raw?.color,
+    }
+  }
 
   // Restore filters from URL query so they survive page refresh.
   const filterInput = ref((route.query.filter as string) || '')

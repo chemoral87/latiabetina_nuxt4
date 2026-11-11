@@ -12,6 +12,24 @@
       class="elevation-1 xwidth1000"
       @update:options="onUpdateOptions">
       <template #[`item.name`]="{ item }">
+        <VIcon
+          v-if="asRec(item).gender === 'female'"
+          class="mr-1"
+          color="pink"
+          size="small"
+          title="Femenino"
+        >
+          mdi-gender-female
+        </VIcon>
+        <VIcon
+          v-else-if="asRec(item).gender === 'male'"
+          class="mr-1"
+          color="blue"
+          size="small"
+          title="Masculino"
+        >
+          mdi-gender-male
+        </VIcon>
         {{ asRec(item).name }} {{ asRec(item).last_name }}
       </template>
 
@@ -45,8 +63,8 @@
       </template>
 
       <template #[`item.consolidators`]="{ item }">
-        <template v-if="Array.isArray(asRec(item).consolidators) && (asRec(item).consolidators as unknown[]).length">
-          <div v-for="c in asRec(item).consolidators as Record<string, unknown>[]" :key="String(c.id)">
+        <template v-if="rowConsolidators(item).length">
+          <div v-for="c in rowConsolidators(item)" :key="String(c.id)">
             {{ c.name }} {{ c.last_name }}
           </div>
         </template>
@@ -140,6 +158,16 @@ function orgLabel(id: unknown): string {
 function maskedCellphone(value: unknown): string {
   const digits = String(value ?? "").replace(/\D/g, "");
   return digits ? `-${digits.slice(-6)}` : "—";
+}
+
+// Consolidators minus the member creator: the creator is already shown in the
+// "Creado por" column, so repeating them here is noise.
+function rowConsolidators(item: unknown): Record<string, unknown>[] {
+  const rec = asRec(item);
+  const list = Array.isArray(rec.consolidators)
+    ? (rec.consolidators as Record<string, unknown>[])
+    : [];
+  return list.filter((c) => String(c.id) !== String(rec.created_by));
 }
 
 const headers = computed<Header[]>(() => {
