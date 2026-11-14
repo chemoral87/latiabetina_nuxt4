@@ -1,6 +1,6 @@
 <template>
   <VContainer :fluid="true" class="page-tracking-logs-all">
-    <VSheet rounded color="white">
+    <VSheet rounded class="pa-1" color="white" elevation="3">
       <VRow density="compact">
         <VCol md="4" sm="6" cols="12">
           <MyDateMonthPicker
@@ -26,7 +26,7 @@
       </VRow>
     </VSheet>
 
-    <VSheet v-if="selectedConsolidator" rounded class="mt-4" color="white">
+    <VSheet v-if="selectedConsolidator" rounded color="white" elevation="3" class="mt-4 pa-1">
       <div class="d-flex align-center pa-4">
         <VBtn
           id="atl-back-btn"

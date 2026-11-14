@@ -1,6 +1,6 @@
-﻿<template>
+<template>
   <VContainer :fluid="true">
-    <VSheet rounded color="white">
+    <VSheet rounded class="pa-1" color="white" elevation="3">
       <VRow density="compact">
         <VCol md="2" cols="12">
           <VSelect id="le-index-level" v-model="filterLevel" hide-details label="Nivel" density="compact" variant="outlined" :items="levelOptions" />

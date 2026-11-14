@@ -11,14 +11,7 @@
       <VCardText class="pt-0">
         <VTextField id="ae2-section-name" v-model="section.name" class="mb-3" hide-details label="Nombre" density="compact" variant="outlined" />
 
-        <VCheckbox
-          id="ae2-section-hide-row-numbers"
-          v-model="section.hideRowNumbers"
-          class="mb-3"
-          hide-details
-          density="compact"
-          label="Ocultar números de fila"
-        />
+        <VCheckbox id="ae2-section-hide-row-numbers" v-model="section.hideRowNumbers" class="mb-3" hide-details density="compact" label="Ocultar números de fila" />
 
         <VTextField
           id="ae2-section-row-start"
@@ -42,7 +35,7 @@
         </VRow>
 
         <div class="text-caption text-medium-emphasis mb-1">Clic en un asiento para asignar categoría</div>
-        <VSheet id="ae2-section-mini-stage" rounded color="black" class="pa-2 mb-3" style="overflow: auto; height: 250px">
+        <VSheet id="ae2-section-mini-stage" rounded color="black" elevation="3" class="mb-3 pa-1" style="overflow: auto; height: 250px">
           <ClientOnly>
             <VStage :config="miniStageConfig" @tap="handleStageClick" @click="handleStageClick">
               <VLayer>

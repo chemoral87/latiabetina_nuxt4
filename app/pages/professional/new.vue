@@ -1,6 +1,6 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VSheet rounded color="white">
+    <VSheet rounded class="pa-1" color="white" elevation="3">
       <VRow density="compact">
         <VCol cols="12">
           <div class="d-flex align-center justify-space-between py-2 px-2">

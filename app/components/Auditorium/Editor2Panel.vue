@@ -14,7 +14,7 @@
     </VCol>
   </VRow>
 
-  <VSheet v-if="sections.length > 0" rounded color="white" class="pa-3 mb-3">
+  <VSheet v-if="sections.length > 0" rounded color="white" elevation="3" class="pa-3 mb-3">
     <div class="d-flex align-center justify-space-between mb-2">
       <div class="text-subtitle-2">Alinear secciones</div>
     </div>

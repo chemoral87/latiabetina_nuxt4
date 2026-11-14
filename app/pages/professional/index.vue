@@ -1,8 +1,7 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VSheet variant="outlined">
-      <VSheet>
-        <VRow density="compact">
+    <VSheet class="pa-1" elevation="3" variant="outlined">
+      <VRow density="compact">
           <!-- Filter -->
           <VCol md="4" cols="12">
             <VTextField
@@ -53,8 +52,7 @@
               @sorting="handleSorting"
             />
           </VCol>
-        </VRow>
-      </VSheet>
+      </VRow>
     </VSheet>
   </VContainer>
 </template>

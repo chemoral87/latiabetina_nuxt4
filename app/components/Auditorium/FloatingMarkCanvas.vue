@@ -1,5 +1,5 @@
 <template>
-  <VSheet id="ae2-mark-canvas-sheet" color="black" elevation="2" class="pa-0 ma-0 stage-container" :style="{ height: '100%', width: '100%', overflow: 'hidden' }">
+  <VSheet id="ae2-mark-canvas-sheet" color="black" elevation="3" class="ma-0 stage-container pa-1" :style="{ height: '100%', width: '100%', overflow: 'hidden' }">
     <VStage
       ref="konvaStage"
       :config="adjustedStageConfig"

@@ -1,6 +1,6 @@
 <template>
   <VContainer :fluid="true" class="page-tracking-logs">
-    <VSheet rounded color="white">
+    <VSheet rounded class="pa-1" color="white" elevation="3">
       <VRow density="compact">
         <VCol md="3" sm="4" cols="12">
           <VTextField

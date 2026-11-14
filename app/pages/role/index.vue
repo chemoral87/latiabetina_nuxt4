@@ -1,7 +1,7 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VSheet variant="outlined">
-      <VSheet>
+    <VSheet class="pa-1" elevation="3" variant="outlined">
+      <VSheet class="pa-1" elevation="3">
         <VRow density="compact">
           <!-- Filter -->
           <VCol md="2" cols="12">

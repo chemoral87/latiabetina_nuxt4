@@ -1,6 +1,6 @@
 <template>
   <VContainer class="" :fluid="true">
-    <VSheet rounded color="white">
+    <VSheet rounded class="pa-1" color="white" elevation="3">
       <VRow density="compact">
       <VCol md="2" sm="4" cols="12">
         <VTextField

@@ -1,4 +1,4 @@
-<template><VContainer :fluid="true"><VSheet rounded color="white"><VCardTitle class="d-flex justify-space-between">Partituras <VBtn id="score-new-btn" color="primary" @click="navigateTo('/music-score/new')">Nueva</VBtn></VCardTitle><VList><VListItem v-for="item in items" :key="item.id" :title="item.title || `Partitura ${item.id}`" @click="navigateTo(`/score/${item.id}/edit`)" /></VList></VSheet></VContainer></template>
+<template><VContainer :fluid="true"><VSheet rounded class="pa-1" color="white" elevation="3"><VCardTitle class="d-flex justify-space-between">Partituras <VBtn id="score-new-btn" color="primary" @click="navigateTo('/music-score/new')">Nueva</VBtn></VCardTitle><VList><VListItem v-for="item in items" :key="item.id" :title="item.title || `Partitura ${item.id}`" @click="navigateTo(`/score/${item.id}/edit`)" /></VList></VSheet></VContainer></template>
 <script setup lang="ts">
 definePageMeta({ title: 'Partituras', icon: 'mdi-music-note', middleware: ['authenticated'] })
 const { Score } = useRepository()

@@ -2,7 +2,7 @@
   <VContainer :fluid="true" class="page-consolidation-details">
     <VRow density="compact">
        <VCol cols="12">
-        <VSheet id="con-detai-card-2" rounded color="white">
+        <VSheet id="con-detai-card-2" rounded class="pa-1" color="white" elevation="3">
 <div class="text-subtitle-1 font-weight-bold d-flex align-center py-3">
           <VIcon start>mdi-account-group</VIcon>
           Miembros
@@ -36,9 +36,9 @@
        </VCol>
      
 <VCol cols="12">
-         <VSheet id="con-detai-card-1" rounded color="white">
+         <VSheet id="con-detai-card-1" rounded color="white" elevation="3" class="pa-1 mt-3">
           
-           <div>
+        
             <VRow  align="center" density="compact">
               <VCol md="2" cols="12">
                 <div class="d-flex align-center">
@@ -159,7 +159,7 @@
              
               </VCol>
             </VRow>
-          </div>
+      
         </VSheet>
       </VCol>
 

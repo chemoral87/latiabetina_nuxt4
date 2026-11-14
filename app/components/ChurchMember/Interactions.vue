@@ -1,5 +1,5 @@
 <template>
-  <VSheet rounded color="white" class="pa-2 pa-sm-3">
+  <VSheet rounded class=" pa-1" color="white" elevation="3">
     <div class="text-subtitle-1 font-weight-medium d-flex align-center">
       <VIcon start size="small" color="primary">mdi-history</VIcon>
       Interacciones

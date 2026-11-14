@@ -3,7 +3,7 @@
     id="ae2-canvas-sheet"
     ref="sheetRef"
     color="black"
-    elevation="2"
+    elevation="3"
     class="pa-0 stage-container"
     :style="{ height: `${stageConfig.height}px`, minHeight: '400px', overflow: 'hidden' }"
   >

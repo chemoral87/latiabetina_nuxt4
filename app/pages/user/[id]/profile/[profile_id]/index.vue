@@ -1,6 +1,6 @@
 <template>
   <VContainer>
-    <VSheet rounded class="pa-6" color="white">
+    <VSheet rounded class=" pa-1" color="white" elevation="3">
       <div class="text-h6 mb-2">
         {{ profile.organization_name }} ({{
           profile.organization_short_code

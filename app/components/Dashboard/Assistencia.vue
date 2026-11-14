@@ -10,14 +10,8 @@
       </VCol>
     </VRow>
 
-    <VSheet rounded="lg" class="mb-4 pa-4">
-      <Bar
-        v-if="chartData"
-        :data="chartData"
-        style="height: 300px"
-        :options="chartOptions"
-        :plugins="[totalOnTop]"
-      />
+    <VSheet rounded="lg" elevation="3" class="mb-4 pa-1">
+      <Bar v-if="chartData" :data="chartData" style="height: 300px" :options="chartOptions" :plugins="[totalOnTop]" />
       <div v-else class="text-center text-medium-emphasis py-8">
         {{ loading ? 'Cargando datos...' : 'Sin datos disponibles' }}
       </div>
@@ -25,7 +19,7 @@
 
     <VRow dense>
       <VCol v-for="item in summaryItems" :key="item.label" cols="6">
-        <VSheet rounded="lg" class="pa-3 text-center">
+        <VSheet rounded="lg" elevation="3" class="pa-3 text-center pa-1">
           <div :style="{ color: item.color }" class="text-h5 font-weight-bold">
             {{ item.value }}
           </div>
@@ -37,16 +31,7 @@
 </template>
 
 <script setup lang="ts">
-  import {
-    Chart as ChartJS,
-    Title,
-    Tooltip,
-    Legend,
-    BarElement,
-    CategoryScale,
-    LinearScale,
-    type Plugin,
-  } from 'chart.js'
+  import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, type Plugin } from 'chart.js'
   import { Bar } from 'vue-chartjs'
 
   ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
@@ -112,10 +97,7 @@
   const chartData = computed(() => {
     if (!rows.value.length) return null
 
-    const grouped = new Map<
-      string,
-      { adults: number; teens: number; kids: number; babies: number }
-    >()
+    const grouped = new Map<string, { adults: number; teens: number; kids: number; babies: number }>()
     for (const row of rows.value) {
       const key = row.assistance_date
       if (!grouped.has(key)) {
@@ -130,21 +112,8 @@
 
     const sorted = [...grouped.entries()].sort(([a], [b]) => a.localeCompare(b))
     const labels = sorted.map(([date]) => {
-      const [y, m = "01", d = ""] = date.split('-')
-      const months = [
-        'Ene',
-        'Feb',
-        'Mar',
-        'Abr',
-        'May',
-        'Jun',
-        'Jul',
-        'Ago',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dic',
-      ]
+      const [y, m = '01', d = ''] = date.split('-')
+      const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
       return `${d} ${months[parseInt(m, 10) - 1]!}`
     })
 

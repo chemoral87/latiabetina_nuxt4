@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div id="cmp-pos-kds-items-list" class="kds-items-list pa-3 pt-0">
     <div
       v-for="(row, rowIndex) in preparationRows"
@@ -10,20 +10,14 @@
       @click="toggleRow(row.item.id, rowIndex)"
     >
       <div class="kds-item-thumb">
-        <VImg
-          v-if="row.item.product?.image_s3"
-          width="36"
-          height="36"
-          class="rounded"
-          :src="row.item.product.image_s3"
-        >
+        <VImg v-if="row.item.product?.image_s3" width="36" height="36" class="rounded" :src="row.item.product.image_s3">
           <template #placeholder>
-            <VSheet width="36" height="36" color="grey-lighten-3" class="d-flex align-center justify-center rounded">
+            <VSheet width="36" height="36" elevation="3" color="grey-lighten-3" class="d-flex align-center justify-center rounded">
               <VIcon size="small" color="grey-lighten-1">mdi-food</VIcon>
             </VSheet>
           </template>
         </VImg>
-        <VSheet v-else width="36" height="36" color="grey-lighten-3" class="d-flex align-center justify-center rounded">
+        <VSheet v-else width="36" height="36" elevation="3" color="grey-lighten-3" class="d-flex align-center justify-center rounded">
           <VIcon size="small" color="grey-lighten-1">mdi-food</VIcon>
         </VSheet>
       </div>
@@ -65,126 +59,126 @@
 </template>
 
 <script setup lang="ts">
-import { isRowDone as isRowDoneShared, getPreparationRows } from "~/utils/kds"
+  import { isRowDone as isRowDoneShared, getPreparationRows } from '~/utils/kds'
 
-interface KdsItem {
-  id: number
-  quantity: number
-  completed_quantity?: number
-  product?: {
-    name?: string
-    description?: string
-    image_s3?: string
-    requires_preparation?: boolean
+  interface KdsItem {
+    id: number
+    quantity: number
+    completed_quantity?: number
+    product?: {
+      name?: string
+      description?: string
+      image_s3?: string
+      requires_preparation?: boolean
+    }
   }
-}
 
-interface KdsOrder {
-  id: number
-  items?: KdsItem[]
-}
+  interface KdsOrder {
+    id: number
+    items?: KdsItem[]
+  }
 
-const props = defineProps<{
-  order: KdsOrder
-  doneMap: Record<string, Record<string, boolean>>
-  isItemCompleted: (item: KdsItem) => boolean
-  statusTitle: (item: KdsItem) => string
-}>()
+  const props = defineProps<{
+    order: KdsOrder
+    doneMap: Record<string, Record<string, boolean>>
+    isItemCompleted: (item: KdsItem) => boolean
+    statusTitle: (item: KdsItem) => string
+  }>()
 
-const emit = defineEmits<{
-  (e: 'toggle-row-done', saleId: number, itemId: number, rowIndex: number): void
-  (e: 'undo-row-done', saleId: number, itemId: number, rowIndex: number): void
-}>()
+  const emit = defineEmits<{
+    (e: 'toggle-row-done', saleId: number, itemId: number, rowIndex: number): void
+    (e: 'undo-row-done', saleId: number, itemId: number, rowIndex: number): void
+  }>()
 
-interface PrepRow {
-  item: KdsItem
-  rowIndex: number
-}
+  interface PrepRow {
+    item: KdsItem
+    rowIndex: number
+  }
 
-const preparationRows = computed<PrepRow[]>(() => getPreparationRows(props.order) as PrepRow[])
+  const preparationRows = computed<PrepRow[]>(() => getPreparationRows(props.order) as PrepRow[])
 
-function isRowDone(row: PrepRow): boolean {
-  return isRowDoneShared(props.doneMap, props.order, row.item.id, row.rowIndex)
-}
+  function isRowDone(row: PrepRow): boolean {
+    return isRowDoneShared(props.doneMap, props.order, row.item.id, row.rowIndex)
+  }
 
-function toggleRow(itemId: number, rowIndex: number) {
-  emit('toggle-row-done', props.order.id, itemId, rowIndex)
-}
+  function toggleRow(itemId: number, rowIndex: number) {
+    emit('toggle-row-done', props.order.id, itemId, rowIndex)
+  }
 
-function undoRow(itemId: number, rowIndex: number) {
-  emit('undo-row-done', props.order.id, itemId, rowIndex)
-}
+  function undoRow(itemId: number, rowIndex: number) {
+    emit('undo-row-done', props.order.id, itemId, rowIndex)
+  }
 </script>
 
 <style scoped>
-.kds-items-list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
+  .kds-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
 
-.kds-item-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 6px 8px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.15s;
-}
+  .kds-item-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
 
-.kds-item-row:hover {
-  background: #fff3e0;
-}
+  .kds-item-row:hover {
+    background: #fff3e0;
+  }
 
-.kds-item-row-done {
-  opacity: 0.6;
-  background: #e8f5e9 !important;
-}
+  .kds-item-row-done {
+    opacity: 0.6;
+    background: #e8f5e9 !important;
+  }
 
-.kds-item-row-done:hover {
-  background: #c8e6c9 !important;
-}
+  .kds-item-row-done:hover {
+    background: #c8e6c9 !important;
+  }
 
-.kds-toggle-button {
-  min-width: 28px;
-  width: 28px;
-  height: 28px;
-  flex-shrink: 0;
-}
+  .kds-toggle-button {
+    min-width: 28px;
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+  }
 
-.kds-undo-button {
-  min-width: 28px;
-  width: 28px;
-  height: 28px;
-  margin-left: auto;
-}
+  .kds-undo-button {
+    min-width: 28px;
+    width: 28px;
+    height: 28px;
+    margin-left: auto;
+  }
 
-.kds-item-thumb {
-  flex-shrink: 0;
-  width: 36px;
-  height: 36px;
-  border-radius: 6px;
-  overflow: hidden;
-}
+  .kds-item-thumb {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    overflow: hidden;
+  }
 
-.kds-item-info {
-  flex: 1;
-  min-width: 0;
-}
+  .kds-item-info {
+    flex: 1;
+    min-width: 0;
+  }
 
-.kds-item-name {
-  font-size: 13px;
-  font-weight: 600;
-  color: #333;
-  line-height: 1.3;
-}
+  .kds-item-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    line-height: 1.3;
+  }
 
-.kds-item-desc {
-  font-size: 11px;
-  color: #999;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+  .kds-item-desc {
+    font-size: 11px;
+    color: #999;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 </style>

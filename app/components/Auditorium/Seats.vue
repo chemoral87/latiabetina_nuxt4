@@ -1,8 +1,8 @@
-﻿<template>
+<template>
   <VSheet
     id="cmp-auditorium-seats"
-    elevation="2"
-    class="pa-2 stage-container"
+    elevation="3"
+    class=" stage-container pa-1"
     style="
       background: #f5f5f5;
       min-height: 500px;

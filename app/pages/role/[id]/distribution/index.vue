@@ -1,6 +1,6 @@
 <template>
   <VContainer :fluid="true">
-    <VSheet rounded color="white">
+    <VSheet rounded class="pa-1" color="white" elevation="3">
       <VRow density="compact">
       <!-- Organization filter -->
       <VCol md="3" cols="12">
@@ -20,7 +20,7 @@
 
       <!-- Profiles with the role -->
       <VCol cols="12">
-        <VSheet id="roldst-profiles-card" rounded class="pa-4" variant="outlined">
+        <VSheet id="roldst-profiles-card" rounded elevation="3" class="pa-4 pa-1" variant="outlined">
           <div class="text-subtitle-1 font-weight-medium pb-2 d-flex align-center">
             <VIcon start size="small" color="primary">mdi-shield-key-outline</VIcon>
             Perfiles con el rol {{ role.name }}
@@ -66,7 +66,7 @@
 
       <!-- Actions -->
       <VCol cols="12">
-        <VSheet id="roldst-actions-card" rounded variant="outlined" class="pa-4 d-flex justify-end">
+        <VSheet id="roldst-actions-card" rounded elevation="3" variant="outlined" class="pa-4 d-flex justify-end pa-1">
           <VBtn id="roldst-back-btn" color="primary" variant="outlined" @click="navigateTo('/role')">
             <VIcon start>mdi-arrow-left</VIcon>
             Volver

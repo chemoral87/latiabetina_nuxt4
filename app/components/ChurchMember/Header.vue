@@ -1,5 +1,5 @@
 <template>
-  <VSheet rounded color="white" class="pa-2 pa-sm-3">
+  <VSheet rounded color="white" elevation="3" class=" pa-sm-3 pa-1">
     <div class="text-subtitle-1 font-weight-medium d-flex align-center">
       <VIcon start size="small" color="primary">mdi-account</VIcon>
       <span class="text-subtitle-2 text-truncate">{{ [member.name, member.last_name].filter(Boolean).join(' ') }}</span>

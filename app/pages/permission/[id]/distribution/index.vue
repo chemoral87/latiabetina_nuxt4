@@ -1,6 +1,6 @@
 <template>
   <VContainer :fluid="true">
-    <VSheet rounded color="white">
+    <VSheet rounded class="pa-1" color="white" elevation="3">
       <VRow density="compact">
       <!-- Organization filter -->
       <VCol md="3" cols="12">

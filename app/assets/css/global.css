@@ -42,7 +42,7 @@ body {
 
 /* Global VContainer padding — equivalent to pa-1 (4px) on all pages */
 .v-container {
-  padding: 8px !important;
+  padding: 6px !important;
 }
 
 /* v-container: top padding for VSheet inside the container */
