@@ -107,11 +107,7 @@
                 />
               </VCol>
 
-              <VCol cols="12" class="mt-2">
-                <VDivider />
-              </VCol>
-
-              <VCol md="6" cols="12" class="mt-1">
+                      <VCol md="6" cols="12" >
                 <VTextarea
                   id="det-comments-ta"
                   v-model="sheet.comments"
@@ -125,7 +121,7 @@
                   prepend-inner-icon="mdi-comment-text-outline"
                 />
               </VCol>
-              <VCol md="6" cols="12" class="mt-1">
+              <VCol md="6" cols="12" >
                 <VTextarea
                   id="det-special-request-ta"
                   v-model="sheet.special_request"

@@ -203,6 +203,12 @@
                 >
                 <span class="font-weight-medium">Creado por:</span>
                 {{ creatorName }}
+                <template v-if="member.conso_sheet">
+                  <span class="font-weight-medium ml-2">Folio:</span>
+                  <NuxtLink class="text-primary" :to="`/consolidation/${(member.conso_sheet as { id: number | string }).id}/details`">
+                    {{ (member.conso_sheet as { folio_number: number | string }).folio_number }}
+                  </NuxtLink>
+                </template>
               </VCol>
               <VCol
                 v-if="member.address"

@@ -111,7 +111,7 @@ watch(() => props.loading, val => {
 onMounted(() => {
   clearErrors()
   if (props.group && Object.keys(props.group).length > 0) {
-    const g = props.group as GroupItem & { users?: ConsolidatorItem[] }
+      const g = props.group as GroupItem & { users?: ConsolidatorItem[] }
     item.value = {
       id: g.id,
       name: g.name ?? '',

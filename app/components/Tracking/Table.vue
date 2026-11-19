@@ -68,7 +68,15 @@
             {{ c.name }} {{ c.last_name }}
           </div>
         </template>
-        <span v-else>—</span>
+        <div
+          v-for="g in groupConsolidators(item)"
+          :key="'g' + g.id"
+          class="font-italic"
+          style="color: #e65100"
+        >
+          {{ g.name }} {{ g.last_name }}
+        </div>
+        <span v-if="!rowConsolidators(item).length && !groupConsolidators(item).length">—</span>
       </template>
 
       <template #[`item.org_id`]="{ item }">
@@ -168,6 +176,25 @@ function rowConsolidators(item: unknown): Record<string, unknown>[] {
     ? (rec.consolidators as Record<string, unknown>[])
     : [];
   return list.filter((c) => String(c.id) !== String(rec.created_by));
+}
+
+// Group-derived consolidators: mates of the creator's consolidator groups,
+// excluding the creator (shown in "Creado por") and manually assigned ones.
+function groupConsolidators(item: unknown): Record<string, unknown>[] {
+  const rec = asRec(item);
+  const creator = rec.creator as
+    | { consolidator_groups?: { users?: Record<string, unknown>[] }[] }
+    | undefined;
+  const manual = new Set(rowConsolidators(item).map((c) => String(c.id)));
+  const out: Record<string, unknown>[] = [];
+  for (const g of creator?.consolidator_groups ?? []) {
+    for (const u of g.users ?? []) {
+      if (String(u.id) === String(rec.created_by)) continue;
+      if (manual.has(String(u.id))) continue;
+      if (!out.some((x) => String(x.id) === String(u.id))) out.push(u);
+    }
+  }
+  return out;
 }
 
 const headers = computed<Header[]>(() => {

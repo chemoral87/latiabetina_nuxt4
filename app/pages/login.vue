@@ -16,8 +16,8 @@
                   class="mb-0"
                   size="large"
                   variant="outlined"
-                  :loading="isSubmitting"
                   :disabled="isSubmitting"
+                  :loading="isGoogleSubmitting"
                   style="
                     border-color: #dadce0;
                     color: #3c4043;
@@ -93,7 +93,7 @@
                   color="primary"
                   variant="elevated"
                   :loading="isSubmitting"
-                  :disabled="isSubmitting"
+                  :disabled="isGoogleSubmitting"
                   >Ingresar</VBtn
                 >
               </VCol>
@@ -120,11 +120,12 @@ const email = ref("");
 const password = ref("");
 const showed = ref(false);
 const isSubmitting = ref(false);
+const isGoogleSubmitting = ref(false);
 const errorMsg = ref("");
 
 function loginWithGoogle() {
-  if (isSubmitting.value) return;
-  isSubmitting.value = true;
+  if (isSubmitting.value || isGoogleSubmitting.value) return;
+  isGoogleSubmitting.value = true;
 
   const rawRedirect =
     route.query.redirect || sessionStorage.getItem("loginRedirect");

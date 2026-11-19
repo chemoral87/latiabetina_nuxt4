@@ -152,12 +152,6 @@ watch(model, (val, prev) => {
     model.value = copy as UserItem[];
   }
 
-  if (val.length > prev.length) {
-    nextTick(() => {
-      menu.value = true;
-    });
-  }
-
   if (!initializing) {
     emit("modelChange", copy as UserItem[]);
   }

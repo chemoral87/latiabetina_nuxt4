@@ -182,14 +182,15 @@ async function saveGroup(item: Record<string, unknown>) {
     saving.value = true
     const userIds = (item.user_ids as number[] | undefined) ?? []
     if (item.id) {
-      const res = await ConsolidatorGroup.update<Record<string, unknown>>(item.id as number, {
+      await ConsolidatorGroup.updateWithoutNotify<Record<string, unknown>>(item.id as number, {
         name: item.name,
       })
       const id = item.id as number
-      await ConsolidatorGroup.syncMembers(id, userIds)
-      const updated = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined
+      const membersRes = await ConsolidatorGroup.syncMembers<Record<string, unknown>>(id, userIds)
+      const updated = (membersRes as Record<string, unknown>)?.data as Record<string, unknown> | undefined
       if (updated) updateRow(response, updated)
-      else flash(id)
+      else await refreshGroups()
+      flash(id)
     } else {
       const res = await ConsolidatorGroup.create<Record<string, unknown>>(item)
       const created = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined

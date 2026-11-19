@@ -188,7 +188,8 @@
     member {
       id org_id conso_sheet_id name last_name second_last_name years_old
       gender number_of_children cellphone address marriage_status status created_by
-      url_image_s3 created_at updated_at
+      conso_sheet { id folio_number }
+       url_image_s3 created_at updated_at
       creator { id name last_name }
       consolidators { id name last_name second_last_name email }
     }
