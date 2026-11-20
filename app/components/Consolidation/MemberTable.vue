@@ -47,6 +47,7 @@
       </template>
       <template #[`item.actions`]="{ item }">
         <VBtn
+          v-if="canDelete"
           :id="`det-member-delete-btn-${asRec(item).id}`"
           icon
           class="ma-1"
@@ -102,11 +103,13 @@ withDefaults(
     id?: string;
     members?: unknown[];
     loading?: boolean;
+    canDelete?: boolean;
   }>(),
   {
     id: "con-membe-members-dt-1",
     members: () => [],
     loading: false,
+    canDelete: true,
   },
 );
 

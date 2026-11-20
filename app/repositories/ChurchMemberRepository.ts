@@ -1,14 +1,14 @@
-import { createCommonRepository } from "./factory/createCommonRepository"
-import { withNotify } from "./factory/withNotify"
-import type { ApiFn } from "./factory/types"
+import { createCommonRepository } from './factory/createCommonRepository'
+import { withNotify } from './factory/withNotify'
+import type { ApiFn } from './factory/types'
 
 export function createChurchMemberRepository(api: ApiFn) {
   return {
-    ...createCommonRepository(api, "/church-member"),
+    ...createCommonRepository(api, '/church-member'),
     updateStatus<T = unknown>(memberId: number | string, status: string, reason?: string) {
       const payload: Record<string, unknown> = { status }
       if (reason) payload.reason = reason
-      return withNotify(api<T>(`/church-member/${memberId}/status`, { method: "PUT", body: payload }))
+      return withNotify(api<T>(`/church-member/${memberId}/status`, { method: 'PUT', body: payload }))
     },
     statusLogs<T = unknown>(memberId: number | string) {
       return withNotify(api<T>(`/church-member/${memberId}/status-logs`))
@@ -17,10 +17,10 @@ export function createChurchMemberRepository(api: ApiFn) {
       return withNotify(api<T>(`/church-member/${memberId}/medals`))
     },
     createMedal<T = unknown>(memberId: number | string, payload: Record<string, unknown>) {
-      return withNotify(api<T>(`/church-member/${memberId}/medals`, { method: "POST", body: payload }))
+      return withNotify(api<T>(`/church-member/${memberId}/medals`, { method: 'POST', body: payload }))
     },
     deleteMedal<T = unknown>(memberId: number | string, medalId: number | string) {
-      return withNotify(api<T>(`/church-member/${memberId}/medals/${medalId}`, { method: "DELETE" }))
+      return withNotify(api<T>(`/church-member/${memberId}/medals/${medalId}`, { method: 'DELETE' }))
     },
     medalLogs<T = unknown>(memberId: number | string) {
       return withNotify(api<T>(`/church-member/${memberId}/medal-logs`))
@@ -29,13 +29,39 @@ export function createChurchMemberRepository(api: ApiFn) {
       return withNotify(api<T>(`/church-member/${memberId}/consolidators`))
     },
     syncConsolidators<T = unknown>(memberId: number | string, consolidatorIds: (number | string)[]) {
-      return withNotify(api<T>(`/church-member/${memberId}/consolidators`, { method: "PUT", body: { consolidator_ids: consolidatorIds } }))
+      return withNotify(api<T>(`/church-member/${memberId}/consolidators`, { method: 'PUT', body: { consolidator_ids: consolidatorIds } }))
     },
     consolidatorLogs<T = unknown>(memberId: number | string) {
       return withNotify(api<T>(`/church-member/${memberId}/consolidator-logs`))
     },
     consolidatorLogsIndex<T = unknown>(params?: Record<string, unknown>) {
-      return withNotify(api<T>("/church-member/consolidator-logs", { params }))
+      return withNotify(api<T>('/church-member/consolidator-logs', { params }))
+    },
+    tracking<T = unknown>(params?: Record<string, unknown>) {
+      return withNotify(api<T>('/church-member/tracking', { params }))
+    },
+    trackingMy<T = unknown>(params?: Record<string, unknown>) {
+      return withNotify(api<T>('/church-member/tracking/my', { params }))
+    },
+    myIndex<T = unknown>(params?: Record<string, unknown>) {
+      return withNotify(api<T>('/church-member/my', { params }))
+    },
+    myShow<T = unknown>(id: number | string) {
+      return withNotify(api<T>(`/church-member/my/${id}`))
+    },
+    myCreate<T = unknown>(payload: Record<string, unknown>) {
+      return withNotify(api<T>('/church-member/my', { method: 'POST', body: payload }))
+    },
+    myUpdate<T = unknown>(id: number | string, payload: Record<string, unknown>) {
+      return withNotify(api<T>(`/church-member/my/${id}`, { method: 'PUT', body: payload }))
+    },
+    myDelete<T = unknown>(id: number | string) {
+      return withNotify(api<T>(`/church-member/my/${id}`, { method: 'DELETE' }))
+    },
+    myUpdateStatus<T = unknown>(memberId: number | string, status: string, reason?: string) {
+      const payload: Record<string, unknown> = { status }
+      if (reason) payload.reason = reason
+      return withNotify(api<T>(`/church-member/my/${memberId}/status`, { method: 'PUT', body: payload }))
     },
   }
 }
@@ -46,22 +72,34 @@ export function createChurchMemberTrackingLogRepository(api: ApiFn) {
       return withNotify(api<T>(`/church-member/${memberId}/tracking-logs`, { params }))
     },
     create<T = unknown>(memberId: number | string, payload: Record<string, unknown>) {
-      return withNotify(api<T>(`/church-member/${memberId}/tracking-logs`, { method: "POST", body: payload }))
+      return withNotify(api<T>(`/church-member/${memberId}/tracking-logs`, { method: 'POST', body: payload }))
     },
     update<T = unknown>(memberId: number | string, logId: number | string, payload: Record<string, unknown>) {
-      return withNotify(api<T>(`/church-member/${memberId}/tracking-logs/${logId}`, { method: "PUT", body: payload }))
+      return withNotify(api<T>(`/church-member/${memberId}/tracking-logs/${logId}`, { method: 'PUT', body: payload }))
     },
     delete<T = unknown>(memberId: number | string, logId: number | string) {
-      return withNotify(api<T>(`/church-member/${memberId}/tracking-logs/${logId}`, { method: "DELETE" }))
+      return withNotify(api<T>(`/church-member/${memberId}/tracking-logs/${logId}`, { method: 'DELETE' }))
     },
-    logsIndex<T = unknown>(params?: Record<string, unknown>) {
-      return withNotify(api<T>("/church-member/tracking-logs", { params }))
+    myIndex<T = unknown>(memberId: number | string, params?: Record<string, unknown>) {
+      return withNotify(api<T>(`/church-member/my/${memberId}/tracking-logs`, { params }))
+    },
+    myCreate<T = unknown>(memberId: number | string, payload: Record<string, unknown>) {
+      return withNotify(api<T>(`/church-member/my/${memberId}/tracking-logs`, { method: 'POST', body: payload }))
+    },
+    myUpdate<T = unknown>(memberId: number | string, logId: number | string, payload: Record<string, unknown>) {
+      return withNotify(api<T>(`/church-member/my/${memberId}/tracking-logs/${logId}`, { method: 'PUT', body: payload }))
+    },
+    myDelete<T = unknown>(memberId: number | string, logId: number | string) {
+      return withNotify(api<T>(`/church-member/my/${memberId}/tracking-logs/${logId}`, { method: 'DELETE' }))
+    },
+    logsMy<T = unknown>(params?: Record<string, unknown>) {
+      return withNotify(api<T>('/church-member/tracking-logs/my', { params }))
     },
     allLogs<T = unknown>(params?: Record<string, unknown>) {
-      return withNotify(api<T>("/church-member/tracking-logs/all", { params }))
+      return withNotify(api<T>('/church-member/tracking-logs/all', { params }))
     },
     allLogsSummary<T = unknown>(params?: Record<string, unknown>) {
-      return withNotify(api<T>("/church-member/tracking-logs/all/summary", { params }))
+      return withNotify(api<T>('/church-member/tracking-logs/all/summary', { params }))
     },
   }
 }

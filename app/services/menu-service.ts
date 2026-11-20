@@ -37,10 +37,29 @@ export class MenuService {
           title: 'Consolidación',
           to: '/consolidation',
         })
+      }
+
+      if (this.hasPermission('conso-sheet-my-index')) {
+        menu.push({
+          icon: 'mdi-account-multiple-outline',
+          title: 'Mi Consolidación',
+          to: '/consolidation-my',
+        })
+      }
+
+      if (this.hasPermission('church-member-index')) {
         menu.push({
           icon: 'mdi-account-search',
           title: 'Seguimiento',
           to: '/tracking',
+        })
+      }
+
+      if (this.hasPermission('church-member-my-index')) {
+        menu.push({
+          icon: 'mdi-account-check',
+          title: 'Mi Seguimiento',
+          to: '/tracking-my',
         })
       }
 
@@ -60,19 +79,19 @@ export class MenuService {
         })
       }
 
-      if (this.hasPermission('church-member-tracking-logs-index')) {
+      if (this.hasPermission('church-member-my-index')) {
         menu.push({
           icon: 'mdi-clock-outline',
           title: 'Mi Actividad',
-          to: '/church-member/tracking-logs',
+          to: '/tracking-activity-my',
         })
       }
 
-      if (this.hasPermission('church-member-tracking-logs-all')) {
+      if (this.hasPermission('church-member-index')) {
         menu.push({
           icon: 'mdi-chart-box-outline',
           title: 'Actividad General',
-          to: '/church-member/tracking-logs/all',
+          to: '/tracking-activity',
         })
       }
 

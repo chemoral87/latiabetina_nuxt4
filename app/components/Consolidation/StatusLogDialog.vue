@@ -106,9 +106,11 @@ const props = withDefaults(defineProps<{
   id?: string
   member?: Record<string, unknown>
   showHistory?: boolean
+  my?: boolean
 }>(), {
   id: "con-status-dlg-1",
   showHistory: true,
+  my: false,
 })
 
 const emit = defineEmits<{
@@ -159,7 +161,8 @@ async function save() {
   if (memberId.value == null) return
   saving.value = true
   try {
-    const res = await ChurchMember.updateStatus<Record<string, unknown>>(memberId.value, selectedStatus.value, reason.value || undefined)
+    const fn = props.my ? ChurchMember.myUpdateStatus : ChurchMember.updateStatus
+    const res = await fn<Record<string, unknown>>(memberId.value, selectedStatus.value, reason.value || undefined)
     const updated = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined ?? res as unknown as Record<string, unknown>
     reason.value = ""
     emit("statusChanged", updated)

@@ -10,7 +10,7 @@
         <div>
           <VRow density="compact">
             <VCol md="4" cols="12">
-              <VBtn id="cnsld-new-member-btn" class="mr-1" color="success" @click="newMember">
+              <VBtn v-if="canManage" id="cnsld-new-member-btn" class="mr-1" color="success" @click="newMember">
                 <VIcon start>mdi-plus</VIcon>
                 Nuevo Miembro
               </VBtn>
@@ -26,6 +26,7 @@
                 id="det-members-dt"
                 :loading="loading"
                 :members="members"
+                :can-delete="canManage"
                 @delete="deleteMemberPrompt"
                  @status-change="onInlineStatusChange"
               />
@@ -204,6 +205,7 @@ const router = useRouter()
 const { ConsoSheet, ChurchMember } = useRepository()
 const notify = useNotifyStore()
 const auth = useAuthStore()
+const canManage = computed(() => auth.hasPermission("church-member-manage"))
 
 const sheetId = computed(() => route.params.id as string)
 

@@ -1,16 +1,16 @@
 <template>
-  <VContainer :fluid="true" class="page-tracking-logs-all">
+  <VContainer :fluid="true" class="page-tracking-activity">
     <VSheet rounded class="pa-1" color="white" elevation="3">
       <VRow density="compact">
         <VCol md="4" sm="6" cols="12">
           <MyDateMonthPicker
-            id="atl-month-picker"
+            id="ta-month-picker"
             v-model="selectedMonth"
             label="Mes"
           />
         </VCol>
         <VCol cols="auto" class="d-flex align-center">
-          <VBtn id="atl-refresh-btn" color="primary" :loading="loading" variant="outlined" @click="refreshActivity">
+          <VBtn id="ta-refresh-btn" color="primary" :loading="loading" variant="outlined" @click="refreshActivity">
             <VIcon start>mdi-reload</VIcon>
             Refrescar
           </VBtn>
@@ -29,7 +29,7 @@
     <VSheet v-if="selectedConsolidator" rounded color="white" elevation="3" class="mt-4 pa-1">
       <div class="d-flex align-center pa-4">
         <VBtn
-          id="atl-back-btn"
+          id="ta-back-btn"
           icon
           class="mr-2"
           size="small"
@@ -64,7 +64,7 @@ import { buildApiParams } from "~/utils/buildApiParams";
 definePageMeta({
   title: "Actividad General",
   icon: "mdi-chart-box-outline",
-  permission: "church-member-tracking-logs-all",
+  permission: "church-member-index",
   middleware: ["authenticated", "permission"],
   color: "orange-lighten-4",
 });
@@ -186,7 +186,7 @@ watch(selectedMonth, () => {
 
 {
   const { data: initialData } = await useAsyncData(
-    "church-member-tracking-logs-all-summary",
+    "tracking-activity-summary",
     () => ChurchMemberTrackingLog.allLogsSummary<SummaryItem[]>(buildApiParams({ year_month: selectedMonth.value })).catch(() => [] as SummaryItem[]),
     { default: () => [] as SummaryItem[] },
   );

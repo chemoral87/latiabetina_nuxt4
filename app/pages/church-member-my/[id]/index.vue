@@ -1,0 +1,427 @@
+<template>
+  <VContainer :fluid="true" class="pa-0 pa-sm-2">
+    <VRow id="cmy-header-row" density="compact">
+      <VCol cols="12">
+        <ChurchMemberHeader
+          :medals="medals"
+          :member="member"
+          @edit="editDialog = true"
+          @medal-add="medalDialog = true"
+          @medal-delete="confirmDeleteMedal"
+          @status-edit="statusDialog = true"
+        />
+      </VCol>
+    </VRow>
+
+    <VRow id="cmy-interactions-section" class="mt-2" density="compact">
+      <VCol cols="12">
+        <ChurchMemberInteractions
+          :member="member"
+          :loading-logs="loadingLogs"
+          :logs-response="logsResponse"
+          @contact="onContact"
+          @edit-log="editTrackingLog"
+          @refresh="fetchTrackingLogs"
+          @sorting="onLogsUpdateOptions"
+          @delete-log="deleteTrackingLog"
+        />
+      </VCol>
+    </VRow>
+
+    <VRow v-if="currentConsolidators.length > 0 || auth.hasPermission('church-member-consolidator-assign')" id="cmy-consolidators-section" class="mt-2" density="compact">
+      <VCol cols="12">
+        <ChurchMemberConsolidators
+          :member="member"
+          :saving="savingConsolidators"
+          :consolidators="currentConsolidators"
+          :has-changes="hasConsolidatorChanges"
+          :can-assign="auth.hasPermission('church-member-consolidator-assign')"
+          @save="saveConsolidators"
+          @update:consolidators="onPendingConsolidatorsChange"
+        />
+      </VCol>
+    </VRow>
+
+    <VRow v-if="consolidatorLogs.length > 0 && auth.hasPermission('church-member-consolidator-assign')" id="cmy-consolidator-logs-section" class="mt-2" density="compact">
+      <VCol cols="12">
+        <ChurchMemberConsolidatorHistory :logs="consolidatorLogs" />
+      </VCol>
+    </VRow>
+
+    <VRow id="cmy-back-row" class="mt-2" density="compact">
+      <VCol cols="12">
+        <VSheet rounded color="white" elevation="3" class="d-flex justify-end pa-1">
+          <VBtn id="cmy-back-btn" color="primary" variant="outlined" @click="goBack">
+            <VIcon start>mdi-arrow-left</VIcon>
+            Volver
+          </VBtn>
+        </VSheet>
+      </VCol>
+    </VRow>
+
+    <ConsolidationStatusLogDialog v-if="statusDialog" id="det-status-dlg" :my="true" :member="member" :show-history="false" @close="statusDialog = false" @status-changed="onStatusChanged" />
+
+    <ChurchMemberDialog v-if="editDialog" id="cmy-dialog-dlg" :member="member" :loading="saving" @save="saveMember" @close="editDialog = false" />
+
+    <ChurchMemberTrackingLogDialog
+      v-if="trackingLogDialog"
+      id="cmy-tracking-log-dlg"
+      :loading="saving"
+      :log="editingLog ?? undefined"
+      @save="saveTrackingLog"
+      @close="trackingLogDialog = false"
+    />
+
+    <ChurchMemberMedalDialog v-if="medalDialog" id="cmy-medal-dlg" :member="member" @saved="onMedalSaved" @close="medalDialog = false" />
+
+    <ChurchMemberMedalDeleteDialog v-if="medalDeleteDialog" v-model="medalDeleteDialog" :medal="medalToDelete" :member-id="route.params.id as string" @deleted="onMedalSaved" />
+  </VContainer>
+</template>
+
+<script setup lang="ts">
+  import { useAsyncData } from '#app'
+  import { buildApiParams } from '~/utils/buildApiParams'
+  import { localDateTimeString } from '~/utils/date'
+
+  definePageMeta({
+    title: 'Detalle Consolidado',
+    icon: 'mdi-account',
+    permission: 'church-member-my-index',
+    middleware: ['authenticated', 'permission'],
+  })
+
+  const route = useRoute()
+  const { ChurchMember, ChurchMemberTrackingLog } = useRepository()
+  const auth = useAuthStore()
+
+  const member = ref<Record<string, unknown>>({})
+  const statusDialog = ref(false)
+  const editDialog = ref(false)
+  const saving = ref(false)
+  const trackingLogDialog = ref(false)
+  const editingLog = ref<Record<string, unknown> | null>(null)
+  const logsResponse = ref<{ data: unknown[]; total: number }>({
+    data: [],
+    total: 0,
+  })
+  const loadingLogs = ref(false)
+  const lastLogOptions = ref<Record<string, unknown>>({
+    page: 1,
+    itemsPerPage: 10,
+    sortBy: [{ key: 'contact_datetime', order: 'desc' }],
+  })
+
+  const currentConsolidators = computed<
+    {
+      id: number | string
+      name: string
+      last_name?: string
+      assigned_by?: string
+    }[]
+  >(() => {
+    const consolidators =
+      (member.value.consolidators as {
+        id: number | string
+        name: string
+        last_name?: string
+      }[]) || []
+    return consolidators.map(c => {
+      const lastLog = consolidatorLogs.value.find(l => (l.consolidator_id === c.id || l.consolidator?.id === c.id) && l.action === 'assigned')
+      const assignedBy = lastLog?.changer ? `${lastLog.changer.name} ${lastLog.changer.last_name}` : undefined
+      return { ...c, assigned_by: assignedBy }
+    })
+  })
+  const savingConsolidators = ref(false)
+  const pendingConsolidators = ref<{ id: number | string; name: string; last_name?: string }[] | null>(null)
+  const consolidatorLogs = ref<
+    {
+      id: number
+      consolidator_id: number
+      action: string
+      consolidator?: { id: number; name: string; last_name?: string }
+      changer?: { id: number; name: string; last_name?: string }
+      created_at?: string
+    }[]
+  >([])
+
+  const medalDialog = ref(false)
+  const medalDeleteDialog = ref(false)
+  const medalToDelete = ref<{ id: number; medal: string } | null>(null)
+  const medals = ref<
+    {
+      id: number
+      medal: string
+      description: Record<string, unknown> | string | null
+      creator?: { id: number; name: string; last_name?: string }
+      created_at?: string
+    }[]
+  >([])
+  const hasConsolidatorChanges = computed(() => {
+    if (pendingConsolidators.value === null) return false
+    const currentIds = currentConsolidators.value
+      .map(c => c.id)
+      .sort()
+      .join(',')
+    const pendingIds = pendingConsolidators.value
+      .map(c => c.id)
+      .sort()
+      .join(',')
+    return currentIds !== pendingIds
+  })
+
+  const backRoute = computed(() => {
+    const from = route.query.from as string | undefined
+    if (from === 'tracking') return '/tracking'
+    if (from === 'tracking-activity-my') return '/tracking-my'
+    if (typeof from === 'string' && from.startsWith('/')) {
+      return safeInternalRedirect(from, '/tracking-activity-my')
+    }
+    return '/tracking-my'
+  })
+
+  // One GraphQL round trip replaces the four REST calls this page used to make
+  // (member + tracking logs + consolidator logs + medals). Pagination and writes
+  // stay on REST.
+  const CHURCH_MEMBER_DETAIL_QUERY = `query ChurchMemberDetail($id: ID!) {
+  churchMember(id: $id) {
+    member {
+      id org_id conso_sheet_id name last_name second_last_name years_old
+      gender number_of_children cellphone address marriage_status status created_by
+      conso_sheet { id folio_number }
+       url_image_s3 created_at updated_at
+      creator { id name last_name }
+      consolidators { id name last_name second_last_name email }
+    }
+    trackingLogs {
+      total itemsPerPage
+      data {
+        id church_member_id contact_datetime medium classification description
+        created_by created_at updated_at
+        creator { id name last_name }
+        church_member { id name last_name cellphone }
+      }
+    }
+    consolidatorLogs {
+      id church_member_id consolidator_id action changed_by created_at updated_at
+      consolidator { id name last_name email }
+      changer { id name last_name }
+    }
+    medals {
+      id church_member_id medal description created_by created_at updated_at
+      creator { id name last_name }
+    }
+  }
+}`
+
+  type ChurchMemberDetailPayload = {
+    churchMember: {
+      member: Record<string, unknown>
+      trackingLogs: { data: unknown[]; total: number }
+      consolidatorLogs: {
+        id: number
+        consolidator_id: number
+        action: string
+        consolidator?: { id: number; name: string; last_name?: string }
+        changer?: { id: number; name: string; last_name?: string }
+        created_at?: string
+      }[]
+      medals: {
+        id: number
+        medal: string
+        description: Record<string, unknown> | string | null
+        creator?: { id: number; name: string; last_name?: string }
+        created_at?: string
+      }[]
+    } | null
+  }
+
+  {
+    const graphQL = useGraphQL()
+    const { data: initialDetail, error: detailError } = await useAsyncData(
+      `church-member-my-detail-${route.params.id}`,
+      () =>
+        graphQL.query<ChurchMemberDetailPayload>(CHURCH_MEMBER_DETAIL_QUERY, {
+          id: route.params.id,
+        }),
+      { default: () => null }
+    )
+
+    const detail = initialDetail.value?.churchMember
+    if (detailError.value || !detail?.member) {
+      throw createError({
+        statusCode: 404,
+        statusMessage: 'Miembro no encontrado o sin acceso a esta organización',
+        fatal: true,
+      })
+    }
+
+    member.value = detail.member
+    logsResponse.value = detail.trackingLogs
+    consolidatorLogs.value = detail.consolidatorLogs
+    medals.value = detail.medals
+  }
+
+  async function fetchTrackingLogs(overrides: Record<string, unknown> = {}) {
+    const id = route.params.id as string
+    if (!id) return
+    loadingLogs.value = true
+    try {
+      const requestOptions = { ...lastLogOptions.value, ...overrides }
+      const params = buildApiParams(requestOptions)
+      const data = await ChurchMemberTrackingLog.myIndex<Record<string, unknown>>(id, params)
+      logsResponse.value = data as { data: unknown[]; total: number }
+      lastLogOptions.value = requestOptions
+    } catch {
+      logsResponse.value = { data: [], total: 0 }
+    } finally {
+      loadingLogs.value = false
+    }
+  }
+
+  let initialLogsLoaded = false
+
+  function onLogsUpdateOptions(opts: Record<string, unknown>) {
+    if (!initialLogsLoaded) {
+      initialLogsLoaded = true
+      return
+    }
+    fetchTrackingLogs(opts)
+  }
+
+  function editTrackingLog(val: unknown) {
+    const log = val as Record<string, unknown>
+    editingLog.value = { ...log }
+    trackingLogDialog.value = true
+  }
+
+  async function saveTrackingLog(payload: Record<string, unknown>) {
+    const id = route.params.id as string
+    const logId = editingLog.value?.id
+    if (!id || !logId) return
+    try {
+      saving.value = true
+      await ChurchMemberTrackingLog.myUpdate<Record<string, unknown>>(id, logId as string | number, payload)
+      editingLog.value = null
+      trackingLogDialog.value = false
+      await fetchTrackingLogs()
+    } catch {
+      // errors surfaced by withNotify
+    } finally {
+      saving.value = false
+    }
+  }
+
+  async function deleteTrackingLog(val: unknown) {
+    const log = val as Record<string, unknown>
+    const id = route.params.id as string
+    const logId = (log as Record<string, unknown> | undefined)?.id
+    if (!id || !logId) return
+    if (!confirm('¿Desea eliminar esta interacción?')) return
+    try {
+      saving.value = true
+      await ChurchMemberTrackingLog.myDelete<Record<string, unknown>>(id, logId as string | number)
+      await fetchTrackingLogs()
+    } catch {
+      // errors surfaced by withNotify
+    } finally {
+      saving.value = false
+    }
+  }
+
+  async function onContact(payload: { medium: string; url?: string | null; message: string }) {
+    const id = route.params.id as string
+    try {
+      const res = await ChurchMemberTrackingLog.myCreate<Record<string, unknown>>(id, {
+        contact_datetime: localDateTimeString(),
+        medium: payload.medium,
+        classification: payload.medium === 'presencial' ? 'CONTESTA' : null,
+        description: payload.message || undefined,
+      })
+      const newLog = res?.data ?? res
+      logsResponse.value.data.unshift(newLog)
+      logsResponse.value.total += 1
+    } catch {
+      // errors surfaced by withNotify
+    }
+  }
+
+  onMounted(() => {
+    route.meta.back = backRoute.value
+  })
+
+  function goBack() {
+    navigateTo(backRoute.value)
+  }
+
+  function onStatusChanged(updated: Record<string, unknown>) {
+    if (updated && updated.status) {
+      member.value = { ...member.value, ...updated }
+    }
+  }
+
+  async function saveMember(payload: Record<string, unknown>) {
+    const id = route.params.id as string
+    if (!id) return
+    try {
+      saving.value = true
+      const updated = await ChurchMember.myUpdate<Record<string, unknown>>(id, payload)
+      member.value = {
+        ...member.value,
+        ...((updated as Record<string, unknown>)?.data ?? payload),
+      }
+      editDialog.value = false
+    } catch {
+      // errors surfaced by withNotify
+    } finally {
+      saving.value = false
+    }
+  }
+
+  function onPendingConsolidatorsChange(consolidators: { id: number | string; name: string; last_name?: string }[]) {
+    pendingConsolidators.value = consolidators
+  }
+
+  async function saveConsolidators() {
+    const id = route.params.id as string
+    if (!id || !pendingConsolidators.value) return
+    try {
+      savingConsolidators.value = true
+      const ids = pendingConsolidators.value.map(c => c.id)
+      const updated = await ChurchMember.syncConsolidators<{
+        data: { id: number | string; name: string; last_name?: string }[]
+      }>(id, ids)
+      member.value = { ...member.value, consolidators: updated.data }
+      pendingConsolidators.value = null
+      const logs = await ChurchMember.consolidatorLogs<
+        {
+          id: number
+          consolidator_id: number
+          action: string
+          consolidator?: { id: number; name: string; last_name?: string }
+          changer?: { id: number; name: string; last_name?: string }
+          created_at?: string
+        }[]
+      >(id).catch(() => [])
+      consolidatorLogs.value = logs
+    } catch {
+      // errors surfaced by withNotify
+    } finally {
+      savingConsolidators.value = false
+    }
+  }
+
+  async function onMedalSaved() {
+    const id = route.params.id as string
+    if (!id) return
+    try {
+      medals.value = await ChurchMember.medals<typeof medals.value>(id).catch(() => [])
+    } catch {
+      // errors already surfaced by withNotify
+    }
+  }
+
+  function confirmDeleteMedal(medal: { id: number; medal: string }) {
+    medalToDelete.value = medal
+    medalDeleteDialog.value = true
+  }
+</script>

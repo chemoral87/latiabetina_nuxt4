@@ -92,7 +92,6 @@
 
   const route = useRoute()
   const { ChurchMember, ChurchMemberTrackingLog } = useRepository()
-  const notify = useNotifyStore()
   const auth = useAuthStore()
 
   const member = ref<Record<string, unknown>>({})
@@ -173,11 +172,11 @@
   const backRoute = computed(() => {
     const from = route.query.from as string | undefined
     if (from === 'tracking') return '/tracking'
-    if (from === 'tracking-logs') return '/church-member/tracking-logs'
+    if (from === 'tracking-activity-my') return '/tracking-activity-my'
     if (typeof from === 'string' && from.startsWith('/')) {
-      return safeInternalRedirect(from, '/church-member/tracking-logs')
+      return safeInternalRedirect(from, '/tracking-activity-my')
     }
-    return '/church-member/tracking-logs'
+    return '/tracking-activity-my'
   })
 
   // One GraphQL round trip replaces the four REST calls this page used to make
@@ -305,10 +304,8 @@
       editingLog.value = null
       trackingLogDialog.value = false
       await fetchTrackingLogs()
-    } catch (error) {
-      notify.notify({
-        error: (error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Error al actualizar la interacción',
-      })
+    } catch {
+      // errors surfaced by withNotify
     } finally {
       saving.value = false
     }
@@ -324,10 +321,8 @@
       saving.value = true
       await ChurchMemberTrackingLog.delete<Record<string, unknown>>(id, logId as string | number)
       await fetchTrackingLogs()
-    } catch (error) {
-      notify.notify({
-        error: (error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Error al eliminar la interacción',
-      })
+    } catch {
+      // errors surfaced by withNotify
     } finally {
       saving.value = false
     }
@@ -345,10 +340,8 @@
       const newLog = res?.data ?? res
       logsResponse.value.data.unshift(newLog)
       logsResponse.value.total += 1
-    } catch (error) {
-      notify.notify({
-        error: (error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Error al registrar la interacción',
-      })
+    } catch {
+      // errors surfaced by withNotify
     }
   }
 
@@ -377,10 +370,8 @@
         ...((updated as Record<string, unknown>)?.data ?? payload),
       }
       editDialog.value = false
-    } catch (error) {
-      notify.notify({
-        error: (error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Error al actualizar el miembro',
-      })
+    } catch {
+      // errors surfaced by withNotify
     } finally {
       saving.value = false
     }
@@ -412,10 +403,8 @@
         }[]
       >(id).catch(() => [])
       consolidatorLogs.value = logs
-    } catch (error) {
-      notify.notify({
-        error: (error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Error al actualizar consolidadores',
-      })
+    } catch {
+      // errors surfaced by withNotify
     } finally {
       savingConsolidators.value = false
     }

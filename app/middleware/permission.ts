@@ -1,6 +1,6 @@
-import { useAuthStore } from "~/composables/useAuth"
+import { useAuthStore } from '~/composables/useAuth'
 
-export default defineNuxtRouteMiddleware((to) => {
+export default defineNuxtRouteMiddleware(to => {
   const meta = to.meta as { permission?: string }
   const required = meta?.permission
   if (!required) return
@@ -12,6 +12,8 @@ export default defineNuxtRouteMiddleware((to) => {
     // diagnostic on initial loads and renders the generic error layout; a
     // normal redirect keeps the app chrome, a clean console, and the same
     // "no access" UX for every permission-protected page (see /forbidden).
-    return navigateTo(`/forbidden?permission=${encodeURIComponent(required)}`)
+    const title = (to.meta as { title?: string }).title
+    const page = title ? `${title} (${to.fullPath})` : to.fullPath
+    return navigateTo(`/forbidden?permission=${encodeURIComponent(required)}&page=${encodeURIComponent(page)}`)
   }
 })

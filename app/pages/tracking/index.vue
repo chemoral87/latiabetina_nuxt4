@@ -55,7 +55,7 @@
   definePageMeta({
     title: 'Seguimiento',
     icon: 'mdi-account-search',
-    permission: 'conso-sheet-index',
+    permission: 'church-member-index',
     middleware: ['authenticated', 'permission'],
     color: 'purple-lighten-4',
   })
@@ -99,7 +99,7 @@
     itemsPerPage: 10,
   })
 
-  const showOrgSelect = computed(() => auth.orgIdsFor('conso-sheet-index').length > 1)
+  const showOrgSelect = computed(() => auth.orgIdsFor('church-member-index').length > 1)
 
   const orgs = computed(() => (auth.user?.orgs as { id: number | string; name: string }[] | undefined) ?? [])
 
@@ -140,7 +140,6 @@
   async function fetchData() {
     loading.value = true
     const params: Record<string, unknown> = {
-      mine: true,
       page: lastOptions.value.page,
       itemsPerPage: lastOptions.value.itemsPerPage,
     }
@@ -156,7 +155,7 @@
     }
 
     try {
-      const res = await ChurchMember.index<unknown>(params)
+      const res = await ChurchMember.tracking<unknown>(params)
       const norm = normalizeResponse(res)
       members.value = norm.data
       total.value = norm.total

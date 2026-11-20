@@ -101,6 +101,7 @@
       dialogDelete?: boolean
       deleting?: boolean
       initialSortBy?: { key: string; order: string }[]
+      managePermission?: string
     }>(),
     {
       response: null,
@@ -111,6 +112,7 @@
       dialogDelete: false,
       deleting: false,
       initialSortBy: () => [{ key: 'date', order: 'desc' }],
+      managePermission: '',
     }
   )
 
@@ -137,8 +139,16 @@
   // permission — the backend resolves the org from auth context.
   const singleOrg = computed(() => auth.hasSingleOrgFor('conso-sheet-index'))
 
-  const canUpdate = computed(() => auth.hasPermission('conso-sheet-update'))
-  const canDelete = computed(() => auth.hasPermission('conso-sheet-delete'))
+  const canUpdate = computed(() =>
+    props.managePermission
+      ? auth.hasPermission(props.managePermission)
+      : auth.hasPermission('conso-sheet-update')
+  )
+  const canDelete = computed(() =>
+    props.managePermission
+      ? auth.hasPermission(props.managePermission)
+      : auth.hasPermission('conso-sheet-delete')
+  )
 
   const headers = computed<Header[]>(() => {
     const list: Header[] = [

@@ -1,10 +1,10 @@
 <template>
-  <VContainer :fluid="true" class="page-tracking-logs">
+  <VContainer :fluid="true" class="page-tracking-activity-my">
     <VSheet rounded class="pa-1" color="white" elevation="3">
       <VRow density="compact">
         <VCol md="3" sm="4" cols="12">
           <VTextField
-            id="mtl-index-filter"
+            id="tam-index-filter"
             v-model="filterInput"
             clearable
             hide-details
@@ -17,7 +17,7 @@
         </VCol>
         <VCol md="2" sm="4" cols="6">
           <VSelect
-            id="mtl-index-medium"
+            id="tam-index-medium"
             v-model="filterMedium"
             clearable
             hide-details
@@ -32,7 +32,7 @@
         </VCol>
         <VCol cols="auto" class="d-flex align-center">
           <VBtn
-            id="mtl-refresh-btn"
+            id="tam-refresh-btn"
             color="primary"
             :loading="loading"
             variant="outlined"
@@ -65,7 +65,7 @@
   definePageMeta({
     title: 'Mi Actividad',
     icon: 'mdi-account-search',
-    permission: 'church-member-tracking-logs-index',
+    permission: 'church-member-my-index',
     middleware: ['authenticated', 'permission'],
     color: 'cyan-lighten-4',
   })
@@ -100,10 +100,10 @@
 
   {
     const { data: initialData } = await useAsyncData(
-      'church-member-tracking-logs-index',
+      'tracking-activity-my-index',
       async () => {
         const apiParams = buildApiParams(lastOptions.value)
-        return await ChurchMemberTrackingLog.logsIndex<{
+        return await ChurchMemberTrackingLog.logsMy<{
           data: unknown[]
           total: number
         }>(apiParams).catch(() => ({ data: [] as unknown[], total: 0 }))
@@ -125,7 +125,7 @@
   function viewMember(item: unknown) {
     const log = item as Record<string, unknown>
     const member = log.church_member as { id?: number | string } | undefined
-    if (member?.id != null) navigateTo(`/church-member/${member.id}?from=tracking-logs`)
+    if (member?.id != null) navigateTo(`/church-member-my/${member.id}?from=tracking-activity-my`)
   }
 
   async function deleteTrackingLog(item: unknown) {
@@ -155,7 +155,7 @@
       if (filterMedium.value && !params.medium) params.medium = filterMedium.value
       if (filterDateRange.value?.[0]) params.date_from = filterDateRange.value[0]
       if (filterDateRange.value?.[1]) params.date_to = filterDateRange.value[1]
-      const res = await ChurchMemberTrackingLog.logsIndex(params)
+      const res = await ChurchMemberTrackingLog.logsMy(params)
       response.value = normalizeResponse(res)
       lastOptions.value = requestOptions
     } catch (error) {

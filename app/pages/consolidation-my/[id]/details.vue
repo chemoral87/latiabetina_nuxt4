@@ -1,0 +1,458 @@
+<template>
+  <VContainer :fluid="true" class="page-consolidation-my-details">
+    <VRow density="compact">
+       <VCol cols="12">
+        <VSheet id="con-detai-card-2" rounded class="pa-1" color="white" elevation="3">
+<div class="text-subtitle-1 font-weight-bold d-flex align-center py-3">
+          <VIcon start>mdi-account-group</VIcon>
+          Miembros
+        </div>
+        <div>
+          <VRow density="compact">
+            <VCol md="4" cols="12">
+              <VBtn id="cnm-new-member-btn" class="mr-1" color="success" @click="newMember">
+                <VIcon start>mdi-plus</VIcon>
+                Nuevo Miembro
+              </VBtn>
+              <VBtn id="cnm-refresh-btn" color="primary" :loading="loading" variant="outlined" @click="fetchMembers">
+                <VIcon start>mdi-reload</VIcon>
+                Refrescar
+              </VBtn>
+            </VCol>
+          </VRow>
+          <VRow density="compact">
+            <VCol cols="12">
+              <ConsolidationMemberTable
+                id="det-members-dt"
+                :loading="loading"
+                :members="members"
+                @delete="deleteMemberPrompt"
+                 @status-change="onInlineStatusChange"
+              />
+            </VCol>
+          </VRow>
+</div>
+        </VSheet>
+       </VCol>
+     
+<VCol cols="12">
+         <VSheet id="con-detai-card-1" rounded color="white" elevation="3" class="pa-1 mt-3">
+          
+        
+            <VRow  align="center" density="compact">
+              <VCol md="2" cols="12">
+                <div class="d-flex align-center">
+                  <VIcon class="mr-1" size="small">mdi-calendar</VIcon>
+                  <span id="det-fecha" class="text-caption font-weight-bold text-grey-darken-2 text-truncate">
+                    Fecha: {{ (formatShortDateDash(sheet.date as string | null)).toUpperCase() }}
+                  </span>
+                </div>
+              </VCol>
+              <VCol v-if="!singleOrg" md="2" cols="12">
+                <div class="d-flex align-center">
+                  <VIcon class="mr-1" size="small">mdi-office-building</VIcon>
+                  <span id="det-org" class="text-caption font-weight-bold text-grey-darken-2 text-truncate">
+                    Org: {{ (sheet.organization as Record<string, unknown> | undefined)?.name || 'N/A' }}
+                  </span>
+                </div>
+              </VCol>
+              <VCol md="2" cols="12">
+                <div class="d-flex align-center">
+                  <VIcon class="mr-1" size="small">mdi-account-plus</VIcon>
+                  <span id="det-creador" class="text-caption font-weight-bold text-grey-darken-2 text-truncate">
+                    Creador: {{ [(sheet.creator as Record<string, unknown> | undefined)?.name, (sheet.creator as Record<string, unknown> | undefined)?.last_name].filter(Boolean).join(' ') || 'N/A' }}
+                  </span>
+                </div>
+              </VCol>
+              <VCol md="2" cols="12">
+                <VTextField
+                  id="tf-conso-detai-sheet-how_did_you_hear-1"
+                  v-model="sheet.how_did_you_hear"
+                  hide-details
+                  density="compact"
+                  variant="outlined"
+                  :disabled="savingSheet"
+                  label="¿Cómo se enteró?"
+                  prepend-inner-icon="mdi-bullhorn"
+                />
+              </VCol>
+              <VCol v-if="auth.hasPermission('conso-sheet-consolidator-select')" md="2" cols="12">
+                <VAutocomplete
+                  
+                  id="det-consolidator-ac"
+                  v-model="sheet.consolidator_id"
+                  clearable
+                  hide-details
+                  :items="users"
+                  item-value="id"
+                  density="compact"
+                  item-title="name"
+                  variant="outlined"
+                  label="Consolidador"
+                  :disabled="savingSheet"
+                  prepend-inner-icon="mdi-account-tie"
+                />
+              </VCol>
+              <VCol md="2" cols="12">
+                <VSelect
+                  id="det-first-church-sel"
+                  v-model="sheet.first_time_christian_church"
+                  hide-details
+                  density="compact"
+                  variant="outlined"
+                  :disabled="savingSheet"
+                  label="¿Primera vez en iglesia cristiana?"
+                  prepend-inner-icon="mdi-help-circle-outline"
+                  :items="[{ title: 'SI', value: true }, { title: 'NO', value: false }]"
+                />
+              </VCol>
+
+                      <VCol md="6" cols="12" >
+                <VTextarea
+                  id="det-comments-ta"
+                  v-model="sheet.comments"
+                  rows="2"
+                  auto-grow
+                  hide-details
+          
+                  variant="outlined"
+                  label="Comentarios"
+                  :disabled="savingSheet"
+                  prepend-inner-icon="mdi-comment-text-outline"
+                />
+              </VCol>
+              <VCol md="6" cols="12" >
+                <VTextarea
+                  id="det-special-request-ta"
+                  v-model="sheet.special_request"
+                  rows="2"
+                  auto-grow
+                  hide-details
+                  variant="outlined"
+                  :disabled="savingSheet"
+                  label="Petición especial"
+                  prepend-inner-icon="mdi-heart-outline"
+                />
+              </VCol> 
+                  <VCol cols="12" class="d-flex justify-end mt-2">
+                    <VBtn id="cnm-back-btn" class="mr-4" color="primary" variant="outlined" @click="navigateTo('/consolidation-my')">
+                  <VIcon start>mdi-arrow-left</VIcon>
+                  Volver
+                </VBtn> 
+                    <VBtn
+                  id="cnm-save-sheet-btn"
+         
+                  color="primary"
+                  variant="elevated"
+                  :loading="savingSheet"
+                  :disabled="!isDirty || savingSheet"
+                  @click="saveSheet"
+                >
+                  <VIcon start >mdi-content-save</VIcon>
+                  Guardar
+                </VBtn>
+                
+             
+              </VCol>
+            </VRow>
+      
+        </VSheet>
+      </VCol>
+
+    
+    </VRow>
+
+    <ChurchMemberDialog    v-if="dialog" id="det-member-dlg" :member="member" :loading="saving" @save="saveMember" @close="closeDialog" />
+
+    <DialogDelete v-if="dialogDelete" id="det-member-delete-dlg" :loading="deleting" :dialog="deleteData" @ok="confirmDelete" @close="dialogDelete = false" />
+
+    <ConsolidationTrackingLogDialog v-if="trackDialog" id="det-track-dlg" :member="trackMember" @close="trackDialog = false" />
+
+    <ConsolidationStatusLogDialog v-if="statusDialog" id="det-status-dlg" :member="statusMember" @close="statusDialog = false" @status-changed="onStatusChanged" />
+
+    <ConsolidationMedalDialog v-if="medalDialog" id="det-medal-dlg" :member="medalMember" @close="medalDialog = false" />
+
+    <DialogConfirm
+      v-if="showConfirmDialog"
+      id="det-sheet-dirty-dlg"
+      title="Cambios sin guardar"
+      message="Hay cambios sin guardar. ¿Desea guardarlos antes de salir?"
+      @yes="confirmSave"
+      @no="confirmDiscard"
+      @cancel="confirmAbort"
+    />
+  </VContainer>
+</template>
+
+<script setup lang="ts">
+import { onBeforeRouteLeave, useRouter } from "vue-router"
+import { useAsyncData } from '#app'
+import { formatShortDateDash } from "~/utils/date"
+import { computed } from 'vue'
+
+definePageMeta({
+  title: "Detalles de Mi Consolidado",
+  icon: "mdi-clipboard-list",
+  middleware: ["authenticated","permission"],
+  permissions: ["conso-sheet-my-index"],
+  back: "/consolidation-my",
+  color: "yellow-lighten-4",
+})
+
+const route = useRoute()
+const router = useRouter()
+const { ConsoSheet, ChurchMember } = useRepository()
+const notify = useNotifyStore()
+const auth = useAuthStore()
+
+const sheetId = computed(() => route.params.id as string)
+
+const saving = ref(false)
+const savingSheet = ref(false)
+const deleting = ref(false)
+const dialog = ref(false)
+const dialogDelete = ref(false)
+const trackDialog = ref(false)
+const statusDialog = ref(false)
+const medalDialog = ref(false)
+const sheet = ref<Record<string, unknown>>({})
+const originalSheet = ref<Record<string, unknown>>({})
+const member = ref<Record<string, unknown>>({})
+const trackMember = ref<Record<string, unknown>>({})
+const statusMember = ref<Record<string, unknown>>({})
+const medalMember = ref<Record<string, unknown>>({})
+const deleteData = ref<Record<string, unknown>>({})
+const members = ref<unknown[]>([])
+const users = ref<{ id: number | string; name: string }[]>([])
+const showConfirmDialog = ref(false)
+const refreshingMembers = ref(false)
+let pendingRoute: { to: unknown } | null = null
+
+// Initial member data is loaded during SSR via useAsyncData so the payload is
+// reused on the client (no double fetch, no hydration mismatch).
+const { data: sheetData, pending: sheetPending } = await useAsyncData(
+  `consolidation-my-details-${route.params.id}`,
+  async () => {
+    return await ConsoSheet.myShow<Record<string, unknown>>(sheetId.value)
+  },
+  { default: () => ({}) as Record<string, unknown> },
+)
+
+const { data: membersData, pending: membersPending } = await useAsyncData(
+  `consolidation-my-details-members-${route.params.id}`,
+  async () => {
+    return await ChurchMember.myIndex<unknown>({ conso_sheet_id: sheetId.value, itemsPerPage: -1 })
+  },
+  { default: () => [] as unknown[] },
+)
+
+sheet.value = sheetData.value as Record<string, unknown>
+originalSheet.value = JSON.parse(JSON.stringify(sheet.value))
+members.value = Array.isArray(membersData.value) ? membersData.value : (membersData.value as { data?: unknown[] })?.data || []
+
+if (sheet.value.folio_number) {
+  route.meta.title = `Folio #${sheet.value.folio_number}`
+}
+
+const loading = computed(
+  () => sheetPending.value || membersPending.value || refreshingMembers.value,
+)
+
+onBeforeRouteLeave((to, _from) => {
+  if (isDirty.value) {
+    showConfirmDialog.value = true
+    pendingRoute = { to }
+    return false
+  }
+})
+
+const isDirty = computed(() => JSON.stringify(sheet.value) !== JSON.stringify(originalSheet.value))
+
+const singleOrg = computed(() => auth.hasSingleOrgFor("conso-sheet-my-index"))
+
+// ── Sheet ─────────────────────────────────────────────────────────────
+
+async function fetchSheet() {
+  try {
+    sheet.value = await ConsoSheet.myShow<Record<string, unknown>>(sheetId.value)
+  } catch (error) {
+    notify.notify({ error: "Error al cargar el consolidado" })
+  }
+}
+
+async function saveSheet() {
+  try {
+    savingSheet.value = true
+    await ConsoSheet.myUpdate(sheetId.value, sheet.value)
+    originalSheet.value = JSON.parse(JSON.stringify(sheet.value))
+  } catch (error) {
+    notify.notify({ error: (error as { response?: { data?: { message?: string } } }).response?.data?.message || "Error al guardar consolidado" })
+  } finally {
+    savingSheet.value = false
+  }
+}
+
+// ── Members ───────────────────────────────────────────────────────────
+
+async function fetchMembers() {
+  try {
+    refreshingMembers.value = true
+    const data = await ChurchMember.myIndex<unknown>({ conso_sheet_id: sheetId.value, itemsPerPage: -1 })
+    members.value = Array.isArray(data) ? data : (data as { data?: unknown[] })?.data || []
+  } catch (error) {
+    notify.notify({ error: "Error al cargar los miembros" })
+  } finally {
+    refreshingMembers.value = false
+  }
+}
+
+function newMember() {
+  const last = members.value.at(-1) as Record<string, unknown> | undefined
+  member.value = {
+    conso_sheet_id: sheetId.value,
+    address: (last?.address as string) || "",
+  }
+  dialog.value = true
+}
+
+function editMember(item: unknown) {
+  member.value = { ...(item as Record<string, unknown>) }
+  dialog.value = true
+}
+
+function openTracking(item: unknown) {
+  trackMember.value = item as Record<string, unknown>
+  trackDialog.value = true
+}
+
+function openStatus(item: unknown) {
+  statusMember.value = item as Record<string, unknown>
+  statusDialog.value = true
+}
+
+function openMedal(item: unknown) {
+  medalMember.value = item as Record<string, unknown>
+  medalDialog.value = true
+}
+
+function onStatusChanged(updated: Record<string, unknown>) {
+  const idx = members.value.findIndex(
+    (m) => (m as Record<string, unknown>).id === updated.id,
+  )
+  if (idx !== -1) {
+    members.value[idx] = {
+      ...(members.value[idx] as Record<string, unknown>),
+      status: updated.status,
+    }
+  }
+}
+
+async function onInlineStatusChange(item: unknown, status: string) {
+  const member = item as Record<string, unknown>
+  try {
+    await ChurchMember.myUpdateStatus(member.id as number, status)
+    const idx = members.value.findIndex(
+      (m) => (m as Record<string, unknown>).id === member.id,
+    )
+    if (idx !== -1) {
+      members.value[idx] = {
+        ...(members.value[idx] as Record<string, unknown>),
+        status,
+      }
+    }
+  } catch (error) {
+    notify.notify({
+      error: (error as { response?: { data?: { message?: string } } }).response?.data?.message || "Error al actualizar estado",
+    })
+  }
+}
+
+function deleteMemberPrompt(item: unknown) {
+  const m = item as Record<string, unknown>
+  deleteData.value = {
+    title: '¿Eliminar Miembro?',
+    text: 'Se eliminará 1 registro: ',
+    strong: `${m.name} ${m.last_name}`,
+    payload: item,
+  }
+  dialogDelete.value = true
+}
+
+async function confirmDelete(item: unknown) {
+  const m = item as Record<string, unknown>
+  try {
+    deleting.value = true
+    await ChurchMember.myDelete(m.id as number)
+    const idx = members.value.findIndex((r) => (r as Record<string, unknown>).id === m.id)
+    if (idx !== -1) members.value.splice(idx, 1)
+    dialogDelete.value = false
+
+  } catch (error) {
+    notify.notify({ error: (error as { response?: { data?: { message?: string } } }).response?.data?.message || "Error al eliminar miembro" })
+  } finally {
+    deleting.value = false
+  }
+}
+
+async function saveMember(item: Record<string, unknown>) {
+  try {
+    saving.value = true
+    const sheetOrgId =
+      (sheet.value.org_id as Record<string, unknown>)?.id ?? sheet.value.org_id
+    const payload = { ...item, org_id: sheetOrgId }
+    const isUpdate = Boolean(item.id)
+    if (isUpdate) {
+      const res = await ChurchMember.myUpdate<Record<string, unknown>>(item.id as number, payload)
+      const updated = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined ?? res as unknown as Record<string, unknown>
+      const idx = members.value.findIndex((r) => (r as Record<string, unknown>).id === updated.id)
+      if (idx !== -1) {
+        members.value[idx] = updated
+      } else {
+        members.value.unshift(updated)
+      }
+    } else {
+      const res = await ChurchMember.myCreate<Record<string, unknown>>(payload)
+      const created = (res as Record<string, unknown>)?.data as Record<string, unknown> | undefined ?? res as unknown as Record<string, unknown>
+      members.value.unshift(created)
+    }
+
+    dialog.value = false
+  } catch (error) {
+    notify.notify({ error: (error as { response?: { data?: { message?: string } } }).response?.data?.message || `Error al ${item.id ? "actualizar" : "crear"} miembro` })
+  } finally {
+    saving.value = false
+  }
+}
+
+function closeDialog() {
+  dialog.value = false
+  member.value = {}
+}
+
+// ── Dirty-check confirm ───────────────────────────────────────────────
+
+async function confirmSave() {
+  await saveSheet()
+  showConfirmDialog.value = false
+  if (pendingRoute) {
+    if (!isDirty.value) {
+      router.push(pendingRoute.to as any)
+    }
+    pendingRoute = null
+  }
+}
+
+function confirmDiscard() {
+  showConfirmDialog.value = false
+  if (pendingRoute) {
+    router.push(pendingRoute.to as string)
+    pendingRoute = null
+  }
+}
+
+function confirmAbort() {
+  showConfirmDialog.value = false
+  pendingRoute = null
+}
+</script>
+
