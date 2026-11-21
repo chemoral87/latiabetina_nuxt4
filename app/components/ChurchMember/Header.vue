@@ -142,6 +142,26 @@
                   >mdi-account</VIcon
                 >
                 <span class="font-weight-medium">Nombre:</span>
+                <VIcon
+                  v-if="gender === 'female'"
+                  id="cmm-gender-icon"
+                  class="mx-1"
+                  color="pink"
+                  size="small"
+                  title="Femenino"
+                >
+                  mdi-gender-female
+                </VIcon>
+                <VIcon
+                  v-else-if="gender === 'male'"
+                  id="cmm-gender-icon"
+                  class="mx-1"
+                  color="blue"
+                  size="small"
+                  title="Masculino"
+                >
+                  mdi-gender-male
+                </VIcon>
                 {{ fullName }}
               </VCol>
               <VCol
@@ -282,6 +302,8 @@ const emit = defineEmits<{
 }>();
 
 const showInfo = ref(false);
+
+const gender = computed(() => (props.member.gender as string | undefined) ?? "");
 
 // Folio link target: consolidators stay inside the "my" scope.
 const sheetDetailsTo = computed(() => {
