@@ -210,6 +210,18 @@
     emit('close')
   }
 
+  /** Fields whose value actually differs from the loaded member. */
+  function changedFields(current: Record<string, unknown>, original: Record<string, unknown>) {
+    const isEmpty = (value: unknown) => value === null || value === undefined || value === ''
+    const changed: Record<string, unknown> = {}
+    for (const [key, value] of Object.entries(current)) {
+      const before = original[key]
+      if (isEmpty(value) && isEmpty(before)) continue
+      if (String(value) !== String(before)) changed[key] = value
+    }
+    return changed
+  }
+
   async function save() {
     if (props.loading) return
     const form = formRef.value
@@ -218,16 +230,29 @@
       if (!valid) return
     }
     const { url_image, url_image_s3, ...rest } = item.value as Record<string, unknown>
-    const payload = { ...rest }
-    if (payload.years_old !== null && payload.years_old !== '') {
-      payload.years_old = Number(payload.years_old)
+
+    // Several consolidators can hold the same member: an edit sends only the
+    // touched fields, so one save cannot overwrite what the other just changed.
+    const payload = isEditMode.value
+      ? changedFields(rest, (props.member ?? {}) as Record<string, unknown>)
+      : { ...rest }
+
+    for (const field of ['years_old', 'number_of_children']) {
+      const value = payload[field]
+      if (value !== null && value !== undefined && value !== '') {
+        payload[field] = Number(value)
+      }
     }
-    if (payload.number_of_children !== null && payload.number_of_children !== '') {
-      payload.number_of_children = Number(payload.number_of_children)
-    }
+
     if (url_image instanceof Blob) {
       payload.url_image = url_image_s3
     }
+
+    if (isEditMode.value && Object.keys(payload).length === 0) {
+      close()
+      return
+    }
+
     emit('save', payload)
   }
 </script>

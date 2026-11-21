@@ -24,6 +24,7 @@
             <VCol cols="12">
               <ConsolidationMemberTable
                 id="det-members-dt"
+                :my="true"
                 :loading="loading"
                 :members="members"
                 @delete="deleteMemberPrompt"
@@ -202,7 +203,6 @@ definePageMeta({
 const route = useRoute()
 const router = useRouter()
 const { ConsoSheet, ChurchMember } = useRepository()
-const notify = useNotifyStore()
 const auth = useAuthStore()
 
 const sheetId = computed(() => route.params.id as string)
@@ -230,13 +230,24 @@ let pendingRoute: { to: unknown } | null = null
 
 // Initial member data is loaded during SSR via useAsyncData so the payload is
 // reused on the client (no double fetch, no hydration mismatch).
-const { data: sheetData, pending: sheetPending } = await useAsyncData(
+const { data: sheetData, pending: sheetPending, error: sheetError } = await useAsyncData(
   `consolidation-my-details-${route.params.id}`,
   async () => {
     return await ConsoSheet.myShow<Record<string, unknown>>(sheetId.value)
   },
   { default: () => ({}) as Record<string, unknown> },
 )
+
+// The sheet is not the caller's own and was not captured by a consolidator
+// group-mate: the API answers 404 (org scope + group scope). Render the error
+// page instead of an empty details view.
+if (sheetError.value || !(sheetData.value as { id?: unknown })?.id) {
+  throw createError({
+    statusCode: (sheetError.value as { status?: number } | null)?.status ?? 404,
+    statusMessage: 'Consolidado no encontrado o sin acceso',
+    fatal: true,
+  })
+}
 
 const { data: membersData, pending: membersPending } = await useAsyncData(
   `consolidation-my-details-members-${route.params.id}`,
@@ -275,8 +286,8 @@ const singleOrg = computed(() => auth.hasSingleOrgFor("conso-sheet-my-index"))
 async function fetchSheet() {
   try {
     sheet.value = await ConsoSheet.myShow<Record<string, unknown>>(sheetId.value)
-  } catch (error) {
-    notify.notify({ error: "Error al cargar el consolidado" })
+  } catch {
+    // toast comes from withNotify
   }
 }
 
@@ -285,8 +296,8 @@ async function saveSheet() {
     savingSheet.value = true
     await ConsoSheet.myUpdate(sheetId.value, sheet.value)
     originalSheet.value = JSON.parse(JSON.stringify(sheet.value))
-  } catch (error) {
-    notify.notify({ error: (error as { response?: { data?: { message?: string } } }).response?.data?.message || "Error al guardar consolidado" })
+  } catch {
+    // toast comes from withNotify
   } finally {
     savingSheet.value = false
   }
@@ -299,8 +310,8 @@ async function fetchMembers() {
     refreshingMembers.value = true
     const data = await ChurchMember.myIndex<unknown>({ conso_sheet_id: sheetId.value, itemsPerPage: -1 })
     members.value = Array.isArray(data) ? data : (data as { data?: unknown[] })?.data || []
-  } catch (error) {
-    notify.notify({ error: "Error al cargar los miembros" })
+  } catch {
+    // toast comes from withNotify
   } finally {
     refreshingMembers.value = false
   }
@@ -360,10 +371,8 @@ async function onInlineStatusChange(item: unknown, status: string) {
         status,
       }
     }
-  } catch (error) {
-    notify.notify({
-      error: (error as { response?: { data?: { message?: string } } }).response?.data?.message || "Error al actualizar estado",
-    })
+  } catch {
+    // toast comes from withNotify
   }
 }
 
@@ -387,8 +396,8 @@ async function confirmDelete(item: unknown) {
     if (idx !== -1) members.value.splice(idx, 1)
     dialogDelete.value = false
 
-  } catch (error) {
-    notify.notify({ error: (error as { response?: { data?: { message?: string } } }).response?.data?.message || "Error al eliminar miembro" })
+  } catch {
+    // toast comes from withNotify
   } finally {
     deleting.value = false
   }
@@ -417,8 +426,8 @@ async function saveMember(item: Record<string, unknown>) {
     }
 
     dialog.value = false
-  } catch (error) {
-    notify.notify({ error: (error as { response?: { data?: { message?: string } } }).response?.data?.message || `Error al ${item.id ? "actualizar" : "crear"} miembro` })
+  } catch {
+    // toast comes from withNotify
   } finally {
     saving.value = false
   }

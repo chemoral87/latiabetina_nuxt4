@@ -36,11 +36,7 @@
           rounded="circle"
           variant="outlined"
           title="Ver miembro"
-          @click="
-            navigateTo(
-              `/church-member/${asRec(item).id}?from=${encodeURIComponent(route.fullPath)}`,
-            )
-          "
+          @click="navigateTo(`${memberBase}/${asRec(item).id}?from=${encodeURIComponent(route.fullPath)}`)"
         >
           <VIcon size="x-large">mdi-eye</VIcon>
         </VBtn>
@@ -98,19 +94,27 @@ interface Header {
 
 const asRec = (i: unknown) => i as Record<string, unknown>;
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     id?: string;
     members?: unknown[];
     loading?: boolean;
     canDelete?: boolean;
+    my?: boolean;
   }>(),
   {
     id: "con-membe-members-dt-1",
     members: () => [],
     loading: false,
     canDelete: true,
+    my: false,
   },
+);
+
+// "my" tables open the self-service member page; the shared manager view keeps
+// the original route.
+const memberBase = computed(() =>
+  props.my ? "/church-member-my" : "/church-member",
 );
 
 const emit = defineEmits<{

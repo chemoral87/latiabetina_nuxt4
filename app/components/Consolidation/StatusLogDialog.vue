@@ -150,7 +150,9 @@ async function fetchLogs() {
 
 onMounted(() => {
   selectedStatus.value = String((props.member?.status as string) || "ACTIVO")
-  fetchLogs()
+  // The history uses a manager-scoped endpoint (conso-sheet-index); skip it
+  // when the caller hides the history, so "my" users get no 403 toast.
+  if (props.showHistory) fetchLogs()
 })
 
 async function save() {

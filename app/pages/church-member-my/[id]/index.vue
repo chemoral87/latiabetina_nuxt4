@@ -3,6 +3,7 @@
     <VRow id="cmy-header-row" density="compact">
       <VCol cols="12">
         <ChurchMemberHeader
+          :my="true"
           :medals="medals"
           :member="member"
           @edit="editDialog = true"

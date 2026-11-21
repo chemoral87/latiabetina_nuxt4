@@ -14,7 +14,7 @@
       <template #[`item.name`]="{ item }">
         <VIcon
           v-if="asRec(item).gender === 'female'"
-          class="mr-1"
+          class="ma-0"
           color="pink"
           size="small"
           title="Femenino"
@@ -23,7 +23,7 @@
         </VIcon>
         <VIcon
           v-else-if="asRec(item).gender === 'male'"
-          class="mr-1"
+          class="ma-0"
           color="blue"
           size="small"
           title="Masculino"

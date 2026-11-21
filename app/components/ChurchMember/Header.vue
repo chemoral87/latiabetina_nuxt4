@@ -205,7 +205,7 @@
                 {{ creatorName }}
                 <template v-if="member.conso_sheet">
                   <span class="font-weight-medium ml-2">Folio:</span>
-                  <NuxtLink class="text-primary" :to="`/consolidation/${(member.conso_sheet as { id: number | string }).id}/details`">
+                  <NuxtLink class="text-primary" :to="sheetDetailsTo ?? '#'">
                     {{ (member.conso_sheet as { folio_number: number | string }).folio_number }}
                   </NuxtLink>
                 </template>
@@ -271,6 +271,7 @@ interface Medal {
 const props = defineProps<{
   member: Record<string, unknown>;
   medals: Medal[];
+  my?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -281,6 +282,13 @@ const emit = defineEmits<{
 }>();
 
 const showInfo = ref(false);
+
+// Folio link target: consolidators stay inside the "my" scope.
+const sheetDetailsTo = computed(() => {
+  const sheet = props.member.conso_sheet as { id: number | string } | undefined;
+  if (!sheet) return undefined;
+  return `${props.my ? "/consolidation-my" : "/consolidation"}/${sheet.id}/details`;
+});
 
 const { statusLabel, statusColor } = useChurchMemberStatus();
 

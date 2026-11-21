@@ -77,7 +77,6 @@ definePageMeta({
 });
 
 const { ConsoSheet } = useRepository();
-const notify = useNotifyStore();
 const auth = useAuthStore();
 const canCreate = computed(() => auth.hasPermission("conso-sheet-my-manage"));
 const {
@@ -147,12 +146,8 @@ async function fetchData(overrides: Record<string, unknown> = {}) {
     if (filterTerm.value && !params.filter) params.filter = filterTerm.value;
     const res = await ConsoSheet.myIndex(params);
     response.value = normalizeResponse(res);
-  } catch (error) {
-    notify.notify({
-      error:
-        (error as { response?: { data?: { message?: string } } }).response?.data
-          ?.message || "Error al cargar consolidados",
-    });
+  } catch {
+    // toast comes from withNotify
     response.value = { data: [], total: 0 };
   } finally {
     loading.value = false;
@@ -182,12 +177,8 @@ async function deleteSheet(item: unknown) {
     await ConsoSheet.myDelete(s.id as number);
     dialogDelete.value = false;
     await removeWithAnimation(response, s.id as number);
-  } catch (error) {
-    notify.notify({
-      error:
-        (error as { response?: { data?: { message?: string } } }).response?.data
-          ?.message || "Error al eliminar consolidado",
-    });
+  } catch {
+    // toast comes from withNotify
   } finally {
     deleting.value = false;
   }
@@ -214,13 +205,8 @@ async function saveSheet(item: Record<string, unknown>) {
     }
 
     dialog.value = false;
-  } catch (error) {
-    notify.notify({
-      error:
-        (error as { response?: { data?: { message?: string } } }).response?.data
-          ?.message ||
-        `Error al ${item.id ? "actualizar" : "crear"} consolidado`,
-    });
+  } catch {
+    // toast comes from withNotify
   } finally {
     saving.value = false;
   }
