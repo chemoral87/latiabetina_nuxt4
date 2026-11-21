@@ -171,7 +171,7 @@
 
     <ConsolidationStatusLogDialog v-if="statusDialog" id="det-status-dlg" :member="statusMember" @close="statusDialog = false" @status-changed="onStatusChanged" />
 
-    <ConsolidationMedalDialog v-if="medalDialog" id="det-medal-dlg" :member="medalMember" @close="medalDialog = false" />
+    <ConsolidationMedalDialog v-if="medalDialog" id="det-medal-dlg" :my="true" :member="medalMember" @close="medalDialog = false" />
 
     <DialogConfirm
       v-if="showConfirmDialog"

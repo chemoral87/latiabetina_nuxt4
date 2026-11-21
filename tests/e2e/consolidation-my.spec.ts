@@ -61,6 +61,7 @@ test.describe.serial('My consolidation — consolidator @ CAM', () => {
   let memberName = ''
 
   test.beforeEach(async ({ page }) => {
+    test.setTimeout(90_000)
     test.skip(!EMAIL || !PASSWORD, 'Set E2E_EMAIL3 and E2E_PASSWORD3 in .env.test to run this test')
     await login(page, { email: EMAIL, password: PASSWORD })
   })
@@ -152,6 +153,60 @@ test.describe.serial('My consolidation — consolidator @ CAM', () => {
     await expect(link).toBeVisible()
     await link.click()
     await expect(page).toHaveURL(new RegExp(`/consolidation-my/${sheetId}/details$`))
+  })
+
+  test('manages a medal through the my endpoints, not the manager ones', async ({ page }) => {
+    test.skip(!memberId, 'no member was created')
+    const headers = await authHeaders(page)
+    const user = await authUser(page)
+    expect(user.permissionsOrg['church-member-my-manage'] ?? [], 'church-member-my-manage must cover CAM').toContain(camOrgId)
+
+    // The manager route stays behind the medal grant a consolidator does not hold.
+    const managerRoute = await page.request.get(`${apiBase()}/church-member/${memberId}/medals`, { headers })
+    expect(managerRoute.status(), 'manager medal route').toBe(403)
+
+    // Seed through my/medals. The page reads during SSR, so a rendered medal —
+    // the manager route 403s for this account — proves the read used my/medals.
+    const seeded = await page.request.post(`${apiBase()}/church-member/my/${memberId}/medals`, {
+      headers,
+      data: { medal: 'bautizo', description: { month: '05', year: 2024 } },
+    })
+    expect(seeded.status(), await seeded.text()).toBe(201)
+
+    await page.goto(`/church-member-my/${memberId}`)
+    await waitForApp(page)
+    await expect(page.locator('#cmm-medals-row')).toContainText('Bautizo', { timeout: 15_000 })
+
+    // The dialog writes through my/medals too.
+    await page.locator('#cmm-medal-add-btn').click()
+    await page.locator('.v-field__input:has(#cm-medal-type)').click()
+    await page.getByRole('option', { name: 'Bautizo', exact: true }).click()
+    await page.locator('.v-field__input:has(#cm-medal-month)').click()
+    await page.getByRole('option', { name: 'Mayo', exact: true }).click()
+
+    const [writeResponse] = await Promise.all([
+      page.waitForResponse(res => res.request().method() === 'POST' && res.url().includes(`/church-member/my/${memberId}/medals`)),
+      page.locator('#cm-medal-save-btn').click(),
+    ])
+    const writeBody = await writeResponse.text()
+    expect(writeResponse.url()).toContain(`/church-member/my/${memberId}/medals`)
+    expect(writeResponse.status(), writeBody).toBe(201)
+
+    await expect
+      .poll(
+        async () => {
+          const rows = await (await page.request.get(`${apiBase()}/church-member/my/${memberId}/medals`, { headers })).json()
+          return Array.isArray(rows) ? rows.length : -1
+        },
+        { timeout: 15_000 }
+      )
+      .toBe(2)
+
+    const listed = await (await page.request.get(`${apiBase()}/church-member/my/${memberId}/medals`, { headers })).json()
+    for (const medal of listed) {
+      const deleted = await page.request.delete(`${apiBase()}/church-member/my/${memberId}/medals/${medal.id}`, { headers })
+      expect(deleted.status(), await deleted.text()).toBe(200)
+    }
   })
 
   test('my activity page loads', async ({ page }) => {

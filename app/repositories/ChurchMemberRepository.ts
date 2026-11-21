@@ -25,6 +25,18 @@ export function createChurchMemberRepository(api: ApiFn) {
     medalLogs<T = unknown>(memberId: number | string) {
       return withNotify(api<T>(`/church-member/${memberId}/medal-logs`))
     },
+    medalsMy<T = unknown>(memberId: number | string) {
+      return withNotify(api<T>(`/church-member/my/${memberId}/medals`))
+    },
+    createMedalMy<T = unknown>(memberId: number | string, payload: Record<string, unknown>) {
+      return withNotify(api<T>(`/church-member/my/${memberId}/medals`, { method: 'POST', body: payload }))
+    },
+    deleteMedalMy<T = unknown>(memberId: number | string, medalId: number | string) {
+      return withNotify(api<T>(`/church-member/my/${memberId}/medals/${medalId}`, { method: 'DELETE' }))
+    },
+    medalLogsMy<T = unknown>(memberId: number | string) {
+      return withNotify(api<T>(`/church-member/my/${memberId}/medal-logs`))
+    },
     consolidators<T = unknown>(memberId: number | string) {
       return withNotify(api<T>(`/church-member/${memberId}/consolidators`))
     },

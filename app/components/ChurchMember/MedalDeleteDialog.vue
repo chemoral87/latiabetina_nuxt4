@@ -30,11 +30,14 @@
 <script setup lang="ts">
 import { MEDAL_OPTIONS } from '~/constants/churchMember'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   modelValue: boolean
   memberId: string | number
   medal: { id: number; medal: string } | null
-}>()
+  my?: boolean
+}>(), {
+  my: false,
+})
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
@@ -54,7 +57,11 @@ async function remove() {
   if (loading.value || !props.medal) return
   loading.value = true
   try {
-    await ChurchMember.deleteMedal(props.memberId, props.medal.id)
+    if (props.my) {
+      await ChurchMember.deleteMedalMy(props.memberId, props.medal.id)
+    } else {
+      await ChurchMember.deleteMedal(props.memberId, props.medal.id)
+    }
     emit('update:modelValue', false)
     emit('deleted')
   } finally {

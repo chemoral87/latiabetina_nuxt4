@@ -73,9 +73,9 @@
       @close="trackingLogDialog = false"
     />
 
-    <ChurchMemberMedalDialog v-if="medalDialog" id="cmy-medal-dlg" :member="member" @saved="onMedalSaved" @close="medalDialog = false" />
+    <ChurchMemberMedalDialog v-if="medalDialog" id="cmy-medal-dlg" :my="true" :member="member" @saved="onMedalSaved" @close="medalDialog = false" />
 
-    <ChurchMemberMedalDeleteDialog v-if="medalDeleteDialog" v-model="medalDeleteDialog" :medal="medalToDelete" :member-id="route.params.id as string" @deleted="onMedalSaved" />
+    <ChurchMemberMedalDeleteDialog v-if="medalDeleteDialog" v-model="medalDeleteDialog" :my="true" :medal="medalToDelete" :member-id="route.params.id as string" @deleted="onMedalSaved" />
   </VContainer>
 </template>
 
@@ -415,7 +415,7 @@
     const id = route.params.id as string
     if (!id) return
     try {
-      medals.value = await ChurchMember.medals<typeof medals.value>(id).catch(() => [])
+      medals.value = await ChurchMember.medalsMy<typeof medals.value>(id).catch(() => [])
     } catch {
       // errors already surfaced by withNotify
     }

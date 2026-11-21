@@ -119,8 +119,10 @@ import { useVrules } from "~/composables/useVrules"
 const props = withDefaults(defineProps<{
   id?: string
   member?: Record<string, unknown>
+  my?: boolean
 }>(), {
   id: "cm-medal-dlg",
+  my: false,
 })
 
 const emit = defineEmits<{
@@ -183,10 +185,15 @@ async function save() {
 
   saving.value = true
   try {
-    await ChurchMember.createMedal<Record<string, unknown>>(memberId as string | number, {
+    const payload = {
       medal: form.value.medal,
       description: { ...form.value.description },
-    })
+    }
+    if (props.my) {
+      await ChurchMember.createMedalMy<Record<string, unknown>>(memberId as string | number, payload)
+    } else {
+      await ChurchMember.createMedal<Record<string, unknown>>(memberId as string | number, payload)
+    }
     emit("saved")
     emit("close")
   } catch {
