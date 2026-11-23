@@ -1,24 +1,37 @@
 <template>
   <VSheet rounded color="white" elevation="3" class="pa-sm-3 pa-1">
-    <div class="text-subtitle-1 font-weight-medium d-flex align-center">
-      <VIcon start size="small" color="primary">mdi-account</VIcon>
-      <span class="text-subtitle-2 text-truncate">{{ [member.name, member.last_name].filter(Boolean).join(' ') }}</span>
-      <VSpacer />
-      <VChip size="small" variant="elevated" :color="statusColor(member.status)">
-        {{ statusLabel(member.status) }}
-      </VChip>
-      <VBtn
-        id="cmm-status-edit-btn"
-        variant="text"
-        color="primary"
-        rounded="circle"
-        icon="mdi-pencil"
-        title="Cambiar estado"
-        aria-label="Cambiar estado del miembro"
-        @click="emit('statusEdit')"
-      />
-    </div>
-    <VDivider class="mb-2" />
+    <VRow id="cmm-header-row" density="compact">
+      <VCol md="7" cols="8" class="order-1">
+        <div class="d-flex align-center">
+          <VIcon class="mr-1" size="small" color="primary">mdi-account</VIcon>
+          <span class="text-subtitle-1 font-weight-medium text-truncate">{{ fullName }}</span>
+          <VIcon v-if="gender === 'female'" id="cmm-gender-icon" class="ml-1" color="pink" size="small" title="Femenino">mdi-gender-female</VIcon>
+          <VIcon v-else-if="gender === 'male'" id="cmm-gender-icon" class="ml-1" color="blue" size="small" title="Masculino">mdi-gender-male</VIcon>
+        </div>
+        <div class="d-flex align-center mt-1">
+          <VChip size="small" variant="elevated" :color="statusColor(member.status)">
+            {{ statusLabel(member.status) }}
+          </VChip>
+          <VBtn
+            id="cmm-status-edit-btn"
+            variant="text"
+            color="primary"
+            rounded="circle"
+            icon="mdi-pencil"
+            title="Cambiar estado"
+            aria-label="Cambiar estado del miembro"
+            @click="emit('statusEdit')"
+          />
+        </div>
+      </VCol>
+      <VCol md="5" cols="4" class="order-2 d-flex justify-end justify-md-center align-start">
+        <VAvatar v-if="member.url_image_s3" size="96" rounded="circle" class="cursor-pointer" @click="emit('edit')">
+          <VImg cover alt="Foto del miembro" :src="member.url_image_s3 as string | undefined" />
+        </VAvatar>
+        <VIcon v-else size="80" class="cursor-pointer" color="grey-lighten-1" @click="emit('edit')">mdi-account-circle</VIcon>
+      </VCol>
+    </VRow>
+    <VDivider class="my-2" />
 
     <div>
       <VRow v-if="medals.length > 0" id="cmm-medals-row" density="compact">
@@ -63,92 +76,82 @@
           <VBtn id="cmm-medal-add-btn" size="x-small" variant="text" color="primary" prepend-icon="mdi-medal-outline" @click="emit('medalAdd')"> Agregar medalla </VBtn>
         </VCol>
       </VRow>
-      <VRow id="cmm-info-row" density="compact">
-        <VCol md="5" cols="4" class="d-flex justify-center align-start align-md-center order-2">
-          <VAvatar v-if="member.url_image_s3" size="80" rounded="circle" class="cursor-pointer" @click="emit('edit')">
-            <VImg cover alt="Foto del miembro" :src="member.url_image_s3 as string | undefined" />
-          </VAvatar>
-          <VIcon v-else size="64" class="cursor-pointer" color="grey-lighten-1" @click="emit('edit')">mdi-account-circle</VIcon>
-        </VCol>
-        <VCol md="7" cols="8" class="order-1">
-          <div class="d-flex align-center mb-1">
-            <VBtn
-              id="cmm-info-toggle-btn"
-              size="x-small"
-              variant="text"
-              color="primary"
-              :prepend-icon="showInfo ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-              @click="showInfo = !showInfo"
-            >
-              {{ showInfo ? 'Ocultar datos' : 'Ver datos' }}
-            </VBtn>
-          </div>
-          <VExpandTransition>
-            <VRow v-show="showInfo" density="compact">
-              <VCol sm="6" cols="12" class="text-body-2">
-                <VIcon start size="x-small" color="grey-darken-1">mdi-account</VIcon>
-                <span class="font-weight-medium">Nombre:</span>
-                <VIcon v-if="gender === 'female'" id="cmm-gender-icon" class="mx-1" color="pink" size="small" title="Femenino"> mdi-gender-female </VIcon>
-                <VIcon v-else-if="gender === 'male'" id="cmm-gender-icon" class="mx-1" color="blue" size="small" title="Masculino"> mdi-gender-male </VIcon>
-                {{ fullName }}
-              </VCol>
-              <VCol v-if="member.cellphone" sm="6" cols="12" class="text-body-2">
-                <VIcon start size="x-small" color="grey-darken-1">mdi-phone</VIcon>
-                <span class="font-weight-medium">Celular:</span>
-                {{ member.cellphone }}
-              </VCol>
-              <VCol v-if="member.years_old != null" sm="6" cols="12" class="text-body-2">
-                <VIcon start size="x-small" color="grey-darken-1">mdi-calendar-account</VIcon>
-                <span class="font-weight-medium">Edad:</span>
-                {{ member.years_old }}
-              </VCol>
-              <VCol v-if="member.number_of_children != null" sm="6" cols="12" class="text-body-2">
-                <VIcon start size="x-small" color="grey-darken-1">mdi-account-multiple</VIcon>
-                <span class="font-weight-medium">Hijos:</span>
-                {{ member.number_of_children }}
-              </VCol>
-              <VCol v-if="member.marriage_status" sm="6" cols="12" class="text-body-2">
-                <VIcon start size="x-small" color="grey-darken-1">mdi-ring</VIcon>
-                <span class="font-weight-medium">Estado civil:</span>
-                {{ member.marriage_status }}
-              </VCol>
-              <VCol v-if="creatorName" sm="6" cols="12" class="text-body-2">
-                <VIcon start size="x-small" color="grey-darken-1">mdi-account-check</VIcon>
-                <span class="font-weight-medium">Creado por:</span>
-                {{ creatorName }}
-              </VCol>
-              <VCol v-if="member.conso_sheet" sm="6" cols="12" class="text-body-2">
-                <VIcon start size="x-small" color="grey-darken-1">mdi-book-open-page-variant</VIcon>
-                <span class="font-weight-medium">Folio:</span>
-                <NuxtLink class="text-primary" :to="sheetDetailsTo ?? '#'">
-                  {{ (member.conso_sheet as { folio_number: number | string }).folio_number }}
-                </NuxtLink>
-              </VCol>
-              <VCol v-if="member.address" cols="12" class="text-body-2 d-none d-sm-flex">
-                <VIcon start size="x-small" color="grey-darken-1">mdi-map-marker</VIcon>
-                <span class="font-weight-medium">Dirección:</span>
-                {{ member.address }}
-              </VCol>
-            </VRow>
-          </VExpandTransition>
-        </VCol>
-      </VRow>
+      <div class="d-flex justify-end">
+        <VBtn
+          id="cmm-info-toggle-btn"
+          size="x-small"
+          variant="text"
+          color="primary"
+          :aria-expanded="showInfo"
+          aria-controls="cmm-info-row"
+          :prepend-icon="showInfo ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+          @click="showInfo = !showInfo"
+        >
+          {{ showInfo ? 'Ocultar datos' : 'Ver datos' }}
+        </VBtn>
+      </div>
 
-      <VRow v-if="member.address" id="cmm-address-mobile-row" density="compact" class="d-flex d-sm-none">
-        <VCol cols="12" class="text-body-2 py-1">
-          <VIcon start size="x-small" color="grey-darken-1">mdi-map-marker</VIcon>
-          <span class="font-weight-medium">Dirección:</span>
-          {{ member.address }}
-        </VCol>
-      </VRow>
-      <VRow id="cmm-edit-row" class="mt-1" density="compact">
+      <VExpandTransition>
+        <VRow v-show="showInfo" id="cmm-info-row" density="compact">
+          <VCol v-if="member.cellphone" md="4" sm="6" cols="12" class="d-flex align-start">
+            <VIcon size="x-small" class="mt-1 mr-2" color="grey-darken-1">mdi-phone</VIcon>
+            <div>
+              <div class="text-caption text-medium-emphasis">Celular</div>
+              <div class="text-body-2">{{ member.cellphone }}</div>
+            </div>
+          </VCol>
+          <VCol v-if="member.years_old != null" md="4" sm="6" cols="12" class="d-flex align-start">
+            <VIcon size="x-small" class="mt-1 mr-2" color="grey-darken-1">mdi-calendar-account</VIcon>
+            <div>
+              <div class="text-caption text-medium-emphasis">Edad</div>
+              <div class="text-body-2">{{ member.years_old }}</div>
+            </div>
+          </VCol>
+          <VCol v-if="member.number_of_children != null" md="4" sm="6" cols="12" class="d-flex align-start">
+            <VIcon size="x-small" class="mt-1 mr-2" color="grey-darken-1">mdi-account-multiple</VIcon>
+            <div>
+              <div class="text-caption text-medium-emphasis">Hijos</div>
+              <div class="text-body-2">{{ member.number_of_children }}</div>
+            </div>
+          </VCol>
+          <VCol v-if="member.marriage_status" md="4" sm="6" cols="12" class="d-flex align-start">
+            <VIcon size="x-small" class="mt-1 mr-2" color="grey-darken-1">mdi-ring</VIcon>
+            <div>
+              <div class="text-caption text-medium-emphasis">Estado civil</div>
+              <div class="text-body-2">{{ member.marriage_status }}</div>
+            </div>
+          </VCol>
+          <VCol v-if="creatorName" md="4" sm="6" cols="12" class="d-flex align-start">
+            <VIcon size="x-small" class="mt-1 mr-2" color="grey-darken-1">mdi-account-check</VIcon>
+            <div>
+              <div class="text-caption text-medium-emphasis">Creado por</div>
+              <div class="text-body-2">{{ creatorName }}</div>
+            </div>
+          </VCol>
+          <VCol v-if="member.conso_sheet" md="4" sm="6" cols="12" class="d-flex align-start">
+            <VIcon size="x-small" class="mt-1 mr-2" color="grey-darken-1">mdi-book-open-page-variant</VIcon>
+            <div>
+              <div class="text-caption text-medium-emphasis">Folio</div>
+              <NuxtLink :to="sheetDetailsTo ?? '#'" class="text-body-2 text-primary">
+                {{ (member.conso_sheet as { folio_number: number | string }).folio_number }}
+              </NuxtLink>
+            </div>
+          </VCol>
+          <VCol v-if="member.address" cols="12" class="d-flex align-start">
+            <VIcon size="x-small" class="mt-1 mr-2" color="grey-darken-1">mdi-map-marker</VIcon>
+            <div>
+              <div class="text-caption text-medium-emphasis">Dirección</div>
+              <div class="text-body-2">{{ member.address }}</div>
+            </div>
+          </VCol>
+        </VRow>
+      </VExpandTransition>
+      <VRow id="cmm-edit-row" density="compact">
         <VCol cols="12" class="d-flex justify-end">
           <VBtn id="cmm-edit-btn" color="primary" variant="elevated" prepend-icon="mdi-pencil" @click="emit('edit')"> Editar Datos </VBtn>
         </VCol>
       </VRow>
     </div>
-
-    <VDivider class="mb-2" />
   </VSheet>
 </template>
 
