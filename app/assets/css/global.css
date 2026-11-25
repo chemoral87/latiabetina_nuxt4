@@ -45,12 +45,12 @@ body {
    beat Vuetify's own .v-container { padding: 16px } in the same layer. */
 @layer vuetify-components {
   .v-container.v-container {
-    padding: 6px;
+    padding: 4px;
   }
 
   /* v-container: top padding for VSheet inside the container */
   .v-container.v-container .v-sheet {
-    padding-top: 8px;
+    padding-top: 8px !important;
   }
 
   .v-table th {
@@ -58,13 +58,14 @@ body {
     font-weight: bold;
   }
 
-  .v-table--striped-odd > .v-table__wrapper > table > tbody > tr:nth-child(odd) {
-    background-image: none;
-    background-color: rgba(var(--v-theme-on-surface), 0.03);
+  /* Stripe every Vuetify table, including tables without `striped="odd"`. */
+  .v-table > .v-table__wrapper > table > tbody > tr:nth-child(odd) {
+    background-image: none !important;
+    background-color: rgba(var(--v-theme-on-surface), 0.03) !important;
   }
 
-  .v-theme--light .v-table--striped-odd > .v-table__wrapper > table > tbody > tr:nth-child(odd) {
-    background-color: #f5fbff;
+  .v-theme--light .v-table > .v-table__wrapper > table > tbody > tr:nth-child(odd) {
+    background-color: #e8f4fc !important;
   }
 
   /* Fixed min-width utilities for data tables — port of the `xwidth*` classes
