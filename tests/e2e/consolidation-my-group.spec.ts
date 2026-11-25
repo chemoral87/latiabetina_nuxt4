@@ -1,15 +1,15 @@
 /**
  * Consolidator-group sharing on the "mine" scope.
  *
- * conso2 (E2E_EMAIL3) captures a conso-sheet on CAM. conso1 (E2E_EMAIL2) shares a
- * consolidator group with conso2, so conso1 must see that sheet on
+ * conso3 (E2E_EMAIL4) captures a conso-sheet on CAM. conso1 (E2E_EMAIL2) shares a
+ * consolidator group with conso3, so conso1 must see that sheet on
  * /consolidation-my and open /consolidation-my/:id/details — the group link
  * widens the sheet scope, while a sheet in an org conso1 has no grant for stays
  * invisible (404).
  *
  * Requirements in .env.test:
  *   E2E_EMAIL2 / E2E_PASSWORD2 — consolidator on CAM (conso-sheet-my-index)
- *   E2E_EMAIL3 / E2E_PASSWORD3 — consolidator on CAM + COM (conso-sheet-my-manage)
+ *   E2E_EMAIL4 / E2E_PASSWORD4 — consolidator-manager on CAM + COM (conso-sheet-my-manage)
  *   Both accounts must share at least one consolidator group.
  */
 import { test, expect, type Page } from '@playwright/test'
@@ -35,7 +35,7 @@ const file = fileEnv()
 const env = (key: string) => process.env[key] || file[key] || ''
 
 const CONSO1 = { email: env('E2E_EMAIL2'), password: env('E2E_PASSWORD2') }
-const CONSO2 = { email: env('E2E_EMAIL3'), password: env('E2E_PASSWORD3') }
+const CONSO4 = { email: env('E2E_EMAIL4'), password: env('E2E_PASSWORD4') }
 const ADMIN = { email: env('E2E_EMAIL'), password: env('E2E_PASSWORD') }
 
 async function waitForApp(page: Page) {
@@ -69,16 +69,16 @@ test.describe.serial('My consolidation — group-mate sharing', () => {
 
   test.beforeEach(async ({ page }) => {
     test.setTimeout(90_000)
-    test.skip(!CONSO1.email || !CONSO2.email, 'Set E2E_EMAIL2/3 in .env.test to run this test')
+    test.skip(!CONSO1.email || !CONSO4.email, 'Set E2E_EMAIL2/4 in .env.test to run this test')
   })
 
-  test('conso2 captures a sheet + member on CAM and a sheet on COM', async ({ page }) => {
-    await login(page, CONSO2)
+  test('conso3 captures a sheet + member on CAM and a sheet on COM', async ({ page }) => {
+    await login(page, CONSO4)
     const user = await authUser(page)
     const cam = orgIdByName(user.orgs, 'CAM')
     const com = orgIdByName(user.orgs, 'COM')
-    test.skip(!cam || !com, 'conso2 needs both CAM and COM profiles')
-    test.skip(!(user.permissionsOrg['conso-sheet-my-manage'] ?? []).includes(cam), 'conso2 cannot manage sheets on CAM')
+    test.skip(!cam || !com, 'conso3 needs both CAM and COM profiles')
+    test.skip(!(user.permissionsOrg['conso-sheet-my-manage'] ?? []).includes(cam), 'conso3 cannot manage sheets on CAM')
 
     const headers = await authHeaders(page)
     camFolio = `E2E GRP ${stamp}`
@@ -184,11 +184,11 @@ test.describe.serial('My consolidation — group-mate sharing', () => {
     test.skip(!camSheetId, 'no sheet was captured')
 
     const login2 = await request.post(`${apiBase()}/auth/login`, {
-      data: { email: CONSO2.email, password: CONSO2.password },
+      data: { email: CONSO4.email, password: CONSO4.password },
     })
     const headers2 = { Accept: 'application/json', Authorization: `Bearer ${(await login2.json()).access_token}` }
-    const conso2User = await (await request.post(`${apiBase()}/auth/user`, { headers: headers2 })).json()
-    const cam = orgIdByName(conso2User.orgs ?? [], 'CAM')
+    const conso3User = await (await request.post(`${apiBase()}/auth/user`, { headers: headers2 })).json()
+    const cam = orgIdByName(conso3User.orgs ?? [], 'CAM')
 
     const created = await request.post(`${apiBase()}/church-member/my`, {
       headers: headers2,
@@ -228,8 +228,8 @@ test.describe.serial('My consolidation — group-mate sharing', () => {
     }
   })
 
-  test('conso2 cleans up the captured sheets and member', async ({ page }) => {
-    await login(page, CONSO2)
+  test('conso3 cleans up the captured sheets and member', async ({ page }) => {
+    await login(page, CONSO4)
     const headers = await authHeaders(page)
     if (memberId) {
       const deleted = await page.request.delete(`${apiBase()}/church-member/my/${memberId}`, { headers })

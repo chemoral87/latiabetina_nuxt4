@@ -457,21 +457,21 @@ function confirmDeleteMedal(medal: { id: number; medal: string }) {
 	medalDeleteDialog.value = true;
 }
 void [
-  auth,
-  statusDialog,
-  medalDialog,
-  hasConsolidatorChanges,
-  onLogsUpdateOptions,
-  editTrackingLog,
-  saveTrackingLog,
-  deleteTrackingLog,
-  onContact,
-  goBack,
-  onStatusChanged,
-  saveMember,
-  onPendingConsolidatorsChange,
-  saveConsolidators,
-  onMedalSaved,
-  confirmDeleteMedal,
-]
+	auth,
+	statusDialog,
+	medalDialog,
+	hasConsolidatorChanges,
+	onLogsUpdateOptions,
+	editTrackingLog,
+	saveTrackingLog,
+	deleteTrackingLog,
+	onContact,
+	goBack,
+	onStatusChanged,
+	saveMember,
+	onPendingConsolidatorsChange,
+	saveConsolidators,
+	onMedalSaved,
+	confirmDeleteMedal,
+];
 </script>
