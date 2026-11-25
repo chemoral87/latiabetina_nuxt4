@@ -48,7 +48,7 @@
       </template>
 
       <template #[`item.creator`]="{ item }">
-        {{ item.creator ? item.creator.name : 'N/A' }}
+        {{ item.creator ? [item.creator.name, item.creator.last_name].filter(Boolean).join(' ') || 'N/A' : 'N/A' }}
       </template>
 
       <template #[`item.organization`]="{ item }">
@@ -87,7 +87,7 @@
     id: number | string
     folio_number?: number | string
     date: string | null
-    creator?: { name?: string } | null
+    creator?: { name?: string; last_name?: string } | null
     organization?: { name?: string } | null
   }
 

@@ -78,7 +78,7 @@ definePageMeta({
 const { ConsoSheet } = useRepository();
 const notify = useNotifyStore();
 const auth = useAuthStore();
-const canCreate = computed(() => auth.hasPermission("conso-sheet-create"));
+const canCreate = computed(() => auth.hasPermission("conso-sheet-create") || auth.hasPermission("conso-sheet-manage"));
 const {
   highlightId,
   prependCreated,
