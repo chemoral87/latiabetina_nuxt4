@@ -26,7 +26,7 @@
                 id="det-members-dt"
                 :loading="loading"
                 :members="members"
-                :can-delete="canManage"
+                :can-delete="canDelete"
                 @delete="deleteMemberPrompt"
                  @status-change="onInlineStatusChange"
               />
@@ -205,7 +205,8 @@ const router = useRouter()
 const { ConsoSheet, ChurchMember } = useRepository()
 const notify = useNotifyStore()
 const auth = useAuthStore()
-const canManage = computed(() => auth.hasPermission("church-member-manage"))
+const canManage = computed(() => auth.hasPermission("church-member-manage") || auth.hasPermission("church-member-create") || auth.hasPermission("church-member-update"))
+const canDelete = computed(() => canManage.value || auth.hasPermission("church-member-delete"))
 
 const sheetId = computed(() => route.params.id as string)
 

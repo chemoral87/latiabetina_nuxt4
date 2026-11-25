@@ -222,6 +222,23 @@ body {
   opacity: 1 !important;
 }
 
+/* Allow text selection inside VChip (Vuetify 4 ships user-select: none).
+   Close button stays non-selectable so dragging across a chip doesn't grab the ×.
+   Must live inside @layer vuetify-components to beat .v-chip--link { user-select: none }. */
+@layer vuetify-components {
+  .v-chip,
+  .v-chip--link,
+  .v-chip--filter,
+  .v-chip .v-chip__content {
+    user-select: text;
+    -webkit-user-select: text;
+  }
+  .v-chip .v-chip__close {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .row-highlight td,
   .row-removing {
