@@ -9,14 +9,14 @@
         </div>
         <div>
           <VRow density="compact">
-            <VCol md="4" cols="12">
-              <VBtn v-if="canManage" id="cnsld-new-member-btn" class="mr-1" color="success" @click="newMember">
-                <VIcon start>mdi-plus</VIcon>
-                Nuevo Miembro
-              </VBtn>
+            <VCol md="4" cols="12" class="d-flex align-center">
               <VBtn id="cnsld-refresh-btn" color="primary" :loading="loading" variant="outlined" @click="fetchMembers">
                 <VIcon start>mdi-reload</VIcon>
                 Refrescar
+              </VBtn>
+              <VBtn v-if="canManage" id="cnsld-new-member-btn" class="ml-2" color="success" @click="newMember">
+                <VIcon start>mdi-plus</VIcon>
+                Nuevo Miembro
               </VBtn>
             </VCol>
           </VRow>

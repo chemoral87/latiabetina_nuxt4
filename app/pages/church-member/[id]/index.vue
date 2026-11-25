@@ -86,7 +86,7 @@
   definePageMeta({
     title: 'Detalle Consolidado',
     icon: 'mdi-account',
-    permission: 'conso-sheet-index',
+    permission: 'church-member-index',
     middleware: ['authenticated', 'permission'],
   })
 
