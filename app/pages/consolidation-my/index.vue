@@ -40,10 +40,11 @@
             :deleting="deleting"
             :response="response"
             :search="filterTerm"
+            :can-delete="canDelete"
+            :can-update="canUpdate"
             :removing-id="removingId"
             :highlight-id="highlightId"
             :initial-sort-by="lastOptions.sortBy"
-            manage-permission="conso-sheet-my-manage"
             @edit="editSheet"
             @view="viewSheet"
             @delete="deleteSheet"
@@ -79,6 +80,8 @@ definePageMeta({
 const { ConsoSheet } = useRepository();
 const auth = useAuthStore();
 const canCreate = computed(() => auth.hasPermission("conso-sheet-my-manage"));
+const canUpdate = computed(() => auth.hasPermission("conso-sheet-my-manage") || auth.hasPermission("conso-sheet-my-update"));
+const canDelete = computed(() => auth.hasPermission("conso-sheet-my-manage") || auth.hasPermission("conso-sheet-my-delete"));
 const {
   highlightId,
   prependCreated,

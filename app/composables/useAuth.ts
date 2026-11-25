@@ -266,10 +266,10 @@ export const useAuthStore = defineStore('auth', () => {
     return p || {}
   })
 
-  function hasPermission(permission: string): boolean {
+  // OR logic across any number of permission keys (org-scoped or global).
+  function hasPermission(...permissions: string[]): boolean {
     if (!user.value) return false
-    if (permission in permissionsOrg.value) return true
-    return permissions.value.includes(permission)
+    return permissions.some(p => p in permissionsOrg.value || permissions.value.includes(p))
   }
 
   function orgIdsFor(permission: string): (number | string)[] {

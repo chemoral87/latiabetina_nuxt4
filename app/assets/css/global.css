@@ -27,7 +27,7 @@ html {
    and the bottom snackbar stack clear of those insets; env() resolves to 0
    on devices/browsers without a safe area, so this is a no-op elsewhere. */
 #lay-app-bar {
-  padding-top: env(safe-area-inset-top, 0px) !important;
+  padding-top: env(safe-area-inset-top, 0px);
 }
 .snackbar-wrapper {
   padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -40,192 +40,149 @@ body {
   background-color: #e8eaf6;
 }
 
-/* Global VContainer padding — equivalent to pa-1 (4px) on all pages */
-.v-container {
-  padding: 6px !important;
-}
-
-/* v-container: top padding for VSheet inside the container */
-.v-container .v-sheet {
-  padding-top: 8px !important;
-}
-
-/* Red asterisk after the label of any required Vuetify input.
-   Vuetify forwards an unrecognized `required` attribute straight onto the
-   native <input>/<textarea> inside `.v-input`, so `:has()` can reach up
-   from there and mark the associated `.v-field-label`. */
-.v-input:has(input[required], textarea[required]) .v-field-label::after {
-  content: ' *';
-  color: rgb(var(--v-theme-error));
-  font-size: 1.35em;
-}
-
-.v-table th {
-  color: rgba(var(--v-theme-on-surface), 0.6);
-  font-weight: bold;
-}
-
-.v-table--striped-odd > .v-table__wrapper > table > tbody > tr:nth-child(odd) {
-  background-image: none !important;
-  background-color: rgba(var(--v-theme-on-surface), 0.03) !important;
-}
-
-.v-theme--light .v-table--striped-odd > .v-table__wrapper > table > tbody > tr:nth-child(odd) {
-  background-color: #f5fbff !important;
-}
-
-/* Fixed min-width utilities for data tables — port of the `xwidth*` classes
-   from latiabetina_aui/assets/variables.scss. Vuetify 2 nested them under
-   `.v-data-table__wrapper`; in Vuetify 4 the selector is `.v-table__wrapper`.
-   On narrow (mobile) viewports a table would otherwise compress and wrap,
-   growing every row's height; these min-widths keep rows single-line and the
-   wrapper (`overflow: auto` by default in Vuetify 4) scrolls horizontally.
-   Apply alongside `elevation-1` on VDataTableServer, e.g.
-   class="elevation-1 xwidth1200". */
-.xwidth400 .v-table__wrapper table {
-  min-width: 400px !important;
-}
-.xwidth450 .v-table__wrapper table {
-  min-width: 450px !important;
-}
-.xwidth500 .v-table__wrapper table {
-  min-width: 500px !important;
-}
-.xwidth600 .v-table__wrapper table {
-  min-width: 600px !important;
-}
-.xwidth700 .v-table__wrapper table {
-  min-width: 700px !important;
-}
-.xwidth800 .v-table__wrapper table {
-  min-width: 800px !important;
-}
-.xwidth900 .v-table__wrapper table {
-  min-width: 900px !important;
-}
-.xwidth1000 .v-table__wrapper table {
-  min-width: 1000px !important;
-}
-.xwidth1100 .v-table__wrapper table {
-  min-width: 1100px !important;
-}
-.xwidth1200 .v-table__wrapper table {
-  min-width: 1200px !important;
-}
-.xwidth1300 .v-table__wrapper table {
-  min-width: 1300px !important;
-}
-.xwidth1400 .v-table__wrapper table {
-  min-width: 1400px !important;
-}
-.xwidth1500 .v-table__wrapper table {
-  min-width: 1500px !important;
-}
-.xwidth1600 .v-table__wrapper table {
-  min-width: 1600px !important;
-}
-.xwidth1700 .v-table__wrapper table {
-  min-width: 1700px !important;
-}
-.xwidth1800 .v-table__wrapper table {
-  min-width: 1800px !important;
-}
-.xwidth1900 .v-table__wrapper table {
-  min-width: 1900px !important;
-}
-.xwidth2000 .v-table__wrapper table {
-  min-width: 2000px !important;
-}
-
-/* Reduced horizontal cell padding for all data tables — port of the rule from
-   latiabetina_aui/assets/global.css. Td with `pa-1` (e.g. a tight edit-action
-   column) is excluded to keep its snugger padding. Vuetify 2 matched `.v-data-table
-   td/th` directly; in Vuetify 4 the cells live under `.v-table__wrapper` and default
-   to `padding: 0 16px` (VTable.css), overridden below per axis so density
-   vertical padding is preserved. */
-.v-data-table .v-table__wrapper td:not(.pa-1),
-.v-data-table .v-table__wrapper th,
-.v-table .v-table__wrapper td:not(.pa-1),
-.v-table .v-table__wrapper th {
-  padding-left: 6px !important;
-  padding-right: 6px !important;
-}
-
-/* Momentary row flash after edit — driven by row-props + highlight-id in table components */
-.row-highlight td {
-  animation: row-highlight-flash var(--row-highlight-animation-ms) ease-out;
-}
-
-@keyframes row-highlight-flash {
-  0% {
-    background-color: rgba(var(--v-theme-success), 0.35);
-  }
-  100% {
-    background-color: transparent;
-  }
-}
-
-/* Row delete animation — driven by row-props + removing-id in table components.
-   The `row-removing` class tints the row light red. The actual height collapse
-   is driven in JS by `removeWithAnimation` in useRowHighlight.ts (tables don't
-   animate cell `height` via CSS), which measures the rendered <tr>, transitions
-   its height to 0, and then the row is spliced from the data so the rows below
-   slide up into its place. */
-.row-removing td {
-  background-color: rgba(var(--v-theme-error), 0.3) !important;
-}
-
-/* Red asterisk at the end of a label for any required input field. The
-   `required` attribute lands on the native <input>/<textarea>/<select> (via
-   Vuetify attr filtering), so we append a red `*` to the field's label. */
-.v-field:has(input[required]) .v-field-label::after,
-.v-field:has(textarea[required]) .v-field-label::after,
-.v-field:has(select[required]) .v-field-label::after {
-  content: ' *';
-  color: rgb(var(--v-theme-error));
-}
-
-/* Church member status background for VSelect / VChip — extracted from Consolidation/MemberTable.vue */
-.status-bg-activo .v-field,
-.status-bg-activo.v-field {
-  background-color: rgba(76, 175, 80, 0.12) !important;
-  border-color: rgba(76, 175, 80, 0.4) !important;
-}
-.status-bg-no-contesta .v-field,
-.status-bg-no-contesta.v-field {
-  background-color: rgba(255, 193, 7, 0.12) !important;
-  border-color: rgba(255, 193, 7, 0.4) !important;
-}
-.status-bg-no-molestar .v-field,
-.status-bg-no-molestar.v-field {
-  background-color: rgba(244, 67, 54, 0.12) !important;
-  border-color: rgba(244, 67, 54, 0.4) !important;
-}
-.status-bg-visita .v-field,
-.status-bg-visita.v-field {
-  background-color: rgba(33, 150, 243, 0.12) !important;
-  border-color: rgba(33, 150, 243, 0.4) !important;
-}
-
-/* Ensure VChip elements inside input fields (e.g. VCombobox, VSelect selection slots)
-   maintain full opacity and color fidelity matching table cells.
-   The .v-field__input container defaults to opacity: 0.87 which cascades
-   to children — override both the container and the chips themselves. */
-.v-combobox .v-field__input,
-.v-select .v-field__input,
-.v-autocomplete .v-field__input {
-  opacity: 1 !important;
-}
-.v-combobox .v-field__input .v-chip,
-.v-select .v-field__input .v-chip,
-.v-autocomplete .v-field__input .v-chip {
-  opacity: 1 !important;
-}
-
-/* Allow text selection inside VChip (Vuetify 4 ships user-select: none).
-   Close button stays non-selectable so dragging across a chip doesn't grab the ×.
-   Must live inside @layer vuetify-components to beat .v-chip--link { user-select: none }. */
+/* Global VContainer padding — equivalent to pa-1 (4px) on all pages.
+   Inside the vuetify-components layer. Doubled class for specificity to
+   beat Vuetify's own .v-container { padding: 16px } in the same layer. */
 @layer vuetify-components {
+  .v-container.v-container {
+    padding: 6px;
+  }
+
+  /* v-container: top padding for VSheet inside the container */
+  .v-container.v-container .v-sheet {
+    padding-top: 8px;
+  }
+
+  .v-table th {
+    color: rgba(var(--v-theme-on-surface), 0.6);
+    font-weight: bold;
+  }
+
+  .v-table--striped-odd > .v-table__wrapper > table > tbody > tr:nth-child(odd) {
+    background-image: none;
+    background-color: rgba(var(--v-theme-on-surface), 0.03);
+  }
+
+  .v-theme--light .v-table--striped-odd > .v-table__wrapper > table > tbody > tr:nth-child(odd) {
+    background-color: #f5fbff;
+  }
+
+  /* Fixed min-width utilities for data tables — port of the `xwidth*` classes
+     from latiabetina_aui/assets/variables.scss. Vuetify 2 nested them under
+     `.v-data-table__wrapper`; in Vuetify 4 the selector is `.v-table__wrapper`.
+     On narrow (mobile) viewports a table would otherwise compress and wrap,
+     growing every row's height; these min-widths keep rows single-line and the
+     wrapper (`overflow: auto` by default in Vuetify 4) scrolls horizontally.
+     Apply alongside `elevation-1` on VDataTableServer, e.g.
+     class="elevation-1 xwidth1200". */
+  .xwidth400 .v-table__wrapper table {
+    min-width: 400px;
+  }
+  .xwidth450 .v-table__wrapper table {
+    min-width: 450px;
+  }
+  .xwidth500 .v-table__wrapper table {
+    min-width: 500px;
+  }
+  .xwidth600 .v-table__wrapper table {
+    min-width: 600px;
+  }
+  .xwidth700 .v-table__wrapper table {
+    min-width: 700px;
+  }
+  .xwidth800 .v-table__wrapper table {
+    min-width: 800px;
+  }
+  .xwidth900 .v-table__wrapper table {
+    min-width: 900px;
+  }
+  .xwidth1000 .v-table__wrapper table {
+    min-width: 1000px;
+  }
+  .xwidth1100 .v-table__wrapper table {
+    min-width: 1100px;
+  }
+  .xwidth1200 .v-table__wrapper table {
+    min-width: 1200px;
+  }
+  .xwidth1300 .v-table__wrapper table {
+    min-width: 1300px;
+  }
+  .xwidth1400 .v-table__wrapper table {
+    min-width: 1400px;
+  }
+  .xwidth1500 .v-table__wrapper table {
+    min-width: 1500px;
+  }
+  .xwidth1600 .v-table__wrapper table {
+    min-width: 1600px;
+  }
+  .xwidth1700 .v-table__wrapper table {
+    min-width: 1700px;
+  }
+  .xwidth1800 .v-table__wrapper table {
+    min-width: 1800px;
+  }
+  .xwidth1900 .v-table__wrapper table {
+    min-width: 1900px;
+  }
+  .xwidth2000 .v-table__wrapper table {
+    min-width: 2000px;
+  }
+
+  /* Reduced horizontal cell padding for all data tables — port of the rule from
+     latiabetina_aui/assets/global.css. Td with `pa-1` (e.g. a tight edit-action
+     column) is excluded to keep its snugger padding. Vuetify 2 matched `.v-data-table
+     td/th` directly; in Vuetify 4 the cells live under `.v-table__wrapper` and default
+     to `padding: 0 16px` (VTable.css), overridden below per axis so density
+     vertical padding is preserved. */
+  .v-data-table .v-table__wrapper td:not(.pa-1),
+  .v-data-table .v-table__wrapper th,
+  .v-table .v-table__wrapper td:not(.pa-1),
+  .v-table .v-table__wrapper th {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
+  /* Church member status background for VSelect / VChip — extracted from Consolidation/MemberTable.vue */
+  .status-bg-activo .v-field,
+  .status-bg-activo.v-field {
+    background-color: rgba(76, 175, 80, 0.12);
+    border-color: rgba(76, 175, 80, 0.4);
+  }
+  .status-bg-no-contesta .v-field,
+  .status-bg-no-contesta.v-field {
+    background-color: rgba(255, 193, 7, 0.12);
+    border-color: rgba(255, 193, 7, 0.4);
+  }
+  .status-bg-no-molestar .v-field,
+  .status-bg-no-molestar.v-field {
+    background-color: rgba(244, 67, 54, 0.12);
+    border-color: rgba(244, 67, 54, 0.4);
+  }
+  .status-bg-visita .v-field,
+  .status-bg-visita.v-field {
+    background-color: rgba(33, 150, 243, 0.12);
+    border-color: rgba(33, 150, 243, 0.4);
+  }
+
+  /* Ensure VChip elements inside input fields (e.g. VCombobox, VSelect selection slots)
+     maintain full opacity and color fidelity matching table cells.
+     The .v-field__input container defaults to opacity: 0.87 which cascades
+     to children — override both the container and the chips themselves. */
+  .v-combobox .v-field__input,
+  .v-select .v-field__input,
+  .v-autocomplete .v-field__input {
+    opacity: 1;
+  }
+  .v-combobox .v-field__input .v-chip,
+  .v-select .v-field__input .v-chip,
+  .v-autocomplete .v-field__input .v-chip {
+    opacity: 1;
+  }
+
+  /* Allow text selection inside VChip (Vuetify 4 ships user-select: none).
+     Close button stays non-selectable so dragging across a chip doesn't grab the ×. */
   .v-chip,
   .v-chip--link,
   .v-chip--filter,
@@ -239,12 +196,57 @@ body {
   }
 }
 
+/* Red asterisk after the label of any required Vuetify input.
+   Vuetify forwards an unrecognized `required` attribute straight onto the
+   native <input>/<textarea> inside `.v-input`, so `:has()` can reach up
+   from there and mark the associated `.v-field-label`. */
+.v-input:has(input[required], textarea[required]) .v-field-label::after {
+  content: ' *';
+  color: rgb(var(--v-theme-error));
+  font-size: 1.35em;
+}
+
+/* Red asterisk at the end of a label for any required input field. The
+   `required` attribute lands on the native <input>/<textarea>/<select> (via
+   Vuetify attr filtering), so we append a red `*` to the field's label. */
+.v-field:has(input[required]) .v-field-label::after,
+.v-field:has(textarea[required]) .v-field-label::after,
+.v-field:has(select[required]) .v-field-label::after {
+  content: ' *';
+  color: rgb(var(--v-theme-error));
+}
+
+/* Momentary row flash after edit — driven by row-props + highlight-id in table components.
+   Placed before the .v-table padding rules so specificity ascends. */
+.row-highlight td {
+  animation: row-highlight-flash var(--row-highlight-animation-ms) ease-out;
+}
+
+/* Row delete animation — driven by row-props + removing-id in table components.
+   The `row-removing` class tints the row light red. The actual height collapse
+   is driven in JS by `removeWithAnimation` in useRowHighlight.ts (tables don't
+   animate cell `height` via CSS), which measures the rendered <tr>, transitions
+   its height to 0, and then the row is spliced from the data so the rows below
+   slide up into its place. */
+.row-removing td {
+  background-color: rgba(var(--v-theme-error), 0.3);
+}
+
+@keyframes row-highlight-flash {
+  0% {
+    background-color: rgba(var(--v-theme-success), 0.35);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .row-highlight td,
   .row-removing {
     animation: none;
   }
   .row-removing td {
-    background-color: transparent !important;
+    background-color: transparent;
   }
 }

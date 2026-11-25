@@ -40,6 +40,8 @@
             :deleting="deleting"
             :response="response"
             :search="filterTerm"
+            :can-delete="canDelete"
+            :can-update="canUpdate"
             :removing-id="removingId"
             :highlight-id="highlightId"
             :initial-sort-by="lastOptions.sortBy"
@@ -79,6 +81,8 @@ const { ConsoSheet } = useRepository();
 const notify = useNotifyStore();
 const auth = useAuthStore();
 const canCreate = computed(() => auth.hasPermission("conso-sheet-create") || auth.hasPermission("conso-sheet-manage"));
+const canUpdate = computed(() => auth.hasPermission("conso-sheet-update") || auth.hasPermission("conso-sheet-manage"));
+const canDelete = computed(() => auth.hasPermission("conso-sheet-delete") || auth.hasPermission("conso-sheet-manage"));
 const {
   highlightId,
   prependCreated,
