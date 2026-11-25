@@ -1,4 +1,4 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
+import { acceptHMRUpdate, defineStore } from 'pinia'
 import { getJwtExp } from '~/utils/jwt'
 
 interface AuthUser {
@@ -267,9 +267,9 @@ export const useAuthStore = defineStore('auth', () => {
   })
 
   // OR logic across any number of permission keys (org-scoped or global).
-  function hasPermission(...permissions: string[]): boolean {
+  function hasPermission(...requiredPermissions: string[]): boolean {
     if (!user.value) return false
-    return permissions.some(p => p in permissionsOrg.value || permissions.value.includes(p))
+    return requiredPermissions.some(permission => permission in permissionsOrg.value || permissions.value.includes(permission))
   }
 
   function orgIdsFor(permission: string): (number | string)[] {
@@ -279,7 +279,8 @@ export const useAuthStore = defineStore('auth', () => {
   function hasSingleOrgFor(permission: string): boolean {
     const orgs = (user.value?.orgs as { id: number | string }[] | undefined) ?? []
     const ids = orgIdsFor(permission)
-    return orgs.length === 1 && ids.includes(orgs[0]!.id)
+    const orgId = orgs[0]?.id
+    return orgs.length === 1 && orgId !== undefined && ids.includes(orgId)
   }
 
   return {

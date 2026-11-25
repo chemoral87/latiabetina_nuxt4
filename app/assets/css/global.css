@@ -166,6 +166,23 @@ body {
     border-color: rgba(33, 150, 243, 0.4);
   }
 
+  /* Allow text selection inside VChip (Vuetify 4 ships user-select: none).
+     Close button stays non-selectable so dragging across a chip doesn't grab the ×. */
+  .v-chip,
+  .v-chip--link,
+  .v-chip--filter {
+    user-select: text;
+    -webkit-user-select: text;
+  }
+  .v-chip .v-chip__content {
+    user-select: text;
+    -webkit-user-select: text;
+  }
+  .v-chip .v-chip__close {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
   /* Ensure VChip elements inside input fields (e.g. VCombobox, VSelect selection slots)
      maintain full opacity and color fidelity matching table cells.
      The .v-field__input container defaults to opacity: 0.87 which cascades
@@ -179,20 +196,6 @@ body {
   .v-select .v-field__input .v-chip,
   .v-autocomplete .v-field__input .v-chip {
     opacity: 1;
-  }
-
-  /* Allow text selection inside VChip (Vuetify 4 ships user-select: none).
-     Close button stays non-selectable so dragging across a chip doesn't grab the ×. */
-  .v-chip,
-  .v-chip--link,
-  .v-chip--filter,
-  .v-chip .v-chip__content {
-    user-select: text;
-    -webkit-user-select: text;
-  }
-  .v-chip .v-chip__close {
-    user-select: none;
-    -webkit-user-select: none;
   }
 }
 

@@ -80,9 +80,9 @@ definePageMeta({
 const { ConsoSheet } = useRepository();
 const notify = useNotifyStore();
 const auth = useAuthStore();
-const canCreate = computed(() => auth.hasPermission("conso-sheet-create") || auth.hasPermission("conso-sheet-manage"));
-const canUpdate = computed(() => auth.hasPermission("conso-sheet-update") || auth.hasPermission("conso-sheet-manage"));
-const canDelete = computed(() => auth.hasPermission("conso-sheet-delete") || auth.hasPermission("conso-sheet-manage"));
+const canCreate = computed(() => auth.hasPermission("conso-sheet-create", "conso-sheet-manage"));
+const canUpdate = computed(() => auth.hasPermission("conso-sheet-update", "conso-sheet-manage"));
+const canDelete = computed(() => auth.hasPermission("conso-sheet-delete", "conso-sheet-manage"));
 const {
   highlightId,
   prependCreated,

@@ -205,8 +205,8 @@ const router = useRouter()
 const { ConsoSheet, ChurchMember } = useRepository()
 const notify = useNotifyStore()
 const auth = useAuthStore()
-const canManage = computed(() => auth.hasPermission("church-member-manage") || auth.hasPermission("church-member-create") || auth.hasPermission("church-member-update"))
-const canDelete = computed(() => canManage.value || auth.hasPermission("church-member-delete"))
+const canManage = computed(() => auth.hasPermission("church-member-manage", "church-member-create", "church-member-update"))
+const canDelete = computed(() => auth.hasPermission("church-member-manage", "church-member-delete"))
 
 const sheetId = computed(() => route.params.id as string)
 
